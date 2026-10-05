@@ -18,7 +18,7 @@ def head(title, desc, page):
 <meta name="description" content="{html.escape(desc)}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:image" content="media/hero.jpg">
+<meta property="og:image" content="media/og.jpg">
 <meta name="theme-color" content="#161b21">
 <link rel="icon" href="media/bird.png">
 <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
