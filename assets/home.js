@@ -4,6 +4,7 @@
 
   /* ---------- falcon eye renderer ---------- */
   const vid = $('#heroVid'), ec = $('#eyeCanvas'), ex = ec.getContext('2d');
+  vid.closest('.eye').classList.add('js');
   const eye = { swoop: 0, word: 0, zoom: 0 };
   const falcon = new Path2D(window.FALCON_PATH || '');
   const E = { x: 888, y: 68 }, LOGO_W = 1933, LOGO_H = 207, WORD = { x: 977, y: 25, w: 956, h: 175 };
@@ -35,6 +36,17 @@
     const sEnd = Math.hypot(vw, vh) / 2 / 4.2 * 1.25;
     const sc = s0 * Math.pow(sEnd / s0, Math.pow(z, 1.35));
     const tx = ePx - E.x * sc, ty = ePy - E.y * sc;
+    if (narrow) {
+      /* phones: never copy the video into the canvas (fails on many Android GPUs).
+         Instead punch the falcon out of the black layer – the real <video> underneath shows through. */
+      ex.save();
+      ex.setTransform(dpr * sc, 0, 0, dpr * sc, dpr * tx, dpr * ty);
+      ex.globalCompositeOperation = 'destination-out'; ex.globalAlpha = Math.min(1, eye.swoop * 1.4);
+      ex.fill(falcon, 'evenodd');
+      ex.restore();
+      const lift = Math.max(0, 1 - z * 2.2);
+      if (lift > 0) { ex.save(); ex.setTransform(dpr * sc, 0, 0, dpr * sc, dpr * tx, dpr * ty); ex.clip(falcon, 'evenodd'); ex.setTransform(1, 0, 0, 1, 0, 0); ex.globalAlpha = .12 * lift; ex.fillStyle = '#ffffff'; ex.fillRect(0, 0, ec.width, ec.height); ex.restore(); }
+    } else {
     ex.save();
     ex.setTransform(dpr * sc, 0, 0, dpr * sc, dpr * tx, dpr * ty);
     ex.clip(falcon, 'evenodd');
@@ -53,6 +65,7 @@
       if (lift > 0) { ex.globalCompositeOperation = 'screen'; ex.globalAlpha = (narrow ? .08 : .28) * lift; ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); ex.globalCompositeOperation = 'source-over'; }
     } else { ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); }
     ex.restore();
+    }
     ex.save();
     ex.setTransform(dpr * sc, 0, 0, dpr * sc, dpr * tx, dpr * ty);
     ex.lineWidth = 1.4 / sc; ex.strokeStyle = 'rgba(230,236,236,' + (.55 * eye.swoop * (1 - Math.min(1, z * 4))) + ')';

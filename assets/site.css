@@ -346,7 +346,8 @@ footer .legalrow{margin-top:40px;padding-top:20px;border-top:1px solid var(--lin
 /* ---------- HOME: falcon eye hero ---------- */
 .eye{height:330vh;background:#000;position:relative}
 .eye .stage{position:sticky;top:0;height:100svh;min-height:540px;overflow:hidden;background:#000}
-.eye video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0}
+.eye video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;opacity:0}
+.eye.js video{opacity:1}
 .eye canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .eye .osd{opacity:0}
 .boot{position:absolute;left:var(--gutter);top:50%;transform:translateY(-50%);font-family:var(--osd);color:#fff;font-size:clamp(14px,1.6vw,20px);line-height:1.7;z-index:3}
