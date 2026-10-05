@@ -10,7 +10,7 @@
   const wordImg = new Image(); wordImg.src = 'media/wordmark.png';
   const poster = new Image();
   /* phones: lighter, portrait hero clip that fills the screen and loads fast */
-  if (innerWidth < 700 && vid.dataset.mobileSrc) { vid.poster = vid.dataset.mobilePoster; vid.src = vid.dataset.mobileSrc; vid.load(); poster.src = vid.dataset.mobilePoster; }
+  if (innerWidth < 700 && vid.dataset.mobileSrc) { vid.poster = vid.dataset.mobilePoster; vid.src = vid.dataset.mobileSrc; vid.load(); vid.play().catch(() => {}); poster.src = vid.dataset.mobilePoster; }
   else poster.src = 'media/hero.jpg';
   const lerp = (a, b, t) => a + (b - a) * t, smooth = t => t * t * (3 - 2 * t);
   const cover = (src, w, h, vw, vh, rx = 0, ry = 0) => { const k = Math.max(vw / w, vh / h); ex.drawImage(src, rx + (vw - w * k) / 2, ry + (vh - h * k) / 2, w * k, h * k); };
@@ -24,7 +24,7 @@
     const ready = vid.readyState >= 2, src = ready ? vid : (poster.complete && poster.naturalWidth ? poster : null);
     const sw = ready ? vid.videoWidth : (src ? src.naturalWidth : 0), sh = ready ? vid.videoHeight : (src ? src.naturalHeight : 0);
     const z = eye.zoom;
-    if (z >= .995) { if (src) { ex.setTransform(dpr, 0, 0, dpr, 0, 0); cover(src, sw, sh, vw, vh); } return; }
+    if (z >= .995) { ex.setTransform(1, 0, 0, 1, 0, 0); ex.clearRect(0, 0, ec.width, ec.height); return; } /* fully zoomed: the real video underneath shows through */
     if (eye.swoop <= 0) return;
     const narrow = vw < 700;
     const logoW = narrow ? vw * .92 : Math.min(vw * .72, 1150), s0 = logoW / LOGO_W;

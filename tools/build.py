@@ -549,8 +549,7 @@ kontakt = head('Kontakt – Falcon Eye FPV', 'Dreh bei Falcon Eye anfragen: Form
       <p class="intro">Drei kurze Schritte. Ihr bekommt eine Flugidee und einen Festpreis – kostenlos und unverbindlich.</p>
       <ul class="promise"><li>Antwort meist am selben Werktag</li><li>Festpreis vor dem Dreh</li><li>Nutzungsrechte schriftlich im Vertrag</li></ul>
       <div class="direct">
-        <div class="ch"><div><span>WhatsApp</span><b>{PHONE_HUMAN}</b></div><a class="btn wa sm" href="{WA}" target="_blank" rel="noopener">{WA_ICON}Chat öffnen</a></div>
-        <div class="ch"><div><span>Telefon</span><b>{PHONE_HUMAN}</b></div><button class="btn ghost sm" type="button" data-copy="{PHONE_HUMAN}">Nummer kopieren</button></div>
+        <div class="ch ch2"><div><span>WhatsApp &amp; Telefon</span><b>{PHONE_HUMAN}</b></div><div class="chb"><a class="btn wa sm" href="{WA}" target="_blank" rel="noopener">{WA_ICON}WhatsApp</a><a class="btn ghost sm" href="tel:+4915156743442">Anrufen</a></div></div>
         <div class="ch"><div><span>E-Mail</span><b>info@falcon-eye.de</b></div><button class="btn ghost sm" type="button" data-copy="info@falcon-eye.de">Adresse kopieren</button></div>
       </div>
     </div>
