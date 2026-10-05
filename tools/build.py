@@ -188,7 +188,7 @@ ticker = '<div class="ticker" aria-label="Kunden und Partner"><div class="row">'
 home_main = f'''<main id="main">
 <section class="eye" aria-label="Falcon Eye">
   <div class="stage">
-    <video id="heroVid" src="media/hero.mp4" poster="media/hero.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <video id="heroVid" src="media/hero.mp4" poster="media/hero.jpg" data-mobile-src="media/r_norway.mp4" data-mobile-poster="media/r_norway.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
     <canvas id="eyeCanvas" aria-hidden="true"></canvas>
     <div class="scan"></div>
     <div class="boot" aria-hidden="true"><span>FALCON EYE OSD</span><span>GPS 14 SAT &nbsp; LINK 100%</span><span>CAM 6K &nbsp; 50 FPS</span><span>LIPO 6S 25.2V</span></div>
@@ -411,7 +411,7 @@ SVC = [
    ['Cinewhoop mit Propellerschutz für Innenräume', 'Dreh vor oder während dem Betrieb', 'Für Website, Google-Profil und Social Media'], 'imagefilm'),
   ('immobilie', 'img:hoermann_DJI_0726', 'Immobilien &amp; Gewerbe', 'Luftbilder und Durchflüge für Exposés, Werksgelände und Bauprojekte – dazu Dachaufnahmen für PV-Planung und Inspektion.',
    ['Luftbilder in hoher Auflösung', 'Durchflug innen und außen', 'Dachaufnahmen für Solar und Gutachter'], 'immobilie'),
-  ('hochzeit', None, 'Hochzeiten', 'Flüsterleise Mini-Drohnen ab 50 Gramm mit 4K-Bild, die niemanden stören: der Einzug, die Gäste, die Location von oben – Aufnahmen, die kein Gast mit dem Handy hinbekommt.',
+  ('hochzeit', 'r_hochzeit', 'Hochzeiten', 'Flüsterleise Mini-Drohnen ab 50 Gramm mit 4K-Bild, die niemanden stören: der Einzug, die Gäste, die Location von oben – Aufnahmen, die kein Gast mit dem Handy hinbekommt.',
    ['Leise und unauffällig', 'Abgestimmt mit Fotograf und Videograf', 'Kurzer Film plus Clips für die Gäste'], 'hochzeit'),
   ('live', 'arena', 'Live-Übertragung', 'Das FPV-Bild live auf Leinwand oder in den Stream – für Sportevents, Shows und Messen.',
    ['Digitales FPV-Livebild', 'Übergabe an Regie oder Stream', 'Flugshow-Einlagen möglich'], 'live'),
@@ -421,10 +421,14 @@ SVC = [
 def svc_row(s, i):
     sid, vid, t, d, ticks, anlass = s
     media = (f'<div class="media"><img src="media/{vid[4:]}.jpg" alt="Luftbild Hörmann-Werk" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>' if vid and vid.startswith('img:') else clip(vid, t, 'Ziehen zum Steuern', anlass=anlass)) if vid else '<div class="clip" style="cursor:default"><div class="nosig"><canvas></canvas><span>Clip folgt</span></div></div>'
+    film = ''
+    if sid == 'hochzeit':
+        media = media.replace('<figure class="clip ', '<figure style="aspect-ratio:9/14" class="clip tall ').replace('data-lb="media/r_hochzeit.mp4"', 'data-lb="media/film_hochzeit.mp4" data-tall="1"')
+        film = '<button class="btn ghost" type="button" data-lb="media/film_hochzeit.mp4" data-title="Hochzeit – der ganze Film" data-anlass="hochzeit" data-tall="1">Hochzeitsfilm ansehen (mit Ton)</button>'
     tk = ''.join(f'<li>{x}</li>' for x in ticks)
     return f'''<article class="case" id="{sid}" data-tags="x">
   <div class="media-wrap">{media}</div>
-  <div><h2 class="h3">{t}</h2><p>{d}</p><ul class="ticks">{tk}</ul><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">{t.split(" ")[0].replace("&amp;","")} anfragen</a></div></div>
+  <div><h2 class="h3">{t}</h2><p>{d}</p><ul class="ticks">{tk}</ul><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">{t.split(" ")[0].replace("&amp;","")} anfragen</a>{film}</div></div>
 </article>'''
 svc_rows = ''.join(svc_row(s, i) for i, s in enumerate(SVC))
 FAQ = [
@@ -434,7 +438,7 @@ FAQ = [
   ('Was passiert bei schlechtem Wetter?', 'Indoor fliegen wir bei jedem Wetter. Draußen verschieben wir bei Regen oder starkem Wind gemeinsam mit euch auf einen Ersatztermin.'),
   ('Wie schnell bekommen wir die Videos?', 'Social-Clips meist innerhalb weniger Tage, längere Imagefilme je nach Umfang. Den Liefertermin nennen wir im Angebot.'),
   ('Dürfen wir die Videos überall nutzen?', 'Ja. Ihr bekommt die Nutzungsrechte für Website, Social Media und Werbung, schriftlich im Vertrag. Ausgewählte Szenen zeigen wir als Referenz.'),
-  ('Wo seid ihr unterwegs?', 'Von Saarbrücken aus im ganzen Saarland und in der Region bis Luxemburg und Frankreich. Für besondere Projekte auch weiter – geflogen sind wir schon in Norwegen und Griechenland.'),
+  ('Wo seid ihr unterwegs?', 'Von Saarbrücken aus im ganzen Saarland und in der Region bis Luxemburg und Frankreich. Für besondere Projekte auch weiter – geflogen sind wir schon in über 20 Ländern, von Norwegen bis Vietnam.'),
   ('Könnt ihr auch klassische Drohnenfotos?', 'Ja. Neben FPV haben wir Kameradrohnen für Luftbilder, Zeitraffer und ruhige Überflüge – oft im selben Termin.'),
 ]
 faq = ''.join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in FAQ)

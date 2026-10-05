@@ -539,3 +539,15 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
 .fe-cursor.hot i{transform:scale(1.5)}
 .fe-cursor.rec span{opacity:1}
 .fe-cursor.rec i{transform:scale(1.8)}
+@media (max-width:700px){
+  .wtile{flex-basis:46vw;border-radius:8px}
+  .wtile b{font-size:19px;left:10px;right:10px;bottom:12px;line-height:1.05}
+  .wtile .loc{left:10px;top:10px;font-size:10px;padding:5px 6px}
+  .wtile .play{right:10px;top:9px;width:30px;height:30px}
+  .wtile .play::after{left:11px;top:8px;border-left-width:11px;border-top-width:7px;border-bottom-width:7px}
+  .world .wrow{gap:10px;padding-top:24px}
+}
+@media (max-width:700px){
+  .eye .hero-copy{text-shadow:0 2px 14px rgba(0,0,0,.85)}
+  .eye .hero-copy::before{content:"";position:absolute;left:-40px;right:-40px;top:-60px;bottom:-60px;z-index:-1;background:radial-gradient(ellipse at 40% 55%,rgba(0,0,0,.62),rgba(0,0,0,0) 72%);pointer-events:none}
+}

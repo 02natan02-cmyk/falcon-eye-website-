@@ -8,7 +8,10 @@
   const falcon = new Path2D(window.FALCON_PATH || '');
   const E = { x: 888, y: 68 }, LOGO_W = 1933, LOGO_H = 207, WORD = { x: 977, y: 25, w: 956, h: 175 };
   const wordImg = new Image(); wordImg.src = 'media/wordmark.png';
-  const poster = new Image(); poster.src = 'media/hero.jpg';
+  const poster = new Image();
+  /* phones: lighter, portrait hero clip that fills the screen and loads fast */
+  if (innerWidth < 700 && vid.dataset.mobileSrc) { vid.poster = vid.dataset.mobilePoster; vid.src = vid.dataset.mobileSrc; vid.load(); poster.src = vid.dataset.mobilePoster; }
+  else poster.src = 'media/hero.jpg';
   const lerp = (a, b, t) => a + (b - a) * t, smooth = t => t * t * (3 - 2 * t);
   const cover = (src, w, h, vw, vh, rx = 0, ry = 0) => { const k = Math.max(vw / w, vh / h); ex.drawImage(src, rx + (vw - w * k) / 2, ry + (vh - h * k) / 2, w * k, h * k); };
   /* mobile: start playback on first touch/scroll if autoplay was blocked (data saver / low power) */
@@ -39,7 +42,7 @@
     ex.globalAlpha = Math.min(1, eye.swoop * 1.4);
     if (src) {
       const lift = Math.max(0, 1 - z * 2.2);
-      ex.filter = 'saturate(' + (.45 + .55 * z) + ') brightness(' + (1 + .9 * lift) + ') contrast(1.06)';
+      ex.filter = narrow ? 'saturate(1.15) brightness(' + (1 + .25 * lift) + ') contrast(1.05)' : 'saturate(' + (.45 + .55 * z) + ') brightness(' + (1 + .9 * lift) + ') contrast(1.06)';
       if (narrow) {
         /* portrait screens: fit the film into the bird's wing band first, then open up to full screen */
         const k = smooth(Math.min(1, z * 1.15)), bw = LOGO_W * sc, bh = LOGO_H * sc * 1.6, by = ty - LOGO_H * sc * .3;
@@ -47,7 +50,7 @@
         cover(src, sw, sh, rw, rh, rx, ry);
       } else cover(src, sw, sh, vw, vh);
       ex.filter = 'none';
-      if (lift > 0) { ex.globalCompositeOperation = 'screen'; ex.globalAlpha = (narrow ? .38 : .28) * lift; ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); ex.globalCompositeOperation = 'source-over'; }
+      if (lift > 0) { ex.globalCompositeOperation = 'screen'; ex.globalAlpha = (narrow ? .08 : .28) * lift; ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); ex.globalCompositeOperation = 'source-over'; }
     } else { ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); }
     ex.restore();
     ex.save();
