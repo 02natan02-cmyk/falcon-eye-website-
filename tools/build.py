@@ -148,7 +148,7 @@ WORLD = [('trollstigen', 'r_trollstigen', 'Norwegen', 'Trollstigen'), ('wasserfa
 world_tiles = ''.join(f'<button class="wtile" type="button" data-lb="media/film_{f}.mp4" data-title="{c} – {t}" data-tall="{1 if l.startswith("r_") else 0}"><video data-auto muted loop playsinline preload="none" poster="media/{l}.jpg" src="media/{l}.mp4" aria-hidden="true"></video><span class="loc">{c}</span><b>{t}</b><span class="play" aria-hidden="true"></span></button>' for f, l, c, t in WORLD)
 WORLD_SEC = f'''<section class="block world" aria-labelledby="world-h">
   <div class="wrap">
-    <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen: Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div>
+    <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Schon in über 20 Ländern geflogen – Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen und mehr. Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div>
   </div>
   <div class="wrow" tabindex="0" aria-label="Filme aus aller Welt, seitlich wischen">{world_tiles}</div>
 </section>
@@ -211,8 +211,8 @@ home_main = f'''<main id="main">
 {ticker}
 <div class="trust">
   <div><b>Fast 100</b><span>Projekte: Partys, Events, Firmen, Sport und Vereine</span></div>
-  <div><b data-count="100" data-suffix="+">100+</b><span>Drohnen im Hangar, vom flüsterleisen 50-Gramm-Whoop bis zum Kino-Lifter</span></div>
-  <div><b>6K</b><span>Kino-Kamera am Cinelifter für die große Leinwand</span></div>
+  <div><b data-count="100" data-suffix="+">100+</b><span>Drohnen im Hangar, viele selbst gebaut – vom flüsterleisen 50-Gramm-Whoop bis zum Kino-Lifter</span></div>
+  <div><b data-count="20" data-suffix="+">20+</b><span>Länder, in denen wir schon geflogen sind – seit Jahren, mit selbst gebauten Coptern</span></div>
   <div><b>0 €</b><span>für Anfrage und Angebot – ihr wisst vorher, was es kostet</span></div>
 </div>
 
@@ -465,12 +465,13 @@ HANGAR = [
 hbtns = ''.join(f'<button type="button" role="tab" aria-selected="{"true" if i == 0 else "false"}" data-src="{("media/" + v + ".mp4") if v else ""}" data-poster="{("media/" + v + ".jpg") if v else ""}" data-desc="{d}" data-spec="{"".join(f"<span>{x}</span>" for x in sp.split("|"))}" data-name="{n}"><span class="n">{i+1:02d}</span><span class="cls">{c}</span><b>{n}</b></button>' for i, (n, c, v, d, sp) in enumerate(HANGAR))
 h0 = HANGAR[0]
 ueber = head('Über uns – Falcon Eye FPV', 'Die Crew hinter Falcon Eye: FPV-Piloten aus dem Saarland, über 100 Drohnen im Hangar, Partner des Flight Club Saar.', 'ueber-uns') + header('ueber-uns') + f'''<main id="main">
-{phero('turm', 'Über uns', 'Piloten aus dem Saarland, die jeden Tag fliegen – im Verein, für Kunden und weil wir es lieben.')}
+{phero('turm', 'Über uns', 'Piloten aus dem Saarland, die seit Jahren fliegen – in über 20 Ländern, mit Coptern, die wir selbst bauen.')}
 <section class="block">
   <div class="wrap two-col">
     <div>
       <h2 class="h2 reveal">Die Crew</h2>
       <p class="intro reveal">Angefangen hat alles mit einer Brille, einer Drohne und viel zu vielen Akkus. Heute fliegen wir für Möbelhäuser, Stadien, Filmproduktionen und Weinbars – und haben immer noch dasselbe Grinsen unter der Brille.</p>
+      <p class="reveal">Unsere Copter bauen wir selbst: Rahmen, Motoren, Elektronik, Kamera. Wir kennen jede Schraube unserer Technik – und können sie genau auf euren Dreh abstimmen. Geflogen sind wir seit Jahren und schon in über 20 Ländern.</p>
       <ul class="crew">
         <li class="reveal"><b>Natan Wojtasczyk</b><span>Gründer, FPV-Pilot, Kamera</span></li>
         <li class="reveal"><b>Manuel Hoffstetter</b><span>Regie, zweite Kamera, Spotter, Schnitt</span></li>
