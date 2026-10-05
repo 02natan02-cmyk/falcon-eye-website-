@@ -81,6 +81,8 @@
     if (e.isIntersecting) { if (v.preload !== 'auto') v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
   }), { rootMargin: '200px 0px' }) : null;
   $$('video[data-auto]').forEach(v => autoIO ? autoIO.observe(v) : v.play().catch(() => {}));
+  /* time-shifted copies (Freier Fall triptych) */
+  $$('video[data-offset]').forEach(v => v.addEventListener('loadedmetadata', () => { try { v.currentTime = +v.dataset.offset % (v.duration || 1); } catch (e) {} }, { once: true }));
 
   /* ---------- scrub clips: move across the clip to fly through it ---------- */
   function fmt(t) { return '00:' + String(Math.floor(t)).padStart(2, '0') + ':' + String(Math.floor((t % 1) * 30)).padStart(2, '0'); }

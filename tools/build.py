@@ -313,6 +313,10 @@ home_main = f'''<main id="main">
   <div class="wrap"><h2 class="h2 reveal" id="safe-h">Sicher in der Luft</h2><p class="intro reveal">FPV sieht wild aus. Dahinter steckt Planung.</p>{SAFETY}</div>
 </section>
 
+<section class="schacht" aria-labelledby="schacht-h">
+  <div class="sch-vids" aria-hidden="true"><video class="dk" data-auto muted loop playsinline preload="none" poster="media/schacht.jpg" src="media/schacht.mp4"></video><video class="mb" data-auto muted loop playsinline preload="none" poster="media/schacht_m.jpg" src="media/schacht_m.mp4"></video></div>
+  <div class="sch-copy"><p class="kicker">Förderturm Göttelborn · ein Take</p><h2 class="h2" id="schacht-h">Freier Fall.</h2><p>Mitten im Förderturm, ein einziger Take: Die Drohne dreht sich durch den Schacht, immer weiter – als würdest du endlos fallen. So hypnotisch kann Industriekultur aussehen.</p><div class="ctas"><a class="btn" href="kontakt.html#imagefilm">So einen Flug anfragen</a><button class="btn ghost" type="button" data-lb="media/film_goettelborn.mp4" data-title="Förderturm Göttelborn – der ganze Flug">Ganzen Flug ansehen</button></div></div>
+</section>
 {band('Was wollt ihr filmen?', 'Tippt an, worum es geht – das Formular ist dann schon ausgefüllt. Antwort mit Idee und Festpreis.')}
 </main>
 '''

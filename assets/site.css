@@ -579,3 +579,14 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
 @media (max-width:700px){.scrollhint .m{display:inline}.scrollhint .d{display:none}.eye{height:250vh}}
 @media (hover:none){.scrollhint .m{display:inline}.scrollhint .d{display:none}}
 .scrollhint .swipe i{background:none}
+/* ---------- Freier Fall (Förderturm, gekippt) ---------- */
+.schacht{position:relative;height:min(100svh,980px);min-height:620px;overflow:hidden;background:#000;display:grid;place-items:center}
+.sch-vids{position:absolute;inset:0}
+.sch-vids video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sch-vids video.mb{display:none}
+.schacht::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.25),rgba(0,0,0,.72) 75%);pointer-events:none}
+.sch-copy{position:relative;z-index:2;text-align:center;max-width:620px;padding:0 var(--gutter)}
+.sch-copy .h2{font-size:clamp(64px,11vw,160px);text-shadow:0 6px 40px rgba(0,0,0,.8)}
+.sch-copy p{color:#e6ecec;text-shadow:0 1px 12px rgba(0,0,0,.9)}
+.sch-copy .ctas{justify-content:center}
+@media (max-width:700px){.sch-vids video.dk{display:none}.sch-vids video.mb{display:block}.schacht{height:100svh}}
