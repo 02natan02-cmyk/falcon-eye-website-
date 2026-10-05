@@ -470,7 +470,7 @@ HANGAR = [
   ('Cinewhoop', 'Indoor', 'kueche', 'Mit Propellerschutz durch Hallen, Küchen, Showrooms und Treppenhäuser. Butterweiche Bilder bis 240 fps.', '4K|240 fps|Propellerschutz'),
   ('Freestyle', '5 Zoll', 'stadion', 'Schnell und wendig für Sport, Flips und Action. Hält mit, wo jede andere Kamera aufgibt.', '4K|120 km/h+|Flips'),
   ('Kameradrohne', 'Luftbild', 'luft', 'Ruhige Überflüge, Luftbilder und Zeitraffer aus großer Höhe – für Übersicht, Lage und Größe.', '4K|Foto|Zeitraffer'),
-  ('Cinelifter', '6K Kino', None, 'Trägt eine Blackmagic 6K. Für Werbung und Filme, die auf die große Leinwand sollen.', '6K RAW|Blackmagic|Wechselobjektive'),
+  ('Cinelifter', '6K Kino', 'cine', 'Trägt eine Blackmagic 6K. Für Werbung und Filme, die auf die große Leinwand sollen.', '6K RAW|Blackmagic|Wechselobjektive'),
 ]
 hbtns = ''.join(f'<button type="button" role="tab" aria-selected="{"true" if i == 0 else "false"}" data-src="{("media/" + v + ".mp4") if v else ""}" data-poster="{("media/" + v + ".jpg") if v else ""}" data-desc="{d}" data-spec="{"".join(f"<span>{x}</span>" for x in sp.split("|"))}" data-name="{n}"><span class="n">{i+1:02d}</span><span class="cls">{c}</span><b>{n}</b></button>' for i, (n, c, v, d, sp) in enumerate(HANGAR))
 h0 = HANGAR[0]
