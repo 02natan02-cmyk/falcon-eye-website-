@@ -194,7 +194,8 @@ home_main = f'''<main id="main">
     <div class="boot" aria-hidden="true"><span>FALCON EYE OSD</span><span>GPS 14 SAT &nbsp; LINK 100%</span><span>CAM 6K &nbsp; 50 FPS</span><span>LIPO 6S 25.2V</span></div>
     <div class="armed" aria-hidden="true">ARMED</div>
     <p class="tagline">FPV-Drohnenfilme aus dem Saarland</p>
-    <p class="scrollhint" aria-hidden="true"><span>Scrollen und abheben</span><i></i></p>
+    <div class="scrollhint" aria-hidden="true"><div class="swipe"><span class="hand"><svg viewBox="0 0 24 24" width="34" height="34"><path fill="#fff" d="M9 11.2V4.5a1.5 1.5 0 0 1 3 0V10h.5V8.6a1.5 1.5 0 0 1 3 0V10h.4v-.6a1.5 1.5 0 0 1 3 0v5.3c0 3.4-2.4 6.3-5.9 6.3h-.6c-2 0-3.4-.9-4.6-2.4L4.6 15a1.4 1.4 0 0 1 2.1-1.9L9 15z"/></svg></span><i></i><i></i><i></i></div><b><span class="m">Nach oben wischen</span><span class="d">Scrollen</span> – und reinfliegen</b></div>
+    <a class="skipfly" href="#main-content">Direkt zu den Filmen &#8595;</a>
     <div class="osd" aria-hidden="true">
       <div class="tl"><span class="rec">REC <b data-osd-clock>00:00</b></span><span>SAARLAND</span></div>
       <div class="tr"><span data-osd-volt>25.2V</span><span>LINK &#9646;&#9646;&#9646;&#9646;</span></div>
@@ -208,6 +209,7 @@ home_main = f'''<main id="main">
   </div>
 </section>
 
+<span id="main-content"></span>
 {ticker}
 <div class="trust">
   <div><b>Fast 100</b><span>Projekte: Partys, Events, Firmen, Sport und Vereine</span></div>

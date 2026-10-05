@@ -565,3 +565,17 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
   .wtile:not(.wide){aspect-ratio:4/5}
 }
 @media (max-width:700px){.sim-copy{top:calc(150px + var(--safe-top))}}
+/* ---------- großer Wisch-Hinweis im Falken-Einstieg ---------- */
+.scrollhint{bottom:calc(42px + var(--safe-bottom));gap:12px;font:700 15px/1.2 Archivo,sans-serif;text-align:center;z-index:4}
+.scrollhint b{display:block;padding:9px 16px;border-radius:999px;background:rgba(0,0,0,.55);box-shadow:inset 0 0 0 1.5px rgba(255,208,0,.7);backdrop-filter:blur(6px)}
+.scrollhint .m{display:none}
+.swipe{position:relative;width:60px;height:86px;display:grid;justify-items:center}
+.swipe .hand{position:absolute;bottom:0;animation:fe-swipe 1.6s cubic-bezier(.5,0,.3,1) infinite;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}
+.swipe i{width:16px;height:16px;border-left:3px solid var(--signal);border-top:3px solid var(--signal);transform:rotate(45deg);opacity:.2;animation:fe-chev 1.6s ease-in-out infinite;margin-top:-4px}
+.swipe i:nth-of-type(2){animation-delay:.15s}.swipe i:nth-of-type(3){animation-delay:.3s}
+@keyframes fe-swipe{0%{transform:translateY(0);opacity:0}15%{opacity:1}70%{transform:translateY(-46px);opacity:1}100%{transform:translateY(-52px);opacity:0}}
+@keyframes fe-chev{0%,100%{opacity:.15}40%{opacity:1}}
+.skipfly{position:absolute;right:var(--gutter);top:calc(78px + var(--safe-top));z-index:5;font:400 12px/1 var(--osd);color:#e6ecec;background:rgba(0,0,0,.5);padding:8px 10px;border-radius:6px;text-decoration:none;opacity:.85}
+@media (max-width:700px){.scrollhint .m{display:inline}.scrollhint .d{display:none}.eye{height:250vh}}
+@media (hover:none){.scrollhint .m{display:inline}.scrollhint .d{display:none}}
+.scrollhint .swipe i{background:none}

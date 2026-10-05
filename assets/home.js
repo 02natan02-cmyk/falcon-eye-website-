@@ -201,7 +201,25 @@
     .to(eye, { swoop: 1, duration: 1.5, ease: 'expo.out', onStart: () => vid.play().catch(() => {}) }, '-=.05')
     .to(eye, { word: 1, duration: .8 }, '-=.9')
     .to('.tagline', { opacity: 1, duration: .6 }, '-=.5')
-    .to('.scrollhint', { opacity: 1, duration: .6 }, '-=.3');
+    .to('.scrollhint', { opacity: 1, duration: .6 }, '-=.3')
+    .add(() => autoFly(), '+=.5');
+
+  /* auto-flight into the eye: starts by itself, slowly; any touch / wheel / key hands control to the visitor */
+  let autoOn = false;
+  function autoFly() {
+    if (autoOn || scrollY > 8) return;
+    autoOn = true;
+    const end = heroSec.offsetHeight - innerHeight, dur = innerWidth < 700 ? 6500 : 8000, t0 = performance.now(), y0 = scrollY;
+    const stop = () => { autoOn = false; ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => removeEventListener(ev, stop)); };
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, stop, { passive: true }));
+    const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    (function step(now) {
+      if (!autoOn) return;
+      const k = Math.min(1, (now - t0) / dur), y = y0 + (end - y0) * ease(k);
+      if (window.FE.lenis) window.FE.lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
+      if (k < 1) requestAnimationFrame(step); else stop();
+    })(t0);
+  }
 
   ScrollTrigger.create({
     trigger: '.eye', start: 'top top', end: 'bottom bottom', scrub: .6,
@@ -210,7 +228,7 @@
       eye.zoom = Math.min(1, p / .72);
       if (p > .01) intro.progress(1);
       const f = 1 - Math.min(1, p / .08);
-      gsap.set(['.tagline', '.scrollhint'], { opacity: f });
+      gsap.set(['.tagline', '.scrollhint', '.skipfly'], { opacity: f, pointerEvents: f > .3 ? 'auto' : 'none' });
       const c = Math.max(0, Math.min(1, (p - .68) / .14));
       gsap.set('.hero-copy', { opacity: c, y: (1 - c) * 40, pointerEvents: c > .5 ? 'auto' : 'none' });
       gsap.set('.eye .osd', { opacity: Math.max(0, Math.min(1, (p - .6) / .12)) });
