@@ -38,10 +38,12 @@ Zugangsdaten, Passwörter und Kundennummern stehen hier bewusst **nicht** drin �
 | A | @ | 185.199.109.153 |
 | A | @ | 185.199.110.153 |
 | A | @ | 185.199.111.153 |
-| A | www | 185.199.108.153 / .109.153 / .110.153 / .111.153 |
+| CNAME | www | 02natan02-cmyk.github.io |
 | MX, TXT (SPF), CNAME (DKIM, DMARC, autodiscover) | – | **E-Mail von IONOS – nicht anfassen** |
 
-HTTPS: In GitHub unter Settings → Pages „Enforce HTTPS“ aktivieren, sobald das Zertifikat ausgestellt ist (passiert automatisch nach der DNS-Umstellung).
+HTTPS: Zertifikat von GitHub ausgestellt, „Enforce HTTPS“ ist aktiv (seit 5. Oktober 2026). http und www leiten automatisch auf https://falcon-eye.de um.
+
+Alte IONOS-Adresse: `defaultsite.html` und `defaultsite/` leiten Besucher, deren Browser noch die alte IONOS-Weiterleitung gespeichert hat, auf die Startseite. Kann ab 2027 gelöscht werden.
 
 ---
 
@@ -136,6 +138,5 @@ Einen Programmierer hinzufügen: GitHub → Repository → Settings → Collabor
 
 ## 8. Offene Punkte
 
-- „Enforce HTTPS“ in GitHub Pages aktivieren, sobald verfügbar.
-- IONOS-Verträge „MyWebsite Now Starter“ und „marketingRadar“ werden nicht mehr gebraucht und können gekündigt werden (vorher prüfen, dass das E-Mail-Postfach nicht daran hängt).
+- IONOS: „MyWebsite Now Starter“ (zum 21.12.2026) und „marketingRadar“ (zum 25.11.2026) kündigen. Der Vertrag „IONOS Domain“ bleibt, denn daran hängen Domain und E-Mail-Postfach.
 - Neue Clips: Ordner `OneDrive\Falcon Eye\_Website_Neu\Neue_Clips` – Lambert Reisen, Addicted to Dance 2026, Hochzeit, Motocross, Norwegen, Asien-Reisen.
