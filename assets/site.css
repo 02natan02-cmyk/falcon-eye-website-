@@ -590,3 +590,57 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
 .sch-copy p{color:#e6ecec;text-shadow:0 1px 12px rgba(0,0,0,.9)}
 .sch-copy .ctas{justify-content:center}
 @media (max-width:700px){.sch-vids video.dk{display:none}.sch-vids video.mb{display:block}.schacht{height:100svh}}
+/* Flight Club partner panel */
+.crewcol{align-items:center}
+.fcp{--fc:#1d5a97;--fcd:#0d1a2c;position:relative;border-radius:10px;overflow:hidden;background:radial-gradient(120% 70% at 50% 0%,#1a3a63 0%,var(--fcd) 62%);border:1px solid rgba(120,170,230,.22);box-shadow:0 30px 80px -30px rgba(0,0,0,.7);display:grid;justify-items:center;text-align:center;padding:clamp(26px,3.4vw,44px) clamp(18px,3vw,40px)}
+.fcp::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 4px);pointer-events:none}
+.fcp-boot{display:grid;justify-items:center;gap:14px;width:100%}
+.fcp-badge{position:relative;width:clamp(132px,15vw,168px);aspect-ratio:1;cursor:pointer}
+.fcp-ring{position:absolute;inset:-12%;width:124%;height:124%;transform:rotate(-90deg)}
+.fcp-ring circle{fill:none;stroke:rgba(255,255,255,.1);stroke-width:2}
+.fcp-ring .pr{stroke:var(--signal);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:0;filter:drop-shadow(0 0 6px rgba(255,208,0,.55))}
+.fcp-spin{position:absolute;inset:0;transform:rotate(0deg)}
+.fcp-spin img{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+.fcp-spin i{position:absolute;width:26%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);background:conic-gradient(from 0deg,transparent 0 8%,rgba(150,205,255,.55) 14%,transparent 24% 58%,rgba(150,205,255,.55) 64%,transparent 74%);animation:fcp-prop .14s linear infinite;opacity:.75;mix-blend-mode:screen}
+.fcp-spin i:nth-of-type(1){left:34.2%;top:33.3%}
+.fcp-spin i:nth-of-type(2){left:65.6%;top:33.3%;animation-direction:reverse}
+.fcp-spin i:nth-of-type(3){left:34.2%;top:65.4%;animation-direction:reverse}
+.fcp-spin i:nth-of-type(4){left:65.6%;top:65.4%}
+@keyframes fcp-prop{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes fcp-hover{50%{transform:translateY(-6px)}}
+.fcp.fc-ok .fcp-badge{animation:fcp-hover 3.2s ease-in-out infinite}
+.fcp-word{width:min(200px,62%);height:auto;margin-top:8px}
+.fcp-osd{display:flex;justify-content:space-between;width:min(260px,82%);font-family:var(--osd);font-size:13px;letter-spacing:.12em;color:#9cc4ee}
+.fcp-osd .st::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rec);margin-right:8px;vertical-align:1px;animation:fcp-blink 1s steps(2) infinite}
+.fcp.fc-ok .fcp-osd .st{color:var(--ok)}
+.fcp.fc-ok .fcp-osd .st::before{background:var(--ok);animation:none}
+@keyframes fcp-blink{50%{opacity:.2}}
+.fcp-bar{width:min(260px,82%);height:3px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.fcp-bar b{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--fc),var(--signal));transform-origin:left}
+.fcp-body{display:grid;justify-items:center;gap:14px;margin-top:26px;width:100%}
+.fcp-body .eyebrow{margin:0;font-family:var(--osd);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--signal)}
+.fcp-body .h3{margin:0}
+.fcp-body p{margin:0;color:var(--text-2);max-width:46ch}
+.fcp-body p b{color:var(--wing)}
+.fcp-body .ctas{justify-content:center;margin-top:6px}
+.fcp-browser{display:block;width:100%;margin-top:8px;border-radius:8px;overflow:hidden;background:#0a1220;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 24px 50px -20px rgba(0,0,0,.8);text-decoration:none;transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s}
+.fcp-browser:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 0 0 1px rgba(255,208,0,.5),0 30px 60px -20px rgba(0,0,0,.9)}
+.fcp-browser .bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#16202e;border-bottom:1px solid rgba(255,255,255,.08)}
+.fcp-browser .bar i{width:9px;height:9px;border-radius:50%;background:#ff5f57}
+.fcp-browser .bar i:nth-child(2){background:#febc2e}.fcp-browser .bar i:nth-child(3){background:#28c840}
+.fcp-browser .url{flex:1;margin-left:8px;padding:4px 10px;border-radius:5px;background:rgba(255,255,255,.07);font-family:var(--osd);font-size:12px;color:#b9cde3;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcp-browser .url::before{content:"🔒 ";font-size:10px}
+.fcp-browser .shot{display:block;aspect-ratio:16/10;overflow:hidden}
+.fcp-browser .shot img{display:block;width:100%;height:auto;animation:fcp-scroll 18s ease-in-out infinite alternate}
+.fcp-browser:hover .shot img{animation-duration:7s}
+@keyframes fcp-scroll{0%,8%{transform:translateY(0)}92%,100%{transform:translateY(-41.6%)}}
+/* boot state (set by JS before entering view) */
+.fcp.pending .fcp-ring .pr{stroke-dashoffset:100}
+.fcp.pending .fcp-bar b{transform:scaleX(0)}
+.fcp.pending:not(.s1) .fcp-spin i{opacity:0}
+.fcp.pending:not(.s2) .fcp-word{opacity:0;transform:translateY(8px)}
+.fcp.pending:not(.s3) .fcp-body{opacity:0;transform:translateY(24px)}
+.fcp-word,.fcp-body{transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.fcp-spin i{transition:opacity .6s}
+@media (max-width:900px){.fcp{margin-top:8px}}
+@media (prefers-reduced-motion:reduce){.fcp-spin i,.fcp-browser .shot img,.fcp.fc-ok .fcp-badge{animation:none}}

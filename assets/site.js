@@ -377,3 +377,31 @@
 
   window.FE.ready = true;
 })();
+
+/* Flight Club partner panel: pre-flight boot sequence */
+(function(){
+  var el=document.querySelector('[data-fcp]'); if(!el) return;
+  var spin=el.querySelector('.fcp-spin'),pr=el.querySelector('.pr'),bar=el.querySelector('.fcp-bar b'),pc=el.querySelector('.pc'),st=el.querySelector('.st'),badge=el.querySelector('.fcp-badge');
+  function done(){st.textContent='ARMED';pc.textContent='100%';el.classList.add('fc-ok');}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window)){done();return;}
+  el.classList.add('pending');
+  var rot=0,busy=false;
+  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function run(first){
+    if(busy) return; busy=true;
+    var t0=performance.now(),D=first?2600:1400,turns=first?3:2,start=rot;
+    (function f(now){
+      var t=Math.min(1,(now-t0)/D),e=ease(t);
+      rot=start+360*turns*e; spin.style.transform='rotate('+rot+'deg)';
+      if(first){var p=Math.round(e*100);pc.textContent=p+'%';pr.style.strokeDashoffset=100-p;bar.style.transform='scaleX('+e+')';
+        if(p>=35&&p<100) st.textContent='ARMING';
+        if(t>.12) el.classList.add('s1'); if(t>.3) el.classList.add('s2'); if(t>.2) el.classList.add('s3');}
+      if(t<1) requestAnimationFrame(f);
+      else {busy=false; rot=rot%360; spin.style.transform='rotate('+rot+'deg)'; if(first){done(); el.classList.add('s3');}}
+    })(t0);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.disconnect();run(true);}})},{threshold:.3});
+  io.observe(el);
+  badge.addEventListener('click',function(){run(false)});
+  badge.addEventListener('mouseenter',function(){if(el.classList.contains('fc-ok'))run(false)});
+})();

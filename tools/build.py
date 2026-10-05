@@ -477,7 +477,7 @@ h0 = HANGAR[0]
 ueber = head('Über uns – Falcon Eye FPV', 'Die Crew hinter Falcon Eye: FPV-Piloten aus dem Saarland, über 100 Drohnen im Hangar, Partner des Flight Club Saar.', 'ueber-uns') + header('ueber-uns') + f'''<main id="main">
 {phero('turm', 'Über uns', 'Piloten aus dem Saarland, die seit Jahren fliegen – in über 20 Ländern, mit Coptern, die wir selbst bauen.')}
 <section class="block">
-  <div class="wrap two-col">
+  <div class="wrap two-col crewcol">
     <div>
       <h2 class="h2 reveal">Die Crew</h2>
       <p class="intro reveal">Angefangen hat alles mit einer Brille, einer Drohne und viel zu vielen Akkus. Heute fliegen wir für Möbelhäuser, Stadien, Filmproduktionen und Weinbars – und haben immer noch dasselbe Grinsen unter der Brille.</p>
@@ -488,11 +488,26 @@ ueber = head('Über uns – Falcon Eye FPV', 'Die Crew hinter Falcon Eye: FPV-Pi
       </ul>
       <div class="ctas" style="margin-top:28px"><a class="btn" href="kontakt.html">Mit uns drehen</a></div>
     </div>
-    <aside class="panel reveal" aria-label="Partner Flight Club Saar">
-      <img src="media/flightclub.png" alt="Flight Club Saar" width="768" height="515">
-      <h3 class="h3">Partner: Flight Club Saar e.V.</h3>
-      <p>Unser Heimatverein für FPV im Saarland. Hier trainieren unsere Piloten, testen neue Drohnen und bringen Neulingen das Fliegen bei.</p>
-      <div class="ctas"><a class="btn" href="flight-club.html">Mehr zum Verein</a></div>
+    <aside class="fcp" aria-label="Partner Flight Club Saar" data-fcp>
+      <div class="fcp-boot">
+        <div class="fcp-badge">
+          <svg class="fcp-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56"/><circle class="pr" cx="60" cy="60" r="56" pathLength="100"/></svg>
+          <div class="fcp-spin"><img src="media/fc_badge.png" alt="" width="325" height="324"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <img class="fcp-word" src="media/fc_word.png" alt="Flight Club Saar" width="759" height="155">
+        <div class="fcp-osd"><span class="st">PRE-FLIGHT</span><span class="pc">0%</span></div>
+        <div class="fcp-bar"><b></b></div>
+      </div>
+      <div class="fcp-body">
+        <p class="eyebrow">Partnerverein</p>
+        <h3 class="h3">Flight Club Saar e.V.</h3>
+        <p>Unser Heimatverein und der größte FPV-Verein rund ums Saarland. Hier trainieren unsere Piloten, testen neue Copter und bringen Neulingen das Fliegen bei. <b>Natan ist im Vorstand.</b></p>
+        <a class="fcp-browser" href="https://flightclub-saar.de/" target="_blank" rel="noopener" aria-label="flightclub-saar.de öffnen">
+          <span class="bar"><i></i><i></i><i></i><span class="url">flightclub-saar.de</span></span>
+          <span class="shot"><img src="media/fc_site.jpg" alt="Startseite von flightclub-saar.de" width="960" height="1027" loading="lazy"></span>
+        </a>
+        <div class="ctas"><a class="btn" href="flight-club.html">Mehr zum Verein</a><a class="btn ghost" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Zur Vereinsseite ↗</a></div>
+      </div>
     </aside>
   </div>
 </section>
