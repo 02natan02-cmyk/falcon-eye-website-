@@ -11,6 +11,10 @@ for f in pages:
     if f=='index.html':
         ld={"@context":"https://schema.org","@type":"LocalBusiness","name":"Falcon Eye","description":"FPV-Drohnenfilme aus dem Saarland: Imagefilme, Events, Sport, Social-Media-Clips.","url":"https://falcon-eye.de/","telephone":"+49 151 56743442","email":"info@falcon-eye.de","image":"https://falcon-eye.de/media/hero.jpg","logo":"https://falcon-eye.de/media/logo.png","address":{"@type":"PostalAddress","streetAddress":"Römerstr. 25","postalCode":"66125","addressLocality":"Saarbrücken","addressRegion":"Saarland","addressCountry":"DE"},"areaServed":"Saarland","founder":"Natan Wojtasczyk","sameAs":["https://www.instagram.com/falconeyesaar","https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw","https://www.facebook.com/profile.php?id=61559258413801"]}
         h=h.replace('</head>','<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False)+'</script>\n</head>')
+    import time as _t  # CACHEBUST
+    v=str(int(_t.time()))
+    for a in ['assets/site.css','assets/site.js','assets/home.js','js/falcon-path.js']:
+        h=h.replace('"'+a+'"','"'+a+'?v='+v+'"')
     open(D+f,'w').write(h)
 open(D+'CNAME','w').write('falcon-eye.de\n')
 open(D+'.nojekyll','w').write('')
