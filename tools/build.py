@@ -188,7 +188,7 @@ ticker = '<div class="ticker" aria-label="Kunden und Partner"><div class="row">'
 home_main = f'''<main id="main">
 <section class="eye" aria-label="Falcon Eye">
   <div class="stage">
-    <video id="heroVid" src="media/hero.mp4" poster="media/hero.jpg" data-mobile-src="media/r_norway.mp4" data-mobile-poster="media/r_norway.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <video id="heroVid" src="media/hero.mp4" poster="media/hero.jpg" data-mobile-src="media/hero_m.mp4" data-mobile-poster="media/r_norway.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
     <canvas id="eyeCanvas" aria-hidden="true"></canvas>
     <div class="scan"></div>
     <div class="boot" aria-hidden="true"><span>FALCON EYE OSD</span><span>GPS 14 SAT &nbsp; LINK 100%</span><span>CAM 6K &nbsp; 50 FPS</span><span>LIPO 6S 25.2V</span></div>
