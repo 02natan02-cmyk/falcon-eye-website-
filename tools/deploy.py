@@ -17,6 +17,7 @@ for f in pages:
         h=h.replace('"'+a+'"','"'+a+'?v='+v+'"')
     open(D+f,'w').write(h)
 open(D+'CNAME','w').write('falcon-eye.de\n')
+open(D+'googled7b4fb2a37a6a49e.html','w').write('google-site-verification: googled7b4fb2a37a6a49e.html')  # Google Search Console – nicht löschen
 open(D+'.nojekyll','w').write('')
 open(D+'robots.txt','w').write('User-agent: *\nAllow: /\nSitemap: https://falcon-eye.de/sitemap.xml\n')
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>https://falcon-eye.de/{"" if p=="index.html" else p}</loc></url>\n' for p in sorted(pages))+'</urlset>\n'
