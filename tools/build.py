@@ -141,11 +141,11 @@ KINO_SEC = f'''<section class="block kino" aria-labelledby="kino-h">
   </div>
 </section>
 '''
-WORLD = [('trollstigen', 'r_trollstigen', 'Norwegen', 'Trollstigen'), ('wasserfall', 'r_wasserfall', 'Norwegen', 'Wasserfall-Dive'),
+WORLD = [('halong', 'halong', 'Vietnam', 'Ha Long Bay'), ('trollstigen', 'r_trollstigen', 'Norwegen', 'Trollstigen'),
   ('mongolei', 'r_mongolei', 'Mongolei', 'Wildpferde und Enduro'), ('gobi', 'r_gobi', 'Mongolei', 'Wüste Gobi'),
-  ('vietnam', 'r_vietnam', 'Vietnam', 'Resort-Auftrag'), ('halong', 'halong', 'Vietnam', 'Ha Long Bay'),
-  ('phiphi', 'phiphi', 'Thailand', 'Kho Phi Phi'), ('norway', 'r_norway', 'Norwegen', 'Fjell und Gischt')]
-world_tiles = ''.join(f'<button class="wtile" type="button" data-lb="media/film_{f}.mp4" data-title="{c} – {t}" data-tall="{1 if l.startswith("r_") else 0}"><video data-auto muted loop playsinline preload="none" poster="media/{l}.jpg" src="media/{l}.mp4" aria-hidden="true"></video><span class="loc">{c}</span><b>{t}</b><span class="play" aria-hidden="true"></span></button>' for f, l, c, t in WORLD)
+  ('wasserfall', 'r_wasserfall', 'Norwegen', 'Wasserfall-Dive'), ('vietnam', 'r_vietnam', 'Vietnam', 'Resort-Auftrag'),
+  ('norway', 'r_norway', 'Norwegen', 'Fjell und Gischt'), ('phiphi', 'phiphi', 'Thailand', 'Kho Phi Phi')]
+world_tiles = ''.join(f'<button class="wtile{"" if l.startswith("r_") else " wide"}" type="button" data-lb="media/film_{f}.mp4" data-title="{c} – {t}" data-tall="{1 if l.startswith("r_") else 0}"><video data-auto muted loop playsinline preload="none" poster="media/{l}.jpg" src="media/{l}.mp4" aria-hidden="true"></video><span class="loc">{c}</span><b>{t}</b><span class="play" aria-hidden="true"></span></button>' for f, l, c, t in WORLD)
 WORLD_SEC = f'''<section class="block world" aria-labelledby="world-h">
   <div class="wrap">
     <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Schon in über 20 Ländern geflogen – Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen und mehr. Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div>
@@ -244,8 +244,8 @@ home_main = f'''<main id="main">
   <div class="sim-stage">
     <video muted loop playsinline preload="none" poster="media/halong.jpg" src="media/halong.mp4" aria-hidden="true"></video>
     <div class="sim-osd" aria-hidden="true"><div class="hz"><i></i></div><div class="cross"></div>
-      <div class="tl"><span class="rec">SIM</span><span>THR <b data-sim="thr">0</b>%</span></div><div class="tr"><span>ROLL <b data-sim="roll">0</b>°</span><span>PITCH <b data-sim="pitch">0</b>°</span></div></div>
-    <div class="sim-copy"><p class="kicker">Probiert es selbst</p><h2 class="h2" id="sim-h">Ihr habt die Sticks.</h2><p>Zieht an den Sticks – auf dem Handy mit beiden Daumen, am Rechner mit Maus oder W A S D und den Pfeiltasten. So fühlt sich FPV an.</p></div>
+      <div class="tl"><span class="rec">SIM</span><span>THR <b data-sim="thr">0</b>%</span><span>SPD <b data-sim="spd">0</b> km/h</span></div><div class="tr"><span>ROLL <b data-sim="roll">0</b>°</span><span>PITCH <b data-sim="pitch">0</b>°</span></div></div>
+    <div class="sim-copy"><p class="kicker">Probiert es selbst</p><h2 class="h2" id="sim-h">Ihr habt die Sticks.</h2><p>Zieht an den Sticks – auf dem Handy mit beiden Daumen, am Rechner mit Maus oder W A S D und den Pfeiltasten. Linker Stick hoch = Gas, runter = bremsen. So fühlt sich FPV an.</p></div>
     <div class="sticks"><div class="stick" data-stick="l" aria-label="Linker Stick: Gas und Drehen"><i></i><span>Gas / Gier</span></div><div class="stick" data-stick="r" aria-label="Rechter Stick: Rollen und Nicken"><i></i><span>Rollen / Nicken</span></div></div>
   </div>
 </section>

@@ -150,8 +150,12 @@
         const tgt = { lx: kx || st.lx, ly: ky || st.ly, rx: rx || st.rx, ry: ry || st.ry };
         for (const k in cur) cur[k] += (tgt[k] - cur[k]) * .12;
         const thr = (1 - cur.ly) / 2, roll = cur.rx * 32, pitch = cur.ry * 14;
-        v.style.transform = `translate(${-cur.lx * 60}px, ${pitch * 3}px) rotate(${-roll}deg) scale(${1.25 + thr * .35})`;
+        v.style.transform = `translate(${-cur.lx * 60}px, ${pitch * 3}px) rotate(${-roll}deg) scale(${1.2 + thr * .45})`;
         hz.style.transform = `translateY(${pitch * 4}px) rotate(${roll}deg)`;
+        const rate = thr < .5 ? .2 + thr * 1.6 : 1 + (thr - .5) * 4.4;
+        if (Math.abs(v.playbackRate - rate) > .04) v.playbackRate = Math.round(rate * 100) / 100;
+        v.style.filter = `saturate(${1 + thr * .25}) contrast(${1 + thr * .08})`;
+        out('spd').textContent = Math.round(thr * thr * 140);
         out('thr').textContent = Math.round(thr * 100); out('roll').textContent = Math.round(roll); out('pitch').textContent = Math.round(-pitch);
         $$('.stick', sim).forEach(el => { const sd = el.dataset.stick; el._knob.style.transform = `translate(${cur[sd + 'x'] * 34}px, ${cur[sd + 'y'] * 34}px)`; });
       }

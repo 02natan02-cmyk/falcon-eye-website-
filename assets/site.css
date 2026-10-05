@@ -558,3 +558,10 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
   .world .wrow{display:grid;grid-template-columns:1fr 1fr;overflow:visible;scroll-snap-type:none;padding:24px var(--gutter) 0;gap:10px}
   .wtile{flex:none;width:auto;aspect-ratio:3/4}
 }
+/* Weltweit mobil: große Querformat-Kachel oben und unten, dazwischen 2er-Raster */
+@media (max-width:700px){
+  .wtile.wide{grid-column:1 / -1;aspect-ratio:16/10}
+  .wtile.wide b{font-size:26px}
+  .wtile:not(.wide){aspect-ratio:4/5}
+}
+@media (max-width:700px){.sim-copy{top:calc(150px + var(--safe-top))}}
