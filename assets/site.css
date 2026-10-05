@@ -449,3 +449,93 @@ form.plan{align-content:start}
 .kino-card b{font:900 22px/1.05 var(--display);text-transform:uppercase;margin-top:8px}
 .kino-card small{color:var(--muted);font-size:14px}
 @media (max-width:900px){.kino-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- header falcon (bird + wordmark) ---------- */
+.top .brand{display:flex;align-items:center;gap:6px;height:30px}
+.top .brand .bird{display:block;height:26px;transform-origin:70% 55%;transform:rotate(calc(var(--bank,0) * 7deg)) translateY(calc(var(--bank,0) * 2px));will-change:transform}
+.top .brand .bird img,.top .brand img.bird{height:26px;width:auto;display:block}
+.top .brand img.word{height:21px;width:auto}
+.top .brand .bird.glide{animation:fe-glide 1.6s cubic-bezier(.2,.75,.25,1) .15s both}
+.top .brand .bird.swoop img{animation:fe-swoop .9s cubic-bezier(.3,.7,.3,1)}
+@keyframes fe-glide{0%{transform:translate(-160px,-18px) rotate(-14deg) scale(.7);opacity:0}35%{opacity:1}55%{transform:translate(14px,4px) rotate(6deg) scale(1.05)}75%{transform:translate(-4px,-1px) rotate(-2deg)}100%{transform:none}}
+@keyframes fe-swoop{0%{transform:none}30%{transform:translate(10px,5px) rotate(9deg) scaleY(.82)}55%{transform:translate(4px,-4px) rotate(-6deg) scaleY(1.08)}100%{transform:none}}
+@media (max-width:980px){.top .brand{height:24px}.top .brand .bird,.top .brand .bird img{height:21px}.top .brand img.word{height:17px}}
+@media (prefers-reduced-motion:reduce){.top .brand .bird,.top .brand .bird img{animation:none!important;transform:none!important}}
+
+/* ---------- missions: click-to-play list ---------- */
+.missions .kicker .mhint{margin-left:10px;color:rgba(230,236,236,.6);font-family:var(--osd);font-size:12px;text-transform:none;letter-spacing:0}
+.mlist button{position:relative;align-items:center;padding:6px 14px 6px 0}
+.mlist button .no{font:400 13px/1 var(--osd);color:rgba(230,236,236,.45);min-width:22px;align-self:center}
+.mlist button .pl{width:0;height:0;border-left:13px solid var(--signal);border-top:8px solid transparent;border-bottom:8px solid transparent;opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s;align-self:center}
+.mlist button:hover .pl{opacity:.6;transform:none}
+.mlist button[aria-selected=true] .pl{opacity:1;transform:none;animation:fe-pulse 1.4s ease-in-out infinite}
+.mlist button[aria-selected=true] .no{color:var(--signal)}
+.mlist button[aria-selected=true]::before{content:"";position:absolute;left:-18px;top:18%;bottom:18%;width:4px;border-radius:2px;background:var(--signal)}
+.mlist button:hover{color:rgba(230,236,236,.8)}
+@keyframes fe-pulse{50%{opacity:.35}}
+.mnav{display:flex;align-items:center;gap:12px;width:100%;max-width:360px}
+.mnav .mprog{flex:1}
+.mnav button{all:unset;cursor:pointer;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);box-shadow:inset 0 0 0 1.5px rgba(230,236,236,.5);color:#fff;font-size:18px;transition:background .2s,box-shadow .2s}
+.mnav button:hover,.mnav button:focus-visible{background:var(--signal);color:var(--signal-ink);box-shadow:none}
+@media (max-width:760px){.mlist button .no{display:none}.mlist button[aria-selected=true]::before{left:-10px}.missions .kicker .mhint{display:block;margin:6px 0 0}}
+
+/* ---------- kino as buttons (play here, not on YouTube) ---------- */
+button.kino-card{all:unset;cursor:pointer;position:relative;display:grid;gap:4px}
+button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4px;border-radius:6px}
+@media (min-width:901px){.kino-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ---------- weltweit geflogen ---------- */
+.world .wrow{display:flex;gap:clamp(10px,1.2vw,16px);overflow-x:auto;scroll-snap-type:x mandatory;padding:34px var(--gutter) 10px;scrollbar-width:thin;overscroll-behavior-x:contain}
+.world .wrow::-webkit-scrollbar{height:6px}.world .wrow::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:3px}
+.wtile{all:unset;cursor:pointer;position:relative;flex:0 0 clamp(200px,22vw,300px);aspect-ratio:9/16;border-radius:10px;overflow:hidden;scroll-snap-align:start;background:#000;box-shadow:0 20px 40px -20px rgba(0,0,0,.8)}
+.wtile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.wtile:hover video{transform:scale(1.05)}
+.wtile::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75),rgba(0,0,0,0) 45%)}
+.wtile .loc{position:absolute;left:14px;top:14px;z-index:2;font:400 12px/1 var(--osd);color:var(--signal);background:rgba(0,0,0,.55);padding:6px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em}
+.wtile b{position:absolute;left:14px;right:14px;bottom:16px;z-index:2;font:900 clamp(22px,2.2vw,30px)/1 var(--display);text-transform:uppercase;color:#fff}
+.wtile .play{position:absolute;right:14px;top:12px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.55);box-shadow:inset 0 0 0 2px var(--signal)}
+.wtile .play::after{content:"";position:absolute;left:14px;top:11px;border-left:13px solid var(--signal);border-top:8px solid transparent;border-bottom:8px solid transparent}
+.wtile:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+@media (max-width:700px){.wtile{flex-basis:62vw}}
+
+/* ---------- lightbox portrait + tall case clips ---------- */
+.lb.tall video{width:auto;max-width:100%;height:min(78vh,1200px);max-height:78vh}
+.lb.tall .meta{width:min(480px,100%)}
+.lb > div{display:grid;justify-items:center}
+.case .clip.tall{max-width:420px;justify-self:center;width:100%}
+
+/* ---------- FPV stick simulator ---------- */
+.sim{position:relative;background:#000;overflow:hidden}
+.sim-stage{position:relative;height:min(100svh,900px);min-height:560px;overflow:hidden}
+.sim video{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;transform:scale(1.25);will-change:transform}
+.sim-stage::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 100%),linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 65%,rgba(0,0,0,.7));pointer-events:none}
+.sim-osd{position:absolute;inset:0;z-index:2;pointer-events:none;font:400 13px/1.3 var(--osd);color:#e6ecec;text-shadow:0 1px 3px #000}
+.sim-osd .tl,.sim-osd .tr{position:absolute;top:calc(84px + var(--safe-top));display:grid;gap:4px}
+.sim-osd .tl{left:var(--gutter)}.sim-osd .tr{right:var(--gutter);text-align:right}
+.sim-osd .rec{color:var(--signal)}
+.sim-osd .hz{position:absolute;left:50%;top:50%;width:min(60vw,520px);height:0;margin-left:calc(min(60vw,520px) / -2)}
+.sim-osd .hz i{position:absolute;inset:-1px 0;border-top:2px solid rgba(255,208,0,.85);box-shadow:0 0 8px rgba(255,208,0,.5)}
+.sim-osd .hz i::before,.sim-osd .hz i::after{content:"";position:absolute;top:-8px;width:2px;height:14px;background:rgba(255,208,0,.85)}
+.sim-osd .hz i::before{left:0}.sim-osd .hz i::after{right:0}
+.sim-osd .cross{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border:2px solid rgba(230,236,236,.8);border-radius:50%}
+.sim-copy{position:absolute;z-index:3;left:var(--gutter);top:calc(150px + var(--safe-top));max-width:min(440px,80vw)}
+.sim-copy p{color:#e6ecec;text-shadow:0 1px 10px rgba(0,0,0,.8)}
+.sticks{position:absolute;z-index:4;left:0;right:0;bottom:calc(28px + var(--safe-bottom));display:flex;justify-content:space-between;padding:0 max(var(--gutter),6vw);pointer-events:none}
+.stick{pointer-events:auto;touch-action:none;position:relative;width:132px;height:132px;border-radius:50%;background:rgba(10,12,14,.55);box-shadow:inset 0 0 0 2px rgba(230,236,236,.35),0 10px 30px rgba(0,0,0,.5);backdrop-filter:blur(6px);cursor:grab}
+.stick::before,.stick::after{content:"";position:absolute;background:rgba(230,236,236,.18)}
+.stick::before{left:50%;top:14px;bottom:14px;width:1px}.stick::after{top:50%;left:14px;right:14px;height:1px}
+.stick i{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a8,var(--signal) 55%,#b38f00);box-shadow:0 6px 16px rgba(0,0,0,.6);z-index:1}
+.stick.on{cursor:grabbing;box-shadow:inset 0 0 0 2px var(--signal),0 10px 30px rgba(0,0,0,.5)}
+.stick span{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);white-space:nowrap;font:400 11px/1 var(--osd);color:rgba(230,236,236,.75)}
+@media (max-width:700px){.stick{width:116px;height:116px}.sim-copy{top:calc(120px + var(--safe-top))}.sim-osd .tl,.sim-osd .tr{top:calc(70px + var(--safe-top))}}
+
+/* ---------- OSD crosshair cursor ---------- */
+.fe-cursor{position:fixed;left:0;top:0;z-index:200;pointer-events:none;width:0;height:0;mix-blend-mode:difference}
+.fe-cursor i{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border:1.5px solid #fff;border-radius:50%;transition:transform .2s,border-color .2s}
+.fe-cursor i::before,.fe-cursor i::after{content:"";position:absolute;background:#fff}
+.fe-cursor i::before{left:50%;top:-6px;bottom:-6px;width:1.5px;margin-left:-.75px;clip-path:polygon(0 0,100% 0,100% 30%,0 30%,0 70%,100% 70%,100% 100%,0 100%)}
+.fe-cursor i::after{top:50%;left:-6px;right:-6px;height:1.5px;margin-top:-.75px;clip-path:polygon(0 0,30% 0,30% 100%,0 100%,0 0,70% 0,100% 0,100% 100%,70% 100%)}
+.fe-cursor span{position:absolute;left:18px;top:-22px;font:400 10px/1 var(--osd);color:#fff;opacity:0;transition:opacity .2s}
+.fe-cursor.hot i{transform:scale(1.5)}
+.fe-cursor.rec span{opacity:1}
+.fe-cursor.rec i{transform:scale(1.8)}

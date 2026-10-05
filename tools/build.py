@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Builds the multi-page Falcon Eye site into site2/ (real site) and a stripped home for the artifact preview."""
 import re, os, html
-OUT = './build/'  # Arbeitsordner mit assets/, fonts/, js/, media/, seq/, seq2/
+OUT = './build/'
 PHONE_HUMAN = '0151 56743442'
 WA = 'https://wa.me/4915156743442?text=' + 'Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen.'
 NAV = [('./', 'Start', 'index'), ('projekte.html', 'Projekte', 'projekte'), ('leistungen.html', 'Leistungen', 'leistungen'),
@@ -32,7 +32,7 @@ def header(active):
     links = ''.join(f'<a href="{h}"{" aria-current=page" if k == active else ""}>{t}</a>' for h, t, k in NAV[1:])
     mlinks = ''.join(f'<a href="{h}"{" aria-current=page" if k == active else ""}>{t}</a>' for h, t, k in NAV)
     return f'''<header class="top{" inhero" if active == "index" else ""}">
-  <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"></a>
+  <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><span class="bird"><img src="media/bird.png" alt="" width="934" height="207"></span><img class="word" src="media/wordmark.png" alt="Falcon Eye" width="956" height="175"></a>
   <nav aria-label="Hauptmenü">{links}<a class="btn sm" href="kontakt.html">Dreh anfragen</a></nav>
   <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mmenu"><i></i><i></i><i></i></button>
 </header>
@@ -46,8 +46,15 @@ def header(active):
 </div>
 '''
 
+LIGHTBOX = '''<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Video">
+  <button class="x">Schließen</button>
+  <div><video controls playsinline loop></video>
+  <div class="meta"><b></b><a class="btn" href="kontakt.html">Ähnlichen Dreh anfragen</a></div></div>
+</div>
+'''
+
 def footer():
-    return f'''<footer>
+    return LIGHTBOX + f'''<footer>
   <div class="wrap">
     <div class="grid">
       <div><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"><p>FPV-Drohnenfilme aus Saarbrücken – für Firmen, Events, Sport und alle, die gesehen werden wollen.</p>
@@ -93,12 +100,6 @@ def phero(video, h1, lede, ctas=True, poster=None):
 </section>
 '''
 
-LIGHTBOX = '''<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Video">
-  <button class="x">Schließen</button>
-  <div><video controls playsinline loop></video>
-  <div class="meta"><b></b><a class="btn" href="kontakt.html">Ähnlichen Dreh anfragen</a></div></div>
-</div>
-'''
 
 SAFETY = '''<div class="safe">
   <div class="reveal"><h3>Versichert</h3><p>Jeder gewerbliche Flug ist über unsere Drohnen-Haftpflicht abgesichert.</p></div>
@@ -121,18 +122,38 @@ def write(name, s):
     open(OUT + name, 'w').write(s)
 
 
-KINO = [('p9bCAF_xBAE', 'Trollstigen, Norwegen', 'Serpentinen und Wasserfälle'), ('IWh6n2F3AAU', 'Pyrenäen Offroad', 'Yamaha, Honda und Ducati'),
+KINO_OLD = [('p9bCAF_xBAE', 'Trollstigen, Norwegen', 'Serpentinen und Wasserfälle'), ('IWh6n2F3AAU', 'Pyrenäen Offroad', 'Yamaha, Honda und Ducati'),
         ('hSStODGSEQY', 'Windräder Tanz', 'Longrange in einem Take'), ('a8_Q94-Q-nY', 'Motocross Nassweiler 2024', 'Saisonstart in 4K'),
         ('inhbzcjcNnA', 'Catch me if you can', 'Verfolgungsjagd in Saarlouis'), ('zM0jxz7P4M4', 'Kho Phi Phi, Thailand', 'Inseln aus der Luft'),
         ('BlDrnifhgco', 'FPV Fire', 'Feuer und Funken'), ('9ovWdsLJET0', 'FPV Club Saar', 'Keiner fliegt höher')]
-kino_cards = ''.join(f'<a class="kino-card" href="https://www.youtube.com/watch?v={i}" target="_blank" rel="noopener"><img src="media/yt_{i}.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span><b>{t}</b><small>{d}</small></a>' for i, t, d in KINO)
+_old_cards = ''.join(f'<a class="kino-card" href="https://www.youtube.com/watch?v={i}" target="_blank" rel="noopener"><img src="media/yt_{i}.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span><b>{t}</b><small>{d}</small></a>' for i, t, d in KINO_OLD)
+FILMS = [('pyrenaeen', 'Pyrenäen Offroad', 'Enduro-Tour durch Spanien und Frankreich'), ('longrange', 'Longrange', 'Berge, Fjorde und Sonnenuntergang'),
+  ('goettelborn', 'Förderturm Göttelborn', 'One-Take durch die Industriekultur'), ('immobilien', 'Immobilien', 'Durchflug für Exposé und Vermarktung'),
+  ('nassweiler', 'Motocross Nassweiler', 'Saisonstart 2024 mit dem Flight Club'), ('fire', 'FPV Fire', 'Am Windrad entlang in die Wolken'),
+  ('hochwasser', 'Hochwasser Saarbrücken', 'Für Fridays for Future'), ('graffiti', 'Graffiti-Workshop', 'Teamevent bei Triple A Trainer'),
+  ('lostplaces', 'Lost Places', 'Hallen, Ruinen und Felsen'), ('feuerwerk', 'Feuerwerk', 'Mitten durch die Raketen'),
+  ('halong', 'Ha Long Bay, Vietnam', 'Zwischen den Kalkfelsen'), ('strand', 'Strand-Enduro', 'Tief über dem Sand')]
+kino_cards = ''.join(f'<button class="kino-card" type="button" data-lb="media/film_{k}.mp4" data-title="{t}"><img src="media/film_{k}.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span><b>{t}</b><small>{d}</small></button>' for k, t, d in FILMS)
 KINO_SEC = f'''<section class="block kino" aria-labelledby="kino-h">
   <div class="wrap">
-    <div class="head-row"><div><p class="kicker">Auf YouTube</p><h2 class="h2 reveal" id="kino-h">Mehr Kino</h2><p class="intro reveal">Norwegen, Pyrenäen, Motocross, Longrange: unsere Filme in voller Länge. Öffnet sich auf YouTube.</p></div><a class="btn ghost" href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">Alle Videos</a></div>
+    <div class="head-row"><div><p class="kicker">Mit Ton</p><h2 class="h2 reveal" id="kino-h">Mehr Kino</h2><p class="intro reveal">Unsere Filme in voller Länge – direkt hier abspielen. Lautsprecher an.</p></div></div>
     <div class="kino-grid">{kino_cards}</div>
   </div>
 </section>
 '''
+WORLD = [('trollstigen', 'r_trollstigen', 'Norwegen', 'Trollstigen'), ('wasserfall', 'r_wasserfall', 'Norwegen', 'Wasserfall-Dive'),
+  ('mongolei', 'r_mongolei', 'Mongolei', 'Wildpferde und Enduro'), ('gobi', 'r_gobi', 'Mongolei', 'Wüste Gobi'),
+  ('vietnam', 'r_vietnam', 'Vietnam', 'Resort-Auftrag'), ('halong', 'halong', 'Vietnam', 'Ha Long Bay'),
+  ('phiphi', 'phiphi', 'Thailand', 'Kho Phi Phi'), ('norway', 'r_norway', 'Norwegen', 'Fjell und Gischt')]
+world_tiles = ''.join(f'<button class="wtile" type="button" data-lb="media/film_{f}.mp4" data-title="{c} – {t}" data-tall="{1 if l.startswith("r_") else 0}"><video data-auto muted loop playsinline preload="none" poster="media/{l}.jpg" src="media/{l}.mp4" aria-hidden="true"></video><span class="loc">{c}</span><b>{t}</b><span class="play" aria-hidden="true"></span></button>' for f, l, c, t in WORLD)
+WORLD_SEC = f'''<section class="block world" aria-labelledby="world-h">
+  <div class="wrap">
+    <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen: Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div>
+  </div>
+  <div class="wrow" tabindex="0" aria-label="Filme aus aller Welt, seitlich wischen">{world_tiles}</div>
+</section>
+'''
+
 
 # ====================================================================== HOME
 MISSIONS = [
@@ -142,14 +163,17 @@ MISSIONS = [
   ('Weinloft 23', 'gastro', 'Gastro / Indoor', 'Durch Bar, Gewölbe und Weinregale – der Laden, bevor der erste Gast kommt.', 'weinloft', 'imagefilm'),
   ('Z &amp; H Aufbereitung', 'zh_fpv', 'Kirkel / Imagefilm', 'Fahrzeugaufbereitung im Imagefilm: Vorher, Nachher, durchs Fenster und von oben über den Betrieb.', 'zh-aufbereitung', 'imagefilm'),
   ('Partyboot', 'boot', 'Saar / Electronic Cruise', 'Über Deck, durch die Menge, vorbei am DJ-Pult.', 'partyboot', 'event'),
-  ('Förderturm', 'turm', 'Göttelborn / Flight Club Saar', 'Am Förderturm hoch über das Saarland – Industriekultur aus Pilotensicht.', 'goettelborn', 'event'),
+  ('Förderturm', 'gang', 'Göttelborn / One-Take', 'Ein Take durch den Förderturm: Gänge, Stahl und Treppen – Industriekultur aus Pilotensicht.', 'goettelborn', 'event'),
+  ('Hochwasser', 'hochwasser', 'Saarbrücken / Fridays for Future', 'Tief über der überfluteten Saar, zwischen den Bäumen hindurch – Aufnahmen, die Fridays for Future gekauft hat.', 'hochwasser', 'social'),
   ('Triple A', 'mallen', 'Teamevent / Graffiti', 'Vom Dach durch den Hof bis zur Wand, die das Team gerade bemalt.', 'triple-a', 'event'),
 ]
-mlist = ''.join(f'<li><button role="tab" aria-selected="false" data-src="media/{v}.mp4" data-poster="media/{v}.jpg" data-meta="{m}" data-text="{t}" data-link="projekte.html#{l}" data-anlass="{a}">{n}<small>{m}</small></button></li>' for n, v, m, t, l, a in MISSIONS)
+mlist = ''.join(f'<li><button role="tab" aria-selected="false" data-src="media/{v}.mp4" data-poster="media/{v}.jpg" data-meta="{m}" data-text="{t}" data-link="projekte.html#{l}" data-anlass="{a}"><span class="no">{i+1:02d}</span><span class="nm">{n}</span><small>{m}</small><i class="pl" aria-hidden="true"></i></button></li>' for i, (n, v, m, t, l, a) in enumerate(MISSIONS))
 
-REELS = [('r_revier', 'Polizeipräsidium', 'Ein Take durch die Tiefgarage.'), ('r_mmlogo', 'Möbel Martin', 'Logo bei Nacht – gebaut für die Story.'),
-         ('r_stadion2', 'Ludwigspark', 'Durch die Tribüne bis aufs Feld.'), ('r_wohnmobil', 'Z &amp; H Aufbereitung', 'Durchs Fenster ins Wohnmobil.'),
-         ('r_fcsbanner', 'Flight Club Saar', 'Am Förderturm Göttelborn.'), ('r_dive', 'Triple A Trainer', 'Dive vom Balkon zum Eingang.')]
+REELS = [('r_atd', 'Addicted to Dance', 'Über der Tanzfläche – drei Jahre in Folge dabei.'), ('r_revier', 'Polizeipräsidium', 'Ein Take durch die Tiefgarage.'),
+         ('r_hochzeit', 'Hochzeit', 'Vom Schlosshof bis zum ersten Tanz.'), ('r_stadion2', 'Ludwigspark', 'Durch die Tribüne bis aufs Feld.'),
+         ('r_kalinski', 'Kalinski Brüder', 'Event am Silo in Saarbrücken.'), ('r_mmlogo', 'Möbel Martin', 'Logo bei Nacht – gebaut für die Story.'),
+         ('r_atd2', 'Addicted to Dance', 'Mittendrin in der Show.'), ('r_wohnmobil', 'Z &amp; H Aufbereitung', 'Durchs Fenster ins Wohnmobil.'),
+         ('r_wasserfall', 'Norwegen', 'Senkrecht den Wasserfall hinunter.'), ('r_gobi', 'Wüste Gobi', 'Enduro über die Dünen.')]
 reel_items = ''.join(f'<div class="item"><video muted loop playsinline preload="none" poster="media/{k}.jpg" src="media/{k}.mp4"></video><p class="cap"><b>@falconeyesaar</b>{t}: {c}</p></div>' for k, t, c in REELS)
 reel_dots = ''.join('<i></i>' for _ in REELS)
 
@@ -187,7 +211,7 @@ home_main = f'''<main id="main">
 {ticker}
 <div class="trust">
   <div><b>Fast 100</b><span>Projekte: Partys, Events, Firmen, Sport und Vereine</span></div>
-  <div><b data-count="100" data-suffix="+">100+</b><span>Drohnen im Hangar, vom 250-Gramm-Winzling bis zum Kino-Lifter</span></div>
+  <div><b data-count="100" data-suffix="+">100+</b><span>Drohnen im Hangar, vom flüsterleisen 50-Gramm-Whoop bis zum Kino-Lifter</span></div>
   <div><b>6K</b><span>Kino-Kamera am Cinelifter für die große Leinwand</span></div>
   <div><b>0 €</b><span>für Anfrage und Angebot – ihr wisst vorher, was es kostet</span></div>
 </div>
@@ -196,7 +220,7 @@ home_main = f'''<main id="main">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>12</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
-    <div class="callout" data-at="0.04"><p class="kicker">Durchflug 1 von 2</p><h3>Ihr steuert.</h3><p>Scrollt weiter – und fliegt selbst vom Balkon bis durch den Eingang.</p></div>
+    <div class="callout" data-at="0.04"><p class="kicker">Durchflug 1 von 3</p><h3>Ihr steuert.</h3><p>Scrollt weiter – und fliegt selbst vom Balkon bis durch den Eingang.</p></div>
     <div class="callout right" data-at="0.42"><h3>Zentimeterarbeit.</h3><p>Wo andere Drohnen umdrehen, fängt FPV erst an: durch Türen, Fenster und Gänge.</p></div>
     <div class="callout" data-at="0.8" data-hold="1"><h3>Kein Schnitt nötig.</h3><p>Ein Flug erzählt euren ganzen Ort. Genau das bleibt bei Kunden hängen.</p><a class="btn" href="kontakt.html#imagefilm">So einen Flug anfragen</a></div>
     <div class="chapters" aria-hidden="true"><span data-a="0" data-b=".35"><i><b></b></i><em>Absprung</em></span><span data-a=".35" data-b=".7"><i><b></b></i><em>Sturzflug</em></span><span data-a=".7" data-b="1.01"><i><b></b></i><em>Eingang</em></span></div>
@@ -216,11 +240,20 @@ home_main = f'''<main id="main">
   </div>
 </section>
 
+<section class="sim" aria-labelledby="sim-h" data-nodock>
+  <div class="sim-stage">
+    <video muted loop playsinline preload="none" poster="media/halong.jpg" src="media/halong.mp4" aria-hidden="true"></video>
+    <div class="sim-osd" aria-hidden="true"><div class="hz"><i></i></div><div class="cross"></div>
+      <div class="tl"><span class="rec">SIM</span><span>THR <b data-sim="thr">0</b>%</span></div><div class="tr"><span>ROLL <b data-sim="roll">0</b>°</span><span>PITCH <b data-sim="pitch">0</b>°</span></div></div>
+    <div class="sim-copy"><p class="kicker">Probiert es selbst</p><h2 class="h2" id="sim-h">Ihr habt die Sticks.</h2><p>Zieht an den Sticks – auf dem Handy mit beiden Daumen, am Rechner mit Maus oder W A S D und den Pfeiltasten. So fühlt sich FPV an.</p></div>
+    <div class="sticks"><div class="stick" data-stick="l" aria-label="Linker Stick: Gas und Drehen"><i></i><span>Gas / Gier</span></div><div class="stick" data-stick="r" aria-label="Rechter Stick: Rollen und Nicken"><i></i><span>Rollen / Nicken</span></div></div>
+  </div>
+</section>
 <section class="missions" aria-label="Projekte auswählen">
   <div class="bg"><video muted loop playsinline preload="none"></video><video muted loop playsinline preload="none"></video></div>
   <div class="wrap">
-    <div><p class="kicker">Wählt einen Flug</p><ul class="mlist" role="tablist">{mlist}</ul></div>
-    <div class="mside"><span class="meta" data-m="meta"></span><p data-m="text"></p><div class="mprog"><i></i></div><div class="ctas"><a class="btn" data-m="ask" href="kontakt.html">So etwas anfragen</a><a class="btn ghost" data-m="link" href="projekte.html">Projekt ansehen</a></div></div>
+    <div><p class="kicker">Wählt einen Flug <span class="mhint">Antippen zum Abspielen</span></p><ul class="mlist" role="tablist">{mlist}</ul></div>
+    <div class="mside"><span class="meta" data-m="meta"></span><p data-m="text"></p><div class="mnav"><button type="button" data-m="prev" aria-label="Vorheriger Flug">&#8592;</button><div class="mprog"><i></i></div><button type="button" data-m="next" aria-label="Nächster Flug">&#8594;</button></div><div class="ctas"><a class="btn" data-m="ask" href="kontakt.html">So etwas anfragen</a><a class="btn ghost" data-m="link" href="projekte.html">Projekt ansehen</a></div></div>
   </div>
 </section>
 
@@ -228,7 +261,7 @@ home_main = f'''<main id="main">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>2</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
-    <div class="callout" data-at="0.04"><p class="kicker">Durchflug 2 von 2</p><h3>Ein Take.</h3><p>Filmdreh im Polizeipräsidium: von der Einfahrt bis zu den Darstellern, ohne einen einzigen Schnitt.</p></div>
+    <div class="callout" data-at="0.04"><p class="kicker">Durchflug 2 von 3</p><h3>Ein Take.</h3><p>Filmdreh im Polizeipräsidium: von der Einfahrt bis zu den Darstellern, ohne einen einzigen Schnitt.</p></div>
     <div class="callout right" data-at="0.36"><h3>Zwischen Streifen&shy;wagen.</h3><p>Zwei Meter hoch, zentimetergenau an Spiegeln und Säulen vorbei.</p></div>
     <div class="callout" data-at="0.78" data-hold="1"><h3>Für Film und Werbung.</h3><p>Plansequenzen wie im Kino – für Musikvideos, Werbespots und Imagefilme.</p><a class="btn" href="kontakt.html#imagefilm">Dreh anfragen</a></div>
     <div class="chapters" aria-hidden="true"><span data-a="0" data-b=".18"><i><b></b></i><em>Einfahrt</em></span><span data-a=".18" data-b=".45"><i><b></b></i><em>Tiefgarage</em></span><span data-a=".45" data-b=".7"><i><b></b></i><em>Streifenwagen</em></span><span data-a=".7" data-b="1.01"><i><b></b></i><em>Darsteller</em></span></div>
@@ -251,6 +284,17 @@ home_main = f'''<main id="main">
   </div>
 </section>
 
+{WORLD_SEC}
+<section class="fly" style="height:440vh" data-frames="204" data-src="seq3/w{{n}}.jpg" data-alt="3" data-alt-to="140" data-secs="17" aria-label="Durchflug Norwegen: unter der Brücke in den Wasserfall">
+  <div class="stage">
+    <canvas aria-hidden="true"></canvas><div class="scan"></div>
+    <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>3</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
+    <div class="callout" data-at="0.03"><p class="kicker">Durchflug 3 von 3 · Norwegen</p><h3>Unter der Brücke durch.</h3><p>Eine alte Steinbrücke, dahinter tobt der Wasserfall. Scrollt – ihr fliegt.</p></div>
+    <div class="callout right" data-at="0.34"><h3>Mitten in die Gischt.</h3><p>Zentimeter neben dem Fels, durch den Sprühnebel nach oben.</p></div>
+    <div class="callout" data-at="0.76" data-hold="1"><h3>Über die Kante.</h3><p>Solche Flüge planen wir auch für euch – im Saarland und überall sonst.</p><a class="btn" href="kontakt.html">Dreh anfragen</a></div>
+    <div class="chapters" aria-hidden="true"><span data-a="0" data-b=".12"><i><b></b></i><em>Brücke</em></span><span data-a=".12" data-b=".7"><i><b></b></i><em>Wasserfall</em></span><span data-a=".7" data-b="1.01"><i><b></b></i><em>Fjell</em></span></div>
+  </div>
+</section>
 {KINO_SEC}
 <section class="block" style="padding-top:0" aria-labelledby="svc-h">
   <div class="wrap">
@@ -302,18 +346,28 @@ CASES = [
   ('triple-a', 'event firma', 'Triple A Trainer', 'Teamevent mit Graffiti', [('mallen', 'Anflug zum Team'), ('kunst', 'An der Wand')],
    [('Kunde', 'Triple A Trainer'), ('Anlass', 'Teamevent'), ('Drohnen', 'DJI Avata 2, Axisflying O3'), ('Einsatz', 'Social Media')],
    'Vom Dach durch den Hof bis zur Wand, die das Team gerade bemalt. Dazu ein Sturzflug vom Balkon bis durch den Eingang.', 'event'),
-  ('goettelborn', 'event', 'Förderturm Göttelborn', 'Mit dem Flight Club Saar', [('turm', 'Am Förderturm')],
+  ('goettelborn', 'event', 'Förderturm Göttelborn', 'Mit dem Flight Club Saar', [('gang', 'Durch den Förderturm'), ('turm', 'Am Förderturm')],
    [('Ort', 'Göttelborn'), ('Gedreht', 'Juni 2026'), ('Mit', 'Flight Club Saar e.V.'), ('Drohnen', 'DJI Neo 2, 5-Zoll O4 Pro')],
    'Ein Flugtag am Förderturm: Industriekultur aus Pilotensicht, gemeinsam mit unserem Verein.', 'event'),
+  ('hochwasser', 'firma social', 'Hochwasser Saarbrücken', 'Footage für Fridays for Future', [('hochwasser', 'Über der überfluteten Saar')],
+   [('Kunde', 'Fridays for Future'), ('Anlass', 'Pfingsthochwasser'), ('Gedreht', 'Mai 2024'), ('Lizenz', 'Aufnahmen verkauft')],
+   'Als die Saar über die Ufer trat, waren wir in der Luft: tief über überflutete Straßen, Promenaden und Parkplätze in Saarbrücken. Fridays for Future hat die Aufnahmen für ihre Kanäle gekauft – wir verkaufen auch fertiges Material.', 'social'),
+  ('hochzeit', 'event', 'Hochzeit', 'Vom Schlosshof bis zur Tanzfläche', [('r_hochzeit', 'Hochzeitstag')],
+   [('Anlass', 'Hochzeit'), ('Partner', 'Union of Love, DJ Maito'), ('Drohnen', 'FPV-Cinewhoop, Kameradrohne'), ('Format', '9:16 und 16:9')],
+   'Ringtausch, Schlosshof von oben, Paarshooting und Party: ein Hochzeitsfilm, den die Gäste so noch nicht gesehen haben – hochkant für Instagram und quer für den großen Bildschirm.', 'event', 'tall'),
   ('musikvideo', 'social', 'Musikvideo', 'Rap-Dreh an der Baustelle', [('bagger', 'Am Bagger')],
    [('Anlass', 'Musikvideo'), ('Gedreht', 'März 2025'), ('Drohnen', 'DJI O4'), ('Format', '16:9 und 9:16')],
    'Dämmerung, Baustelle, Bagger: FPV-Flüge, die den Beat mitnehmen.', 'social'),
 ]
+CASE_FILM = {'zh-aufbereitung': ('zh_film', 'Z &amp; H Aufbereitung – Imagefilm'), 'goettelborn': ('film_goettelborn', 'Förderturm Göttelborn'),
+             'triple-a': ('film_graffiti', 'Graffiti-Workshop bei Triple A Trainer'), 'hochwasser': ('film_hochwasser', 'Hochwasser Saarbrücken'),
+             'hochzeit': ('film_hochzeit', 'Hochzeit'), 'dance': ('film_atd', 'Addicted to Dance')}
 def case_html(i, c):
-    cid, tags, name, sub, clips, facts, text, anlass = c
+    cid, tags, name, sub, clips, facts, text, anlass = c[:8]
+    tall = len(c) > 8
     if clips:
         k0 = clips[0][0]
-        media = f'''<figure class="clip" id="cm-{cid}" style="aspect-ratio:16/10"><video muted loop playsinline preload="none" poster="media/{k0}.jpg" src="media/{k0}.mp4"></video><span class="tc">00:00:00</span><span class="hint">&#9664; ziehen &#9654;</span><i class="bar"></i><button class="open" data-lb="media/{k0}.mp4" data-title="{name}" data-anlass="{anlass}" aria-label="{name} im Vollbild ansehen"></button></figure>'''
+        media = f'''<figure class="clip{' tall' if tall else ''}" id="cm-{cid}" style="aspect-ratio:{'9/14' if tall else '16/10'}"><video muted loop playsinline preload="none" poster="media/{k0}.jpg" src="media/{k0}.mp4"></video><span class="tc">00:00:00</span><span class="hint">&#9664; ziehen &#9654;</span><i class="bar"></i><button class="open" data-lb="media/{k0}.mp4" data-title="{name}" data-anlass="{anlass}" aria-label="{name} im Vollbild ansehen"></button></figure>'''
         thumbs = ''
         if len(clips) > 1:
             thumbs = f'<div class="filters" data-switch="#cm-{cid}" style="margin-top:12px">' + ''.join(f'<button type="button" data-src="media/{k}.mp4" data-poster="media/{k}.jpg" aria-pressed="false" aria-selected="{"true" if j == 0 else "false"}">{t}</button>' for j, (k, t) in enumerate(clips)) + '</div>'
@@ -321,7 +375,7 @@ def case_html(i, c):
     else:
         media = '<div class="media-wrap"><div class="media"><img src="media/hoermann_DJI_0726.jpg" alt="Luftbild Hörmann-Werk mit Schriftzug" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div><div class="media" style="margin-top:12px;aspect-ratio:16/7"><img src="media/hoermann_DJI_0648.jpg" alt="Luftbild Hörmann-Hallen von hinten" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div></div>'
     dl = ''.join(f'<dt>{a}</dt><dd>{b}</dd>' for a, b in facts)
-    extra = '<button class="btn ghost" type="button" data-lb="media/zh_film.mp4" data-title="Z &amp; H Aufbereitung – Imagefilm" data-anlass="imagefilm">Ganzen Film ansehen (mit Ton)</button>' if cid == 'zh-aufbereitung' else ''
+    extra = f'<button class="btn ghost" type="button" data-lb="media/{CASE_FILM[cid][0]}.mp4" data-title="{CASE_FILM[cid][1]}" data-anlass="{anlass}" data-tall="{1 if cid in ("hochzeit", "dance") else 0}">Ganzen Film ansehen (mit Ton)</button>' if cid in CASE_FILM else ''
     return f'''<article class="case" id="{cid}" data-tags="{tags}">
   {media}
   <div><p class="kicker">{sub}</p><h2 class="h3">{name}</h2><p>{text}</p><dl class="facts">{dl}</dl><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">Ähnlichen Dreh anfragen</a>{extra}</div></div>
@@ -339,7 +393,7 @@ proj = head('Projekte – Falcon Eye FPV', 'Echte FPV-Projekte von Falcon Eye: M
 {KINO_SEC}
 {band('Euer Projekt als nächstes?', 'Schickt uns kurz, was ihr vorhabt. Ihr bekommt eine Flugidee und einen Festpreis.')}
 </main>
-''' + LIGHTBOX + footer() + scripts()
+''' + footer() + scripts()
 proj = proj.replace('.case .media{', '.case .media{')
 write('projekte.html', proj)
 
@@ -357,7 +411,7 @@ SVC = [
    ['Cinewhoop mit Propellerschutz für Innenräume', 'Dreh vor oder während dem Betrieb', 'Für Website, Google-Profil und Social Media'], 'imagefilm'),
   ('immobilie', 'img:hoermann_DJI_0726', 'Immobilien &amp; Gewerbe', 'Luftbilder und Durchflüge für Exposés, Werksgelände und Bauprojekte – dazu Dachaufnahmen für PV-Planung und Inspektion.',
    ['Luftbilder in hoher Auflösung', 'Durchflug innen und außen', 'Dachaufnahmen für Solar und Gutachter'], 'immobilie'),
-  ('hochzeit', None, 'Hochzeiten', 'Mini-Drohnen unter 250 Gramm, die niemanden stören: der Einzug, die Gäste, die Location von oben – Aufnahmen, die kein Gast mit dem Handy hinbekommt.',
+  ('hochzeit', None, 'Hochzeiten', 'Flüsterleise Mini-Drohnen ab 50 Gramm mit 4K-Bild, die niemanden stören: der Einzug, die Gäste, die Location von oben – Aufnahmen, die kein Gast mit dem Handy hinbekommt.',
    ['Leise und unauffällig', 'Abgestimmt mit Fotograf und Videograf', 'Kurzer Film plus Clips für die Gäste'], 'hochzeit'),
   ('live', 'arena', 'Live-Übertragung', 'Das FPV-Bild live auf Leinwand oder in den Stream – für Sportevents, Shows und Messen.',
    ['Digitales FPV-Livebild', 'Übergabe an Regie oder Stream', 'Flugshow-Einlagen möglich'], 'live'),
@@ -396,11 +450,12 @@ leist = head('Leistungen – Falcon Eye FPV', 'FPV-Drohnenfilme für Events, Ima
 <section class="block" aria-labelledby="faq-h"><div class="wrap"><h2 class="h2 reveal" id="faq-h">Häufige Fragen</h2><div class="faq">{faq}</div></div></section>
 {band('Welche Leistung braucht ihr?', 'Tippt an, worum es geht. Den Rest klären wir am Telefon oder per WhatsApp.')}
 </main>
-''' + LIGHTBOX + footer() + scripts()
+''' + footer() + scripts()
 write('leistungen.html', leist)
 
 # ====================================================================== ÜBER UNS
 HANGAR = [
+  ('Whoop', 'Ab 50 g', 'events', 'Flüsterleise Mini-Whoops ab 50 Gramm – und trotzdem 4K-Bild dank DJI O4 Pro Air Unit. Für Hochzeiten, Bühnen und Räume voller Menschen.', 'ab 50 g|4K|O4 Pro|flüsterleise'),
   ('Micro', 'Unter 250 g', 'turm', 'DJI Neo 2 und Co. Leise, leicht, fast überall erlaubt. Für Hochzeiten, Feiern und alles, was ganz nah an Menschen passiert.', '4K|leise|unter 250 g'),
   ('Cinewhoop', 'Indoor', 'kueche', 'Mit Propellerschutz durch Hallen, Küchen, Showrooms und Treppenhäuser. Butterweiche Bilder bis 240 fps.', '4K|240 fps|Propellerschutz'),
   ('Freestyle', '5 Zoll', 'stadion', 'Schnell und wendig für Sport, Flips und Action. Hält mit, wo jede andere Kamera aufgibt.', '4K|120 km/h+|Flips'),
@@ -458,11 +513,11 @@ fc = head('Flight Club Saar – Partner von Falcon Eye', 'Der Flight Club Saar e
   <div class="wrap reels">
     <div><div class="phone"><div class="screen"><span class="island"></span><div class="feed"><div class="item"><video data-auto muted loop playsinline preload="none" poster="media/r_fcsbanner.jpg" src="media/r_fcsbanner.mp4"></video><p class="cap"><b>Flight Club Saar e.V.</b>Flugtag am Förderturm Göttelborn</p></div></div></div></div></div>
     <div>
-      <img src="media/flightclub.png" alt="Flight Club Saar" width="768" height="515" style="width:min(220px,55%);margin-bottom:24px">
+      <img src="media/flightclub.png" alt="Flight Club Saar" width="768" height="515" style="width:min(220px,55%);height:auto;margin-bottom:24px">
       <h2 class="h2 reveal">Fliegen lernt man nicht allein.</h2>
       <p class="intro reveal">Der Flight Club Saar e.V. ist einer der größten FPV-Vereine im Saarland. Wir treffen uns zum gemeinsamen Fliegen, Schrauben und Fachsimpeln – und für Flugtage an besonderen Orten: Lost Places, Industriekultur und der Förderturm in Göttelborn.</p>
       <ul class="ticks"><li>Gemeinsame Flugtage an Lost Places und Industrie-Spots</li><li>Eigene Mitgliedskarte für jedes Mitglied</li><li>Hilfe für Einsteiger – vom Simulator bis zum ersten Flug</li><li>Natan Wojtasczyk ist im Vorstand des Vereins</li></ul>
-      <div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Zum Flight Club Saar</a><a class="btn ghost" href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a><a class="btn ghost" href="https://www.youtube.com/watch?v=9ovWdsLJET0" target="_blank" rel="noopener">Vereinsvideo ansehen</a></div>
+      <div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Zum Flight Club Saar</a><a class="btn ghost" href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a><button class="btn ghost" type="button" data-lb="media/film_goettelborn.mp4" data-title="Flight Club Saar – Förderturm Göttelborn">Vereinsflug ansehen</button></div>
     </div>
   </div>
 </section>
@@ -509,11 +564,12 @@ kontakt = head('Kontakt – Falcon Eye FPV', 'Dreh bei Falcon Eye anfragen: Form
         <div><label class="lbl" for="msg">Was soll man im Film sehen?</label><textarea id="msg" name="msg" placeholder="Erzählt kurz von eurem Ort, Event oder Produkt."></textarea></div>
         <div class="f2" style="margin-top:16px"><div><label class="lbl" for="name">Name</label><input type="text" id="name" name="name" autocomplete="name"></div>
         <div><label class="lbl" for="kontakt">E-Mail oder Telefon</label><input type="text" id="kontakt" name="kontakt" autocomplete="email"></div></div>
-        <div class="ctas" style="margin-top:20px"><button class="btn ghost" type="button" data-back>Zurück</button><button class="btn" type="submit">Anfrage fertigstellen</button></div>
+        <div class="ctas" style="margin-top:20px"><button class="btn ghost" type="button" data-back>Zurück</button><button class="btn" type="submit">Anfrage senden</button></div><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
         <p class="fine" style="margin-top:14px">Eure Angaben nutzen wir nur, um euch zu antworten. Mehr in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
       </div>
       <div class="pstep sent" hidden>
-        <p><b>Eure Anfrage ist fertig.</b> Schickt sie uns mit einem Klick per WhatsApp oder E-Mail.</p>
+        <p class="ok-sent" hidden><b>Danke, eure Anfrage ist bei uns!</b> Wir melden uns meist noch am selben Werktag. Wenn es eilt: schickt sie zusätzlich per WhatsApp.</p>
+        <p class="ok-manual"><b>Eure Anfrage ist fertig.</b> Schickt sie uns mit einem Klick per WhatsApp oder E-Mail.</p>
         <pre id="planText"></pre>
         <div class="ctas"><a class="btn wa" id="waSend" href="#" target="_blank" rel="noopener">{WA_ICON}Per WhatsApp senden</a><a class="btn" id="mailSend" href="#">Per E-Mail senden</a><button class="btn ghost" type="button" id="planCopy" data-copy="">Text kopieren</button></div>
         <p class="fine">Falls sich nichts öffnet: Text kopieren und an info@falcon-eye.de schicken.</p>
@@ -562,7 +618,7 @@ ds = head('Datenschutz – Falcon Eye', 'Datenschutzerklärung von Falcon Eye: k
 <h1>Datenschutz</h1>
 <p class="stand">Stand: Oktober 2026</p>
 <h2>1. Das Wichtigste in Kürze</h2>
-<p>Diese Website setzt keine Cookies, nutzt kein Tracking und keine Werbung. Schriften, Videos, Vorschaubilder und Skripte werden zusammen mit der Website ausgeliefert – beim Besuch werden keine Daten an Google, YouTube, Meta oder andere Dritte übertragen, nur an unseren Hoster GitHub (siehe Abschnitt 3). Daten verarbeiten wir selbst nur, wenn ihr uns kontaktiert.</p>
+<p>Diese Website setzt keine Cookies, nutzt kein Tracking und keine Werbung. Schriften, Videos, Vorschaubilder und Skripte werden zusammen mit der Website ausgeliefert – beim Besuch werden keine Daten an Google, YouTube, Meta oder andere Dritte übertragen, nur an unseren Hoster GitHub (siehe Abschnitt 3). Daten verarbeiten wir nur, wenn ihr uns kontaktiert, etwa über das Anfrageformular (Abschnitt 5).</p>
 <h2>2. Verantwortlicher</h2>
 <p>Natan Wojtasczyk, Falcon Eye, Römerstr. 25, 66125 Saarbrücken<br>Telefon: {PHONE_HUMAN}, E-Mail: info@falcon-eye.de</p>
 <h2>3. Hosting über GitHub Pages</h2>
@@ -570,7 +626,7 @@ ds = head('Datenschutz – Falcon Eye', 'Datenschutzerklärung von Falcon Eye: k
 <h2>4. Verschlüsselung</h2>
 <p>Die Verbindung zu dieser Website ist per TLS verschlüsselt. Ihr erkennt das am Schloss-Symbol und an „https://“ in der Adresszeile.</p>
 <h2>5. Anfrageformular</h2>
-<p>Das Formular auf der Kontaktseite speichert und versendet nichts selbst. Es stellt eure Angaben nur zu einer Nachricht zusammen, die ihr anschließend selbst per WhatsApp oder E-Mail an uns schickt.</p>
+<p>Wenn ihr das Formular auf der Kontaktseite absendet, werden eure Angaben (Anlass, Ort, Datum, Umfang, Nachricht, Name sowie E-Mail-Adresse oder Telefonnummer) über den Formulardienst Web3Forms an unser Postfach info@falcon-eye.de weitergeleitet. Anbieter ist Web3Creative mit Sitz in Indien; der Dienst nutzt Server von Amazon Web Services, Cloudflare und Hetzner, sodass Daten auch außerhalb der EU verarbeitet werden können. Grundlage dafür sind die EU-Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO) im Auftragsverarbeitungsvertrag von Web3Forms. Laut Web3Forms werden Übermittlungen höchstens drei Jahre gespeichert; Details unter web3forms.com/privacy. Rechtsgrundlage ist die Beantwortung eurer Anfrage bzw. die Anbahnung eines Auftrags (Art. 6 Abs. 1 lit. b DSGVO). Wer das nicht möchte, kann die Anfrage stattdessen per WhatsApp oder E-Mail schicken – das Formular bietet dafür ebenfalls Knöpfe an.</p>
 <h2>6. Kontakt per E-Mail und Telefon</h2>
 <p>Wenn ihr uns schreibt oder anruft, verarbeiten wir eure Angaben (z. B. Name, Kontaktdaten, Inhalt der Anfrage), um die Anfrage zu beantworten und ein Angebot zu erstellen (Art. 6 Abs. 1 lit. b DSGVO). Kommt kein Auftrag zustande, löschen wir die Daten nach Abschluss der Anfrage, spätestens nach 12 Monaten. Bei einem Auftrag gelten die gesetzlichen Aufbewahrungsfristen (bis zu 10 Jahre nach HGB und AO).</p>
 <h2>7. Kontakt per WhatsApp</h2>

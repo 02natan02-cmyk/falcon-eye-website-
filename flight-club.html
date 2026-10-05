@@ -18,7 +18,7 @@
 <body class="p-flight-club">
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="top">
-  <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"></a>
+  <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><span class="bird"><img src="media/bird.png" alt="" width="934" height="207"></span><img class="word" src="media/wordmark.png" alt="Falcon Eye" width="956" height="175"></a>
   <nav aria-label="Hauptmenü"><a href="projekte.html">Projekte</a><a href="leistungen.html">Leistungen</a><a href="ueber-uns.html">Über uns</a><a href="flight-club.html" aria-current=page>Flight Club</a><a href="kontakt.html">Kontakt</a><a class="btn sm" href="kontakt.html">Dreh anfragen</a></nav>
   <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mmenu"><i></i><i></i><i></i></button>
 </header>
@@ -40,11 +40,11 @@
   <div class="wrap reels">
     <div><div class="phone"><div class="screen"><span class="island"></span><div class="feed"><div class="item"><video data-auto muted loop playsinline preload="none" poster="media/r_fcsbanner.jpg" src="media/r_fcsbanner.mp4"></video><p class="cap"><b>Flight Club Saar e.V.</b>Flugtag am Förderturm Göttelborn</p></div></div></div></div></div>
     <div>
-      <img src="media/flightclub.png" alt="Flight Club Saar" width="768" height="515" style="width:min(220px,55%);margin-bottom:24px">
+      <img src="media/flightclub.png" alt="Flight Club Saar" width="768" height="515" style="width:min(220px,55%);height:auto;margin-bottom:24px">
       <h2 class="h2 reveal">Fliegen lernt man nicht allein.</h2>
       <p class="intro reveal">Der Flight Club Saar e.V. ist einer der größten FPV-Vereine im Saarland. Wir treffen uns zum gemeinsamen Fliegen, Schrauben und Fachsimpeln – und für Flugtage an besonderen Orten: Lost Places, Industriekultur und der Förderturm in Göttelborn.</p>
       <ul class="ticks"><li>Gemeinsame Flugtage an Lost Places und Industrie-Spots</li><li>Eigene Mitgliedskarte für jedes Mitglied</li><li>Hilfe für Einsteiger – vom Simulator bis zum ersten Flug</li><li>Natan Wojtasczyk ist im Vorstand des Vereins</li></ul>
-      <div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Zum Flight Club Saar</a><a class="btn ghost" href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a><a class="btn ghost" href="https://www.youtube.com/watch?v=9ovWdsLJET0" target="_blank" rel="noopener">Vereinsvideo ansehen</a></div>
+      <div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Zum Flight Club Saar</a><a class="btn ghost" href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a><button class="btn ghost" type="button" data-lb="media/film_goettelborn.mp4" data-title="Flight Club Saar – Förderturm Göttelborn">Vereinsflug ansehen</button></div>
     </div>
   </div>
 </section>
@@ -62,6 +62,11 @@
 </section>
 
 </main>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Video">
+  <button class="x">Schließen</button>
+  <div><video controls playsinline loop></video>
+  <div class="meta"><b></b><a class="btn" href="kontakt.html">Ähnlichen Dreh anfragen</a></div></div>
+</div>
 <footer>
   <div class="wrap">
     <div class="grid">

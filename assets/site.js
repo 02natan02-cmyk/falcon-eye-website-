@@ -5,6 +5,8 @@
   const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
   const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
   const PHONE = '4915156743442';
+  /* Web3Forms-Zugangsschlüssel (kostenlos, an info@falcon-eye.de gebunden). Leer = Formular bietet nur WhatsApp/E-Mail an. */
+  const FORM_KEY = 'd55d3073-461f-4aad-b190-36db4d7bcbb9';
   window.FE = { $, $$, reduce, fine, hasGsap };
 
   /* ---------- header, menu, dock ---------- */
@@ -24,6 +26,22 @@
       if (!hide) for (const el of document.querySelectorAll('[data-nodock], .missions, .band, footer')) { const r = el.getBoundingClientRect(); if (r.top < innerHeight - 40 && r.bottom > innerHeight - 160) { hide = true; break; } }
       dock.classList.toggle('show', y > start && !hide && !document.body.classList.contains('menu-open'));
     }
+  }
+  /* header falcon: glides in once, banks gently while scrolling */
+  const bird = $('.top .brand .bird');
+  if (bird && !reduce) {
+    bird.classList.add('glide');
+    let lastY = scrollY, tilt = 0, idle = 0;
+    const bank = () => {
+      const dy = scrollY - lastY; lastY = scrollY;
+      const target = Math.max(-1, Math.min(1, dy / 30));
+      tilt += (target - tilt) * .18;
+      bird.style.setProperty('--bank', tilt.toFixed(3));
+      if (Math.abs(tilt) > .002 || Math.abs(dy) > 0) { idle = 0; requestAnimationFrame(bank); } else if (++idle < 20) requestAnimationFrame(bank); else bird.style.setProperty('--bank', 0), (running = false);
+    };
+    let running = false;
+    addEventListener('scroll', () => { if (!running) { running = true; requestAnimationFrame(bank); } }, { passive: true });
+    $('.top .brand').addEventListener('pointerenter', () => { bird.classList.remove('swoop'); void bird.offsetWidth; bird.classList.add('swoop'); });
   }
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
   if ($('.dock') && !$('.dock').hidden) document.body.classList.add('has-dock');
@@ -96,6 +114,38 @@
     if (autoIO) autoIO.observe(v);
   });
 
+  /* ---------- OSD crosshair cursor (desktop) ---------- */
+  if (fine && !reduce) {
+    const c = document.createElement('div'); c.className = 'fe-cursor'; c.innerHTML = '<i></i><span>REC</span>'; document.body.appendChild(c);
+    let x = -100, y = -100, tx = x, ty = y;
+    addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; const t = e.target.closest('video,.clip,.wtile,.kino-card,[data-lb],.compare,.mlist button'); c.classList.toggle('rec', !!t); c.classList.toggle('hot', !!e.target.closest('a,button')); }, { passive: true });
+    document.addEventListener('pointerleave', () => { tx = ty = -100; });
+    (function f() { x += (tx - x) * .25; y += (ty - y) * .25; c.style.transform = `translate(${x}px,${y}px)`; requestAnimationFrame(f); })();
+    document.documentElement.classList.add('has-fe-cursor');
+  }
+
+  /* ---------- OSD decode effect on big headings ---------- */
+  if (!reduce && 'IntersectionObserver' in window) {
+    const CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*';
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; io.unobserve(e.target);
+      const el = e.target, txt = el.textContent; if (el.children.length || txt.length > 40) return;
+      let f = 0; const total = 18;
+      const tick = () => { f++; el.textContent = txt.split('').map((ch, i) => ch === ' ' || i < (f / total) * txt.length ? ch : CH[(Math.random() * CH.length) | 0]).join(''); if (f < total) requestAnimationFrame(tick); else el.textContent = txt; };
+      tick();
+    }), { threshold: .6 });
+    $$('h2.h2').forEach(h => io.observe(h));
+  }
+
+  /* ---------- drag-to-scroll rows (desktop mouse) ---------- */
+  $$('.wrow').forEach(row => {
+    let down = false, sx = 0, sl = 0, moved = false;
+    row.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = row.scrollLeft; });
+    addEventListener('pointermove', e => { if (!down) return; const d = e.clientX - sx; if (Math.abs(d) > 5) { moved = true; row.style.scrollSnapType = 'none'; } row.scrollLeft = sl - d; });
+    addEventListener('pointerup', () => { if (down) { down = false; row.style.scrollSnapType = ''; } });
+    row.addEventListener('click', e => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+  });
+
   /* ---------- lightbox ---------- */
   const lb = $('#lb');
   if (lb) {
@@ -103,7 +153,7 @@
     const close = () => { lb.hidden = true; lv.pause(); lv.removeAttribute('src'); lv.load(); document.body.style.overflow = ''; };
     $$('[data-lb]').forEach(b => b.addEventListener('click', e => {
       e.preventDefault();
-      lv.src = b.dataset.lb; lt.textContent = b.dataset.title || '';
+      lv.src = b.dataset.lb; lt.textContent = b.dataset.title || ''; lb.classList.toggle('tall', b.dataset.tall === '1'); lv.muted = false;
       if (lc && b.dataset.anlass) lc.href = 'kontakt.html#' + b.dataset.anlass;
       lb.hidden = false; document.body.style.overflow = 'hidden'; lv.play().catch(() => {}); $('.x', lb).focus();
     }));
@@ -184,7 +234,16 @@
       $('#waSend').href = `https://wa.me/${PHONE}?text=${encodeURIComponent(t)}`;
       $('#mailSend').href = `mailto:info@falcon-eye.de?subject=${encodeURIComponent('Drehanfrage: ' + d.anlass)}&body=${encodeURIComponent(t)}`;
       $('#planCopy').dataset.copy = t;
-      show(steps.length - 1);
+      const okS = $('.ok-sent', plan), okM = $('.ok-manual', plan);
+      const done = sent => { okS.hidden = !sent; okM.hidden = sent; show(steps.length - 1); };
+      if (!FORM_KEY || plan.botcheck.checked) return done(false);
+      const btn = $('button[type=submit]', plan), old = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Wird gesendet …';
+      fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ access_key: FORM_KEY, subject: 'Drehanfrage über falcon-eye.de: ' + d.anlass, from_name: 'falcon-eye.de', name: d.name,
+          replyto: d.kontakt.includes('@') ? d.kontakt : undefined, Anlass: d.anlass, Ort: d.ort || '–', Datum: d.datum || 'noch offen', Umfang: d.umfang, Nachricht: d.msg || '–', Kontakt: d.kontakt }) })
+        .then(r => r.json()).then(j => done(!!j.success)).catch(() => done(false))
+        .finally(() => { btn.disabled = false; btn.textContent = old; });
     });
     $('#planCopy')?.addEventListener('click', e => {
       const b = e.currentTarget;
@@ -218,8 +277,19 @@
       const im = nearest(i); if (!im) return;
       const dpr = Math.min(devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
       if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
-      const s = Math.max(cv.width / im.naturalWidth, cv.height / im.naturalHeight), dw = im.naturalWidth * s, dh = im.naturalHeight * s;
-      cx.drawImage(im, (cv.width - dw) / 2, (cv.height - dh) / 2, dw, dh);
+      const tall = im.naturalHeight > im.naturalWidth && cv.width > cv.height * 1.05;
+      if (tall) {
+        /* portrait footage on a wide screen: blurred backdrop + full frame in the middle */
+        const sb = Math.max(cv.width / im.naturalWidth, cv.height / im.naturalHeight) * 1.1;
+        cx.save(); if ('filter' in cx) cx.filter = 'blur(28px) brightness(.55) saturate(1.2)';
+        cx.drawImage(im, (cv.width - im.naturalWidth * sb) / 2, (cv.height - im.naturalHeight * sb) / 2, im.naturalWidth * sb, im.naturalHeight * sb);
+        cx.restore(); if (!('filter' in cx)) { cx.fillStyle = 'rgba(0,0,0,.55)'; cx.fillRect(0, 0, cv.width, cv.height); }
+        const sc = cv.height / im.naturalHeight, dw = im.naturalWidth * sc;
+        cx.drawImage(im, (cv.width - dw) / 2, 0, dw, cv.height);
+      } else {
+        const s = Math.max(cv.width / im.naturalWidth, cv.height / im.naturalHeight), dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+        cx.drawImage(im, (cv.width - dw) / 2, (cv.height - dh) / 2, dw, dh);
+      }
     }
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => e.isIntersecting && load()), { rootMargin: '150% 0px' }).observe(sec); else load();
     addEventListener('resize', () => draw(Math.max(0, cur)));

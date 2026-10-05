@@ -1,6 +1,6 @@
 import os, shutil, re, json
-S='./build/'; D='./'  # S = Ausgabe von build.py, D = dieses Repository
-for sub in ['assets','fonts','js','media','seq','seq2']:
+S='/home/claude/fe/site2/'; D='/home/claude/fe/deploy/'
+for sub in ['assets','fonts','js','media','seq','seq2','seq3']:
     if os.path.exists(D+sub): shutil.rmtree(D+sub)
     shutil.copytree(S+sub, D+sub)
 pages=[f for f in os.listdir(S) if f.endswith('.html') and f!='preview.html']
@@ -23,5 +23,8 @@ a=k.index('<main id="main"'); b=k.index('</main>')+7
 k=k[:a]+'<main id="main" class="legal"><div class="wrap"><h1>Notlandung</h1><p>Diese Seite gibt es nicht (mehr). Zurück zur <a href="/">Startseite</a> oder direkt einen <a href="/kontakt.html">Dreh anfragen</a>.</p></div></main>'+k[b:]
 k=k.replace('<title>Impressum – Falcon Eye</title>','<title>Seite nicht gefunden – Falcon Eye</title>')
 k=re.sub(r'(href|src)="(?!https?:|/|#|mailto|tel)([^"]+)"',r'\1="/\2"',k)
+k=k.replace('</head>','<script>if(/defaultsite|^\\/(home|start|index\\.php)/i.test(location.pathname))location.replace("/")</script></head>',1)
 open(D+'404.html','w').write(k)
+R='<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=/"><link rel="canonical" href="https://falcon-eye.de/"><title>Falcon Eye</title><script>location.replace("/")</script></head><body><a href="/">Weiter zu Falcon Eye</a></body></html>'
+open(D+'defaultsite.html','w').write(R+'\n'); os.makedirs(D+'defaultsite',exist_ok=True); open(D+'defaultsite/index.html','w').write(R+'\n')
 print(sorted(os.listdir(D)))

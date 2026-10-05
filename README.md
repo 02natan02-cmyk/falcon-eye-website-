@@ -13,7 +13,8 @@ Diese Datei erklärt, wo die Website liegt, wer Zugriff hat und wie man sie änd
 | Live-Adresse | https://falcon-eye.de (auch www.falcon-eye.de) |
 | Code und Dateien | GitHub-Repository **02natan02-cmyk/falcon-eye-website-** – https://github.com/02natan02-cmyk/falcon-eye-website- |
 | GitHub-Konto (Inhaber) | **02natan02-cmyk** (Natan Wojtasczyk) |
-| Hosting | **GitHub Pages**, kostenlos. Einstellungen: Repository → Settings → Pages |
+| Hosting | **GitHub Pages**, kostenlos. Einstellungen: Repository → Settings → Pages. Limit: Seite max. 1 GB, Dateien max. 100 MB |
+| Formular | **Web3Forms** (kostenlos), Schlüssel an info@falcon-eye.de gebunden |
 | Domain falcon-eye.de | **IONOS** (Konto von Natan, Vertrag „IONOS Domain“) |
 | DNS-Einstellungen | IONOS → Domains & SSL → falcon-eye.de → DNS |
 | E-Mail info@falcon-eye.de | weiterhin bei **IONOS** (unverändert) |
@@ -50,7 +51,7 @@ Alte IONOS-Adresse: `defaultsite.html` und `defaultsite/` leiten Besucher, deren
 ## 3. Ordner und Dateien
 
 ```
-index.html          Startseite (Falkenauge-Einstieg, Durchflüge, Projekt-Auswahl, Reels, Kino)
+index.html          Startseite (Falkenauge, 3 Scroll-Durchflüge, Stick-Simulator, Projekt-Auswahl, Reels, Weltweit, Kino)
 projekte.html       11 Fallstudien mit Filter
 leistungen.html     Leistungen + häufige Fragen
 ueber-uns.html      Crew, Hangar, Sicherheit
@@ -65,7 +66,8 @@ assets/home.js      Nur Startseite: Falkenauge, Projekt-Auswahl, Reels-Handy
 js/                 Bibliotheken: GSAP + ScrollTrigger (Animation), Lenis (weiches Scrollen), falcon-path.js (Logo als Vektor)
 fonts/              Schriften lokal (Big Shoulders Display, Archivo, Share Tech Mono) – keine Google-Verbindung
 media/              Videos (.mp4), Standbilder (.jpg), Logo (logo.png, bird.png, wordmark.png)
-seq/  seq2/         Einzelbilder für die zwei Scroll-Durchflüge (Dive / Polizeipräsidium)
+seq/ seq2/ seq3/    Einzelbilder für die drei Scroll-Durchflüge (Dive / Polizeipräsidium / Norwegen-Wasserfall)
+defaultsite*        Weiterleitung alter IONOS-Adressen auf die Startseite
 tools/              Bau-Skripte (siehe Abschnitt 5) – nicht Teil der sichtbaren Seite
 robots.txt, sitemap.xml   für Google
 ```
@@ -85,6 +87,13 @@ Neues Video mit **gleichem Dateinamen** in `media/` hochladen (GitHub: Ordner ö
 - MP4 (H.264), ohne Ton, 960×540 Pixel, 4–8 Sekunden, unter 3 MB
 - Passendes Standbild `.jpg` mit gleichem Namen (z. B. `nacht.mp4` + `nacht.jpg`)
 - GitHub erlaubt max. 100 MB pro Datei; für die Seite sollten Videos deutlich kleiner sein.
+
+### Film in „Mehr Kino“ oder „Weltweit geflogen“ ergänzen
+Filme mit Ton liegen als `media/film_<name>.mp4` mit Vorschaubild `media/film_<name>.jpg` (1280×720 bzw. 720×1280, H.264, AAC). Kurze stumme Loops für Kacheln und Reels: `media/r_<name>.mp4` (hochkant 540×960) bzw. `media/<name>.mp4` (quer 1280×720).
+In `tools/build.py` die Listen `FILMS` (Kino), `WORLD` (Weltweit) und `REELS` (Handy) um eine Zeile ergänzen. Ohne Bau-Skript: eine bestehende Kachel in `index.html` kopieren und Dateinamen anpassen.
+
+### Kontaktformular
+Das Formular schickt Anfragen über **Web3Forms** (kostenlos) an info@falcon-eye.de. Der öffentliche Zugangsschlüssel steht in `assets/site.js` (`FORM_KEY`). Neuen Schlüssel holen: web3forms.com → „Create your Access Key“ → info@falcon-eye.de. Ist `FORM_KEY` leer, bietet das Formular nur WhatsApp/E-Mail an.
 
 ### Telefonnummer / E-Mail ändern
 In allen `.html`-Dateien suchen und ersetzen: `0151 56743442`, `4915156743442` (WhatsApp-Links), `info@falcon-eye.de`.
@@ -129,7 +138,8 @@ Einen Programmierer hinzufügen: GitHub → Repository → Settings → Collabor
 ## 7. Rechtliches
 
 - Impressum und Datenschutz liegen in `impressum.html` und `datenschutz.html` (Stand Oktober 2026).
-- Keine Cookies, kein Tracking, keine eingebetteten Fremd-Inhalte. Schriften und Videos werden mit der Seite ausgeliefert.
+- Keine Cookies, kein Tracking, keine eingebetteten Fremd-Inhalte. Schriften und Videos werden mit der Seite ausgeliefert (kein YouTube).
+- Kontaktformular über Web3Forms – steht in der Datenschutzerklärung (Abschnitt 5).
 - Hoster: GitHub B.V. / GitHub, Inc. (EU-US Data Privacy Framework) – steht in der Datenschutzerklärung.
 - Gezeigte Kundenprojekte: Nutzungsrechte laut Kundenverträgen.
 - Bei Änderungen am Angebot (z. B. Kontaktformular mit Server, Google Analytics, YouTube-Einbettung) muss die Datenschutzerklärung angepasst werden.
