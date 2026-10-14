@@ -337,6 +337,9 @@
     $$('.h2').forEach(h => { if (h.closest('.fc')) return; gsap.from(h, { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 90%', once: true } }); });
   }
 
+  /* ---------- Glanz-Galerie: Lichtreflex beim Erscheinen ---------- */
+  $$('.sh').forEach((f, i) => onView(f, () => setTimeout(() => f.classList.add('lit'), 200 + i * 140), '-10%'));
+
   /* ---------- Paket ---------- */
   const veh = $('[data-veh]');
   if (veh) {
