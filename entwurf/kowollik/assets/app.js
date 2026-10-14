@@ -408,10 +408,143 @@
     else window.open('https://wa.me/491716226690?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   });
 
+
+  /* ===== v2: Lackierstraße ===== */
+  const stations = $$('.station');
+  if (stations.length) {
+    if (hasG && !reduce) stations.forEach(st => {
+      gsap.to($('.st-name span', st), { backgroundPosition: '0% 0', ease: 'none', scrollTrigger: { trigger: st, start: 'top 85%', end: 'center 40%', scrub: true } });
+      gsap.to($('.st-stripe', st), { scaleX: 1, ease: 'none', scrollTrigger: { trigger: st, start: 'top 70%', end: 'bottom 30%', scrub: true } });
+    });
+    const rail = $('.rail'), links = $$('.rail a'), line = $('.rail-line i'), car = $('.rail-car');
+    const first = stations[0], lastEl = $('.visit') || stations[stations.length - 1];
+    const upd = () => {
+      const y = scrollY + innerHeight * .5;
+      const top = first.offsetTop, end = lastEl.offsetTop + lastEl.offsetHeight;
+      rail.classList.toggle('show', y > top && y < end + innerHeight * .2);
+      let cur = 0; stations.forEach((st, i) => { if (y >= st.offsetTop) cur = i + 1; });
+      links.forEach((a, i) => { a.classList.toggle('on', i + 1 === cur); a.classList.toggle('done', i + 1 < cur); });
+      const p = Math.max(0, Math.min(1, (y - top) / (end - top)));
+      if (line) line.style.transform = `scaleY(${p})`;
+      if (car) { const h = rail.offsetHeight - 32; car.style.transform = `translateY(${p * (h - 20)}px) rotate(90deg)`; }
+    };
+    addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+    links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = $(a.getAttribute('href')); lenis ? lenis.scrollTo(t, { offset: -20 }) : t.scrollIntoView({ behavior: 'smooth' }); }));
+  }
+
+  /* unfall checklist */
+  const ufl = $('.uf-list');
+  if (ufl) {
+    const boxes = $$('input', ufl), n = $('[data-uf-n]'), ring = $('.uf-p');
+    let saved = []; try { saved = JSON.parse(localStorage.getItem('kw-uf') || '[]'); } catch (e) {}
+    boxes.forEach((b, i) => b.checked = !!saved[i]);
+    const upd = () => { const c = boxes.filter(b => b.checked).length; n.textContent = c; ring.style.strokeDashoffset = 100 - c / boxes.length * 100; try { localStorage.setItem('kw-uf', JSON.stringify(boxes.map(b => b.checked))); } catch (e) {} if (c === boxes.length && hasG) gsap.fromTo('.uf-ring', { scale: 1 }, { scale: 1.12, yoyo: true, repeat: 1, duration: .25 }); };
+    boxes.forEach(b => b.addEventListener('change', upd)); upd();
+    const sb = $('[data-uf-share]');
+    sb && sb.addEventListener('click', async () => {
+      const txt = 'Unfall-Checkliste von Karosserie Kowollik (Homburg):\n' + $$('li', ufl).map((li, i) => `${i + 1}. ${$('b', li).textContent} – ${$('span', li).childNodes[1].textContent}`).join('\n') + '\n\nSchaden melden: https://kowollik.schadensmeldung.digital/ · Tel. 06841 / 170 170';
+      try { if (navigator.share) { await navigator.share({ title: 'Unfall-Checkliste', text: txt }); return; } } catch (e) { return; }
+      try { await navigator.clipboard.writeText(txt); sb.textContent = 'Kopiert – jetzt in WhatsApp einfügen'; } catch (e) { window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener'); }
+    });
+  }
+
+  /* smart repair check */
+  const smSize = $('[data-sm-size]');
+  if (smSize) {
+    let paint = 0, pos = 'flat';
+    const dent = $('.sm-dent'), cm = $('[data-sm-cm]'), vd = $('[data-sm-verdict]'), dt = $('[data-sm-detail]'), wa = $('[data-sm-wa]');
+    const run = () => {
+      const s = +smSize.value; cm.textContent = s;
+      dent.style.setProperty('--d', (14 + s * 6) + 'px'); dent.classList.toggle('scratch', !!paint);
+      let v, d, cls;
+      if (paint) { v = 'Lackierung nötig'; cls = 'mid'; d = 'Ist der Lack verletzt, richten wir das Blech und lackieren den Bereich – farbtongenau angepasst. Kleine Stellen oft als Spot-Repair.'; }
+      else if (pos === 'edge') { v = 'Schauen wir uns an'; cls = 'mid'; d = 'An Kanten und Sicken ist Ausbeulen ohne Lackieren manchmal möglich, manchmal nicht. Ein Foto reicht für eine erste Einschätzung.'; }
+      else if (s <= 25) { v = 'Gute Chancen für Smart Repair'; cls = 'ok'; d = 'Ausbeulen ohne Lackieren: der Originallack bleibt erhalten, oft ist das in wenigen Stunden erledigt.'; }
+      else { v = 'Teil-Instandsetzung'; cls = 'mid'; d = 'Bei großen Dellen kombinieren wir Ausbeulen und Lackieren. Wir sagen Ihnen vorher, was sinnvoll ist.'; }
+      vd.textContent = v; vd.className = 'sm-verdict ' + cls; dt.textContent = d;
+      wa.href = 'https://wa.me/491716226690?text=' + encodeURIComponent(`Hallo, ich habe eine Delle (ca. ${s} cm, ${paint ? 'Lack beschädigt' : 'Lack heil'}, ${pos === 'edge' ? 'an einer Kante' : 'auf der Fläche'}). Ihr Check sagt: ${v}. Foto schicke ich mit.`);
+    };
+    smSize.addEventListener('input', run);
+    const segs = (sel, fn) => $$(sel + ' button').forEach(b => b.addEventListener('click', () => { $$(sel + ' button').forEach(x => x.classList.toggle('on', x === b)); fn(b.dataset.v); run(); }));
+    segs('[data-sm-paint]', v => paint = +v); segs('[data-sm-pos]', v => pos = v); run();
+  }
+
+  /* paint layers exploded view */
+  const ly = $('.layers');
+  if (ly) {
+    const plates = $$('.ly-plate', ly), leg = $$('.ly-legend li', ly);
+    const setP = p => {
+      const o = Math.min(1, p * 1.6) * (innerWidth < 700 ? .8 : 1.5);
+      plates.forEach(pl => pl.style.setProperty('--o', o));
+      const active = p < .12 ? -1 : 4 - Math.min(4, Math.floor((p - .12) / .88 * 5));
+      leg.forEach(l => l.classList.toggle('on', active === -1 || +l.dataset.l === active));
+      plates.forEach((pl, i) => pl.classList.toggle('on', i === active));
+    };
+    if (hasG && !reduce) ScrollTrigger.create({ trigger: ly, start: 'top top', end: '+=160%', pin: '.ly-pin', scrub: true, anticipatePin: 1, onUpdate: s => setP(s.progress) });
+    else setP(.6);
+  }
+
+  /* color code finder */
+  const code = $('[data-code]');
+  if (code) {
+    const ans = $('[data-code-ans]'), spots = $$('.spot');
+    $$('button', code).forEach(b => b.addEventListener('click', () => {
+      $$('button', code).forEach(x => x.classList.toggle('on', x === b));
+      spots.forEach(sp => sp.classList.toggle('on', sp.dataset.at === b.dataset.spot));
+      ans.textContent = b.dataset.txt; hasG && gsap.fromTo(ans, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4 });
+    }));
+  }
+
+  /* sanding scratch-off */
+  const sc = $('[data-scratch]');
+  if (sc) {
+    const cv = $('canvas', sc), ctx = cv.getContext('2d'), pct = $('[data-sc-pct]');
+    let done = false, down = false, last = null, dpr = Math.min(2, devicePixelRatio || 1);
+    const prime = () => {
+      done = false; sc.classList.remove('done');
+      cv.width = sc.clientWidth * dpr; cv.height = sc.clientHeight * dpr;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#8d8f8c'; ctx.fillRect(0, 0, cv.width, cv.height);
+      for (let i = 0; i < 2600; i++) { ctx.fillStyle = `rgba(${Math.random() < .5 ? '255,255,255' : '0,0,0'},${Math.random() * .06})`; ctx.fillRect(Math.random() * cv.width, Math.random() * cv.height, 2 * dpr, 2 * dpr); }
+      for (let i = 0; i < 7; i++) { const x = Math.random() * cv.width, y = Math.random() * cv.height, r = (30 + Math.random() * 70) * dpr; const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, 'rgba(190,180,150,.55)'); g.addColorStop(1, 'rgba(190,180,150,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
+      ctx.fillStyle = 'rgba(40,40,40,.55)'; ctx.font = `800 ${28 * dpr}px "Barlow Condensed",sans-serif`; ctx.textAlign = 'center'; ctx.fillText('HIER SCHLEIFEN', cv.width / 2, cv.height / 2);
+      pct.textContent = 0;
+    };
+    const measure = () => { const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let c = 0, n = 0; for (let i = 3; i < d.length; i += 64) { n++; if (d[i] < 40) c++; } return c / n; };
+    const sand = (x, y) => {
+      const r = cv.getBoundingClientRect(); x = (x - r.left) * dpr; y = (y - r.top) * dpr;
+      ctx.globalCompositeOperation = 'destination-out'; ctx.lineCap = 'round'; ctx.lineWidth = 64 * dpr;
+      ctx.beginPath(); if (last) ctx.moveTo(last[0], last[1]); else ctx.moveTo(x - .1, y); ctx.lineTo(x, y); ctx.stroke(); last = [x, y];
+    };
+    let mt = 0;
+    cv.addEventListener('pointerdown', e => { down = true; last = null; cv.setPointerCapture(e.pointerId); sand(e.clientX, e.clientY); });
+    cv.addEventListener('pointermove', e => { if (!down || done) return; sand(e.clientX, e.clientY); const now = performance.now(); if (now - mt > 120) { mt = now; const p = measure(); pct.textContent = Math.round(p * 100); if (p > .55) finish(); } });
+    addEventListener('pointerup', () => { down = false; last = null; });
+    const finish = () => { done = true; pct.textContent = 100; if (hasG) gsap.to(cv, { opacity: 0, duration: .8, onComplete: () => { ctx.clearRect(0, 0, cv.width, cv.height); cv.style.opacity = 1; } }); else ctx.clearRect(0, 0, cv.width, cv.height); sc.classList.add('done'); };
+    $('[data-sc-reset]').addEventListener('click', prime);
+    const img0 = $('img', sc); (img0.complete ? prime() : img0.addEventListener('load', prime)); prime();
+    let rw = sc.clientWidth; new ResizeObserver(() => { if (Math.abs(sc.clientWidth - rw) > 40) { rw = sc.clientWidth; prime(); } }).observe(sc);
+  }
+
+  /* wish appointment */
+  const tf = $('[data-termin]');
+  if (tf) {
+    const days = $('[data-days]'), DS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const now = new Date(); let picked = null, slot = 'vormittags';
+    for (let k = 1, c = 0; c < 10 && k < 20; k++) { const d = new Date(now); d.setDate(now.getDate() + k); if (d.getDay() === 0 || d.getDay() === 6) continue; c++;
+      const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<small>${DS[d.getDay()]}</small><b>${d.getDate()}.</b><small>${d.toLocaleDateString('de-DE', { month: 'short' })}</small>`; b.dataset.label = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }); b.dataset.fri = d.getDay() === 5 ? 1 : '';
+      b.addEventListener('click', () => { $$('button', days).forEach(x => x.classList.toggle('on', x === b)); picked = b; }); days.appendChild(b); if (!picked) { picked = b; b.classList.add('on'); } }
+    $$('[data-slot] button', tf).forEach(b => b.addEventListener('click', () => { $$('[data-slot] button', tf).forEach(x => x.classList.toggle('on', x === b)); slot = b.dataset.v; }));
+    tf.addEventListener('submit', e => { e.preventDefault(); const what = $('[data-what]', tf).value;
+      const msg = `Hallo Karosserie Kowollik, ich hätte gern einen Termin: ${picked.dataset.label}, ${slot}${picked.dataset.fri && slot === 'nachmittags' ? ' (Freitag bis 15 Uhr)' : ''}. Es geht um: ${what}. Passt das?`;
+      window.open('https://wa.me/491716226690?text=' + encodeURIComponent(msg), '_blank', 'noopener'); });
+  }
+
   /* ---------- videos play only in view ---------- */
   const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { v.preload = 'auto'; const p = v.play(); p && p.catch(() => {}); } else v.pause(); }), { threshold: .25 });
   $$('.reel video, .drone-view video').forEach(v => vio.observe(v));
   const hv = $('.hero video'); if (hv) { const kick = () => { const p = hv.play(); p && p.catch(() => {}); }; kick(); addEventListener('touchstart', kick, { once: true, passive: true }); }
 
-  addEventListener('load', () => hasG && ScrollTrigger.refresh());
+  if (hasG) { ScrollTrigger.sort(); ScrollTrigger.refresh(); }
+  addEventListener('load', () => { if (hasG) { ScrollTrigger.sort(); ScrollTrigger.refresh(); } });
 })();

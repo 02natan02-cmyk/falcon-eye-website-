@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0d0e10">
 <link rel="icon" href="img/favicon.png">
 <link rel="preload" href="fonts/barlow-condensed-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=1792010982">
+<link rel="stylesheet" href="assets/style.css?v=1792012478">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoBodyShop", "name": "Karosserie Kowollik", "foundingDate": "1987", "telephone": "+496841170170", "email": "info@karosseriekowollik.de", "address": {"@type": "PostalAddress", "streetAddress": "Kaiserslauterer Str. 271-273", "postalCode": "66424", "addressLocality": "Homburg", "addressCountry": "DE"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"], "opens": "07:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "07:00", "closes": "15:00"}], "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "89"}, "sameAs": ["https://www.instagram.com/karosseriekowollik/", "https://www.facebook.com/KowollikKarosserie/"]}</script>
 </head>
 <body>
@@ -45,6 +45,15 @@
   <div class="mnav-c"><a href="tel:+496841170170">06841 / 170 170</a><a href="https://wa.me/491716226690" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@karosseriekowollik.de">info@karosseriekowollik.de</a></div>
 </div>
 
+<nav class="rail" aria-label="Lackierstraße">
+  <span class="rail-line"><i></i></span>
+  <span class="rail-car"><img src="img/car.png" alt="" width="299" height="108"></span>
+  <a href="#station-annahme" data-s="1"><b>1</b><span>Annahme</span></a>
+  <a href="#station-karosserie" data-s="2"><b>2</b><span>Karosserie</span></a>
+  <a href="#station-lack" data-s="3"><b>3</b><span>Lack</span></a>
+  <a href="#station-finish" data-s="4"><b>4</b><span>Finish</span></a>
+  <a href="#station-uebergabe" data-s="5"><b>5</b><span>Übergabe</span></a>
+</nav>
 <main id="main">
 <section class="hero" aria-label="Willkommen">
   <div class="hero-media"><video class="hero-img" src="img/lackierung.mp4" poster="img/lackierung.jpg" muted loop playsinline autoplay preload="auto" aria-label="Lackierer bei der Arbeit in der Lackierkabine von Karosserie Kowollik"></video></div>
@@ -80,15 +89,18 @@
   <p class="lead dim">Mit Flexibilität, Zuverlässigkeit und Fachkompetenz setzen wir Ihre Wünsche schnell und professionell um. Zu unseren Kunden zählen Privatleute, Autohäuser und Fahrzeughersteller.</p>
 </section>
 
-<section class="block timelapse" aria-labelledby="tl-h">
-  <div class="wrap">
-    <div class="sec-head"><p class="kicker">Reparatur-Zeitraffer</p><h2 class="h2" id="tl-h">Vom Schaden zum Spiegelglanz.</h2><p class="dim">Ziehen Sie den Regler – echte Aufträge aus unserer Halle.</p></div>
-    <div class="tl-tabs" role="tablist"><button role="tab" aria-selected="true" data-case="0">Seitenschaden</button><button role="tab" aria-selected="false" data-case="1">Stoßfänger</button><button role="tab" aria-selected="false" data-case="2">Mercedes C-Klasse</button><button role="tab" aria-selected="false" data-case="3">Ford Thunderbird</button></div>
-    <div class="tl" data-cases='[[{"src": "img/g/k54.jpg", "label": "Schaden", "text": "Tiefe Delle \u00fcber T\u00fcr und Seitenwand."}, {"src": "img/g/k53.jpg", "label": "Instandsetzung", "text": "Blech ausgebeult, geschliffen, aufgebaut."}, {"src": "img/g/k55.jpg", "label": "Ergebnis", "text": "Lackiert, poliert \u2013 spiegelglatt."}], [{"src": "img/g/k18.jpg", "label": "Schaden", "text": "Hecksto\u00dff\u00e4nger stark eingedr\u00fcckt."}, {"src": "img/g/k22.jpg", "label": "Instandsetzung", "text": "Zur\u00fcckgeformt, grundiert, abgeklebt."}, {"src": "img/g/k19.jpg", "label": "Ergebnis", "text": "Farbton genau getroffen."}], [{"src": "img/g/k80.jpg", "label": "Schaden", "text": "Seitenwand und Sto\u00dff\u00e4nger eingedr\u00fcckt."}, {"src": "img/g/k82.jpg", "label": "Ergebnis", "text": "Instand gesetzt und lackiert \u2013 wie aus dem Werk."}], [{"src": "img/g/k37.jpg", "label": "Schaden", "text": "Klassiker mit Blechschaden an der Flanke."}, {"src": "img/g/k45.jpg", "label": "Instandsetzung", "text": "Blankes Metall, neue Form."}, {"src": "img/g/k48.jpg", "label": "Ergebnis", "text": "Wieder ein Schmuckst\u00fcck."}]]'>
-      <div class="tl-view"><img class="tl-a" alt="" src="img/g/k54.jpg"><img class="tl-b" alt="" src="img/g/k53.jpg"><span class="tl-badge">Schaden</span></div>
-      <div class="tl-rail"><input type="range" min="0" max="200" value="0" step="1" aria-label="Zeitraffer"><div class="tl-steps"><span>Schaden</span><span>Instandsetzung</span><span>Ergebnis</span></div><div class="tl-fill"></div></div>
-      <p class="tl-text">Tiefe Delle über Tür und Seitenwand.</p>
+<section class="block drone" aria-labelledby="dr-h">
+  <div class="drone-view">
+    <video src="img/flug.mp4" poster="img/flug.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Beispiel-Drohnenflug von Falcon Eye durch eine Tiefgarage"></video>
+    <div class="hud" aria-hidden="true">
+      <span class="hud-rec"><i></i>REC</span><span class="hud-alt">ALT <b>42</b> m</span><span class="hud-spd">SPD <b>18</b> km/h</span><span class="hud-gps">49.3221° N · 7.3384° E</span>
+      <span class="hud-x"></span><span class="hud-frame"></span>
     </div>
+  </div>
+  <div class="wrap drone-txt">
+    <p class="kicker">Werkstatt-Rundflug</p>
+    <h2 class="h2" id="dr-h">Kommen Sie mit auf eine Runde durch die Halle.</h2>
+    <p class="dim">Ein einziger FPV-Flug vom Hof durch das Tor, vorbei an Richtbank und Lackierkabine bis zum fertigen Auto – der beste Beweis, wie es bei uns aussieht. <em>Im Entwurf: Beispielflug von Falcon Eye (Tiefgarage). Der echte Flug durch Ihre Halle folgt.</em></p>
   </div>
 </section>
 
@@ -147,31 +159,9 @@
   </div>
 </section>
 
-<section class="block cabin" aria-labelledby="cb-h">
-  <div class="wrap">
-    <div class="sec-head"><p class="kicker">Aus der Lackierkabine</p><h2 class="h2" id="cb-h">Handarbeit, die man sieht.</h2><p class="dim">Echte Aufnahmen aus unserer Halle – vom Airbrush bis zur kompletten Sonderlackierung.</p></div>
-    <div class="cabin-g">
-      <figure class="reel tall"><video src="img/reel_airbrush.mp4" poster="img/reel_airbrush.jpg" muted loop playsinline preload="none" aria-label="Airbrush-Arbeit an einem Motorradteil"></video><figcaption>Airbrush von Hand</figcaption></figure>
-      <figure class="reel wide"><video src="img/reel_custom.mp4" poster="img/reel_custom.jpg" muted loop playsinline preload="none" aria-label="Sonderlackierung an einem VW Eos"></video><figcaption>Sonderlackierung – einmalig</figcaption></figure>
-      <figure class="reel tall"><video src="img/reel_teile.mp4" poster="img/reel_teile.jpg" muted loop playsinline preload="none" aria-label="Lackierte Anbauteile in der Kabine"></video><figcaption>Anbauteile in Wunschfarbe</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<section class="block lamp-sec" aria-labelledby="lp-h">
-  <div class="wrap lamp-g">
-    <div>
-      <p class="kicker">Moderne Dellentechnik</p>
-      <h2 class="h2" id="lp-h">Wir sehen jede Delle.</h2>
-      <p class="dim">Mit Prüflicht machen wir selbst kleinste Beulen sichtbar – und drücken sie ohne neuen Lack wieder heraus. Fahren Sie mit der Maus oder dem Finger über das Bild.</p>
-      <a class="btn btn-ghost" href="leistungen.html#dellen">Mehr zu Smart Repair</a>
-    </div>
-    <div class="lamp" tabindex="0" aria-label="Interaktives Prüflicht">
-      <img src="img/g/k26.jpg" alt="Prüflicht auf rotem Lack zeigt die Dellen" width="1500" height="1125" loading="lazy" decoding="async">
-      <div class="lamp-stripes" aria-hidden="true"></div>
-      <span class="lamp-hint">Prüflicht bewegen</span>
-    </div>
-  </div>
+<section class="station" data-station="1" id="station-annahme" aria-label="Station 1: Annahme">
+  <div class="wrap station-in"><span class="st-no">Station 1 von 5</span><h2 class="st-name"><span>Annahme</span></h2><p class="st-line">Schaden melden, Fragen klären, Versicherung regeln – der erste Schritt ist der wichtigste.</p></div>
+  <div class="st-stripe" aria-hidden="true"></div>
 </section>
 
 <section class="block check" aria-labelledby="ck-h">
@@ -196,10 +186,122 @@
   </div>
 </section>
 
-<section class="hs" aria-labelledby="hs-h">
-  <div class="hs-pin">
-    <div class="hs-head wrap"><p class="kicker">Projekt-Story</p><h2 class="h2" id="hs-h">Ford Thunderbird.<br><span class="dim">Elf Etappen. Ein Klassiker.</span></h2><div class="hs-bar"><i></i></div></div>
-    <div class="hs-track"><figure class="hs-i"><span><img src="img/g/k35.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>01</b> Ankunft in der Halle</figcaption></figure><figure class="hs-i"><span><img src="img/g/k36.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>02</b> Der Schaden im Detail</figcaption></figure><figure class="hs-i"><span><img src="img/g/k37.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>03</b> Blech auf Blech</figcaption></figure><figure class="hs-i"><span><img src="img/g/k39.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1125" height="1500" loading="lazy" decoding="async"></span><figcaption><b>04</b> Teile ab, Fehler sichtbar</figcaption></figure><figure class="hs-i"><span><img src="img/g/k45.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>05</b> Zurück auf blankes Metall</figcaption></figure><figure class="hs-i"><span><img src="img/g/k47.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>06</b> Handarbeit am Blech</figcaption></figure><figure class="hs-i"><span><img src="img/g/k41.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>07</b> Form gefunden</figcaption></figure><figure class="hs-i"><span><img src="img/g/k40.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>08</b> Front im Rohbau</figcaption></figure><figure class="hs-i"><span><img src="img/g/k42.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>09</b> Chrom und Grill</figcaption></figure><figure class="hs-i"><span><img src="img/g/k48.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>10</b> Lack drauf</figcaption></figure><figure class="hs-i"><span><img src="img/g/k49.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" loading="lazy" decoding="async"></span><figcaption><b>11</b> Fertig für die Straße</figcaption></figure></div>
+<section class="block unfall" aria-labelledby="uf-h">
+  <div class="wrap unfall-g">
+    <div class="uf-head">
+      <p class="kicker">Unfall-Checkliste</p>
+      <h2 class="h2" id="uf-h">Es hat gekracht. Was jetzt?</h2>
+      <p class="dim">Acht Punkte, die nach einem Unfall wirklich zählen. Abhaken, aufs Handy schicken, ruhig bleiben.</p>
+      <div class="uf-ring" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52"/><circle class="uf-p" cx="60" cy="60" r="52" pathLength="100"/></svg><b><span data-uf-n>0</span>/8</b></div>
+      <div class="ctas"><button class="btn btn-ghost" data-uf-share>Checkliste aufs Handy schicken</button></div>
+      <p class="small dim">Allgemeine Hinweise, keine Rechtsberatung.</p>
+    </div>
+    <ol class="uf-list">
+      <li><label><input type="checkbox"><span><b>Unfallstelle sichern</b>Warnblinker an, Warnweste anziehen, Warndreieck aufstellen.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Verletzte versorgen</b>Erste Hilfe leisten und im Zweifel sofort die 112 wählen.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Polizei rufen, wenn nötig</b>Spätestens bei Verletzten, Streit über die Schuldfrage oder wenn der Unfallgegner flüchtet.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Alles fotografieren</b>Gesamtsituation, Endlage der Fahrzeuge, jeden Schaden, beide Kennzeichen.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Daten austauschen</b>Name, Anschrift, Kennzeichen, Versicherung des Unfallgegners – und Kontaktdaten von Zeugen.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Nichts unterschreiben</b>Kein Schuldanerkenntnis vor Ort, auch wenn Sie unter Druck gesetzt werden.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Versicherung informieren</b>Den Schaden zeitnah melden – viele Verträge verlangen das innerhalb einer Woche.</span></label></li>
+      <li><label><input type="checkbox"><span><b>Werkstatt selbst wählen</b>Bei einem unverschuldeten Unfall dürfen Sie Ihre Werkstatt frei wählen. Wir unterstützen Sie bei der Abwicklung.</span></label></li>
+    </ol>
+  </div>
+</section>
+
+<section class="station" data-station="2" id="station-karosserie" aria-label="Station 2: Karosserie">
+  <div class="wrap station-in"><span class="st-no">Station 2 von 5</span><h2 class="st-name"><span>Karosserie</span></h2><p class="st-line">Ausbeulen, richten, schweißen: Hier bekommt Ihr Auto seine Form zurück.</p></div>
+  <div class="st-stripe" aria-hidden="true"></div>
+</section>
+
+<section class="block timelapse" aria-labelledby="tl-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="kicker">Reparatur-Zeitraffer</p><h2 class="h2" id="tl-h">Vom Schaden zum Spiegelglanz.</h2><p class="dim">Ziehen Sie den Regler – echte Aufträge aus unserer Halle.</p></div>
+    <div class="tl-tabs" role="tablist"><button role="tab" aria-selected="true" data-case="0">Seitenschaden</button><button role="tab" aria-selected="false" data-case="1">Stoßfänger</button><button role="tab" aria-selected="false" data-case="2">Mercedes C-Klasse</button><button role="tab" aria-selected="false" data-case="3">Ford Thunderbird</button></div>
+    <div class="tl" data-cases='[[{"src": "img/g/k54.jpg", "label": "Schaden", "text": "Tiefe Delle \u00fcber T\u00fcr und Seitenwand."}, {"src": "img/g/k53.jpg", "label": "Instandsetzung", "text": "Blech ausgebeult, geschliffen, aufgebaut."}, {"src": "img/g/k55.jpg", "label": "Ergebnis", "text": "Lackiert, poliert \u2013 spiegelglatt."}], [{"src": "img/g/k18.jpg", "label": "Schaden", "text": "Hecksto\u00dff\u00e4nger stark eingedr\u00fcckt."}, {"src": "img/g/k22.jpg", "label": "Instandsetzung", "text": "Zur\u00fcckgeformt, grundiert, abgeklebt."}, {"src": "img/g/k19.jpg", "label": "Ergebnis", "text": "Farbton genau getroffen."}], [{"src": "img/g/k80.jpg", "label": "Schaden", "text": "Seitenwand und Sto\u00dff\u00e4nger eingedr\u00fcckt."}, {"src": "img/g/k82.jpg", "label": "Ergebnis", "text": "Instand gesetzt und lackiert \u2013 wie aus dem Werk."}], [{"src": "img/g/k37.jpg", "label": "Schaden", "text": "Klassiker mit Blechschaden an der Flanke."}, {"src": "img/g/k45.jpg", "label": "Instandsetzung", "text": "Blankes Metall, neue Form."}, {"src": "img/g/k48.jpg", "label": "Ergebnis", "text": "Wieder ein Schmuckst\u00fcck."}]]'>
+      <div class="tl-view"><img class="tl-a" alt="" src="img/g/k54.jpg"><img class="tl-b" alt="" src="img/g/k53.jpg"><span class="tl-badge">Schaden</span></div>
+      <div class="tl-rail"><input type="range" min="0" max="200" value="0" step="1" aria-label="Zeitraffer"><div class="tl-steps"><span>Schaden</span><span>Instandsetzung</span><span>Ergebnis</span></div><div class="tl-fill"></div></div>
+      <p class="tl-text">Tiefe Delle über Tür und Seitenwand.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block lamp-sec" aria-labelledby="lp-h">
+  <div class="wrap lamp-g">
+    <div>
+      <p class="kicker">Moderne Dellentechnik</p>
+      <h2 class="h2" id="lp-h">Wir sehen jede Delle.</h2>
+      <p class="dim">Mit Prüflicht machen wir selbst kleinste Beulen sichtbar – und drücken sie ohne neuen Lack wieder heraus. Fahren Sie mit der Maus oder dem Finger über das Bild.</p>
+      <a class="btn btn-ghost" href="leistungen.html#dellen">Mehr zu Smart Repair</a>
+    </div>
+    <div class="lamp" tabindex="0" aria-label="Interaktives Prüflicht">
+      <img src="img/g/k26.jpg" alt="Prüflicht auf rotem Lack zeigt die Dellen" width="1500" height="1125" loading="lazy" decoding="async">
+      <div class="lamp-stripes" aria-hidden="true"></div>
+      <span class="lamp-hint">Prüflicht bewegen</span>
+    </div>
+  </div>
+</section>
+
+<section class="block smart" aria-labelledby="sm-h">
+  <div class="wrap smart-g">
+    <div>
+      <p class="kicker">Smart-Repair-Check</p>
+      <h2 class="h2" id="sm-h">Muss das neu lackiert werden?</h2>
+      <p class="dim">Drei Fragen, eine ehrliche Ersteinschätzung. Die endgültige Antwort gibt's nach einem Blick auf Ihr Auto.</p>
+      <div class="q"><p class="q-t">Wie groß ist die Delle?</p>
+        <input type="range" min="1" max="40" value="6" data-sm-size aria-label="Größe der Delle in Zentimetern">
+        <div class="q-scale"><span>Münze</span><span>Handfläche</span><span>Teller</span></div></div>
+      <div class="q"><p class="q-t">Ist der Lack verletzt?</p><div class="seg" data-sm-paint><button class="on" data-v="0">Nein, nur eingedrückt</button><button data-v="1">Ja, Kratzer oder Abplatzer</button></div></div>
+      <div class="q"><p class="q-t">Wo sitzt sie?</p><div class="seg" data-sm-pos><button class="on" data-v="flat">Auf der Fläche</button><button data-v="edge">An Kante oder Sicke</button></div></div>
+    </div>
+    <div class="sm-out">
+      <div class="sm-vis" aria-hidden="true"><div class="sm-panel"><i class="sm-dent"></i></div><span class="sm-cm"><b data-sm-cm>6</b> cm</span></div>
+      <p class="sm-verdict" data-sm-verdict></p>
+      <p class="sm-detail dim" data-sm-detail></p>
+      <a class="btn btn-red" data-sm-wa href="https://wa.me/491716226690" target="_blank" rel="noopener">Foto per WhatsApp schicken</a>
+    </div>
+  </div>
+</section>
+
+<section class="station" data-station="3" id="station-lack" aria-label="Station 3: Lack">
+  <div class="wrap station-in"><span class="st-no">Station 3 von 5</span><h2 class="st-name"><span>Lack</span></h2><p class="st-line">Vom Füller bis zum Klarlack – in unserer Kabine entsteht der Glanz.</p></div>
+  <div class="st-stripe" aria-hidden="true"></div>
+</section>
+
+<section class="block cabin" aria-labelledby="cb-h">
+  <div class="wrap">
+    <div class="sec-head"><p class="kicker">Aus der Lackierkabine</p><h2 class="h2" id="cb-h">Handarbeit, die man sieht.</h2><p class="dim">Echte Aufnahmen aus unserer Halle – vom Airbrush bis zur kompletten Sonderlackierung.</p></div>
+    <div class="cabin-g">
+      <figure class="reel tall"><video src="img/reel_airbrush.mp4" poster="img/reel_airbrush.jpg" muted loop playsinline preload="none" aria-label="Airbrush-Arbeit an einem Motorradteil"></video><figcaption>Airbrush von Hand</figcaption></figure>
+      <figure class="reel wide"><video src="img/reel_custom.mp4" poster="img/reel_custom.jpg" muted loop playsinline preload="none" aria-label="Sonderlackierung an einem VW Eos"></video><figcaption>Sonderlackierung – einmalig</figcaption></figure>
+      <figure class="reel tall"><video src="img/reel_teile.mp4" poster="img/reel_teile.jpg" muted loop playsinline preload="none" aria-label="Lackierte Anbauteile in der Kabine"></video><figcaption>Anbauteile in Wunschfarbe</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="layers" aria-labelledby="ly-h">
+  <div class="ly-pin">
+    <div class="wrap ly-g">
+      <div class="ly-txt">
+        <p class="kicker">Unter der Oberfläche</p>
+        <h2 class="h2" id="ly-h">Fünf Schichten, dünner als ein Blatt Papier.</h2>
+        <p class="dim">So ist eine typische Fahrzeuglackierung aufgebaut. Scrollen Sie weiter – wir nehmen sie auseinander.</p>
+        <ol class="ly-legend">
+          <li data-l="4"><b>Klarlack</b><span>schützt vor UV, Kratzern, Waschanlage · ca. 40–50 µm</span></li>
+          <li data-l="3"><b>Basislack</b><span>der eigentliche Farbton · ca. 15–20 µm</span></li>
+          <li data-l="2"><b>Füller</b><span>gleicht Unebenheiten aus · ca. 30–40 µm</span></li>
+          <li data-l="1"><b>Grundierung</b><span>Korrosionsschutz auf dem Blech · ca. 20 µm</span></li>
+          <li data-l="0"><b>Blech</b><span>Stahl oder Aluminium – die Karosserie</span></li>
+        </ol>
+      </div>
+      <div class="ly-stack" aria-hidden="true">
+        <div class="ly-plate l0" style="--i:0"><span>Blech</span></div>
+        <div class="ly-plate l1" style="--i:1"><span>Grundierung</span></div>
+        <div class="ly-plate l2" style="--i:2"><span>Füller</span></div>
+        <div class="ly-plate l3" style="--i:3"><span>Basislack</span></div>
+        <div class="ly-plate l4" style="--i:4"><span>Klarlack</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -226,34 +328,57 @@
   </div>
 </section>
 
-<section class="block road" aria-labelledby="rd-h">
-  <div class="wrap">
-    <div class="sec-head"><p class="kicker">Im Schadensfall</p><h2 class="h2" id="rd-h">In vier Etappen zurück auf die Straße.</h2></div>
-    <div class="road-track">
-      <div class="road-line"><span class="road-car"><img src="img/car.png" alt="" width="299" height="108"></span></div>
-      <ol class="road-steps">
-        <li><b>01</b><h3>Schaden melden</h3><p>Per App, WhatsApp oder Telefon – mit Fotos geht's am schnellsten.</p></li>
-        <li><b>02</b><h3>Begutachtung</h3><p>Wir sehen uns den Schaden an und sagen Ihnen ehrlich, was nötig ist.</p></li>
-        <li><b>03</b><h3>Versicherung</h3><p>Wir unterstützen Sie bei der Abwicklung mit Ihrer Versicherung.</p></li>
-        <li><b>04</b><h3>Reparatur &amp; Übergabe</h3><p>Karosserie, Lack, Technik – und Ihr Auto steht wieder wie neu vor Ihnen.</p></li>
-      </ol>
+<section class="block code" aria-labelledby="cd-h">
+  <div class="wrap code-g">
+    <div>
+      <p class="kicker">Farbcode-Finder</p>
+      <h2 class="h2" id="cd-h">Wo steht Ihr Farbcode?</h2>
+      <p class="dim">Für Smart Repair oder Lackstift brauchen Sie den Farbcode Ihres Autos. Marke wählen – wir zeigen, wo er typischerweise sitzt.</p>
+      <div class="seg code-b" data-code><button data-spot="trunk" data-txt="Aufkleber im Kofferraum, meist in der Reserveradmulde – zusätzlich oft im Serviceheft." class=on>VW · Audi · Skoda · Seat</button><button data-spot="engine" data-txt="Im Motorraum am Federbeindom oder an der Türsäule auf der Fahrerseite.">BMW · Mini</button><button data-spot="pillar" data-txt="Am Schild in der Türsäule (B-Säule) oder vorn im Motorraum.">Mercedes-Benz</button><button data-spot="pillar" data-txt="Typschild an der B-Säule oder im Motorraum, dazu im Serviceheft.">Opel</button><button data-spot="pillar" data-txt="Typschild an der Türsäule auf der Fahrerseite.">Ford</button><button data-spot="pillar" data-txt="Typschild an der B-Säule auf der Fahrerseite, oft mit „C/TR“ oder „Paint“ markiert.">Toyota · Hyundai · Kia</button><button data-spot="engine" data-txt="Plakette im Motorraum oder an der Türsäule.">Renault · Peugeot · Citroën</button></div>
+      <p class="code-ans" data-code-ans>Aufkleber im Kofferraum, meist in der Reserveradmulde – zusätzlich oft im Serviceheft.</p>
+      <p class="small dim">Nicht gefunden? Fahrzeugschein reicht – wir ermitteln den Farbcode über die Fahrgestellnummer.</p>
+    </div>
+    <div class="code-car" aria-hidden="true">
+      <img src="img/car.png" alt="" width="299" height="108">
+      <span class="spot" data-at="engine" style="--x:20%;--y:38%"><i></i><em>Motorraum</em></span>
+      <span class="spot" data-at="pillar" style="--x:52%;--y:48%"><i></i><em>Türsäule</em></span>
+      <span class="spot on" data-at="trunk" style="--x:84%;--y:40%"><i></i><em>Kofferraum</em></span>
     </div>
   </div>
 </section>
 
-<section class="block drone" aria-labelledby="dr-h">
-  <div class="drone-view">
-    <video src="img/flug.mp4" poster="img/flug.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Beispiel-Drohnenflug von Falcon Eye durch eine Tiefgarage"></video>
-    <div class="hud" aria-hidden="true">
-      <span class="hud-rec"><i></i>REC</span><span class="hud-alt">ALT <b>42</b> m</span><span class="hud-spd">SPD <b>18</b> km/h</span><span class="hud-gps">49.3221° N · 7.3384° E</span>
-      <span class="hud-x"></span><span class="hud-frame"></span>
+<section class="station" data-station="4" id="station-finish" aria-label="Station 4: Finish">
+  <div class="wrap station-in"><span class="st-no">Station 4 von 5</span><h2 class="st-name"><span>Finish</span></h2><p class="st-line">Schleifen, polieren, prüfen. Erst wenn alles stimmt, geht es raus.</p></div>
+  <div class="st-stripe" aria-hidden="true"></div>
+</section>
+
+<section class="block scratch-sec" aria-labelledby="sc-h">
+  <div class="wrap scratch-g">
+    <div>
+      <p class="kicker">Selbst ausprobieren</p>
+      <h2 class="h2" id="sc-h">Schleifen Sie mal.</h2>
+      <p class="dim">Unter dem grauen Füller wartet ein fertiger Auftrag aus unserer Halle. Mit Maus oder Finger über das Bild reiben – so fühlt sich der letzte Schritt an.</p>
+      <p class="sc-meter"><span data-sc-pct>0</span> % geschliffen</p>
+      <button class="btn btn-ghost" data-sc-reset>Neu grundieren</button>
+    </div>
+    <div class="scratch" data-scratch>
+      <img src="img/g/k74.jpg" alt="Restaurierter Karmann Ghia vor der Werkstatt von Karosserie Kowollik" width="1500" height="1125" loading="lazy" decoding="async">
+      <canvas aria-hidden="true"></canvas>
+      <span class="sc-done">Fertig. So verlässt er unsere Halle.</span>
     </div>
   </div>
-  <div class="wrap drone-txt">
-    <p class="kicker">Werkstatt-Rundflug</p>
-    <h2 class="h2" id="dr-h">Kommen Sie mit auf eine Runde durch die Halle.</h2>
-    <p class="dim">Ein einziger FPV-Flug vom Hof durch das Tor, vorbei an Richtbank und Lackierkabine bis zum fertigen Auto – der beste Beweis, wie es bei uns aussieht. <em>Im Entwurf: Beispielflug von Falcon Eye (Tiefgarage). Der echte Flug durch Ihre Halle folgt.</em></p>
+</section>
+
+<section class="hs" aria-labelledby="hs-h">
+  <div class="hs-pin">
+    <div class="hs-head wrap"><p class="kicker">Projekt-Story</p><h2 class="h2" id="hs-h">Ford Thunderbird.<br><span class="dim">Elf Etappen. Ein Klassiker.</span></h2><div class="hs-bar"><i></i></div></div>
+    <div class="hs-track"><figure class="hs-i"><span><img src="img/g/k35.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>01</b> Ankunft in der Halle</figcaption></figure><figure class="hs-i"><span><img src="img/g/k36.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>02</b> Der Schaden im Detail</figcaption></figure><figure class="hs-i"><span><img src="img/g/k37.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>03</b> Blech auf Blech</figcaption></figure><figure class="hs-i"><span><img src="img/g/k39.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1125" height="1500" decoding="async"></span><figcaption><b>04</b> Teile ab, Fehler sichtbar</figcaption></figure><figure class="hs-i"><span><img src="img/g/k45.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>05</b> Zurück auf blankes Metall</figcaption></figure><figure class="hs-i"><span><img src="img/g/k47.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>06</b> Handarbeit am Blech</figcaption></figure><figure class="hs-i"><span><img src="img/g/k41.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>07</b> Form gefunden</figcaption></figure><figure class="hs-i"><span><img src="img/g/k40.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>08</b> Front im Rohbau</figcaption></figure><figure class="hs-i"><span><img src="img/g/k42.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>09</b> Chrom und Grill</figcaption></figure><figure class="hs-i"><span><img src="img/g/k48.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>10</b> Lack drauf</figcaption></figure><figure class="hs-i"><span><img src="img/g/k49.jpg" alt="Ford Thunderbird – Karosseriearbeiten bei Kowollik" width="1500" height="1125" decoding="async"></span><figcaption><b>11</b> Fertig für die Straße</figcaption></figure></div>
   </div>
+</section>
+
+<section class="station" data-station="5" id="station-uebergabe" aria-label="Station 5: Übergabe">
+  <div class="wrap station-in"><span class="st-no">Station 5 von 5</span><h2 class="st-name"><span>Übergabe</span></h2><p class="st-line">Ihr Auto steht wieder wie neu vor Ihnen – und Sie sehen, was wir gemacht haben.</p></div>
+  <div class="st-stripe" aria-hidden="true"></div>
 </section>
 
 <section class="block reviews" aria-labelledby="rv-h">
@@ -285,9 +410,19 @@
       <div class="hours" data-hours></div>
       <div class="ctas"><a class="btn btn-ghost" href="https://maps.app.goo.gl/XkemHoMqZr7ZnVgr7" target="_blank" rel="noopener">Route planen</a><a class="btn btn-ghost" href="kontakt.html">Kontakt</a></div>
     </div>
+    <div class="side-col">
+    <form class="termin" data-termin>
+      <h3>Wunschtermin anfragen</h3>
+      <p class="dim small">Tag und Tageszeit wählen – wir bestätigen per WhatsApp.</p>
+      <div class="days" data-days></div>
+      <div class="seg" data-slot><button type="button" class="on" data-v="vormittags">Vormittags</button><button type="button" data-v="nachmittags">Nachmittags</button></div>
+      <label class="tm-what">Worum geht's?<select data-what><option>Unfallschaden</option><option>Delle / Smart Repair</option><option>Lackierung</option><option>Klimaservice</option><option>Achsvermessung</option><option>Autoglas</option><option>Oldtimer</option><option>Sonstiges</option></select></label>
+      <button class="btn btn-red" type="submit">Termin per WhatsApp anfragen</button>
+    </form>
     <div class="app-card">
       <img src="img/qr-app.png" alt="QR-Code zur Schadensmelde-App" width="120" height="120" loading="lazy">
       <div><h3>Schaden per App melden</h3><p class="dim">Fotos hochladen, Daten eingeben, fertig – rund um die Uhr.</p><a class="btn btn-red sm" href="https://kowollik.schadensmeldung.digital/#/" target="_blank" rel="noopener">App öffnen</a></div>
+    </div>
     </div>
   </div>
 </section>
@@ -331,6 +466,6 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/app.js?v=1792011290"></script>
+<script src="assets/app.js?v=1792012478"></script>
 </body>
 </html>
