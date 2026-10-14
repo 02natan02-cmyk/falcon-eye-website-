@@ -116,6 +116,29 @@
     let sx = 0; lb.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true }); lb.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); });
   }
 
+
+  /* ---------- Küchen-Finder ---------- */
+  const fd = $('[data-finder]');
+  if (fd) {
+    const K = $$('.kc').map(c => ({ k: c.dataset.k, tags: c.dataset.tags, t: $('b', c).textContent, d: $('span', c).textContent, plan: $('.kc-plan', c).getAttribute('href') }));
+    const ans = []; const qs = $$('.fi-q', fd), res = $('[data-res]', fd);
+    const show = i => { qs.forEach((q, j) => q.classList.toggle('on', j === i)); res.hidden = i < 3; };
+    qs.forEach((q, i) => $$('button', q).forEach(b => b.addEventListener('click', () => { ans[i] = b.dataset.v; if (i < 2) show(i + 1); else finish(); })));
+    const finish = () => { const score = c => { let s = 0; if (c.tags.includes(ans[0])) s += 3; if (ans[1] === 'insel' && c.tags.includes('insel')) s += 2; if (ans[1] === 'theke' && c.tags.includes('theke')) s += 2; if (ans[1] === 'wand' && !c.tags.includes('insel')) s += 2; if (ans[2] === 'grifflos' && c.tags.includes('grifflos')) s += 1; if (ans[2] === 'griffe' && !c.tags.includes('grifflos')) s += 1; return s + Math.random() * .3; };
+      const best = K.slice().sort((a, b) => score(b) - score(a))[0];
+      $('[data-res-img]', fd).src = `img/k/${best.k}_0_s.webp`; $('[data-res-img]', fd).alt = best.t; $('[data-res-t]', fd).textContent = best.t; $('[data-res-d]', fd).textContent = best.d; $('[data-res-plan]', fd).href = best.plan; show(3); };
+    $('[data-res-again]', fd).addEventListener('click', () => { ans.length = 0; show(0); });
+  }
+
+  /* ---------- Ergonomie ---------- */
+  const eg = $('[data-ergo]');
+  if (eg) { const svg = $('.er-svg'), hd = $('[data-hd]', svg), bd = $('[data-bd]', svg), ct = $('[data-ct]', svg), tp = $('[data-tp]', svg), ln = $('[data-ln]', svg);
+    const upd = () => { const h = +eg.value, lo = Math.round(h / 2 + 5), hi = Math.round(h / 2 + 10), mid = (lo + hi) / 2, sc = 1.15, G = 250;
+      const top = G - h * sc, wy = G - mid * sc, sh = top + 26 * sc * .9;
+      hd.setAttribute('cy', top + 13); bd.setAttribute('y', top + 28); bd.setAttribute('height', G - top - 28); const arm = $('[data-arm]', svg); arm.setAttribute('y', wy - 14); ct.setAttribute('y', wy + 7); ct.setAttribute('height', G - wy - 7); tp.setAttribute('y', wy); ln.setAttribute('y1', wy); ln.setAttribute('y2', wy);
+      $('[data-ergo-v]').textContent = h + ' cm'; $('[data-ergo-out]').textContent = `${lo}–${hi} cm`; };
+    eg.addEventListener('input', upd); upd(); }
+
   /* ---------- 3D laden ---------- */
   let k3p = null; const load3d = () => k3p || (k3p = new Promise((res, rej) => { if (window.PelKitchen) return res(); const s = document.createElement('script'); s.src = 'js/kitchen3d.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }));
   const BASE = { shape: 'insel', a: 460, b: 300, c: 300, front: '#2b2c2e', finish: 'matt', worktop: 'eiche', handle: 'grifflos', tall: true, wallCab: true, hood: 'bora' };
