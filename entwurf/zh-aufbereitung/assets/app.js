@@ -82,7 +82,8 @@
         ctx.strokeStyle = 'rgba(160,220,225,.5)'; ctx.lineCap = 'round';
         for (const d of drips) { d.l += d.v * dpr; ctx.lineWidth = 2 * dpr; ctx.beginPath(); ctx.moveTo(d.x, d.y - d.l * .2); ctx.lineTo(d.x, d.y + Math.min(d.l, 120 * dpr)); ctx.stroke(); }
       })();
-      const done = () => { run = false; intro.classList.add('gone'); lenis && lenis.start(); heroIn(); };
+      let fin = false; const done = () => { if (fin) return; fin = true; run = false; intro.classList.add('gone'); lenis && lenis.start(); heroIn(); };
+      setTimeout(done, 6000);
       gsap.timeline({ onComplete: done })
         .to(st, { fill: 1, duration: 1.1, ease: 'power2.out' }, 0)
         .fromTo('.intro-logo .lg-car', { strokeDashoffset: 420 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, .2)
@@ -170,8 +171,8 @@
         if (sealed) { // beads: roll fast once big enough, stay round
           if (d.r > 2.2 * dpr) { d.vx += gx * G * dt * .9; d.vy += gy * G * dt * .9; } d.vx *= .9; d.vy *= .9;
         } else { // sheet: spreads, sticks, slow, leaves film
-          d.r = Math.min(d.r * (1 + dt * .25), 9 * dpr); if (d.r > 6 * dpr) { d.vx += gx * G * dt * .08; d.vy += gy * G * dt * .08; } d.vx *= .7; d.vy *= .7;
-          wctx.fillStyle = 'rgba(160,210,215,.05)'; wctx.beginPath(); wctx.ellipse(d.x, d.y, d.r * 1.6, d.r * 1.2, 0, 0, 7); wctx.fill();
+          d.r = Math.min(d.r * (1 + dt * .3), 10 * dpr); if (d.r > 5 * dpr) { d.vx += gx * G * dt * .05; d.vy += gy * G * dt * .05; } d.vx *= .82; d.vy *= .82; if (d.life > 3.5) d.dead = true;
+          wctx.fillStyle = 'rgba(160,210,215,.025)'; wctx.beginPath(); wctx.ellipse(d.x, d.y, d.r * 1.6, d.r * 1.2, 0, 0, 7); wctx.fill();
         }
         d.x += d.vx * dt; d.y += d.vy * dt;
       }
@@ -189,8 +190,8 @@
           ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(d.x + d.r * .2, d.y + d.r * .9, d.r * .8, d.r * .25, 0, 0, 7); ctx.fill();
           if (Math.hypot(d.vx, d.vy) > 40 * dpr) { ctx.strokeStyle = 'rgba(200,240,242,.25)'; ctx.lineWidth = d.r * .6; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.vx * .03, d.y - d.vy * .03); ctx.stroke(); }
         } else {
-          ctx.fillStyle = 'rgba(170,215,220,.22)'; ctx.beginPath(); ctx.ellipse(d.x, d.y, d.r * 1.5, d.r * 1.1, 0, 0, 7); ctx.fill();
-          ctx.strokeStyle = 'rgba(220,245,247,.25)'; ctx.lineWidth = 1 * dpr; ctx.stroke();
+          const fa = Math.max(0, 1 - d.life / 3.5); ctx.fillStyle = `rgba(170,215,220,${.2 * fa})`; ctx.beginPath(); ctx.ellipse(d.x, d.y, d.r * 1.5, d.r * 1.1, 0, 0, 7); ctx.fill();
+          ctx.strokeStyle = `rgba(220,245,247,${.22 * fa})`; ctx.lineWidth = 1 * dpr; ctx.stroke();
         }
       }
     };
@@ -291,7 +292,9 @@
         wx.innerHTML = days.map(x => `<div class="wd${x === best ? ' best' : ''}"><small>${x.t.toLocaleDateString('de-DE', { weekday: 'short' })}</small><span class="ic" aria-hidden="true">${ICON(x.c)}</span><b>${x.tx}°</b><span class="pr" title="${x.pr.toFixed(1)} mm"><i style="height:${Math.min(100, x.pr / max * 100)}%"></i></span><span class="mm">${x.pr.toFixed(1)} mm</span></div>`).join('') +
           `<p class="wx-tip">Bester Abholtag: <b>${best.t.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}</b>. ${days.some(x => x.pr > 2) ? 'Regen in Sicht? Mit Keramikversiegelung perlt er einfach ab.' : 'Trocken und klar – perfekt für frischen Glanz.'}</p>`;
       }).catch(() => { wx.closest('section').style.display = 'none'; });
-    const wio = new IntersectionObserver(([e]) => { if (e.isIntersecting) { wio.disconnect(); go(); } }, { rootMargin: '600px' }); wio.observe(wx);
+    let wgo = false; const startW = () => { if (wgo) return; wgo = true; go(); };
+    const wio = new IntersectionObserver(([e]) => { if (e.isIntersecting) { wio.disconnect(); startW(); } }, { rootMargin: '600px' }); wio.observe(wx);
+    addEventListener('scroll', () => { if (wx.getBoundingClientRect().top < innerHeight + 800) startW(); }, { passive: true });
   }
 
   /* ================= SEASON PLANNER (.ics) ================= */
