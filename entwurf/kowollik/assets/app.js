@@ -320,7 +320,10 @@
         sc.onerror = fallback; document.body.appendChild(sc);
         setTimeout(() => { if (!host.classList.contains('ready') && host.isConnected) { api = null; fallback(); } }, 25000);
       };
-      const lio = new IntersectionObserver(([e]) => { if (e.isIntersecting) { lio.disconnect(); go(); } }, { rootMargin: '900px' }); lio.observe(host);
+      let started = false; const start = () => { if (started) return; started = true; removeEventListener('scroll', chk); go(); };
+      const chk = () => { if (host.getBoundingClientRect().top < innerHeight + 1200) start(); };
+      const lio = new IntersectionObserver(([e]) => { if (e.isIntersecting) { lio.disconnect(); start(); } }, { rootMargin: '1200px' }); lio.observe(host);
+      addEventListener('scroll', chk, { passive: true }); addEventListener('load', () => setTimeout(start, 6000));
     }
   }
 
