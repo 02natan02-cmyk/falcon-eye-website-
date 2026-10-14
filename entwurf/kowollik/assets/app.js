@@ -384,7 +384,8 @@
       $$('.gal-f .chip').forEach(x => x.classList.toggle('on', x === c));
       const f = c.dataset.f;
       if (hasG && !reduce) {
-        gsap.to(gal, { opacity: 0, y: 10, duration: .25, onComplete: () => { items.forEach(i => i.classList.toggle('out', f !== 'all' && i.dataset.cat !== f)); ScrollTrigger.refresh(); gsap.to(gal, { opacity: 1, y: 0, duration: .45 }); gsap.fromTo(items.filter(i => !i.classList.contains('out')).slice(0, 16), { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: .03, duration: .6, ease: 'power3.out' }); } });
+        items.forEach(i => i.classList.toggle('out', f !== 'all' && i.dataset.cat !== f)); ScrollTrigger.refresh();
+        gsap.fromTo(items.filter(i => !i.classList.contains('out')).slice(0, 16), { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: .03, duration: .6, ease: 'power3.out', overwrite: true });
       } else items.forEach(i => i.classList.toggle('out', f !== 'all' && i.dataset.cat !== f));
     }));
     const lb = $('.lb'), lim = $('img', lb), cap = $('figcaption', lb); let cur = 0, vis = [];
