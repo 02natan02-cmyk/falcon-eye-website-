@@ -350,7 +350,8 @@
     $$('button', veh).forEach(b => b.addEventListener('click', () => { $$('button', veh).forEach(x => x.classList.toggle('on', x === b)); v = b.dataset.v; const wm = /Wohn/.test(v); roof.style.display = wm ? '' : 'none'; if (!wm) roof.classList.remove('on'); render(); }));
     $$('button', mods).forEach(b => b.addEventListener('click', () => { b.classList.toggle('on'); render(); }));
     roof.style.display = 'none';
-    $('[data-tk-share]').addEventListener('click', async e => { const txt = `Anfrage Z&H Aufbereitung\nFahrzeug: ${v}\nLeistungen: ${$$('button.on', mods).map(b => b.textContent).join(', ') || '—'}\nTel. 06841 / 890 200`; try { if (navigator.share) { await navigator.share({ title: 'Mein Pflegepaket', text: txt }); return; } await navigator.clipboard.writeText(txt); e.target.textContent = 'Kopiert ✓'; } catch (err) {} });
+    const twa = $('[data-tk-wa]'); const setWa = () => { const txt = `Hallo Z&H, hier mein Auftragszettel von der Website:\nFahrzeug: ${v}\nLeistungen: ${$$('button.on', mods).map(b => b.textContent).join(', ') || '—'}\nWann hätten Sie Zeit? Fotos schicke ich gern mit.`; twa.href = 'https://wa.me/4917624401827?text=' + encodeURIComponent(txt); };
+    $$('button', veh).concat($$('button', mods)).forEach(b => b.addEventListener('click', setWa)); setWa();
     render();
   }
 

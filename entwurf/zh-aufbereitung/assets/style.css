@@ -57,6 +57,10 @@ h1,h2,h3{hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
 .btn-white{background:#fff;color:var(--ink)}
 .btn-ink{background:var(--ink);color:#fff}
 .btn-line{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+.btn-wa{background:#25d366;color:#fff;box-shadow:0 12px 30px -14px rgba(37,211,102,.9)}
+.btn-wa .wai,.dock .wai,.mn-wa .wai{width:18px;height:18px;fill:currentColor;flex:none}
+.mn-wa{display:inline-flex;align-items:center;gap:8px;color:#25d366!important}
+.kc.wa small{color:#1aa752}
 .btn-glass{background:rgba(255,255,255,.12);color:#fff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 .progress{position:fixed;inset:0 0 auto;height:3px;z-index:120;pointer-events:none}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--aqua));transform-origin:left;transform:scaleX(0)}
 /* logos */
@@ -321,6 +325,7 @@ input[type=range]{accent-color:var(--aqua);width:100%}
 .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + var(--sb));z-index:80;display:none;grid-template-columns:1fr 1fr 1.4fr;gap:8px;padding:8px;border-radius:22px;background:rgba(10,15,17,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 20px 40px -10px rgba(0,0,0,.5),0 0 0 1px var(--nline);transition:transform .4s var(--ease)}
 .dock a{display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;border-radius:15px;color:#fff;text-decoration:none;font:700 14px var(--body);background:rgba(255,255,255,.08)}
 .dock svg{width:17px;height:17px;fill:currentColor}
+.dock a.wa{background:#25d366}
 .dock a.hi{background:var(--aqua);color:var(--ink)}
 .dock.away{transform:translateY(150%)}
 .concept{position:fixed;left:16px;bottom:16px;z-index:70;padding:8px 14px;border-radius:999px;background:rgba(6,9,10,.82);color:#fff;font-size:12px;text-decoration:none;backdrop-filter:blur(8px)}
@@ -424,6 +429,7 @@ input[type=range]{accent-color:var(--aqua);width:100%}
   .hero-cue{bottom:96px}
   .hero-meta{font-size:13px;gap:6px 16px}
   .hero-cue{display:none}
+  .hero .btn-glass{display:none}
   .kick{font-size:11px;letter-spacing:.12em}
   .hero-cue span{font-size:10.5px}
   .bf-blade i{width:44px;height:44px;left:-22px;margin-top:-22px}
