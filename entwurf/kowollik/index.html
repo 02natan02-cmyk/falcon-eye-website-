@@ -56,7 +56,7 @@
 </nav>
 <main id="main">
 <section class="hero" aria-label="Willkommen">
-  <div class="hero-media"><video class="hero-img" src="img/lackierung.mp4" poster="img/lackierung.jpg" muted loop playsinline autoplay preload="auto" aria-label="Lackierer bei der Arbeit in der Lackierkabine von Karosserie Kowollik"></video></div>
+  <div class="hero-media"><video class="hero-img" muted loop playsinline autoplay preload="auto" aria-label="Lackierer bei der Arbeit in der Lackierkabine von Karosserie Kowollik"></video><script>(function(v){var m=innerHeight>innerWidth*1.05;v.poster=m?"img/lackierung_m.jpg":"img/lackierung.jpg";v.src=m?"img/lackierung_m.mp4":"img/lackierung.mp4";})(document.currentScript.previousElementSibling)</script></div>
   <canvas class="mist" aria-hidden="true"></canvas>
   <div class="hero-in wrap">
     <p class="kicker"><span class="dot"></span>Homburg · seit 1987</p>
@@ -91,7 +91,7 @@
 
 <section class="block drone" aria-labelledby="dr-h">
   <div class="drone-view">
-    <video src="img/flug.mp4" poster="img/flug.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Beispiel-Drohnenflug von Falcon Eye durch eine Tiefgarage"></video>
+    <video muted loop playsinline autoplay preload="metadata" aria-label="Beispiel: FPV-Drohnenflug von Falcon Eye über einen Autobetrieb bis ins Fahrzeug"></video><script>(function(v){var m=innerHeight>innerWidth*1.05;v.poster=m?"img/flug_m.jpg":"img/flug.jpg";v.src=m?"img/flug_m.mp4":"img/flug.mp4";})(document.currentScript.previousElementSibling)</script>
     <div class="hud" aria-hidden="true">
       <span class="hud-rec"><i></i>REC</span><span class="hud-alt">ALT <b>42</b> m</span><span class="hud-spd">SPD <b>18</b> km/h</span><span class="hud-gps">49.3221° N · 7.3384° E</span>
       <span class="hud-x"></span><span class="hud-frame"></span>
@@ -100,7 +100,7 @@
   <div class="wrap drone-txt">
     <p class="kicker">Werkstatt-Rundflug</p>
     <h2 class="h2" id="dr-h">Kommen Sie mit auf eine Runde durch die Halle.</h2>
-    <p class="dim">Ein einziger FPV-Flug vom Hof durch das Tor, vorbei an Richtbank und Lackierkabine bis zum fertigen Auto – der beste Beweis, wie es bei uns aussieht. <em>Im Entwurf: Beispielflug von Falcon Eye (Tiefgarage). Der echte Flug durch Ihre Halle folgt.</em></p>
+    <p class="dim">Ein einziger FPV-Flug vom Hof durch das Tor, vorbei an Richtbank und Lackierkabine bis zum fertigen Auto – der beste Beweis, wie es bei uns aussieht. <em>Im Entwurf: echter Falcon-Eye-Flug bei Z&amp;H Aufbereitung in Kirkel, gefilmt in 4K. Ihr eigener Flug durch die Halle folgt.</em></p>
   </div>
 </section>
 
@@ -186,26 +186,17 @@
   </div>
 </section>
 
-<section class="block unfall" aria-labelledby="uf-h">
-  <div class="wrap unfall-g">
-    <div class="uf-head">
-      <p class="kicker">Unfall-Checkliste</p>
-      <h2 class="h2" id="uf-h">Es hat gekracht. Was jetzt?</h2>
-      <p class="dim">Acht Punkte, die nach einem Unfall wirklich zählen. Abhaken, aufs Handy schicken, ruhig bleiben.</p>
-      <div class="uf-ring" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52"/><circle class="uf-p" cx="60" cy="60" r="52" pathLength="100"/></svg><b><span data-uf-n>0</span>/8</b></div>
-      <div class="ctas"><button class="btn btn-ghost" data-uf-share>Checkliste aufs Handy schicken</button></div>
-      <p class="small dim">Allgemeine Hinweise, keine Rechtsberatung.</p>
+<section class="unfall" aria-labelledby="uf-h">
+  <div class="wrap">
+    <div class="uf-card">
+      <div class="uf-top">
+        <div class="uf-ring" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52"/><circle class="uf-p" cx="60" cy="60" r="52" pathLength="100"/></svg><b><span data-uf-n>0</span>/8</b></div>
+        <div class="uf-tt"><p class="kicker">Unfall-Checkliste</p><h2 class="h3" id="uf-h">Es hat gekracht? Acht Punkte, ruhig abhaken.</h2></div>
+        <button class="btn btn-ghost sm" data-uf-share>Aufs Handy schicken</button>
+      </div>
+      <ol class="uf-list"><li><label><input type="checkbox"><span><b>Unfallstelle sichern</b><small>Warnblinker, Warnweste, Warndreieck.</small></span></label></li><li><label><input type="checkbox"><span><b>Verletzte versorgen</b><small>Erste Hilfe – im Zweifel sofort 112.</small></span></label></li><li><label><input type="checkbox"><span><b>Polizei rufen</b><small>Bei Verletzten, Streit oder Fahrerflucht.</small></span></label></li><li><label><input type="checkbox"><span><b>Alles fotografieren</b><small>Endlage, jeden Schaden, beide Kennzeichen.</small></span></label></li><li><label><input type="checkbox"><span><b>Daten tauschen</b><small>Name, Kennzeichen, Versicherung, Zeugen.</small></span></label></li><li><label><input type="checkbox"><span><b>Nichts unterschreiben</b><small>Kein Schuldanerkenntnis vor Ort.</small></span></label></li><li><label><input type="checkbox"><span><b>Versicherung melden</b><small>Zeitnah – oft innerhalb einer Woche.</small></span></label></li><li><label><input type="checkbox"><span><b>Werkstatt selbst wählen</b><small>Unverschuldet? Sie entscheiden. Wir regeln den Rest.</small></span></label></li></ol>
+      <p class="uf-foot">Allgemeine Hinweise, keine Rechtsberatung. Wir übernehmen die Abwicklung mit der Versicherung.</p>
     </div>
-    <ol class="uf-list">
-      <li><label><input type="checkbox"><span><b>Unfallstelle sichern</b>Warnblinker an, Warnweste anziehen, Warndreieck aufstellen.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Verletzte versorgen</b>Erste Hilfe leisten und im Zweifel sofort die 112 wählen.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Polizei rufen, wenn nötig</b>Spätestens bei Verletzten, Streit über die Schuldfrage oder wenn der Unfallgegner flüchtet.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Alles fotografieren</b>Gesamtsituation, Endlage der Fahrzeuge, jeden Schaden, beide Kennzeichen.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Daten austauschen</b>Name, Anschrift, Kennzeichen, Versicherung des Unfallgegners – und Kontaktdaten von Zeugen.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Nichts unterschreiben</b>Kein Schuldanerkenntnis vor Ort, auch wenn Sie unter Druck gesetzt werden.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Versicherung informieren</b>Den Schaden zeitnah melden – viele Verträge verlangen das innerhalb einer Woche.</span></label></li>
-      <li><label><input type="checkbox"><span><b>Werkstatt selbst wählen</b>Bei einem unverschuldeten Unfall dürfen Sie Ihre Werkstatt frei wählen. Wir unterstützen Sie bei der Abwicklung.</span></label></li>
-    </ol>
   </div>
 </section>
 
@@ -379,6 +370,58 @@
 <section class="station" data-station="5" id="station-uebergabe" aria-label="Station 5: Übergabe">
   <div class="wrap station-in"><span class="st-no">Station 5 von 5</span><h2 class="st-name"><span>Übergabe</span></h2><p class="st-line">Ihr Auto steht wieder wie neu vor Ihnen – und Sie sehen, was wir gemacht haben.</p></div>
   <div class="st-stripe" aria-hidden="true"></div>
+</section>
+
+<section class="block insta" aria-labelledby="ig-h">
+  <div class="wrap insta-g">
+    <div class="ig-txt">
+      <p class="kicker">Live aus der Halle</p>
+      <h2 class="h2" id="ig-h">Folgen Sie uns in die Lackierkabine.</h2>
+      <p class="dim">Spektralphotometer, Spachtel, Klarlack: Auf Instagram zeigen wir fast jede Woche, was hinter dem Rolltor passiert. Scrollen Sie durchs Handy – tippen Sie einen Beitrag an.</p>
+      <div class="ig-latest"><span class="ig-dot"></span><p><b>Neu:</b> <span data-ig-latest></span></p></div>
+      <div class="ctas"><a class="btn btn-red" href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener">@karosseriekowollik folgen</a></div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone" data-ig>
+        <span class="ph-notch" aria-hidden="true"></span>
+        <div class="ph-screen">
+          <div class="ph-status" aria-hidden="true"><b data-ig-time>9:41</b><span>●●● ▲ ▮</span></div>
+          <div class="ig-scroll" data-lenis-prevent tabindex="0" aria-label="Instagram-Profil von Karosserie Kowollik, scrollbar">
+            <div class="ig-bar"><span>karosseriekowollik</span><span class="ig-ic">☰</span></div>
+            <div class="ig-prof">
+              <a class="ig-ava" href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener"><img src="img/logo-dark.png" alt="Karosserie Kowollik" width="934" height="267"></a>
+              <div class="ig-stats"><div><b>666</b><span>Beiträge</span></div><div><b>126</b><span>Follower</span></div><div><b>2</b><span>Gefolgt</span></div></div>
+            </div>
+            <div class="ig-bio"><b>Karosserie Kowollik</b><span>Autowerkstatt · Homburg</span><span>– Karosserie<br>– Lackierung<br>– Smartrepair<br>– Versicherungsabwicklung</span><a href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener">karosseriekowollik.de</a></div>
+            <div class="ig-btns"><a href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener" class="ig-follow">Folgen</a><a href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener">Nachricht</a></div>
+            <div class="ig-tabs" aria-hidden="true"><span class="on">▦</span><span>▶</span><span>☺</span></div>
+            <div class="ig-grid"><button class="ig-tile" data-i="0" aria-label="Beitrag öffnen: Farbton genau getroffen. 🎨📊
+
+Damit der Lack nach der Reparat"><img src="img/ig/t0.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="1" aria-label="Beitrag öffnen: Wenn wir Unebenheiten ausgleichen müssen, kommt bei uns Spac"><img src="img/ig/t1.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="2" aria-label="Beitrag öffnen: Sauberes Werkzeug ist die Basis für ein makelloses Ergebnis."><img src="img/ig/t2.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="3" aria-label="Beitrag öffnen: Für manche Arbeiten ist es besser, wenn bestimmte Bauteile a"><img src="img/ig/t3.webp" alt="" loading="lazy" width="360" height="480"></button><button class="ig-tile" data-i="4" aria-label="Beitrag öffnen: Glanz entsteht im Detail. ✨🚗
+
+Beim Polieren wird die Lackobe"><img src="img/ig/t4.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="5" aria-label="Beitrag öffnen: Nacharbeit bis alles passt. 🔧
+
+Auch nach einer Reparatur wir"><img src="img/ig/t5.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="6" aria-label="Beitrag öffnen: Bei Karosserie Kowollik nutzen wir moderne Technik zum exakt"><img src="img/ig/t6.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="7" aria-label="Beitrag öffnen: Schritt für Schritt zum neuen Lack. 🎨🚗
+
+Bevor der Lack aufge"><img src="img/ig/t7.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="8" aria-label="Beitrag öffnen: Spachtelarbeit für eine glatte Oberfläche. 🧱✨
+
+Bevor der Lac"><img src="img/ig/t8.webp" alt="" loading="lazy" width="360" height="480"></button><button class="ig-tile" data-i="9" aria-label="Beitrag öffnen: Damit neuer Lack später sauber hält und gleichmäßig wirkt, w"><img src="img/ig/t9.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="10" aria-label="Beitrag öffnen: Nachdem der Basislack aufgetragen wurde, kommt der Klarlack "><img src="img/ig/t10.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button><button class="ig-tile" data-i="11" aria-label="Beitrag öffnen: Frisch aufgetragener Lack wirkt zunächst „nass“ und glänzend"><img src="img/ig/t11.webp" alt="" loading="lazy" width="360" height="480"><i class=ig-reel></i></button></div>
+            <a class="ig-more" href="https://www.instagram.com/karosseriekowollik/" target="_blank" rel="noopener">Alle Beiträge auf Instagram ansehen →</a>
+          </div>
+          <div class="ig-post" data-lenis-prevent hidden>
+            <div class="ig-ph"><button class="ig-back" aria-label="Zurück zum Profil">←</button><span>Beiträge</span></div>
+            <div class="ig-media"><img alt="" data-ig-img><video muted playsinline loop data-ig-vid></video><span class="ig-heart" aria-hidden="true">♥</span></div>
+            <div class="ig-acts"><button class="ig-like" aria-label="Gefällt mir">♡</button><span>💬</span><span>➤</span><a data-ig-link target="_blank" rel="noopener">Auf Instagram öffnen</a></div>
+            <p class="ig-cap"><b>karosseriekowollik</b> <span data-ig-cap></span></p>
+            <p class="ig-date" data-ig-date></p>
+          </div>
+          <span class="ph-home" aria-hidden="true"></span>
+        </div>
+      </div>
+      <script src="assets/ig.js"></script>
+      <p class="ph-hint">Im Handy scrollen · Beitrag antippen · doppelt tippen = ♥</p>
+    </div>
+  </div>
 </section>
 
 <section class="block reviews" aria-labelledby="rv-h">

@@ -545,6 +545,29 @@
   $$('.reel video, .drone-view video').forEach(v => vio.observe(v));
   const hv = $('.hero video'); if (hv) { const kick = () => { const p = hv.play(); p && p.catch(() => {}); }; kick(); addEventListener('touchstart', kick, { once: true, passive: true }); }
 
+  /* ---------- Instagram-Handy ---------- */
+  const ph = $('.phone[data-ig]');
+  if (ph && window.IG_POSTS) {
+    const P = window.IG_POSTS, post = $('.ig-post', ph), img = $('[data-ig-img]', ph), vid = $('[data-ig-vid]', ph), cap = $('[data-ig-cap]', ph), dt = $('[data-ig-date]', ph), lk = $('[data-ig-link]', ph), like = $('.ig-like', ph), heart = $('.ig-heart', ph);
+    const MON = { January: 'Januar', February: 'Februar', March: 'März', April: 'April', May: 'Mai', June: 'Juni', July: 'Juli', August: 'August', September: 'September', October: 'Oktober', November: 'November', December: 'Dezember' };
+    const deD = d => { const m = /([A-Za-z]+) (\d+), (\d{4})/.exec(d || ''); return m ? `${m[2]}. ${MON[m[1]] || m[1]} ${m[3]}` : ''; };
+    const lat = $('[data-ig-latest]'); if (lat) lat.textContent = (P[0].c || '').split('\n')[0];
+    const tm = $('[data-ig-time]'); const clk = () => { const d = new Date(); tm.textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); }; clk(); setInterval(clk, 30000);
+    const open = i => { const x = P[i]; img.src = x.p; img.hidden = !!x.v; vid.hidden = !x.v; if (x.v) { vid.src = x.v; vid.poster = x.p; vid.muted = true; const pr = vid.play(); pr && pr.catch(() => {}); } else { vid.removeAttribute('src'); vid.load(); }
+      cap.textContent = x.c; dt.textContent = deD(x.d); lk.href = x.u; like.classList.remove('on'); like.textContent = '♡'; post.hidden = false; post.scrollTop = 0; };
+    const close = () => { post.hidden = true; vid.pause(); };
+    $$('.ig-tile', ph).forEach(t => t.addEventListener('click', () => open(+t.dataset.i)));
+    $('.ig-back', ph).addEventListener('click', close);
+    const doLike = () => { like.classList.add('on'); like.textContent = '♥'; heart.classList.remove('pop'); void heart.offsetWidth; heart.classList.add('pop'); };
+    like.addEventListener('click', () => { if (like.classList.contains('on')) { like.classList.remove('on'); like.textContent = '♡'; } else doLike(); });
+    let lastTap = 0; $('.ig-media', ph).addEventListener('pointerup', () => { const n = Date.now(); if (n - lastTap < 320) doLike(); lastTap = n; });
+    $('.ig-media', ph).addEventListener('dblclick', e => e.preventDefault());
+    if (fine) { const wrap = ph.parentElement; wrap.addEventListener('pointermove', e => { const r = wrap.getBoundingClientRect(); ph.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 16 + 'deg'); ph.style.setProperty('--rx', -((e.clientY - r.top) / r.height - .5) * 10 + 'deg'); }); wrap.addEventListener('pointerleave', () => { ph.style.removeProperty('--ry'); ph.style.removeProperty('--rx'); }); }
+    // kleiner Auto-Scroll als Hinweis, sobald das Handy sichtbar wird
+    const sc = $('.ig-scroll', ph); let hinted = false;
+    new IntersectionObserver(([e]) => { if (e.isIntersecting && !hinted) { hinted = true; setTimeout(() => { sc.scrollTo({ top: 220, behavior: 'smooth' }); setTimeout(() => sc.scrollTo({ top: 0, behavior: 'smooth' }), 1300); }, 700); } }, { threshold: .5 }).observe(ph);
+  }
+
   if (hasG) { ScrollTrigger.sort(); ScrollTrigger.refresh(); }
   addEventListener('load', () => { if (hasG) { ScrollTrigger.sort(); ScrollTrigger.refresh(); } });
 })();
