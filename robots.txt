@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://falcon-eye.de/sitemap.xml
+Disallow: /entwurf/
