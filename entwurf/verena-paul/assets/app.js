@@ -58,13 +58,13 @@
   }
 
   /* ---------- Klang ---------- */
-  const sbtn = $('[data-snd]'); let AC, master, swell, audioEl, sound = false, built = false;
+  const sbtn = $('[data-snd]'), moodEl = $('[data-mood]'); let cur = 1; let AC, master, swell, audioEl, sound = false, built = false;
   async function buildAudio() {
     AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = 0; master.connect(AC.destination);
     swell = AC.createGain(); swell.gain.value = 1; swell.connect(master);
     let ok = false;
     try { const r = await fetch(D.music, { method: 'HEAD' }); ok = r.ok && /audio|mpeg|octet/.test(r.headers.get('content-type') || 'audio'); } catch (e) {}
-    if (ok) { audioEl = new Audio(D.music); audioEl.loop = true; audioEl.crossOrigin = 'anonymous'; AC.createMediaElementSource(audioEl).connect(swell); audioEl.play().catch(() => {}); }
+    if (ok) { audioEl = new Audio(D.tracks ? D.tracks[cur - 1] : D.music); audioEl.loop = true; audioEl.crossOrigin = 'anonymous'; AC.createMediaElementSource(audioEl).connect(swell); audioEl.play().catch(() => {}); }
     else {
       // Meeresrauschen: braunes Rauschen + Tiefpass + langsame Wellen
       const len = AC.sampleRate * 4, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0); let l = 0;
@@ -89,8 +89,10 @@
     if (AC.state === 'suspended') await AC.resume();
     if (audioEl) sound ? audioEl.play().catch(() => {}) : null;
     master.gain.setTargetAtTime(sound ? .9 : 0, AC.currentTime, .6);
+    if (moodEl) moodEl.hidden = !(sound && audioEl);
     if (!sound && audioEl) setTimeout(() => !sound && audioEl.pause(), 1500);
   });
+  moodEl && moodEl.addEventListener('click', e => { const b = e.target.closest('[data-tr]'); if (!b || !audioEl) return; cur = +b.dataset.tr; $$('[data-tr]', moodEl).forEach(x => x.classList.toggle('on', x === b)); const t = audioEl.currentTime; master.gain.setTargetAtTime(0, AC.currentTime, .15); setTimeout(() => { audioEl.src = D.tracks[cur - 1]; audioEl.play().catch(() => {}); master.gain.setTargetAtTime(.9, AC.currentTime, .4); }, 350); });
   const breatheSound = (to, sec) => { if (sound && swell) swell.gain.setTargetAtTime(to, AC.currentTime, sec / 3); };
 
   /* ---------- Reise (horizontal) ---------- */
@@ -116,6 +118,23 @@
     const up = () => { const r = bq.getBoundingClientRect(), p = Math.max(0, Math.min(1, (innerHeight * .85 - r.top) / (r.height + innerHeight * .35))); const n = Math.round(p * ws.length); ws.forEach((w, i) => w.classList.toggle('on', i < n)); };
     addEventListener('scroll', up, { passive: true }); up();
   }
+
+
+  /* ---------- Lebensbaum ---------- */
+  const tw = $('[data-tree]');
+  if (tw) {
+    const svgT = $('svg.tree', tw), ty = $('[data-ty]'), tt = $('[data-tt]'), F = $$('.fr', tw);
+    const FD = F.map(f => f.getAttribute('aria-label'));
+    const pick = i => { F.forEach((f, j) => f.classList.toggle('on', j === i)); const [y, ...r] = FD[i].split(': '); ty.textContent = y; tt.textContent = r.join(': '); };
+    F.forEach((f, i) => { f.addEventListener('click', () => pick(i)); f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(i); } }); f.addEventListener('mouseenter', () => pick(i)); });
+    const grow = () => { const r = tw.getBoundingClientRect(), vh = innerHeight; const g = RM ? 1 : Math.max(0, Math.min(1, (vh * .9 - r.top) / (r.height * .75))); svgT.style.setProperty('--g', g.toFixed(3)); tw.classList.toggle('leafy', g > .55); tw.classList.toggle('fruity', g > .8); if (g > .8 && !tw._auto) { tw._auto = 1; let k = 0; const a = setInterval(() => { if (tw._touched) return clearInterval(a); pick(k = (k + 1) % F.length); }, 3200); } };
+    tw.addEventListener('pointerdown', () => tw._touched = 1);
+    addEventListener('scroll', grow, { passive: true }); grow(); pick(0);
+  }
+
+  /* ---------- Momente (Handy: antippen) ---------- */
+  $$('[data-mo]').forEach(m => m.addEventListener('click', () => m.classList.toggle('on')));
+  if (window.gsap && !RM) $$('.mo img').forEach((im, i) => gsap.fromTo(im, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: im, start: 'top bottom', end: 'bottom top', scrub: true } }));
 
   /* ---------- Finder ---------- */
   const ft = $('[data-ft]'), fd = $('[data-fd]'), fl = $('[data-fl]'), fres = $('[data-fres]');

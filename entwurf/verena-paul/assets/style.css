@@ -249,3 +249,93 @@ button{font:inherit;color:inherit}
 .aloha .swipe{color:#9fbcbc}
 .trio{right:calc(var(--gut) + 80px)}
 @media (max-width:899px){.hero::after{background:linear-gradient(0deg,rgba(8,28,36,.85),rgba(8,28,36,.35) 55%,rgba(8,28,36,.1))}.trio{right:auto}}
+/* ===== Energie: Blume des Lebens, Lebensbaum, Fotos ===== */
+:root{--gold:#e9c23c;--gold2:#f6dc7a;--leaf:#8cb83f;--leaf2:#5f8f2b}
+.mark{width:42px;height:42px;animation:spin 40s linear infinite}
+.mark circle{stroke:var(--gold);stroke-width:1.3}.mark .fol-o,.mark .fol-o2{stroke:var(--leaf);stroke-width:1}
+.hdr.solid .mark circle{stroke:#d4a017}.hdr.solid .mark .fol-o{stroke:var(--leaf2)}
+/* Intro */
+.in-fol{width:min(300px,60vw);height:auto;margin-bottom:18px;overflow:visible;filter:drop-shadow(0 0 18px rgba(246,220,122,.55))}
+.in-fol circle{stroke:var(--gold2);stroke-width:1;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s calc(var(--i,0) * .045s) cubic-bezier(.6,0,.2,1) forwards}
+.in-fol .fol-o{stroke:var(--leaf);animation-delay:1s}.in-fol .fol-o2{stroke:var(--gold);animation-delay:1.1s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.in-fol g{transform-box:fill-box;transform-origin:center;animation:spin 30s linear infinite}
+.in-sun{display:none}
+.in-a{animation-delay:1.2s}.in-n{animation-delay:1.6s}
+/* Hero-Portrait */
+.hero-por{position:absolute;right:calc(var(--gut) + 20px);top:50%;z-index:2;width:clamp(300px,30vw,440px);aspect-ratio:3/4;translate:0 -46%}
+.arch{position:absolute;inset:8% 10%;border-radius:999px 999px 28px 28px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.6),0 0 0 6px rgba(255,255,255,.12)}
+.arch img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.06);transition:transform 1.5s var(--ease)}
+.hero-por:hover .arch img{transform:scale(1.1)}
+.por-fol{position:absolute;left:50%;top:40%;width:150%;height:auto;translate:-50% -50%;overflow:visible;opacity:.55;animation:spin 90s linear infinite}
+.por-fol circle{stroke:var(--gold2);stroke-width:.5}.por-fol .fol-o,.por-fol .fol-o2{stroke:#fff;stroke-width:.4;opacity:.6}
+.por-tag{position:absolute;left:0;bottom:4%;padding:12px 18px;border-radius:18px;background:rgba(255,250,243,.92);color:var(--ink);font:400 italic 22px/1.1 var(--serif);box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
+.por-tag small{display:block;font:500 12px var(--sans);font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:var(--lagoon);margin-top:4px}
+@media (min-width:900px){.hero-in{padding-right:min(36vw,520px)}.trio{display:none}}
+@media (max-width:899px){.hero{align-items:end;padding-top:100px}.hero-por{position:relative;right:auto;top:auto;translate:none;width:min(300px,72vw);margin:0 auto 26px;grid-row:1}.hero{display:grid;grid-template-rows:auto auto}}
+/* Mood / Stimmungen */
+.mood{display:flex;gap:3px;padding:3px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+.hdr.solid .mood{background:#fff;border-color:var(--line)}
+.mood button{width:28px;height:28px;border-radius:50%;border:0;background:none;cursor:pointer;font-size:12.5px;font-weight:500}
+.mood button.on{background:var(--coral);color:#fff}
+/* Reise-Fotos */
+img.pc-art{width:100%;height:100%;object-fit:cover;border-radius:14px}
+/* Lebensbaum */
+.tree-s{position:relative;padding:clamp(90px,11vw,160px) 0;background:linear-gradient(180deg,var(--sand),#f3ead8);overflow:hidden}
+.tree-w{position:relative;max-width:900px;margin:0 auto}
+.tree{width:100%;height:auto;overflow:visible}
+.tree .ground{stroke:#c9b48f;stroke-width:2;stroke-linecap:round;opacity:.6}
+.tree .br{fill:none;stroke:#6b4a2f;stroke-width:var(--w);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--g,0))}
+.tree .rt{fill:none;stroke:#8a6a4a;stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--g,0));opacity:.8}
+.tree .lf{fill:var(--leaf);opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .6s var(--ease),opacity .6s}
+.tree .lf:nth-child(3n){fill:var(--leaf2)}.tree .lf:nth-child(5n){fill:#b9d36a}
+.tree-w.leafy .lf{opacity:.92;transform:scale(1);transition-delay:calc(var(--d) * 1s)}
+.tree .fr{cursor:pointer;opacity:0;transition:opacity .6s}
+.tree-w.fruity .fr{opacity:1}
+.tree .fr-c{fill:var(--coral);transition:r .3s}.tree .fr-h{fill:var(--coral);opacity:.25;animation:fpulse 2.4s ease-in-out infinite}
+.tree .fr:hover .fr-c,.tree .fr.on .fr-c{fill:var(--hib)}.tree .fr.on .fr-h{opacity:.45}
+.tree .fr text{font:500 italic 17px var(--serif);fill:var(--ink);text-anchor:middle;paint-order:stroke;stroke:#f6ecdf;stroke-width:4}
+@keyframes fpulse{50%{transform:scale(1.35)}}
+.tree .fr-h{transform-box:fill-box;transform-origin:center}
+.tfol circle{stroke:var(--gold);stroke-width:.6;opacity:.5}
+.t-fol{opacity:calc(var(--g,0) * .9)}
+.t-fol svg{animation:spin 120s linear infinite;transform-origin:center}
+.tree-card{position:absolute;left:50%;bottom:0;translate:-50% 30%;min-width:min(420px,90%);display:grid;gap:4px;padding:16px 22px;border-radius:20px;background:#fff;box-shadow:0 30px 60px -30px rgba(14,52,66,.5);text-align:center}
+.tree-card b{font:400 italic 26px var(--serif);color:var(--coral)}.tree-card span{color:var(--mute)}
+/* Momente */
+.moments{padding:clamp(90px,11vw,160px) 0 clamp(60px,8vw,120px);background:var(--cream)}
+.mo-g{columns:4 260px;column-gap:14px;padding:0 var(--gut);max-width:1500px;margin:0 auto}
+.mo{position:relative;margin:0 0 14px;break-inside:avoid;border-radius:20px;overflow:hidden;background:var(--sand)}
+.mo img{width:100%;height:auto;display:block;transform:scale(1.04);transition:transform 1.2s var(--ease),filter .6s}
+.mo:hover img{transform:scale(1.12)}
+.mo figcaption{position:absolute;left:12px;right:12px;bottom:12px;padding:8px 14px;border-radius:14px;background:rgba(255,250,243,.9);font:400 italic 16px var(--serif);opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s var(--ease)}
+.mo:hover figcaption,.mo.on figcaption{opacity:1;transform:none}
+/* Behandlungen mit Bild */
+.tr{padding-top:0}
+.tr-img{margin:0 -28px 22px;height:170px;overflow:hidden}
+.tr-img img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.tr:hover .tr-img img{transform:scale(1.08)}
+.tr .ic{margin-top:-46px;position:relative;z-index:1;width:46px;height:46px;padding:10px;border-radius:14px;background:#fff;box-shadow:0 10px 20px -10px rgba(0,0,0,.3)}
+/* Atmen: Blume des Lebens blüht */
+.br-fol{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:transform 4s cubic-bezier(.45,0,.55,1)}
+.br-fol circle{stroke:rgba(246,220,122,.55);stroke-width:.6;transition:transform 4s cubic-bezier(.45,0,.55,1),stroke .8s}
+.br-fol .fol-o,.br-fol .fol-o2{stroke:rgba(255,255,255,.2)}
+.breath .br-fol g{animation:spin 80s linear infinite;transform-origin:center}
+.breath.in .br-fol,.breath.hold .br-fol{transform:scale(1.18)}.breath.in .br-fol circle,.breath.hold .br-fol circle{stroke:rgba(255,226,140,.95)}
+.breath.out .br-fol{transition-duration:6s}
+.br-c{position:relative;z-index:1}
+/* Aloha-Hintergrund */
+.aloha{position:relative;overflow:hidden}
+.al-fol{position:absolute;right:-12%;top:-10%;width:min(900px,90vw);height:auto;opacity:.12;pointer-events:none;animation:spin 160s linear infinite}
+.al-fol circle{stroke:var(--gold2);stroke-width:.4}
+.aloha .wrap{position:relative}
+/* Film-Poster */
+.fl-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.05) brightness(.85)}
+.fl-ph .fl-sun{display:none}.fl-ph::after{display:none}
+/* Logo im Werdegang */
+.cv-logo{width:min(280px,70%);height:auto;margin-bottom:24px}
+@media (max-width:899px){.tree-card{position:relative;translate:none;left:auto;margin:10px auto 0}.mo-g{columns:2 150px;column-gap:10px}.mo{margin-bottom:10px;border-radius:14px}.mo figcaption{opacity:1;transform:none;font-size:13px;padding:5px 10px;left:8px;right:8px;bottom:8px}.tr-img{height:150px}}
+@media (prefers-reduced-motion:reduce){.tree .br,.tree .rt{stroke-dashoffset:0}.tree .lf,.tree .fr{opacity:1;transform:none}.in-fol circle{stroke-dashoffset:0}}
+.tree .bl{fill:#fff3f6;stroke:#f39ab0;stroke-width:1.2;opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .6s var(--ease),opacity .6s}
+.tree-w.fruity .bl{opacity:1;transform:scale(1);transition-delay:calc(var(--d) * 1s)}
+@media (min-width:900px){.tree-card{left:auto;right:-40px;bottom:auto;top:46%;translate:0 0;min-width:0;width:260px;text-align:left}.tree-w{max-width:980px;padding-right:200px}}
