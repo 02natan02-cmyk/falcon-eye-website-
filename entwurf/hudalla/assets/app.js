@@ -286,3 +286,30 @@
   }
   addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true }); addEventListener('resize', upd); upd();
 })();
+
+/* Cookie-Banner: ein Hund, keine Tracker. Merkt sich nur für diese Sitzung, dass er weggeklickt wurde. */
+(function () {
+  var ck = document.querySelector('[data-ck]'); if (!ck) return;
+  var seen = false; try { seen = sessionStorage.getItem('ck-cookie') === '1'; } catch (e) {}
+  if (seen) return;
+  var shown = false;
+  function show() { if (shown) return; shown = true; ck.hidden = false; requestAnimationFrame(function () { requestAnimationFrame(function () { ck.classList.add('show'); }); }); }
+  var team = document.getElementById('team');
+  if (team && 'IntersectionObserver' in window) new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); show(); } }, { threshold: .25 }).observe(team);
+  setTimeout(function () { if (scrollY > innerHeight * 1.5) show(); }, 25000);
+  function close(msg) {
+    var m = ck.querySelector('[data-ck-msg]'); m.textContent = msg; m.hidden = false; ck.classList.add('wag');
+    try { sessionStorage.setItem('ck-cookie', '1'); } catch (e) {}
+    setTimeout(function () { ck.classList.remove('show'); setTimeout(function () { ck.hidden = true; }, 600); }, 1600);
+  }
+  ck.querySelector('[data-ck-yes]').addEventListener('click', function () { close('Wuff! Cookie freut sich. 🐾'); });
+  ck.querySelector('[data-ck-no]').addEventListener('click', function () { close('Gute Wahl – Cookie ist notwendig. 🐾'); });
+})();
+
+/* Wuff-Blase am Bus, wenn er an einem Ortsschild vorbeifährt */
+(function () {
+  var b = document.querySelector('[data-cpbubble]'), road = document.querySelector('[data-cproad]'), drive = road && road.querySelector('[data-cpdrive]');
+  if (!b || !drive) return; var lastTown = '', t;
+  var town = road.querySelector('[data-cptown]');
+  new MutationObserver(function () { var n = town.textContent; if (n === lastTown) return; lastTown = n; var r = drive.getBoundingClientRect(), rr = road.getBoundingClientRect(); b.style.setProperty('--bx', (r.left - rr.left + r.width * .38) + 'px'); b.textContent = ['Wuff!', 'Wuff wuff!', 'Da vorne!', 'Fast da!', 'Wuff!'][Math.floor(Math.random() * 5)]; b.classList.add('on'); clearTimeout(t); t = setTimeout(function () { b.classList.remove('on'); }, 1100); }).observe(town, { childList: true, characterData: true, subtree: true });
+})();
