@@ -8,69 +8,57 @@
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const lenisStop = on => { const l = window.__lenis; if (l) on ? l.stop() : l.start(); };
 
-  /* ================= Kapitel 01: Der Pfeiler ================= */
+  /* ================= Kapitel 01: Der Pfeiler (echte Montagefotos) ================= */
   const pf = $('[data-pf]', root);
   if (pf) {
-    const pin = $('.pf-pin', pf), plate = $('[data-pf-plate]', pf), intro = $('[data-pf-intro]', pf), card = $('[data-pf-card]', pf);
-    const d1 = $('[data-pf-draw1]', pf), d2 = $('[data-pf-draw2]', pf), lines = $('[data-pf-lines]', pf), wax = $('[data-pf-wax]', pf), wax2 = $('[data-pf-wax2]', pf), ring = $('[data-pf-ring]', pf), shade = $('[data-pf-shade]', pf);
-    const steps = $$('[data-pfs]', pf), prog = $$('.pf-prog li', pf);
-    const IW = 1600, IH = 753, FX = 376, FY = 330;      // Bildkoordinaten: Fuß des Pfeilers
+    const pin = $('.pf-pin', pf), intro = $('[data-pf-intro]', pf), card = $('[data-pf-card]', pf), shade = $('[data-pf-shade]', pf);
+    const draw = $('[data-pf-draw]', pf), ring = $('[data-pf-ring]', pf);
+    const steps = $$('[data-pfs]', pf), prog = $$('.pf-prog li', pf), sls = $$('[data-pfsl]', pf);
+    // Pro Foto: Fokuspunkt (Bildpixel) Anfang→Ende, Zoom Anfang→Ende, aktives Fenster, Einblendung
+    const CFG = [
+      { f0: [508, 446], f1: [508, 446], z: [1, 1.5], win: [0, .24], fade: null },
+      { f0: [700, 760], f1: [760, 860], z: [1.02, 1.16], win: [.16, .44], fade: [.16, .25] },
+      { f0: [640, 260], f1: [640, 860], z: [1.25, 1.1], win: [.40, .60], fade: [.40, .47] },
+      { f0: [600, 760], f1: [780, 820], z: [1.02, 1.18], win: [.56, .78], fade: [.56, .63] },
+      { f0: [640, 470], f1: [640, 470], z: [1.25, 1.0], win: [.74, .96], fade: [.74, .81] },
+    ];
+    sls.forEach((el, i) => { const c = CFG[i]; c.el = el; c.ph = $('.pf-ph', el); c.w = +el.dataset.w; c.h = +el.dataset.h; c.ph.style.width = c.w + 'px'; c.ph.style.height = c.h + 'px'; });
     if (reduce) {
-      pf.classList.add('static'); d1.setAttribute('stroke-dashoffset', 0); d2.setAttribute('stroke-dashoffset', 0);
+      pf.classList.add('static'); if (draw) draw.setAttribute('stroke-dashoffset', 0);
     } else {
-      let L = 0, T = 0, S = 1, W = 0, H = 0, mob = false, last = -1;
-      const layout = () => {
-        W = pin.clientWidth; H = pin.clientHeight; mob = W < 900;
-        S = Math.max(W / IW, H / IH);
-        const pw = IW * S, ph = IH * S;
-        // Pfeiler auf dem Handy mittig, am Desktop links vom Text
-        L = clamp((mob ? .5 : .36) * W - FX * S, W - pw, 0); T = clamp(.5 * H - FY * S, H - ph, 0);
-        plate.style.width = pw + 'px'; plate.style.height = ph + 'px';
-        last = -1; tick();
-      };
-      const setStep = i => {
-        steps.forEach((s, j) => s.classList.toggle('on', j === i));
-        prog.forEach((l, j) => l.classList.toggle('on', j === i));
+      let W = 0, H = 0, mob = false, last = -1;
+      const layout = () => { W = pin.clientWidth; H = pin.clientHeight; mob = W < 900; last = -1; tick(); };
+      const place = (c, t) => {
+        const z = c.z[0] + (c.z[1] - c.z[0]) * t, fx = c.f0[0] + (c.f1[0] - c.f0[0]) * t, fy = c.f0[1] + (c.f1[1] - c.f0[1]) * t;
+        const S = Math.max(W / c.w, H / c.h) * z;
+        const tx = mob ? .5 * W : .36 * W, ty = mob ? .36 * H : .5 * H;
+        const X = clamp(tx - fx * S, W - c.w * S, 0), Y = clamp(ty - fy * S, H - c.h * S, 0);
+        c.ph.style.transform = `translate3d(${X.toFixed(1)}px,${Y.toFixed(1)}px,0) scale(${S.toFixed(4)})`;
       };
       const render = p => {
-        // Zoom hinein (0.10–0.30), wieder heraus (0.80–0.95)
-        const zin = ease(seg(p, .10, .30)), zout = ease(seg(p, .80, .95)), t = zin * (1 - zout);
-        const Z = 1 + t * (mob ? 1.15 : .95);
-        const fx = FX * S, fy = FY * S;
-        const s0x = L + fx, s0y = T + fy;
-        const ax = mob ? .5 * W : .34 * W, ay = mob ? .34 * H : .5 * H;
-        let X = (s0x + (ax - s0x) * t) - L - Z * fx, Y = (s0y + (ay - s0y) * t) - T - Z * fy;
-        X = clamp(X, W - L - Z * IW * S, -L); Y = clamp(Y, H - T - Z * IH * S, -T);
-        plate.style.transform = `translate3d(${(L + X).toFixed(1)}px,${(T + Y).toFixed(1)}px,0) scale(${Z.toFixed(4)})`;
-        // Intro-Frage
-        const qo = 1 - seg(p, .11, .2);
+        CFG.forEach((c, i) => {
+          const next = CFG[i + 1], near = p >= c.win[0] - .04 && (!next || p <= next.fade[1] + .02);
+          c.el.style.visibility = near ? '' : 'hidden';
+          if (!near) return;
+          c.el.style.opacity = c.fade ? ease(seg(p, c.fade[0], c.fade[1])).toFixed(3) : 1;
+          place(c, ease(seg(p, c.win[0], c.win[1])));
+        });
+        const qo = 1 - seg(p, .1, .18);
         intro.style.opacity = qo; intro.style.transform = `translateY(${(-30 * (1 - qo)).toFixed(1)}px)`; intro.style.visibility = qo <= 0 ? 'hidden' : '';
-        shade.style.setProperty('--sh', (.55 + .45 * (1 - t * .6)).toFixed(3));
-        ring.classList.toggle('on', p > .18 && p < .3);
-        // Linien zeichnen, Wachs heilt
-        d1.setAttribute('stroke-dashoffset', (1 - seg(p, .27, .41)).toFixed(4));
-        d2.setAttribute('stroke-dashoffset', (1 - seg(p, .45, .56)).toFixed(4));
-        // Hartwachs: warme Linie füllt den Schnitt, dann verheilt alles
-        const h = seg(p, .59, .7), fade = ease(seg(p, .69, .79));
-        lines.style.opacity = (1 - fade).toFixed(3);
-        wax.setAttribute('stroke-dashoffset', (1 - h).toFixed(4)); wax2.setAttribute('stroke-dashoffset', (1 - h).toFixed(4));
-        wax.style.opacity = (h > 0 ? .75 * (1 - fade) : 0).toFixed(3); wax2.style.opacity = (h > 0 ? 1 - fade : 0).toFixed(3);
-        pf.style.setProperty('--nt', p > .26 && p < .74 ? 1 : 0); $('.pf-note', pf).style.opacity = p > .26 && p < .74 ? 1 : 0;
-        // Karte + Schritte
-        const st = p < .24 ? -1 : p < .43 ? 0 : p < .59 ? 1 : p < .77 ? 2 : 3;
-        card.classList.toggle('on', st >= 0);
-        card.classList.toggle('done', p > .9);
-        setStep(st);
-        const bounds = [[.24, .43], [.43, .59], [.59, .77], [.77, .9]];
+        shade.style.setProperty('--sh', p < .2 ? 1 : .75);
+        if (ring) ring.classList.toggle('on', p > .08 && p < .2);
+        if (draw) draw.setAttribute('stroke-dashoffset', (1 - seg(p, .26, .37)).toFixed(4));
+        const st = p < .2 ? -1 : p < .43 ? 0 : p < .59 ? 1 : p < .77 ? 2 : 3;
+        card.classList.toggle('on', st >= 0); card.classList.toggle('done', p > .88);
+        steps.forEach((s, j) => s.classList.toggle('on', j === st)); prog.forEach((l, j) => l.classList.toggle('on', j === st));
+        const bounds = [[.2, .43], [.43, .59], [.59, .77], [.77, .88]];
         prog.forEach((l, j) => l.querySelector('i').style.setProperty('--f', seg(p, bounds[j][0], bounds[j][1]).toFixed(3)));
       };
       let raf = 0;
       const tick = () => {
-        raf = 0;
-        const r = pf.getBoundingClientRect(), span = r.height - innerHeight;
+        raf = 0; const r = pf.getBoundingClientRect(), span = r.height - innerHeight;
         if (r.bottom < -200 || r.top > innerHeight + 200) return;
-        const p = clamp(-r.top / span);
-        if (Math.abs(p - last) < .0004) return; last = p; render(p);
+        const p = clamp(-r.top / span); if (Math.abs(p - last) < .0004) return; last = p; render(p);
       };
       const req = () => { if (!raf) raf = requestAnimationFrame(tick); };
       addEventListener('scroll', req, { passive: true }); addEventListener('resize', layout);
@@ -78,6 +66,12 @@
       layout(); render(0);
     }
   }
+  /* ---------- Frisch montiert: Pfeile ---------- */
+  const fm = $('[data-fm]', root);
+  if (fm) { const by = d => fm.scrollBy({ left: d * fm.clientWidth * .7, behavior: reduce ? 'auto' : 'smooth' }); const p = $('[data-fm-p]', root), n = $('[data-fm-n]', root); p && p.addEventListener('click', () => by(-1)); n && n.addEventListener('click', () => by(1)); }
+  /* ---------- Vorher / Nachher ---------- */
+  const ba = $('[data-ba]', root);
+  if (ba) { const r = $('[data-ba-r]', ba); const set = () => ba.style.setProperty('--x', r.value + '%'); r.addEventListener('input', set); set(); }
 
   /* ================= Kapitel 02–08: Einblenden + Parallax/Ken Burns ================= */
   const chs = $$('[data-ch]', root);
