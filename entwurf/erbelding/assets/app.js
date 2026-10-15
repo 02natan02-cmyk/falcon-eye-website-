@@ -227,6 +227,16 @@
   }
 
 
+
+  /* Ausstellung: Hotspots */
+  var au = $('[data-ausst]');
+  if (au) {
+    var pop = $('[data-hspop]', au), seen = {};
+    var close = function () { pop.classList.remove('on'); $$('.hs', au).forEach(function (h) { h.classList.remove('on'); }); };
+    $$('.hs', au).forEach(function (h) { h.addEventListener('click', function (e) { e.stopPropagation(); var i = h.dataset.hs; $$('[data-hsc]', pop).forEach(function (c) { c.hidden = c.dataset.hsc !== i; }); $$('.hs', au).forEach(function (x) { x.classList.toggle('on', x === h); }); h.classList.add('seen'); seen[i] = 1; var n = Object.keys(seen).length; $('.au-hint', au).textContent = n >= 7 ? 'Alles entdeckt – jetzt live ansehen?' : (7 - n) + ' von 7 Details noch offen'; var l = parseFloat(h.style.left); pop.classList.toggle('left', l > 55); pop.classList.add('on'); }); });
+    $('.hs-x', pop).addEventListener('click', close); au.addEventListener('click', function (e) { if (!e.target.closest('.hs-pop')) close(); });
+  }
+
   /* VR-Teaser: echte 3D-Küche, "VR-Blick" = Augenhöhe mit Brillen-Rand */
   var vr = $('[data-vr]');
   if (vr) {

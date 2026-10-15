@@ -388,3 +388,21 @@ html[data-page="planer"] .hdr{background:var(--cream);color:var(--blue);--bg:#f7
 html[data-page="planer"] .concept{display:none}
 .unterlagen{background:var(--blue)!important}.unterlagen .h2 em{color:var(--acc)!important}
 .ul-form{color:var(--ink)}
+
+/* ================= Ausstellung / Hotspots ================= */
+.ausst{padding:clamp(80px,10vw,140px) 0;background:var(--cream)}
+.au-stage{position:relative;margin:30px 0 26px;border-radius:var(--r);overflow:hidden;box-shadow:0 40px 80px -40px rgba(16,38,74,.45)}
+.au-stage>img{width:100%;height:auto;display:block}
+.hs{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);cursor:pointer;z-index:2}
+.hs i{position:absolute;inset:11px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px #fff}
+.hs::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #fff;animation:hsp 2.2s infinite}
+.hs.seen i{background:var(--blue)}.hs.on i{background:#fff;box-shadow:0 0 0 3px var(--acc)}
+@keyframes hsp{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.hs-pop{position:absolute;right:16px;top:16px;bottom:16px;width:min(340px,42%);z-index:3;padding:20px;border-radius:18px;background:rgba(255,253,249,.97);box-shadow:0 20px 50px -20px rgba(0,0,0,.5);overflow:auto;opacity:0;transform:translateX(20px);pointer-events:none;transition:all .4s var(--ease)}
+.hs-pop.left{right:auto;left:16px;transform:translateX(-20px)}
+.hs-pop.on{opacity:1;transform:none;pointer-events:auto}
+.hs-card img{width:100%;max-height:200px;object-fit:cover;border-radius:12px;margin-bottom:12px}
+.hs-card b{display:block;font:800 21px/1.15 var(--disp);color:var(--blue);margin-bottom:6px}.hs-card p{margin:0;color:var(--mute);font-size:15px}
+.hs-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:0;background:var(--cream);font-size:20px;cursor:pointer}
+.au-hint{position:absolute;left:14px;bottom:14px;padding:7px 12px;border-radius:999px;background:rgba(16,38,74,.85);color:#fff;font:700 12.5px var(--body);z-index:2}
+@media (max-width:700px){.hs{width:34px;height:34px;margin:-17px 0 0 -17px}.hs i{inset:9px}.hs-pop,.hs-pop.left{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;margin:0;border-radius:0;transform:none;display:none}.hs-pop.on{display:block}.au-stage{overflow:visible;border-radius:16px}.au-stage>img{border-radius:16px}}
