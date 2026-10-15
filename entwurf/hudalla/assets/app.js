@@ -257,3 +257,32 @@
   }
   addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true }); upd();
 })();
+
+/* Echte Einsätze: Pfeile + Zähler */
+(function () {
+  var row = document.querySelector('[data-eirow]'); if (!row) return;
+  var items = row.querySelectorAll('.ei-c'), cnt = document.querySelector('[data-eicount]');
+  function cur() { var c = row.scrollLeft + row.clientWidth / 2, best = 0, bd = 1e9; items.forEach(function (it, i) { var m = it.offsetLeft + it.offsetWidth / 2, d = Math.abs(m - c); if (d < bd) { bd = d; best = i; } }); return best; }
+  row.addEventListener('scroll', function () { if (cnt) cnt.textContent = (cur() + 1) + ' / ' + items.length; }, { passive: true });
+  document.querySelectorAll('[data-eistep]').forEach(function (b) { b.addEventListener('click', function () { var i = Math.max(0, Math.min(items.length - 1, cur() + +b.dataset.eistep)); var it = items[i]; row.scrollTo({ left: it.offsetLeft - (row.clientWidth - it.offsetWidth) / 2, behavior: 'smooth' }); }); });
+})();
+
+/* Zu zweit unterwegs: Bus fährt beim Scrollen von rechts nach links durch die Orte */
+(function () {
+  var road = document.querySelector('[data-cproad]'), drive = road && road.querySelector('[data-cpdrive]');
+  if (!road || !drive || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var signs = road.querySelectorAll('.cp-sign'), town = road.querySelector('[data-cptown]'), last = -1, tmr;
+  function upd() {
+    var r = road.getBoundingClientRect(), vh = innerHeight;
+    var p = (vh - r.top) / (vh + r.height); p = Math.max(0, Math.min(1, p));
+    var W = road.clientWidth, w = drive.offsetWidth;
+    var x = W - p * (W + w * 0.6) * 1.05;
+    drive.style.setProperty('--vx', x.toFixed(1) + 'px');
+    var nose = (x + w * 0.04) / W, name = null;
+    signs.forEach(function (s) { var on = nose <= parseFloat(s.dataset.sx) + 0.02; s.classList.toggle('on', on); if (on && getComputedStyle(s).display !== 'none') name = s.textContent; });
+    if (name && town) town.textContent = name;
+    var moving = last >= 0 && Math.abs(p - last) > .0004; last = p;
+    if (moving) { road.style.setProperty('--run', 'running'); drive.style.setProperty('--wind', '1'); clearTimeout(tmr); tmr = setTimeout(function () { road.style.setProperty('--run', 'paused'); drive.style.setProperty('--wind', '0'); }, 180); }
+  }
+  addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true }); addEventListener('resize', upd); upd();
+})();
