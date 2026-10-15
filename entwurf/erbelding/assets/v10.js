@@ -64,7 +64,7 @@
       var n = Object.keys(seen).length;
       prog.innerHTML = n >= N ? '<b>Alle ' + N + ' Details entdeckt</b> – jetzt live ansehen?' : '<b>' + n + ' von ' + N + '</b> Details entdeckt';
       num.textContent = (i + 1) + ' / ' + N;
-      pop.classList.toggle('left', x > 52); pop.classList.add('on');
+      pop.classList.toggle('left', x > 52); pop.classList.add('on'); document.body.classList.add('hs-open');
       spot.style.setProperty('--sx', x + '%'); spot.style.setProperty('--sy', y + '%');
       img.style.setProperty('--ox', x + '%'); img.style.setProperty('--oy', y + '%');
       sec.classList.add('focus');
@@ -79,7 +79,7 @@
       if (tabs[i] && tabs[i].parentNode) { var tp = tabs[i].parentNode; tp.scrollTo({ left: tabs[i].offsetLeft - tp.clientWidth / 2 + tabs[i].clientWidth / 2, behavior: RM ? 'auto' : 'smooth' }); }
     }
     function close() {
-      cur = -1; pop.classList.remove('on'); sec.classList.remove('focus'); back.classList.remove('on'); stage.classList.remove('sock-show');
+      cur = -1; pop.classList.remove('on'); document.body.classList.remove('hs-open'); sec.classList.remove('focus'); back.classList.remove('on'); stage.classList.remove('sock-show');
       hs.forEach(function (b) { b.classList.remove('on'); b.setAttribute('aria-expanded', 'false'); }); tabs.forEach(function (b) { b.classList.remove('on'); });
     }
     function setSock(on) { stage.classList.toggle('sock-up', on); $$('[data-sock]', stage).forEach(function (b) { b.textContent = on ? 'Steckdose versenken' : 'Steckdose ausfahren'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); }
@@ -93,9 +93,16 @@
     document.addEventListener('keydown', function (e) { if (cur < 0) return; if (e.key === 'Escape') { stopTour(); close(); } if (e.key === 'ArrowRight' && e.target.closest && !e.target.closest('input')) open(cur + 1); if (e.key === 'ArrowLeft' && e.target.closest && !e.target.closest('input')) open(cur - 1); });
     /* Glasfarben */
     var pre = {};
-    $$('[data-glass]', stage).forEach(function (b) {
+    $$('.sw-row', sec).filter(function (r) { return r.querySelector('.gsw'); }).forEach(function (row) {
+      var nm = document.createElement('div'); nm.className = 'sw-name'; row.parentNode.insertBefore(nm, row.nextSibling);
+      var lab = row.querySelector('[data-light]') ? 'Licht' : 'Glasfarbe';
+      var up = function (b) { nm.innerHTML = lab + ': <b>' + b.textContent.trim() + '</b>'; };
+      $$('button', row).forEach(function (b) { b.title = b.textContent.trim(); b.addEventListener('click', function () { up(b); }); });
+      var b0 = row.querySelector('.on') || row.querySelector('button'); if (b0) up(b0);
+    });
+        $$('[data-glass]', stage).forEach(function (b) {
       b.addEventListener('click', function () {
-        stopTour(); var k = b.dataset.glass;
+        stopTour(); var k = b.dataset.glass; var fg = $('[data-hsc] .hc-fig img[src*="au/glas"]', sec); if (fg) fg.src = 'img/au/glas_' + k + '.webp';
         $$('[data-glass]', stage).forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         if (k === 'rot') { glass.classList.remove('on'); return; }
         var src = 'img/aus_glas_' + k + '.webp';
