@@ -368,3 +368,6 @@ img.pc-art{width:100%;height:100%;object-fit:cover;border-radius:14px}
 .fl-side.a{left:0;top:6%;transform:rotate(-6deg)}.fl-side.b{right:0;bottom:4%;transform:rotate(5deg)}
 .mo-ig{margin-top:6px}
 @media (max-width:899px){.fl-reel{min-height:520px}.fl-side{width:40%}}
+/* Mobil-Fix: nichts darf breiter als der Bildschirm werden (ältere iOS/Android ohne overflow:clip) */
+.oils{overflow:hidden}.mist{max-width:100%}
+@supports not (overflow:clip){html,body{overflow-x:hidden}}
