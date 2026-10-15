@@ -271,5 +271,30 @@
     if (/[?&]gesendet=1/.test(location.search)) $('[data-ul-sent]').hidden = false;
   }
 
+
+  /* ---------- Live: Reel-Karussell ---------- */
+  (function () {
+    var st = document.querySelector('[data-reels]'); if (!st) return;
+    var R = [].slice.call(st.querySelectorAll('.rl')), num = st.querySelector('[data-rnum]'), cur = 0, t = 0, vis = false;
+    function set(c) { cur = (c + R.length) % R.length; R.forEach(function (r, i) { var p = (i - cur + R.length) % R.length; r.setAttribute('data-pos', p); var v = r.querySelector('video'); if (p === 0 && vis) { v.play().catch(function () {}); } else v.pause(); }); num.textContent = (cur + 1) + ' / ' + R.length; }
+    function auto() { clearInterval(t); t = setInterval(function () { set(cur + 1); }, 9000); }
+    R.forEach(function (r, i) { r.addEventListener('click', function (e) { if (r.getAttribute('data-pos') !== '0') { e.preventDefault(); set(i); auto(); } }); });
+    st.querySelector('[data-rprev]').addEventListener('click', function () { set(cur - 1); auto(); });
+    st.querySelector('[data-rnext]').addEventListener('click', function () { set(cur + 1); auto(); });
+    new IntersectionObserver(function (es) { vis = es[0].isIntersecting; set(cur); if (vis) auto(); else clearInterval(t); }, { threshold: .3 }).observe(st);
+    set(0);
+    if (window.gsap && window.ScrollTrigger && !matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.fromTo(st, { rotateX: 10, y: 60 }, { rotateX: 0, y: 0, ease: 'none', scrollTrigger: { trigger: st, start: 'top bottom', end: 'center center', scrub: true } });
+  })();
+
+  /* ---------- Schnäppchen: Tilt + Video ---------- */
+  [].forEach.call(document.querySelectorAll('[data-tilt]'), function (c) {
+    var v = c.querySelector('video');
+    if (v) new IntersectionObserver(function (es) { es[0].isIntersecting ? v.play().catch(function () {}) : v.pause(); }, { threshold: .4 }).observe(c);
+    if (matchMedia('(hover: hover)').matches) {
+      c.addEventListener('pointermove', function (e) { var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.transform = 'perspective(900px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg)'; });
+      c.addEventListener('pointerleave', function () { c.style.transform = ''; });
+    }
+  });
+
   window.addEventListener('load', function () { if (hasG) ScrollTrigger.refresh(); });
 })();
