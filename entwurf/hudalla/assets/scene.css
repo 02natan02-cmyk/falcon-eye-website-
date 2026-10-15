@@ -1,0 +1,73 @@
+/* Wohnanlagen-Szene – Jahreszeiten */
+.scene{display:block;width:100%;height:100%}
+.scene *{transition:fill 1s ease,opacity 1s ease,stop-color 1s ease}
+.scene{--sky1:#8ccbee;--sky2:#e9f6fb;--hill2:#a6cb8f;--hill1:#86b86f;--vine:#5e8e4e;--lawn:#78b257;--edge:#68a148;--wall:#f6f1e8;--wall2:#efe2cf;--roof2:#b4553b;--par:#ddd5c8;--glass:#a8d2e8;--hedge:#3f8a4a;--crown:#4f9b4f;--crownO:1;--blossom:0;--flowers:1;--snow:0;--leaves:0;--mow:1;--lit:0;--sunO:1;--moonO:0;--path:#cfc8bb;--cloud:#fff;--church:#7d9a75}
+.scene[data-season="spring"]{--sky1:#9fd6f2;--sky2:#f4f9fb;--hill2:#bcdc9f;--hill1:#9dcd80;--vine:#6f9e58;--lawn:#8cc463;--edge:#7bb153;--crown:#86c766;--blossom:1;--flowers:1;--mow:0;--church:#8aa883}
+.scene[data-season="autumn"]{--sky1:#f1bf7c;--sky2:#fbe9d0;--hill2:#cfa65c;--hill1:#b88a44;--vine:#8a5a2b;--lawn:#93a64b;--edge:#84973f;--hedge:#5d7a33;--crown:#d9822b;--crownO:.95;--flowers:0;--leaves:1;--mow:0;--church:#a7845a;--cloud:#fff5e6}
+.scene[data-season="winter"]{--sky1:#22324f;--sky2:#6f86a3;--hill2:#dde5ee;--hill1:#c9d5e2;--vine:#b6c3d1;--lawn:#eef3f8;--edge:#e1e8f0;--wall:#e8e6e1;--wall2:#e4ddd2;--glass:#ffcf6b;--hedge:#3c6b4a;--crown:#4f9b4f;--crownO:0;--flowers:0;--snow:1;--mow:0;--lit:1;--sunO:0;--moonO:1;--path:#8f989e;--cloud:#c6d0dc;--church:#5e6f86}
+.scene .sky1{stop-color:var(--sky1)}.scene .sky2{stop-color:var(--sky2)}
+.scene .sun{opacity:var(--sunO)}.scene .sun-c{fill:#ffd23f}.scene .sun-h{fill:#ffd23f;opacity:.18}
+.scene .moon{opacity:var(--moonO)}.scene .moon-cut{fill:var(--sky1)}
+.scene .stars{opacity:calc(var(--moonO) * .85)}
+.scene .cloud ellipse{fill:var(--cloud);opacity:.9}
+.scene .cloud{animation:cloud var(--d) linear infinite;animation-delay:calc(var(--o) * 1s)}
+@keyframes cloud{from{transform:translateX(-300px)}to{transform:translateX(1400px)}}
+.scene .hill2{fill:var(--hill2)}.scene .hill1{fill:var(--hill1)}.scene .vine{stroke:var(--vine)}
+.scene .church{fill:var(--church)}
+.scene .lawn{fill:var(--lawn)}.scene .lawn-edge{fill:var(--edge)}
+.scene .wall{fill:var(--wall);stroke:rgba(0,0,0,.08)}.scene .wall2{fill:var(--wall2)}.scene .roof2{fill:var(--roof2)}.scene .parapet{fill:var(--par)}
+.scene .win{fill:var(--glass);stroke:#fff;stroke-width:4}
+.scene .w2{stroke:#fff}
+.scene .sill{fill:#d9d2c6}
+.scene .door{fill:#2f5d50}.scene .doorline{fill:#e9e3d9}.scene .canopy{fill:#2e3a36}
+.scene .mailbox rect{fill:#3b4a46}.scene .mailbox line{stroke:#8e9a96;stroke-width:2}
+.scene .balc rect{fill:#3b4a46}.scene .balc path{stroke:#3b4a46}
+.scene .gutter{stroke:#8d8f90}
+.scene .lampglow{opacity:var(--lit)}
+.scene .path{fill:var(--path)}.scene .path-snow{fill:#f6f9fc;opacity:0}
+.scene .salt{fill:#fff;opacity:calc(var(--snow) * .8)}
+.scene .bed rect{fill:#7a5a3c}
+.scene .flowers{opacity:var(--flowers)}
+.scene .hedge rect{fill:var(--hedge)}
+.scene .snowcap,.scene .snowcap rect{fill:#f7fafc;opacity:var(--snow)}
+.scene .binhouse{fill:#c9c2b6}.scene .bins .lid{transform-box:fill-box;transform-origin:0 100%}
+.scene .trunk{stroke:#6b4a33}
+.scene .crown circle{fill:var(--crown);opacity:var(--crownO)}
+.scene .blossom circle{fill:#f6c6d8;opacity:var(--blossom)}
+.scene .snowtree ellipse{fill:#fff;opacity:var(--snow)}
+.scene .bench rect{fill:#7b5a3c}
+.scene .lawn-snow{fill:#f7fafc;opacity:var(--snow)}
+.scene .leafpile{opacity:var(--leaves)}
+.scene .mowlines{opacity:var(--mow)}
+/* Hausmeister */
+.scene .walker{animation:walk 18s linear infinite}
+@keyframes walk{0%{transform:translate(440px,598px)}46%{transform:translate(860px,598px)}50%{transform:translate(860px,598px)}96%{transform:translate(440px,598px)}100%{transform:translate(440px,598px)}}
+.scene .wk-inner{animation:flip 18s steps(1) infinite}
+@keyframes flip{0%{transform:scaleX(1)}48%{transform:scaleX(-1)}98%{transform:scaleX(1)}}
+.scene .jacket{fill:#1f5c4a}.scene .cap{fill:#ffb81c}.scene .leg{fill:#26302d}
+.scene .leg{transform-box:fill-box;transform-origin:50% 0;animation:step .6s ease-in-out infinite alternate}.scene .l2{animation-delay:-.6s}
+@keyframes step{from{transform:rotate(14deg)}to{transform:rotate(-14deg)}}
+.scene .tool{display:none}
+.scene[data-season="summer"] .t-mower,.scene[data-season="spring"] .t-shears,.scene[data-season="autumn"] .t-rake,.scene[data-season="winter"] .t-shovel{display:inline}
+/* Partikel */
+.scene .fx{display:none}
+.scene[data-season="winter"] .snow,.scene[data-season="autumn"] .leaves,.scene[data-season="spring"] .petals,.scene[data-season="summer"] .butter{display:inline}
+.scene .snow circle{fill:#fff;opacity:.9;animation:fall var(--t) linear infinite;animation-delay:var(--dl)}
+.scene .petals ellipse{animation:fall var(--t) linear infinite;animation-delay:var(--dl)}
+.scene .leaves path{transform-box:fill-box;transform-origin:center;animation:leaf var(--t) linear infinite;animation-delay:var(--dl)}
+@keyframes fall{to{transform:translate(var(--x),700px)}}
+@keyframes leaf{to{transform:translate(var(--x),700px) rotate(720deg)}}
+.scene .bf{transform-box:fill-box;transform-origin:center;animation:flap .25s ease-in-out infinite alternate}
+.scene .butter g{animation:hover var(--t) ease-in-out infinite alternate;animation-delay:var(--dl)}
+@keyframes flap{to{transform:scaleY(.3)}}
+@keyframes hover{from{translate:0 0}to{translate:60px -40px}}
+/* Fokus (Monatsaufgaben) */
+.scene [class*="f-"]{transition:filter .5s}
+.scene[data-focus~="hedge"] .f-hedge,.scene[data-focus~="tree"] .f-tree,.scene[data-focus~="gutter"] .f-gutter,.scene[data-focus~="bins"] .f-bins,.scene[data-focus~="door"] .f-door,.scene[data-focus~="house"] .f-house{animation:focus 1.6s ease-in-out infinite}
+@keyframes focus{50%{filter:drop-shadow(0 0 10px #ffd23f) drop-shadow(0 0 3px #ffb81c)}}
+@media (prefers-reduced-motion:reduce){.scene *{animation:none!important}}
+.scene .hilltrees .ht{fill:var(--hedge);opacity:.8}
+.scene .shadow ellipse{fill:rgba(0,0,0,.12)}
+.scene .refl{fill:#fff;opacity:calc(.35 - var(--lit) * .3)}
+.scene .vansnow{fill:#f7fafc;opacity:var(--snow)}
+.scene[data-focus~="van"] .f-van{animation:focus 1.6s ease-in-out infinite}
