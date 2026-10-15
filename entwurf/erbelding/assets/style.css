@@ -406,3 +406,4 @@ html[data-page="planer"] .concept{display:none}
 .hs-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:0;background:var(--cream);font-size:20px;cursor:pointer}
 .au-hint{position:absolute;left:14px;bottom:14px;padding:7px 12px;border-radius:999px;background:rgba(16,38,74,.85);color:#fff;font:700 12.5px var(--body);z-index:2}
 @media (max-width:700px){.hs{width:34px;height:34px;margin:-17px 0 0 -17px}.hs i{inset:9px}.hs-pop,.hs-pop.left{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;margin:0;border-radius:0;transform:none;display:none}.hs-pop.on{display:block}.au-stage{overflow:visible;border-radius:16px}.au-stage>img{border-radius:16px}}
+.ex-g{grid-template-columns:repeat(2,minmax(0,1fr))!important}@media (max-width:899px){.ex-g{grid-template-columns:minmax(0,1fr)!important}}

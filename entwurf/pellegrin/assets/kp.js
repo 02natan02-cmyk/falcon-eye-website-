@@ -41,7 +41,7 @@
     const f = FORMS[form], old = keep || {};
     const room = old.room || { w: 480, d: form === 'insel' ? 420 : form === 'zwei' ? 300 : 380 };
     if (form === 'insel' && room.d < 380) room.d = 420;
-    const p = { form, room, rows: {}, top: {}, win: { wall: 'N', s: 0, w: 120 }, island: { w: 180, v: 'kochfeld' }, style: old.style || { front: '#f1eee8', wood: null, handle: 'grifflos', top: 'eiche', finish: 'matt', wall: '#f3efe9', floor: 'eiche' } };
+    const p = { ah: (old && old.ah) || (P && P.ah) || 90, form, room, rows: {}, top: {}, win: { wall: 'N', s: 0, w: 120 }, island: { w: 180, v: 'kochfeld' }, style: old.style || { front: '#f1eee8', wood: null, handle: 'grifflos', top: 'eiche', finish: 'matt', wall: '#f3efe9', floor: 'eiche' } };
     f.walls.forEach(w => { p.rows[w] = []; p.top[w] = w === 'N' || form === 'zwei' ? 1 : 0; });
     const seq = {
       zeile: { N: [['kue'], ['bo'], ['us'], ['kf'], ['us', 80], ['sp'], ['gs']] },
@@ -84,13 +84,19 @@
   }
   function baseBox(x, w, parts, o = {}) {
     // Sockel 10, Korpus bis 86, Platte 86–90
-    let s = `<rect x="${x}" y="${FL - 10}" width="${w}" height="10" fill="#2b2b2b"/>`;
+    const dh = (P.ah || 90) - 90;
+    let s = `<rect x="${x}" y="${FL - 10}" width="${w}" height="${10 + dh}" fill="#2b2b2b"/>`;
     let y = FL - 86; const hh = 76;
     parts.forEach(p => { s += front(x, y, w, hh * p, o); y += hh * p; });
     s += `<rect x="${x - .3}" y="${FL - 90}" width="${w + .6}" height="4" fill="${topCol()}" stroke="rgba(0,0,0,.25)" stroke-width=".4"/>`;
     return s;
   }
   function elev(m, x) {
+    const w = m.w, t = m.t; let s = '';
+    if (M[t].h === 'b') { const dh = (P && P.ah || 90) - 90; if (dh) return `<g transform="translate(0 ${-dh})">${elevRaw(m, x)}</g>`; }
+    return elevRaw(m, x);
+  }
+  function elevRaw(m, x) {
     const w = m.w, t = m.t; let s = '';
     if (t === 'us') s = baseBox(x, w, w < 40 ? [1] : [.24, .38, .38]);
     else if (t === 'ut') s = baseBox(x, w, [.2, .8]);
@@ -346,8 +352,8 @@
 
   /* ---------------- Verlauf / Link ---------------- */
   const hist = [], fut = [];
-  const ser = () => JSON.stringify({ f: P.form, r: P.room, rw: Object.fromEntries(Object.entries(P.rows).map(([k, v]) => [k, v.map(m => [m.t, m.w])])), tp: P.top, wi: P.win, is: P.island, s: P.style });
-  function des(j) { const o = JSON.parse(j); P = { form: o.f, room: o.r, rows: {}, top: o.tp, win: o.wi, island: o.is, style: o.s }; for (const k in o.rw) P.rows[k] = o.rw[k].map(([t, w]) => mk(t, w)); sel = null; }
+  const ser = () => JSON.stringify({ f: P.form, r: P.room, rw: Object.fromEntries(Object.entries(P.rows).map(([k, v]) => [k, v.map(m => [m.t, m.w])])), tp: P.top, wi: P.win, is: P.island, s: P.style, ah: P.ah || 90 });
+  function des(j) { const o = JSON.parse(j); P = { form: o.f, room: o.r, rows: {}, top: o.tp, win: o.wi, island: o.is, style: o.s, ah: o.ah || 90 }; for (const k in o.rw) P.rows[k] = o.rw[k].map(([t, w]) => mk(t, w)); sel = null; }
   const b64 = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const unb64 = s => decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))));
   let lastHash = '';
@@ -381,7 +387,9 @@
   function makeRoomQuiet(w) { let over = -free(w); if (over <= 0) { fillGap(w); return; } const R = [...P.rows[w]].reverse().filter(x => x.t === 'us'); for (const x of R) { if (over <= 0.5) break; const fit = M.us.ws.filter(v => v <= x.w - over).pop(); if (fit) { over -= x.w - fit; x.w = fit; } else { over -= x.w; P.rows[w] = P.rows[w].filter(y => y !== x); } } }
   function fillGap(w) { const f = free(w); if (f >= 30) { const last = [...P.rows[w]].reverse().find(x => x.t === 'us'); const grow = last && M.us.ws.filter(v => v <= last.w + f).pop(); if (last && grow > last.w) last.w = grow; else fillRest(w); } }
   [rw, rd].forEach(el => { el.addEventListener('input', roomIn); el.addEventListener('change', () => change()); });
-  function syncRoomOut() { $('[data-kp-rwo]').textContent = (P.room.w / 100).toFixed(2).replace('.', ',') + ' m'; $('[data-kp-rdo]').textContent = (P.room.d / 100).toFixed(2).replace('.', ',') + ' m'; }
+  const ahIn = $('[data-kp-ah]');
+  if (ahIn) { ahIn.addEventListener('input', () => { P.ah = +ahIn.value; $('[data-kp-aho]').textContent = P.ah + ' cm'; renderWalls(); }); ahIn.addEventListener('change', () => change()); }
+  function syncRoomOut() { if (ahIn) { ahIn.value = P.ah || 90; $('[data-kp-aho]').textContent = (P.ah || 90) + ' cm'; } $('[data-kp-rwo]').textContent = (P.room.w / 100).toFixed(2).replace('.', ',') + ' m'; $('[data-kp-rdo]').textContent = (P.room.d / 100).toFixed(2).replace('.', ',') + ' m'; }
   $$('[data-kp-top]').forEach(b => b.addEventListener('click', () => { const on = !Object.values(P.top).some(Boolean); for (const k in P.top) P.top[k] = on ? 1 : 0; change(); }));
   // Stil
   $('[data-kp-fronts]').innerHTML = FRONTS.map(([n, c]) => `<button type="button" class="kp-sw" data-front="${c}" style="--c:${c.startsWith('wood') ? WOOD[c.slice(5)] : c}"><i></i><span>${n}</span></button>`).join('');
@@ -414,6 +422,7 @@
     const L = [`Form: ${FORMS[P.form].n} · Raum ${P.room.w} × ${P.room.d} cm`];
     for (const w in P.rows) L.push(`${WN[w]}: ` + P.rows[w].map(m => `${M[m.t].n}${m.t === 'us' || m.t === 'ut' ? ' (' + M[m.t].s + ')' : ''} ${m.w}`).join(' · '));
     if (P.form === 'insel') L.push(`Insel: ${P.island.w} cm, ${({ kochfeld: 'mit Kochfeld', spuele: 'mit Spüle', frei: 'freie Arbeitsfläche' })[P.island.v]}`);
+    L.push(`Arbeitshöhe: ${P.ah || 90} cm`);
     L.push(`Fronten: ${fr ? fr[0] : s.front} · Griffe: ${HANDLES.find(h => h[0] === s.handle)[1]} · Arbeitsplatte: ${TOPS.find(t => t[0] === s.top)[1]} · Hängeschränke: ${Object.values(P.top).some(Boolean) ? 'ja' : 'nein'}`);
     const w = tips().filter(x => x[0] === 'warn').map(x => x[1]); if (w.length) L.push('Hinweise: ' + w.join('; '));
     return L.join('\n');
@@ -455,6 +464,8 @@
 
   /* ---------------- Start ---------------- */
   if (!fromHash()) fresh('l');
+  const qAh = +(new URLSearchParams(location.search).get('ah') || 0);
+  if (qAh >= 80 && qAh <= 110) { P.ah = qAh; setTimeout(() => toast(`Ihre Arbeitshöhe ${qAh} cm ist übernommen – sehen Sie den höheren Sockel?`), 2600); }
   renderPal(); change(); go(/[?&]gesendet=1/.test(location.search) ? 3 : 1);
   if (/[?&]gesendet=1/.test(location.search)) { const n = $('[data-sent]'); if (n) n.hidden = false; }
   const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); load3D(); } }); io.observe(host3);

@@ -548,3 +548,9 @@ html[data-page="planer"] .wa-fab{display:none}
   .hw-mosaic{grid-template-columns:minmax(0,1fr);}.hw-mosaic figure{aspect-ratio:16/10}
 }
 @media (min-width:900px){.hw-mosaic figure{aspect-ratio:auto;height:clamp(240px,24vw,340px)}}
+
+.k-grid:not(.all) .kc:nth-child(n+10){display:none}
+.k-more{display:flex;justify-content:center;margin-top:28px}.k-more[hidden]{display:none}
+@media (max-width:899px){.k-grid:not(.all) .kc:nth-child(n+7){display:none}
+ .hw-mosaic{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1*var(--gut));padding:0 var(--gut);scrollbar-width:none}.hw-mosaic::-webkit-scrollbar{display:none}
+ .hw-mosaic figure{flex:0 0 82%;scroll-snap-align:center;aspect-ratio:4/3}}

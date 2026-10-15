@@ -133,7 +133,7 @@
     els.forEach(function (el) { io.observe(el); });
   }
   if (hasG && !RM) {
-    var rv = $$('.h2,.familie .lead,.years li,.tier.on,.ref,.ex,.anfrage,.sp-img,.bu-vis,.ku-head .small');
+    var rv = $$('.h2,.familie .lead,.years li,.ref,.ex,.anfrage,.sp-img,.bu-vis,.ku-head .small');
     rv.forEach(function (el) { gsap.set(el, { opacity: 0, y: 34 }); });
     onView(rv, function (el) { gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: el.classList.contains('ref') ? ($$('.ref').indexOf(el) * 0.08) : 0 }); });
     setTimeout(function () { rv.forEach(function (el) { if (getComputedStyle(el).opacity === '0' && el.getBoundingClientRect().top < innerHeight) gsap.to(el, { opacity: 1, y: 0, duration: 0.5 }); }); }, 3500);

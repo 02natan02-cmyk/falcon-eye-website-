@@ -96,7 +96,7 @@
   /* ---------- Küchen: Filter + Lightbox ---------- */
   const grid = $('.k-grid');
   if (grid) {
-    $$('.filters button').forEach(b => b.addEventListener('click', () => { $$('.filters button').forEach(x => x.classList.toggle('on', x === b)); const f = b.dataset.f; $$('.kc', grid).forEach(k => k.classList.toggle('hide', f !== '*' && !k.dataset.tags.includes(f))); hasG && ScrollTrigger.refresh(); }));
+    $$('.filters button').forEach(b => b.addEventListener('click', () => { $$('.filters button').forEach(x => x.classList.toggle('on', x === b)); const f = b.dataset.f; $$('.kc', grid).forEach(k => k.classList.toggle('hide', f !== '*' && !k.dataset.tags.includes(f))); if (f !== '*') { grid.classList.add('all'); const km = $('.k-more'); if (km) km.hidden = true; } hasG && ScrollTrigger.refresh(); }));
     const lb = document.createElement('div'); lb.className = 'lbx'; lb.hidden = true; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
     lb.innerHTML = '<button class="lbx-x" aria-label="Schließen">×</button><div class="lbx-img"><img alt=""></div><div class="lbx-bar"><button data-p aria-label="Vorheriges Bild">←</button><div><b></b><p class="small" style="color:#cfc6ba;margin:4px 0 0"></p></div><a class="btn btn-copper sm" data-lp href="#">Ähnlich planen</a><a class="btn btn-wa sm" data-lw target="_blank" rel="noopener" href="#">So eine will ich</a><button data-n aria-label="Nächstes Bild">→</button></div>';
     document.body.appendChild(lb);
@@ -200,6 +200,8 @@
   if (page === 'home' && location.hash && $(location.hash)) setTimeout(() => lenis ? lenis.scrollTo($(location.hash), { offset: -70, immediate: true }) : null, 600);
 
 
+  const kmb = $('[data-kmore]');
+  if (kmb) kmb.addEventListener('click', () => { const g = $('[data-kgrid]'); g.classList.add('all'); kmb.parentNode.hidden = true; $$('.kc', g).forEach((c, i) => { if (c.animate) c.animate([{ opacity: 0, transform: 'translateY(20px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Math.max(0, i - 6) * 40, easing: 'cubic-bezier(.2,.7,.1,1)', fill: 'backwards' }); }); hasG && ScrollTrigger.refresh(); });
   /* ---------- Martins Handschrift (Rohbau → Küche) ---------- */
   const hw = $('[data-hw]');
   if (hw) {

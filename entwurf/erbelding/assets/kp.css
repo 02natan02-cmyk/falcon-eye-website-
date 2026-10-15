@@ -112,7 +112,7 @@
   .kp-isl{margin-top:10px}
   .kp-panel{position:static;height:auto;overflow:visible;padding:18px 16px 40px;border-right:0;border-top:1px solid var(--line)}
   .kp[data-step="1"] .kp-panel{position:sticky;bottom:0;top:auto;z-index:30;padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -12px 30px -18px rgba(0,0,0,.35);background:rgba(251,248,243,.97);backdrop-filter:blur(8px)}
-  .kp[data-step="1"] .kp-pane.on .kp-h,.kp[data-step="1"] .kp-dk{display:none}
+  .kp[data-step="1"] .kp-pane.on .kp-h,.kp[data-step="1"] .kp-dk,.kp[data-step="1"] .kp-pane.on .kp-brand{display:none}
   .kp[data-step="1"] .kp-pal{display:flex;gap:8px;overflow-x:auto;padding:2px 12px 4px;scroll-snap-type:x proximity;scrollbar-width:none}
   .kp[data-step="1"] .kp-pal::-webkit-scrollbar{display:none}
   .kp[data-step="1"] .kp-tile{flex:0 0 82px;scroll-snap-align:start;padding:7px 3px 8px}
@@ -125,10 +125,10 @@
 
 /* ---------------- KI-Vorschau ---------------- */
 .ki{padding:clamp(64px,9vw,120px) 0;background:var(--ink2,#141210);color:#f3eee6;overflow:hidden}
-.ki-in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);grid-template-areas:"txt demo" "form demo";gap:28px 56px;align-items:start}
+.ki-in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);grid-template-areas:"txt demo";gap:28px 56px;align-items:center}
 .ki-txt{grid-area:txt}.ki-demo{grid-area:demo;position:sticky;top:100px}.ki-form{grid-area:form}
 .ki .kp-k{color:#e9a27c}
-.ki-h{font:500 clamp(36px,5vw,68px)/1.02 var(--serif);letter-spacing:-.02em;margin:10px 0 16px}.ki-h em{font-style:italic;color:#e9a27c}
+.ki-h{margin:10px 0 18px}.ki .ki-h{color:#f6f1e9}.ki .ki-h em{color:#e9a27c}
 .ki-txt>p{color:#c9c0b4;font-size:17px;max-width:46ch}
 .ki-steps{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:12px;counter-reset:k}
 .ki-steps li{position:relative;display:grid;padding-left:46px;counter-increment:k}
@@ -157,7 +157,7 @@
 .ki-form textarea{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:16px var(--sans);color:var(--ink);resize:vertical}
 .ki-form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ki-drop{padding:22px}
-@media (max-width:899px){.ki-in{grid-template-columns:minmax(0,1fr);grid-template-areas:"txt" "demo" "form"}.ki-demo{position:static}.ki-ba{border-radius:16px;aspect-ratio:4/3}.ki-form .two{grid-template-columns:1fr}}
+@media (max-width:899px){.ki-in{display:flex;flex-direction:column;align-items:stretch;gap:0}.ki-txt{display:contents}.ki-txt>*{margin-bottom:16px}.ki-demo{order:1;margin:8px 0 22px}.ki-det,.ki-txt>.sent{order:2}.ki-demo{position:static}.ki-ba{border-radius:16px;aspect-ratio:4/3}.ki-form .two{grid-template-columns:1fr}}
 .kp-ghost[hidden],.kp-caret[hidden],.kp-trash[hidden],.kp-pop[hidden],.kp-toast[hidden]{display:none}
 html[data-page="planer"] .concept{display:none}
 /* Arbeitshöhen-Rechner */
@@ -173,4 +173,36 @@ html[data-page="planer"] .concept{display:none}
 .ah-out p{margin:0;font-size:15px;line-height:1.5}
 .ah-vis{color:var(--ink)}.ah-vis svg{width:100%;max-width:440px;margin-inline:auto;overflow:visible}
 .ah-vis g{transition:transform .25s ease}
-@media (max-width:899px){.ah-in{grid-template-columns:minmax(0,1fr)}.ah-vis{order:-1;width:min(260px,70vw);margin-inline:auto}.ah-out b{font-size:44px}}
+@media (max-width:899px){.ah-in{display:flex;flex-direction:column;gap:0}.ah-txt{display:contents}.ah-vis{order:1;width:min(230px,62vw);margin:0 auto 6px}.ah-txt>.ah-r,.ah-txt>.ah-two,.ah-txt>.ah-out,.ah-txt>.ctas{order:2}.ah-out b{font-size:44px}.ah-r{margin-top:8px}}
+
+/* KI: eingeklapptes Formular */
+.ki-det{margin-top:26px}
+.ki-det>summary{list-style:none;cursor:pointer;display:inline-flex}.ki-det>summary::-webkit-details-marker{display:none}
+.ki-det[open]>summary{margin-bottom:14px;background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}
+.ki-det[open] .ki-form{animation:kpfin .45s ease}
+.ki-det .ki-form{padding:20px}
+/* Arbeitshöhe zu zweit */
+.ah-two{display:inline-flex;align-items:center;gap:10px;margin:-4px 0 16px;padding:9px 14px 9px 10px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:600 14px var(--sans);cursor:pointer;color:var(--ink)}
+.ah-two i{position:relative;width:34px;height:20px;border-radius:10px;background:#cfc7bb;transition:background .2s}.ah-two i::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s}
+.ah-two.on i{background:var(--copper)}.ah-two.on i::after{transform:translateX(14px)}
+.ah-r2{margin-top:0}.ah-r2[hidden]{display:none}
+.ah-vis path,.ah-vis circle,.ah-vis g{transition:all .35s cubic-bezier(.2,.7,.1,1)}
+/* Einheitliche Einblendungen */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.1,1) var(--d,0ms),transform .9s cubic-bezier(.2,.7,.1,1) var(--d,0ms)}
+.rv.in{opacity:1;transform:none}
+/* Studio-Identität im Planer */
+.kp-brand{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px;padding:5px 11px 5px 8px;border-radius:999px;background:color-mix(in srgb,var(--copper) 12%,transparent);color:var(--copper);font:700 11.5px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.kp-brand::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--copper);box-shadow:0 0 0 4px color-mix(in srgb,var(--copper) 25%,transparent)}
+.kp-live b{font-weight:700}
+.kp[data-theme="werkbank"] .kp-build{background:linear-gradient(180deg,rgba(255,255,255,.35),transparent 40%),repeating-linear-gradient(90deg,#efe7da 0 2px,#f3ece1 2px 140px)}
+.kp[data-theme="werkbank"] .kp-stage{background:radial-gradient(ellipse at 50% 30%,#f2ece3,#e2d9cc)}
+.kp[data-theme="blueprint"] .kp-build{background-color:#10264a;background-image:linear-gradient(rgba(169,201,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(169,201,255,.12) 1px,transparent 1px),linear-gradient(rgba(169,201,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(169,201,255,.05) 1px,transparent 1px);background-size:100px 100px,100px 100px,20px 20px,20px 20px}
+.kp[data-theme="blueprint"] .kp-k{color:#a9c9ff}
+.kp[data-theme="blueprint"] .kp-walltabs{background:rgba(255,255,255,.1)}.kp[data-theme="blueprint"] .kp-walltabs button{color:#dfe9ff}.kp[data-theme="blueprint"] .kp-walltabs button.on{color:var(--ink)}
+.kp[data-theme="blueprint"] .kp-wall{box-shadow:0 0 0 1px rgba(169,201,255,.4),0 24px 50px -24px rgba(0,0,0,.7)}
+.kp[data-theme="blueprint"] .kp-stage{background:radial-gradient(ellipse at 50% 30%,#eef3fb,#d6e1f2)}
+.kp[data-theme="blueprint"] .kp-tips li{box-shadow:0 6px 18px -10px rgba(0,0,0,.5)}
+.ah,.ki{text-align:left}
+.ah .kick,.ah .h2,.ki .kick,.ki .h2{text-align:left;margin-left:0;margin-right:0;justify-content:flex-start;align-self:flex-start}
+.ah-r{width:100%;align-self:stretch}.ah-two{align-self:flex-start}
+.kp-progress{position:fixed;left:0;top:0;right:0;height:3px;z-index:9999;background:linear-gradient(90deg,var(--copper),color-mix(in srgb,var(--copper) 60%,#fff));transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
