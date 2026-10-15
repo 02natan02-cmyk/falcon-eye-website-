@@ -199,5 +199,16 @@
   $$('a[href^="#"], a[href^="index.html#"]').forEach(a => a.addEventListener('click', e => { const h = a.getAttribute('href').replace('index.html', ''); if (page !== 'home' && a.getAttribute('href').startsWith('index.html')) return; const t = h.length > 1 && $(h); if (!t) return; e.preventDefault(); lenis ? lenis.scrollTo(t, { offset: -70 }) : t.scrollIntoView({ behavior: 'smooth' }); }));
   if (page === 'home' && location.hash && $(location.hash)) setTimeout(() => lenis ? lenis.scrollTo($(location.hash), { offset: -70, immediate: true }) : null, 600);
 
+
+  /* ---------- Martins Handschrift (Rohbau → Küche) ---------- */
+  const hw = $('[data-hw]');
+  if (hw) {
+    const figs = $$('[data-hwf]', hw), steps = $$('[data-hws]', hw), dots = $$('.hw-dots li', hw), dEl = $('[data-hw-days]', hw), DAYS = [0, 10, 82, 87];
+    let cur = -1, shown = 0;
+    const set = i => { if (i === cur) return; cur = i; figs.forEach((f, j) => f.classList.toggle('on', j === i)); steps.forEach((s, j) => s.classList.toggle('on', j === i)); dots.forEach((d, j) => d.classList.toggle('on', j <= i));
+      const from = shown, to = DAYS[i], t0 = performance.now(); const tick = t => { const k = Math.min(1, (t - t0) / 700); shown = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); dEl.textContent = shown; if (k < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); };
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) set(+e.target.dataset.hws); }), { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(s => io.observe(s)); set(0);
+  }
   if (hasG) { ScrollTrigger.refresh(); addEventListener('load', () => ScrollTrigger.refresh()); }
 })();
