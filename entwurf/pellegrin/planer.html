@@ -9,7 +9,8 @@
 <meta name="theme-color" content="#f6f1e9">
 <link rel="icon" href="img/favicon.png">
 <link rel="preload" href="fonts/fraunces-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=1792045579">
+<link rel="stylesheet" href="assets/style.css?v=1792047827">
+<link rel="stylesheet" href="assets/kp.css?v=1792047827">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HomeGoodsStore", "name": "Pellegrin Küchenstudio", "alternateName": "Küchenhaus Ruppenthal", "founder": "Martin Pellegrin", "telephone": "+4968519397460", "email": "info@kueche-ruppenthal.de", "address": {"@type": "PostalAddress", "streetAddress": "Kelsweiler Straße 19", "postalCode": "66606", "addressLocality": "St. Wendel", "addressCountry": "DE"}}</script>
 </head>
 <body>
@@ -21,80 +22,119 @@
 </header>
 <div class="mnav" aria-hidden="true"><nav><a href="index.html#kuechen">Küchen</a><a href="planer.html" aria-current=page>Planer</a><a href="index.html#ablauf">Ablauf</a><a href="index.html#studio">Studio</a><a href="index.html#besuch">Kontakt</a></nav><div class="mnav-c"><a href="tel:+4968519397460">06851 939 74 60</a><span>Kelsweiler Straße 19, 66606 St. Wendel</span><span data-countdown></span></div></div>
 
-<main id="main" class="planer" data-planner data-mail="info@kueche-ruppenthal.de" data-wa="https://wa.me/4917656791796">
-  <section class="pl-ws" data-ws data-mode="split" aria-label="Arbeitsfläche">
-    <div class="pl-bar">
-      <div class="seg pl-modes" role="group" aria-label="Ansicht"><button type="button" data-mode="plan">Grundriss</button><button type="button" data-mode="split" class="d-only">Beides</button><button type="button" data-mode="3d">3D</button></div>
-      <div class="pl-tools"><button type="button" data-undo aria-label="Rückgängig" title="Rückgängig (Strg+Z)">↶</button><button type="button" data-redo aria-label="Wiederholen" title="Wiederholen">↷</button></div>
-    </div>
-    <div class="pl-views2">
-      <div class="pl-2d"><svg data-plan2d xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grundriss Ihrer Küche – Elemente lassen sich mit der Maus oder dem Finger verschieben"></svg>
-        <p class="pl-tip" data-tip>Schränke ziehen · an die Wand halten, dann docken sie an · Doppelklick auf eine Wand öffnet sie</p>
-        <div class="selbar" data-selbar hidden></div></div>
-      <div class="pl-3dw"><div class="pl-3d" data-plan3d><span class="pt-load">3D-Küche lädt …</span></div>
-        <div class="pl-cams" role="group" aria-label="Kamera"><button type="button" data-view3="perspektive">Übersicht</button><button type="button" data-view3="ecke">Andere Seite</button><button type="button" data-view3="top">Von oben</button><button type="button" data-view3="augen">Augenhöhe</button></div></div>
-    </div>
+
+<main id="main" class="kp" data-kp data-mail="info@kueche-ruppenthal.de" data-wa="https://wa.me/4917656791796" data-studio="Pellegrin Küchenstudio · St. Wendel" data-greet="Hallo Herr Pellegrin" data-acc="#c0673f" data-person="Martin" data-step="1">
+  <nav class="kp-head" aria-label="Planungsschritte">
+    <div class="kp-steps"><button type="button" data-kstep><i>1</i>Form & Raum</button><button type="button" data-kstep class="on"><i>2</i>Einrichten</button><button type="button" data-kstep><i>3</i>Farbe & Stil</button><button type="button" data-kstep><i>4</i>Absenden</button></div>
+    <div class="kp-hr"><span class="kp-score" data-kp-score></span><button type="button" class="kp-ic" data-undo aria-label="Rückgängig" title="Rückgängig">↶</button></div>
+  </nav>
+
+  <section class="kp-stage" aria-label="3D-Ansicht">
+    <div class="kp-3d" data-kp-3d><span class="kp-load">Ihre Küche wird in 3D aufgebaut …</span></div>
+    <p class="kp-live"><i></i>Live in 3D · drehen mit Finger oder Maus</p>
+    <div class="kp-cams" role="group" aria-label="Blickwinkel"><button type="button" data-cam="perspektive" class="on">Übersicht</button><button type="button" data-cam="augen">Reinstellen</button><button type="button" data-cam="top">Von oben</button></div>
   </section>
-  <aside class="pl-panel">
-    <div class="pl-tabs" role="tablist"><button role="tab" class="on" data-tab>1 Raum</button><button role="tab" data-tab>2 Einrichten</button><button role="tab" data-tab>3 Stil</button><button role="tab" data-tab>4 Prüfen <i data-warn-n></i></button><button role="tab" data-tab>5 Senden</button></div>
-    <section class="pl-pane on" data-pane>
-      <h1 class="h3">Ihr Raum</h1><p class="small">Starten Sie mit einer Vorlage oder einem leeren Raum – alles lässt sich danach frei verschieben.</p>
-      <div class="presets" data-presets></div><p class="pl-note" data-reset-note hidden>Ihre Planung wird ersetzt – zum Bestätigen nochmal tippen.</p>
-      <p class="pl-l">Maße des Raums</p>
-      <div class="rm"><label>Breite<input type="range" min="200" max="900" step="10" data-room-w><input type="number" min="200" max="900" step="1" data-room-n="w" inputmode="numeric"><span>cm</span></label>
-      <label>Tiefe<input type="range" min="200" max="800" step="10" data-room-d><input type="number" min="200" max="800" step="1" data-room-n="d" inputmode="numeric"><span>cm</span></label></div>
-      <p class="small" data-room-out></p>
-      <p class="pl-l">Wände</p><p class="small">Offene Seite, z. B. zum Wohnzimmer? Wand antippen.</p>
-      <div class="walls"><button type="button" data-wallt="N">oben</button><button type="button" data-wallt="W">links</button><span class="walls-c" aria-hidden="true"></span><button type="button" data-wallt="E">rechts</button><button type="button" data-wallt="S">unten</button></div>
-      <p class="pl-l">Fenster & Türen</p><div class="ctas"><button type="button" class="btn btn-line sm" data-addopen="fenster">+ Fenster</button><button type="button" class="btn btn-line sm" data-addopen="tuer">+ Tür</button><button type="button" class="btn btn-line sm" data-addopen="durchgang">+ Durchgang</button></div>
-      <p class="small">Im Grundriss an der Wand entlangziehen. Breite ändern über die Leiste unten.</p>
-      <div class="pl-next"><button type="button" class="btn btn-ink" data-go="1">Weiter: Schränke stellen →</button></div>
+
+  <section class="kp-build" aria-label="Ihre Wände">
+    <div class="kp-bh"><p class="kp-k">Ihre Küche – Ansicht von vorn</p><div class="kp-walltabs" data-kp-walltabs></div></div>
+    <div class="kp-walls" data-kp-walls></div>
+    <ul class="kp-tips" data-kp-tips aria-live="polite"></ul>
+  </section>
+
+  <aside class="kp-panel">
+    <section class="kp-pane" data-kpane>
+      <h1 class="kp-h">Welche Form hat Ihre Küche?</h1>
+      <p class="kp-p">Tippen Sie eine Form an – wir stellen eine Grundausstattung hinein, die Sie danach frei verändern.</p>
+      <div class="kp-forms" data-kp-forms></div>
+      <p class="kp-l">Wie groß ist der Raum?</p>
+      <label class="kp-range">Breite <output data-kp-rwo></output><input type="range" min="240" max="800" step="10" data-kp-rw></label>
+      <label class="kp-range">Tiefe <output data-kp-rdo></output><input type="range" min="240" max="700" step="10" data-kp-rd></label>
+      <p class="kp-l">Hängeschränke</p>
+      <button type="button" class="kp-tg" data-kp-top aria-pressed="true"><span></span>Hängeschränke über der Arbeitsfläche</button>
+      <p class="kp-p sm">Das Fenster können Sie in der Wandansicht mit dem Finger verschieben.</p>
+      <div class="kp-next"><button type="button" class="btn btn-ink" data-kgo="1">Weiter: Schränke reinziehen →</button></div>
     </section>
-    <section class="pl-pane" data-pane>
-      <h2 class="h3">Schränke & Geräte</h2><p class="small">Antippen fügt das Element an der nächsten freien Wand ein. Im Grundriss können Sie es verschieben, drehen, breiter oder schmaler machen.</p>
-      <div data-catalog></div>
-      <div class="pl-next"><button type="button" class="btn btn-ink" data-go="2">Weiter: Stil →</button></div>
+    <section class="kp-pane on" data-kpane>
+      <h2 class="kp-h">Ziehen Sie rein, was Sie brauchen</h2>
+      <p class="kp-p kp-dk">Anfassen und in die Wand ziehen – oder einfach antippen. Antippen in der Wand: breiter, schmaler, verschieben, entfernen.</p>
+      <div class="kp-pal" data-kp-pal></div>
+      <div class="kp-next"><button type="button" class="btn btn-ink" data-kgo="2">Weiter: Farbe & Stil →</button></div>
     </section>
-    <section class="pl-pane" data-pane>
-      <h2 class="h3">Ihr Stil</h2>
-      <p class="pl-l">Fronten</p><div class="sws" data-fronts></div>
-      <p class="pl-l">Oberfläche</p><div class="seg" data-finish></div>
-      <p class="pl-l">Arbeitsplatte</p><div class="sws" data-tops></div>
-      <p class="pl-l">Griffe</p><div class="seg" data-handle></div>
-      <p class="pl-l">Boden</p><div class="sws" data-floors></div>
-      <p class="pl-l">Wandfarbe</p><div class="sws" data-wallcols></div>
-      <div class="pl-next"><button type="button" class="btn btn-ink" data-go="3">Weiter: Planung prüfen →</button></div>
+    <section class="kp-pane" data-kpane>
+      <h2 class="kp-h">Wie soll sie aussehen?</h2>
+      <p class="kp-l">Schnell-Auswahl</p>
+      <div class="kp-quick"><button type="button" data-style="hell"><i style="--a:#f1eee8;--b:#b98a5c"></i>Hell</button><button type="button" data-style="dunkel"><i style="--a:#232426;--b:#b98a5c"></i>Dunkel</button><button type="button" data-style="holz"><i style="--a:#c39a6b;--b:#1d1d1f"></i>Holz</button><button type="button" data-style="natur"><i style="--a:#d9cfbf;--b:#e7e4de"></i>Natur</button><button type="button" data-style="farbe"><i style="--a:#7f8e77;--b:#e7e4de"></i>Salbei</button><button type="button" data-style="blau"><i style="--a:#22304a;--b:#e7e4de"></i>Nachtblau</button></div>
+      <p class="kp-l">Fronten</p><div class="kp-sws" data-kp-fronts></div>
+      <p class="kp-l">Griffe</p><div class="kp-handles" data-kp-handles></div>
+      <p class="kp-l">Arbeitsplatte</p><div class="kp-sws" data-kp-tops></div>
+      <div class="kp-next"><button type="button" class="btn btn-copper" data-kgo="3">Weiter: Entwurf an Martin schicken →</button></div>
     </section>
-    <section class="pl-pane" data-pane>
-      <h2 class="h3">Passt das so?</h2><p class="small">Der Planer prüft Ihre Küche nach den Regeln, nach denen auch Martin plant – live bei jeder Änderung.</p>
-      <ul class="checks" data-checks></ul>
-      <p class="pl-l">Ihre Stückliste</p><ul class="bom" data-bom></ul>
-      <div class="pl-next"><button type="button" class="btn btn-copper" data-go="4">Weiter: Entwurf senden →</button></div>
-    </section>
-    <section class="pl-pane" data-pane>
-      <h2 class="h3">Entwurf senden</h2>
+    <section class="kp-pane" data-kpane>
+      <h2 class="kp-h">Fast geschafft.</h2>
       <div class="sent" data-sent hidden><b>Danke – Ihr Entwurf ist angekommen!</b><span>Martin Pellegrin meldet sich in der Regel innerhalb eines Werktags.</span></div>
-      <p class="small">Schicken Sie uns Ihren Entwurf – gern mit Aufmaß, Fotos vom Raum oder einem Angebot, das wir ehrlich prüfen sollen.</p>
-      <form class="sendform" data-sendform action="https://formsubmit.co/info@falcon-eye.de" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="_subject" value="Küchenentwurf über den Online-Planer"><input type="hidden" name="_template" value="table"><input type="hidden" name="_next" value=""><input type="hidden" name="Entwurf" value="">
+      <p class="kp-p">Martin Pellegrin schaut sich Ihren Entwurf persönlich an und plant ihn millimetergenau durch – mit Geräten, Preisen und allem, was ein Online-Planer nicht kann.</p>
+      <div class="kp-fast"><button type="button" class="btn btn-wa" data-ksend="wa">Per WhatsApp schicken</button></div>
+      <p class="kp-l">Oder per Formular – mit Fotos und Aufmaß</p>
+      <form class="sendform" data-kp-form action="https://formsubmit.co/info@falcon-eye.de" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_subject" value="Küchenentwurf aus dem Online-Planer"><input type="hidden" name="_template" value="table"><input type="hidden" name="_next" value=""><input type="hidden" name="Entwurf" value="">
         <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="tm-l">Name<input name="Name" required autocomplete="name" placeholder="Vor- und Nachname"></label>
-        <div class="two"><label class="tm-l">Telefon<input name="Telefon" autocomplete="tel" inputmode="tel" placeholder="Für Rückfragen"></label><label class="tm-l">E-Mail<input name="email" type="email" required autocomplete="email" placeholder="name@beispiel.de"></label></div>
-        <label class="tm-l">Was dürfen wir für Sie tun?<select name="Anliegen"><option>Bitte meinen Entwurf durchplanen</option><option>Mein Aufmaß / eigenes Projekt prüfen</option><option>Gegenangebot prüfen lassen</option><option>Termin im Studio vereinbaren</option></select></label>
-        <label class="tm-l">Wann ist der Einzug / Umbau?<select name="Zeitpunkt"><option>So bald wie möglich</option><option>In 3–6 Monaten</option><option>In 6–12 Monaten</option><option>Ich informiere mich erst</option></select></label>
-        <label class="tm-l">Nachricht<textarea name="Nachricht" rows="3" placeholder="Wünsche, Besonderheiten, Fragen …"></textarea></label>
-        <label class="drop"><input type="file" name="attachment" data-files multiple accept="image/*,.pdf,.heic,.dwg,.dxf"><b>Dateien anhängen</b><span>Aufmaß, Grundriss, Fotos, Angebot – Bilder oder PDF, zusammen bis 10 MB</span></label>
+        <label class="tm-l">Telefon<input name="Telefon" autocomplete="tel" inputmode="tel" placeholder="Für eine kurze Rückfrage"></label>
+        <label class="tm-l">E-Mail<input name="email" type="email" required autocomplete="email" placeholder="name@beispiel.de"></label>
+        <label class="tm-l">Wann soll die Küche kommen?<select name="Zeitpunkt"><option>So bald wie möglich</option><option>In 3–6 Monaten</option><option>In 6–12 Monaten</option><option>Ich informiere mich erst</option></select></label>
+        <label class="drop"><input type="file" name="attachment" data-files multiple accept="image/*,.pdf,.heic"><b>Fotos, Aufmaß oder Angebot anhängen</b><span>Optional · Bilder oder PDF, zusammen bis 10 MB</span></label>
         <ul class="filelist" data-filelist></ul>
         <input type="file" name="Entwurf-Bild" class="hp" tabindex="-1" aria-hidden="true">
-        <label class="tg"><input type="checkbox" data-attach-plan checked><span>3D-Bild und Grundriss meines Entwurfs mitschicken</span></label>
-        <label class="tg"><input type="checkbox" required><span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage verwendet werden (<a href="datenschutz.html">Datenschutz</a>).</span></label>
-        <button type="submit" class="btn btn-copper">Entwurf absenden</button><p class="small" data-form-msg aria-live="polite"></p>
+        <label class="tg"><input type="checkbox" required><span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung verwendet werden (<a href="datenschutz.html">Datenschutz</a>).</span></label>
+        <button type="submit" class="btn btn-copper">Entwurf mit Bild absenden</button><p class="small" data-form-msg aria-live="polite"></p>
       </form>
-      <p class="pl-l">Oder schneller</p>
-      <div class="ctas col"><button type="button" class="btn btn-wa" data-send="wa">Per WhatsApp senden</button><button type="button" class="btn btn-line" data-send="img">Bild meiner Küche speichern</button><button type="button" class="btn btn-line" data-send="link">Link zum Entwurf kopieren</button></div>
+      <div class="kp-fast"><button type="button" class="btn btn-line sm" data-ksend="img">Bild speichern</button><button type="button" class="btn btn-line sm" data-ksend="link">Link kopieren</button></div>
     </section>
   </aside>
+
+  <div class="kp-ghost" data-kp-ghost hidden aria-hidden="true"></div>
+  <div class="kp-caret" data-kp-caret hidden aria-hidden="true"></div>
+  <div class="kp-trash" data-kp-trash hidden aria-hidden="true">Hier loslassen zum Entfernen</div>
+  <div class="kp-pop" data-kp-pop hidden></div>
+  <div class="kp-toast" data-kp-toast hidden role="status"></div>
 </main>
+<section class="ki" id="ki-vorschau" aria-label="KI-Vorschau">
+  <div class="wrap ki-in">
+    <div class="ki-txt">
+      <p class="kp-k">Neu · KI-Vorschau</p>
+      <h2 class="ki-h">Ihre neue Küche.<br><em>In Ihrem Raum.</em></h2>
+      <p>Machen Sie ein Foto vom leeren Raum oder von Ihrer alten Küche. Wir legen Ihre Wunschküche hinein – so sehen Sie, wie es bei Ihnen zu Hause wirkt, bevor ein einziger Schrank bestellt ist.</p>
+      <ol class="ki-steps"><li><b>Foto machen</b><span>Einfach mit dem Handy, aus der Tür heraus.</span></li><li><b>Stil antippen</b><span>Hell, dunkel, Holz, Farbe – und welche Griffe.</span></li><li><b>Bild bekommen</b><span>Martin schickt Ihnen die Vorschau, meist am nächsten Werktag.</span></li></ol>
+    </div>
+    <div class="ki-demo">
+      <div class="ki-ba" data-ba style="--p:52%">
+        <img src="img/ki/vorher.webp" alt="Leerer Raum vor dem Umbau" loading="lazy" decoding="async">
+        <div class="ki-after"><img data-ki-img src="img/ki/hell.webp" alt="Derselbe Raum mit neuer Küche (KI-Vorschau)" loading="lazy" decoding="async"></div>
+        <span class="ki-lab l">Vorher</span><span class="ki-lab r">KI-Vorschau</span>
+        <input type="range" min="0" max="100" value="52" aria-label="Vorher/Nachher vergleichen" data-ba-r>
+        <i class="ki-knob" aria-hidden="true"></i>
+      </div>
+      <div class="ki-chips" role="group" aria-label="Stil wählen"><button type="button" data-ki="hell" class=on>Hell & grifflos</button><button type="button" data-ki="dunkel">Schwarz & Nussbaum</button><button type="button" data-ki="salbei">Landhaus Salbei</button><button type="button" data-ki="blau">Nachtblau & Messing</button></div>
+      <p class="ki-note">Beispielbild, mit KI erzeugt. Ihre echte Planung macht Martin – millimetergenau.</p>
+    </div>
+    <form class="ki-form" action="https://formsubmit.co/info@falcon-eye.de" method="POST" enctype="multipart/form-data" data-kiform>
+      <input type="hidden" name="_subject" value="KI-Vorschau angefragt"><input type="hidden" name="_template" value="table"><input type="hidden" name="_next" value="">
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="ki-fh">Ihre Vorschau anfragen – kostenlos</p>
+      <label class="drop ki-drop"><input type="file" name="attachment" accept="image/*,.heic" required data-files><b>📷 Foto vom Raum wählen</b><span>Oder direkt mit dem Handy aufnehmen</span></label>
+      <ul class="filelist" data-filelist></ul>
+      <p class="kp-l">Stil</p>
+      <div class="ki-opts"><label><input type="radio" name="Stil" value="Hell & grifflos" checked><span>Hell & grifflos</span></label><label><input type="radio" name="Stil" value="Schwarz & Nussbaum"><span>Schwarz & Nussbaum</span></label><label><input type="radio" name="Stil" value="Landhaus Salbei"><span>Landhaus Salbei</span></label><label><input type="radio" name="Stil" value="Nachtblau & Messing"><span>Nachtblau & Messing</span></label><label><input type="radio" name="Stil" value="Überraschen Sie mich"><span>Überraschen Sie mich</span></label></div>
+      <p class="kp-l">Griffe</p>
+      <div class="ki-opts"><label><input type="radio" name="Griffe" value="Grifflos" checked><span>Grifflos</span></label><label><input type="radio" name="Griffe" value="Edelstahl"><span>Edelstahl</span></label><label><input type="radio" name="Griffe" value="Schwarz"><span>Schwarz</span></label><label><input type="radio" name="Griffe" value="Messing"><span>Messing</span></label></div>
+      <label class="tm-l">Was ist Ihnen wichtig? <small>(optional)</small><textarea name="Wunsch" rows="2" placeholder="z. B. Insel, viel Stauraum, Holzplatte …"></textarea></label>
+      <div class="two"><label class="tm-l">Name<input name="Name" required autocomplete="name"></label><label class="tm-l">E-Mail<input name="email" type="email" required autocomplete="email"></label></div>
+      <label class="tg"><input type="checkbox" required><span>Einverstanden mit der Verarbeitung meiner Angaben (<a href="datenschutz.html">Datenschutz</a>).</span></label>
+      <button type="submit" class="btn btn-copper">Vorschau anfragen</button>
+      <div class="sent" data-ki-sent hidden><b>Danke!</b><span>Ihre Vorschau ist in Arbeit.</span></div>
+    </form>
+  </div>
+</section>
 <footer class="ftr">
   <div class="wrap ftr-top">
     <div class="ftr-brand"><svg class="logo" viewBox="0 0 560 140" role="img" aria-label="Pellegrin Küchenstudio St. Wendel"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><rect class="pm-box" x="6" y="14" width="112" height="112" rx="26"/><path class="pm-stem" d="M42 106 V40"/><circle class="pm-ring" cx="64" cy="62" r="22" stroke="var(--acc,#c0673f)"/><circle class="pm-ring2" cx="64" cy="62" r="10" stroke="var(--acc,#c0673f)" stroke-width="3.5"/></g><text x="146" y="86" font-family="Fraunces" font-weight="500" font-size="66" letter-spacing="-1" fill="currentColor">Pellegrin</text><text x="149" y="120" font-family="DM Sans" font-weight="600" font-size="15.5" letter-spacing="6.2" fill="currentColor">KÜCHENSTUDIO · ST. WENDEL</text></svg><p>Küchen mit Herz und Verstand – geplant im Studio in St. Wendel, montiert von Profis aus der Region.</p><p class="ftr-was">Früher: Küchenhaus Ruppenthal</p></div>
@@ -110,7 +150,8 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/planer.js?v=1792045579"></script>
-<script src="assets/app.js?v=1792045579"></script>
+<script src="assets/ki.js?v=1792047827"></script>
+<script src="assets/kp.js?v=1792047827"></script>
+<script src="assets/app.js?v=1792047827"></script>
 </body>
 </html>

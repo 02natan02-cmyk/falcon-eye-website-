@@ -9,7 +9,8 @@
 <meta name="theme-color" content="#10264a">
 <link rel="icon" href="img/favicon.png">
 <link rel="preload" href="fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=1792044983">
+<link rel="stylesheet" href="assets/style.css?v=1792047827">
+<link rel="stylesheet" href="assets/kp.css?v=1792047827">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HomeGoodsStore", "name": "Küchenstudio Erbelding", "foundingDate": "1983", "telephone": "+491745181818", "email": "kuechenstudio-erbelding@t-online.de", "address": {"@type": "PostalAddress", "streetAddress": "Hauptstraße 125", "postalCode": "66459", "addressLocality": "Kirkel-Limbach", "addressCountry": "DE"}}</script>
 </head>
 <body>
@@ -122,11 +123,70 @@
       <p class="kick dark">3D &amp; VR-Planung</p>
       <h2 class="h2" id="vr-h">Stellen Sie sich vor, <em>Sie stehen schon drin.</em></h2>
       <p class="lead">Bei uns sehen Sie Ihre Küche, bevor auch nur ein Schrank bestellt ist. Drehen Sie die Küche links mit dem Finger – und tippen Sie auf „VR-Blick": So fühlt es sich an, wenn Sie im Studio die Brille aufsetzen.</p>
-      <ul class="vr-l"><li>Planen Sie selbst: Raum, Schränke, Farben – live in 3D</li><li>Der Planer prüft Laufwege, Arbeitsdreieck und Abstände</li><li>Schicken Sie uns Ihren Entwurf – wir machen ihn baubar</li></ul>
-      <div class="ctas"><a class="btn btn-acc" href="planer.html">Jetzt selbst planen</a><a class="btn btn-line" href="#unterlagen">Aufmaß schicken</a></div>
+      <ul class="vr-l"><li>Spüle, Herd, Backofen und Schränke einfach in die Wand ziehen</li><li>Farbe und Griffe antippen – live in 3D</li><li>Entwurf per WhatsApp an Barbara – sie macht ihn baubar</li></ul>
+      <div class="ctas"><a class="btn btn-acc" href="planer.html">Küche zusammenziehen</a><a class="btn btn-line" href="#ki-vorschau">KI-Vorschau</a></div>
     </div>
   </div>
 </section>
+
+<section class="ki" id="ki-vorschau" aria-label="KI-Vorschau">
+  <div class="wrap ki-in">
+    <div class="ki-txt">
+      <p class="kp-k">Neu · KI-Vorschau</p>
+      <h2 class="ki-h">Ihre neue Küche.<br><em>In Ihrem Raum.</em></h2>
+      <p>Machen Sie ein Foto vom leeren Raum oder von Ihrer alten Küche. Wir legen Ihre Wunschküche hinein – so sehen Sie, wie es bei Ihnen zu Hause wirkt, bevor ein einziger Schrank bestellt ist.</p>
+      <ol class="ki-steps"><li><b>Foto machen</b><span>Einfach mit dem Handy, aus der Tür heraus.</span></li><li><b>Stil antippen</b><span>Hell, dunkel, Holz, Farbe – und welche Griffe.</span></li><li><b>Bild bekommen</b><span>Barbara schickt Ihnen die Vorschau, meist am nächsten Werktag.</span></li></ol>
+    </div>
+    <div class="ki-demo">
+      <div class="ki-ba" data-ba style="--p:52%">
+        <img src="img/ki/vorher.webp" alt="Leerer Raum vor dem Umbau" loading="lazy" decoding="async">
+        <div class="ki-after"><img data-ki-img src="img/ki/hell.webp" alt="Derselbe Raum mit neuer Küche (KI-Vorschau)" loading="lazy" decoding="async"></div>
+        <span class="ki-lab l">Vorher</span><span class="ki-lab r">KI-Vorschau</span>
+        <input type="range" min="0" max="100" value="52" aria-label="Vorher/Nachher vergleichen" data-ba-r>
+        <i class="ki-knob" aria-hidden="true"></i>
+      </div>
+      <div class="ki-chips" role="group" aria-label="Stil wählen"><button type="button" data-ki="hell" class=on>Hell & grifflos</button><button type="button" data-ki="dunkel">Schwarz & Nussbaum</button><button type="button" data-ki="salbei">Landhaus Salbei</button><button type="button" data-ki="blau">Nachtblau & Messing</button></div>
+      <p class="ki-note">Beispielbild, mit KI erzeugt. Ihre echte Planung macht Barbara – millimetergenau.</p>
+    </div>
+    <form class="ki-form" action="https://formsubmit.co/info@falcon-eye.de" method="POST" enctype="multipart/form-data" data-kiform>
+      <input type="hidden" name="_subject" value="KI-Vorschau angefragt"><input type="hidden" name="_template" value="table"><input type="hidden" name="_next" value="">
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="ki-fh">Ihre Vorschau anfragen – kostenlos</p>
+      <label class="drop ki-drop"><input type="file" name="attachment" accept="image/*,.heic" required data-files><b>📷 Foto vom Raum wählen</b><span>Oder direkt mit dem Handy aufnehmen</span></label>
+      <ul class="filelist" data-filelist></ul>
+      <p class="kp-l">Stil</p>
+      <div class="ki-opts"><label><input type="radio" name="Stil" value="Hell & grifflos" checked><span>Hell & grifflos</span></label><label><input type="radio" name="Stil" value="Schwarz & Nussbaum"><span>Schwarz & Nussbaum</span></label><label><input type="radio" name="Stil" value="Landhaus Salbei"><span>Landhaus Salbei</span></label><label><input type="radio" name="Stil" value="Nachtblau & Messing"><span>Nachtblau & Messing</span></label><label><input type="radio" name="Stil" value="Überraschen Sie mich"><span>Überraschen Sie mich</span></label></div>
+      <p class="kp-l">Griffe</p>
+      <div class="ki-opts"><label><input type="radio" name="Griffe" value="Grifflos" checked><span>Grifflos</span></label><label><input type="radio" name="Griffe" value="Edelstahl"><span>Edelstahl</span></label><label><input type="radio" name="Griffe" value="Schwarz"><span>Schwarz</span></label><label><input type="radio" name="Griffe" value="Messing"><span>Messing</span></label></div>
+      <label class="tm-l">Was ist Ihnen wichtig? <small>(optional)</small><textarea name="Wunsch" rows="2" placeholder="z. B. Insel, viel Stauraum, Holzplatte …"></textarea></label>
+      <div class="two"><label class="tm-l">Name<input name="Name" required autocomplete="name"></label><label class="tm-l">E-Mail<input name="email" type="email" required autocomplete="email"></label></div>
+      <label class="tg"><input type="checkbox" required><span>Einverstanden mit der Verarbeitung meiner Angaben (<a href="datenschutz.html">Datenschutz</a>).</span></label>
+      <button type="submit" class="btn btn-copper">Vorschau anfragen</button>
+      <div class="sent" data-ki-sent hidden><b>Danke!</b><span>Ihre Vorschau ist in Arbeit.</span></div>
+    </form>
+  </div>
+</section>
+<section class="ah" id="arbeitshoehe" aria-labelledby="ah-h">
+  <div class="wrap ah-in">
+    <div class="ah-txt">
+      <p class="kp-k">Ergonomie · in 5 Sekunden</p>
+      <h2 class="ki-h" id="ah-h">Ihr Rücken <em>sagt Danke.</em></h2>
+      <p>Die meisten Küchen sind 86 cm hoch – egal, ob dort jemand mit 1,60 m oder 1,90 m steht. Schieben Sie den Regler auf Ihre Größe und sehen Sie, wie hoch Ihre Arbeitsplatte sein sollte.</p>
+      <label class="ah-r"><span>Ihre Körpergröße</span><output data-ah-k>172 cm</output><input type="range" min="150" max="200" value="172" data-ah></label>
+      <div class="ah-out"><div><b data-ah-ideal>93</b><span>cm ideale Arbeitshöhe</span></div><p data-ah-msg></p></div>
+      <div class="ctas"><a class="btn btn-copper" href="planer.html">Küche in meiner Höhe planen</a><a class="btn btn-wa" data-ah-wa href="https://wa.me/491745181818" target="_blank" rel="noopener">Barbara fragen</a></div>
+    </div>
+    <div class="ah-vis" aria-hidden="true">
+      <svg viewBox="0 0 420 460" data-ah-svg>
+        <line x1="10" y1="440" x2="410" y2="440" stroke="currentColor" stroke-opacity=".3"/>
+        <g data-ah-std><rect x="200" y="0" width="200" height="8" rx="2" fill="currentColor" fill-opacity=".18"/><text x="206" y="26" font-size="13" fill="currentColor" fill-opacity=".55">Standard 86 cm</text></g>
+        <g data-ah-cnt><rect x="200" y="0" width="200" height="10" rx="2" fill="#e9a27c"/><rect x="204" y="10" width="192" height="100" fill="currentColor" fill-opacity=".08" data-ah-body2/><text x="400" y="-10" text-anchor="end" font-size="15" font-weight="700" fill="#e9a27c" data-ah-lab>93 cm</text></g>
+        <g data-ah-p fill="currentColor"><circle cx="120" cy="0" r="17"/><path data-ah-body d=""/></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
 
 <section class="spuele" aria-labelledby="sp-h">
   <div class="wrap sp-g">
@@ -225,6 +285,7 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/app.js?v=1792044983"></script>
+<script src="assets/ki.js?v=1792047827"></script>
+<script src="assets/app.js?v=1792047827"></script>
 </body>
 </html>
