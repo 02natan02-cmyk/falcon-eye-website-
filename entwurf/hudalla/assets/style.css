@@ -451,3 +451,6 @@ section{position:relative}
 @media (max-width:899px){.play-hud{top:10px;bottom:auto}}
 .play-hint{top:auto;bottom:16%;translate:-50% 0;padding:8px 14px;font-size:13px;gap:6px;white-space:nowrap}
 .play-hint i{width:22px;height:22px}
+.rv-sum{display:grid;align-content:center;justify-items:start;background:var(--ink);color:#fff}.rv-big{font:800 64px/1 var(--disp)}.rv-sum p{margin:6px 0 0;color:#b8c9c2}
+.rv-c blockquote{font-size:17px;line-height:1.55}
+@media (min-width:900px){.rv-track{overflow:visible;display:grid;grid-template-columns:.8fr 1fr 1fr 1fr}.rv-c{flex:none}}
