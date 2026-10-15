@@ -226,3 +226,34 @@
 })();
 
 ;(function(){ document.querySelectorAll('[data-role]').forEach(a => a.addEventListener('click', () => { const s = document.querySelector('[data-ocf="rolle"]'); if (s) { s.value = a.dataset.role; s.dispatchEvent(new Event('change', { bubbles: true })); s.dispatchEvent(new Event('input', { bubbles: true })); } })); })();
+
+/* Marke: drei Pfeile – Einflug, Hover-Kopplung, Bus fährt beim Scrollen durch */
+(function () {
+  var m = document.querySelector('[data-pf3]'); if (!m) return;
+  new IntersectionObserver(function (es, o) { es.forEach(function (e) { if (e.isIntersecting) { m.classList.add('in'); o.disconnect(); } }); }, { threshold: .35 }).observe(m);
+  var lis = document.querySelectorAll('.pf3-l li'), auto = 0, user = false;
+  function hl(k) { m.setAttribute('data-hl', k); lis.forEach(function (l) { l.classList.toggle('on', l.dataset.k === k); }); }
+  function clr() { m.removeAttribute('data-hl'); lis.forEach(function (l) { l.classList.remove('on'); }); }
+  lis.forEach(function (l) {
+    l.addEventListener('mouseenter', function () { user = true; hl(l.dataset.k); });
+    l.addEventListener('focus', function () { user = true; hl(l.dataset.k); });
+    l.addEventListener('click', function () { user = true; hl(l.dataset.k); });
+    l.addEventListener('mouseleave', clr); l.addEventListener('blur', clr);
+  });
+  // auf Touch-Geräten automatisch durchschalten, solange sichtbar
+  var ks = ['r', 'b', 'g'], vis = false;
+  new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }, { threshold: .5 }).observe(document.querySelector('.pf3-l'));
+  setInterval(function () { if (!vis || user || matchMedia('(hover:hover)').matches) return; hl(ks[auto++ % 3]); }, 2200);
+  // Bus
+  var road = document.querySelector('[data-pf3road]'), drive = road && road.querySelector('.pf3-drive'), last = 0, tmr;
+  if (!road || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  function upd() {
+    var r = road.getBoundingClientRect(), vh = innerHeight;
+    var p = (vh - r.top) / (vh + r.height); p = Math.max(0, Math.min(1, p));
+    var x = -0.05 + p * 1.1; drive.style.setProperty('--x', x.toFixed(4));
+    var moving = Math.abs(p - last) > .0005; last = p;
+    road.style.setProperty('--run', moving ? 'running' : 'paused'); drive.style.setProperty('--trail', moving ? '1' : '0');
+    clearTimeout(tmr); tmr = setTimeout(function () { road.style.setProperty('--run', 'paused'); drive.style.setProperty('--trail', '0'); }, 160);
+  }
+  addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true }); upd();
+})();
