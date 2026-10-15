@@ -80,7 +80,7 @@
 
   /* Hero: Blaupause + VR-Brille */
   var hero = $('.hero');
-  if (hero) {
+  if (hero && !$('.hero-bp[hidden]')) {
     var svgs = $$('.bp', hero);
     var active = function () { for (var i = 0; i < svgs.length; i++) if (svgs[i].getBoundingClientRect().width > 0 && getComputedStyle(svgs[i]).display !== 'none') return svgs[i]; return svgs[0]; };
     // Linien zeichnen
@@ -295,6 +295,75 @@
       c.addEventListener('pointerleave', function () { c.style.transform = ''; });
     }
   });
+
+  
+  /* Barbara: Zitate */
+  (function () {
+    var box = $('[data-quotes]'); if (!box) return;
+    var qs = $$('blockquote', box), i = 0;
+    if (RM) return;
+    setInterval(function () { if (document.hidden) return; qs[i].classList.remove('on'); i = (i + 1) % qs.length; qs[i].classList.add('on'); }, 5200);
+  })();
+  /* Zähler */
+  (function () {
+    var els = $$('[data-count]'); if (!els.length || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; io.unobserve(e.target);
+        var el = e.target, to = +el.dataset.count, t0 = null; if (RM) { el.textContent = to; return; }
+        (function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); })(performance.now());
+      });
+    }, { threshold: .6 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+  /* Zeitreise */
+  (function () {
+    var sec = $('[data-zr]'); if (!sec) return;
+    var tr = $('[data-ztrack]', sec), cards = $$('.zr-c', tr), btns = $$('[data-zy]', sec), big = $('[data-zbig]', sec), prog = $('[data-zprog]', sec), rail = $('.zr-rail', sec);
+    var curY = null;
+    function setYear(y) {
+      if (y === curY) return; curY = y;
+      btns.forEach(function (b) { var on = b.dataset.zy == y; b.classList.toggle('on', on); if (on && rail) { var l = b.offsetLeft - rail.clientWidth / 2 + b.clientWidth / 2; rail.scrollTo({ left: l, behavior: RM ? 'auto' : 'smooth' }); } });
+      if (big) { big.classList.add('swap'); setTimeout(function () { big.textContent = y; big.classList.remove('swap'); }, 200); }
+    }
+    function onS() {
+      var max = tr.scrollWidth - tr.clientWidth; if (prog) prog.style.width = (max > 0 ? tr.scrollLeft / max * 100 : 0) + '%';
+      var x = tr.scrollLeft + tr.clientWidth * .3, pick = cards[0];
+      cards.forEach(function (c) { if (c.offsetLeft <= x) pick = c; });
+      if (pick) setYear(pick.dataset.y);
+    }
+    tr.addEventListener('scroll', function () { requestAnimationFrame(onS); }, { passive: true });
+    btns.forEach(function (b) { b.addEventListener('click', function () { var c = cards.filter(function (k) { return k.dataset.y == b.dataset.zy; })[0]; if (c) tr.scrollTo({ left: c.offsetLeft - parseFloat(getComputedStyle(tr).paddingLeft), behavior: RM ? 'auto' : 'smooth' }); }); });
+    function by(d) { var w = cards[0] ? cards[0].getBoundingClientRect().width + 20 : 300; tr.scrollBy({ left: d * w, behavior: RM ? 'auto' : 'smooth' }); }
+    var p = $('[data-zprev]', sec), n = $('[data-znext]', sec);
+    if (p) p.addEventListener('click', function () { by(-1); }); if (n) n.addEventListener('click', function () { by(1); });
+    tr.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); by(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); by(-1); } });
+    /* Maus-Ziehen (Desktop) */
+    var down = false, sx = 0, sl = 0, moved = false;
+    tr.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = tr.scrollLeft; });
+    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 5) { moved = true; tr.classList.add('drag'); } tr.scrollLeft = sl - dx; });
+    window.addEventListener('pointerup', function () { if (!down) return; down = false; setTimeout(function () { tr.classList.remove('drag'); }, 30); });
+    tr.addEventListener('click', function (e) { if (moved) { e.preventDefault(); moved = false; } }, true);
+    /* Mausrad senkrecht -> waagerecht, solange Track noch Platz hat */
+    onS();
+  })();
+  /* BORA zerlegt */
+  (function () {
+    var sec = $('[data-bx-sec]'); if (!sec) return;
+    var st = $('[data-bx3d]', sec), lis = $$('[data-bxlist] li', sec), temp = $('[data-bxtemp]', sec), vid = $('.bx-vid', sec);
+    function upd() {
+      var r = sec.getBoundingClientRect(), vh = window.innerHeight;
+      var p = (vh * .85 - r.top) / (r.height * .75); p = Math.max(0, Math.min(1, p));
+      var e = RM ? 1 : (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+      st.style.setProperty('--e', e.toFixed(3));
+      var k = Math.min(lis.length - 1, Math.floor(p * lis.length));
+      lis.forEach(function (li, i) { li.classList.toggle('on', i <= k && p > .05); });
+      if (temp) temp.textContent = Math.round(40 + 160 * e) + '°';
+    }
+    window.addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true });
+    window.addEventListener('resize', upd); upd();
+    if (vid && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {}); } else vid.pause(); }); }, { threshold: .3 }).observe(vid);
+  })();
 
   window.addEventListener('load', function () { if (hasG) ScrollTrigger.refresh(); });
 })();
