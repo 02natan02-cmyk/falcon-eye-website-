@@ -261,3 +261,38 @@
   .fm-i{height:auto;width:80%;aspect-ratio:4/3.4}.fm-i.fm-p{width:62%;aspect-ratio:3/4}
   .fm-list{gap:10px}
 }
+
+/* ===== Verkaufs-Umbau: Planer nach oben ===== */
+.hero-new{display:inline-block;margin-left:6px;padding:4px 10px;border-radius:999px;background:var(--copper);color:#fff;font-weight:700;letter-spacing:.06em;animation:hnPulse 2.4s ease-in-out infinite}
+@keyframes hnPulse{0%,100%{box-shadow:0 0 0 0 rgba(192,103,63,.6)}50%{box-shadow:0 0 0 10px rgba(192,103,63,0)}}
+.btn-xl{min-height:64px;padding:0 30px;font-size:17px;flex-direction:column;gap:0;line-height:1.15}
+.btn-xl small{display:block;font-size:12px;font-weight:500;opacity:.85;letter-spacing:.04em}
+.hero-proof{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:22px 0 0}
+.hero-proof li{display:flex;align-items:baseline;gap:8px;padding:9px 14px;border-radius:14px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f3eee6;font-size:14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.hero-proof b{font:600 20px/1 var(--serif);color:#f4b48f}
+.pt-top{position:relative;padding-top:clamp(70px,9vw,120px)}
+.pt-top::before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(192,103,63,.8),transparent)}
+.pt-badge{display:inline-block;margin:-6px 0 18px;padding:8px 14px;border-radius:12px;background:rgba(192,103,63,.16);color:#f4b48f;font-weight:600;font-size:15px}
+.pt-top .pt-3d{box-shadow:0 0 0 1px rgba(255,255,255,.08),0 50px 120px -40px rgba(192,103,63,.55)}
+/* Pfeiler kompakt */
+.pf-compact{border-radius:clamp(0px,2vw,32px);margin:0 auto clamp(40px,6vw,90px);max-width:1500px}
+.pf-punch{font:500 clamp(22px,2.4vw,30px)/1.2 var(--serif);font-style:italic;color:#f4b48f;margin:14px 0 22px}
+.pf-strip{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:0;margin-top:clamp(28px,4vw,50px)}
+.pf-strip li{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#000}
+.pf-strip img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.pf-strip li:hover img{transform:scale(1.06)}
+.pf-strip span{position:absolute;left:10px;right:10px;bottom:10px;padding:8px 12px;border-radius:10px;background:rgba(10,9,8,.7);backdrop-filter:blur(6px);font-size:13px;color:#ddd4c8;display:grid}
+.pf-strip b{color:#fff;font-weight:600}
+@media (max-width:899px){.pf-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:0}.pf-strip li{flex:0 0 72%;scroll-snap-align:center}}
+/* Handschrift kompakt: kein langes Scrollen */
+.hw-compact .hw-g{grid-template-columns:minmax(0,1fr)}
+.hw-compact .hw-stage{display:none}
+.hw-compact .hw-steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.hw-compact .hw-s{min-height:0;opacity:1;padding:0;justify-content:flex-start}
+.hw-compact .hw-s h3{font-size:clamp(22px,1.8vw,26px)}
+.hw-compact .hw-s p{font-size:15px}
+.hw-compact .hw-mimg{display:block;margin:0 0 14px;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#0c0b0a}
+.hw-compact .hw-mimg>img{width:100%;height:100%;object-fit:cover}
+.hw-compact .hw-mimg.hw-mon{display:grid;place-items:center}
+@media (max-width:1100px){.hw-compact .hw-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.hw-compact .hw-steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.hw-compact .hw-s{flex:0 0 82%;scroll-snap-align:center}}
