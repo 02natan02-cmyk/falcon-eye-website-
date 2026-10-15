@@ -463,7 +463,7 @@ html[data-page="planer"] .dock{display:none}
 .intro .intro-skip{position:absolute;left:auto;top:auto;width:auto;right:18px;bottom:calc(18px + var(--sb));z-index:3;padding:10px 16px;border-radius:999px;border:0;background:rgba(28,26,23,.75);color:#fff;font:600 13px var(--sans);cursor:pointer}
 
 /* ================= Flug ================= */
-.flug{height:340vh;position:relative;background:var(--paper)}
+.flug{height:260vh;position:relative;background:var(--paper)}
 .fl-pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
 .fl-g{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);align-items:center}
 .fl-steps{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:6px}
@@ -476,7 +476,7 @@ html[data-page="planer"] .dock{display:none}
 .fl-rec{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;font:600 12px var(--sans);letter-spacing:.06em}
 .fl-rec i{width:8px;height:8px;border-radius:50%;background:#e33;animation:ping 1.6s infinite}
 .fl-bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.2)}.fl-bar i{display:block;height:100%;background:var(--copper);transform-origin:left;transform:scaleX(0)}
-@media (max-width:900px){.flug{height:300vh}.fl-g{grid-template-columns:minmax(0,1fr);gap:16px}.fl-pin{align-items:flex-start;padding-top:72px}.fl-txt .h2{font-size:30px}.fl-txt .kick{margin-bottom:6px}.fl-steps{margin-top:10px}.fl-steps li{padding:8px 12px}.fl-steps li:not(.on){display:none}.fl-txt .ctas{display:none}.fl-win{order:-1;aspect-ratio:4/3;border-radius:16px}}
+@media (max-width:900px){.flug{height:230vh}.fl-g{grid-template-columns:minmax(0,1fr);gap:16px}.fl-pin{align-items:flex-start;padding-top:72px}.fl-txt .h2{font-size:30px}.fl-txt .kick{margin-bottom:6px}.fl-steps{margin-top:10px}.fl-steps li{padding:8px 12px}.fl-steps li:not(.on){display:none}.fl-txt .ctas{display:none}.fl-win{order:-1;aspect-ratio:4/3;border-radius:16px}}
 /* ================= Unterlagen ================= */
 .unterlagen{padding:clamp(80px,10vw,140px) 0;background:var(--ink2);color:var(--cream)}
 .unterlagen .lead{color:#d8cdbf}.unterlagen .h2 em{color:#e8a27d}
