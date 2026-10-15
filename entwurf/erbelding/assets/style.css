@@ -577,3 +577,5 @@ html[data-page="planer"] .concept{display:none}
 .bx-list li.on{opacity:1;background:rgba(224,112,63,.12)}
 @media (max-width:899px){.bx-g{grid-template-columns:minmax(0,1fr)}.bx-stage{max-width:420px;margin:0 auto;width:100%}}
 @media (prefers-reduced-motion:reduce){.ba-ring,.l-cav .fan,.l-cav .steam{animation:none}}
+/* Hero schärfer: kein Weichzeichner, keine Vergrößerung */
+.hero-reels video{filter:saturate(1.08) contrast(1.05)!important;transform:none!important;animation:none!important}
