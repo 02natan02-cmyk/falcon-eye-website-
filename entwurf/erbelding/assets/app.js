@@ -141,7 +141,7 @@
   }
 
   /* Jahreszahlen hochzählen */
-  onView($$('[data-y]'), function (el) {
+  onView($$('[data-y]').filter(function (el) { return !el.children.length && !el.classList.contains('zr-c'); }), function (el) {
     var to = +el.dataset.y, from = to - 40, st = performance.now();
     if (RM) return;
     (function f(n) { var p = Math.min(1, (n - st) / 1400), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(from + (to - from) * e); if (p < 1) requestAnimationFrame(f); })(st);
