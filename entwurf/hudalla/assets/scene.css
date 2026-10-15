@@ -71,3 +71,8 @@
 .scene .refl{fill:#fff;opacity:calc(.35 - var(--lit) * .3)}
 .scene .vansnow{fill:#f7fafc;opacity:var(--snow)}
 .scene[data-focus~="van"] .f-van{animation:focus 1.6s ease-in-out infinite}
+/* Mitmach-Modus */
+.scene.play .walker,.scene.play .wk-inner{animation:none}
+.scene.play:not(.moving) .leg{animation-play-state:paused}
+.scene.play .walker{transition:none}
+.scene .mess{pointer-events:none}

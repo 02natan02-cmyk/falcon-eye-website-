@@ -422,3 +422,32 @@ section{position:relative}
 @media (min-width:900px){.ab-van{display:block}.ab-g{padding-top:6px}}
 .ab-g .ab-n{position:relative;z-index:2}
 @media (max-width:899px){.m-hide{display:none}.season-cap{font-size:14px;padding:12px 14px}.sec-h .lead{margin-top:14px}}
+/* ===== Mitmach-Modus ===== */
+.play-btn{position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:9px;padding:10px 16px 10px 10px;border:0;border-radius:999px;background:var(--sun);color:var(--ink);font:800 14px var(--body);cursor:pointer;box-shadow:0 12px 26px -10px rgba(0,0,0,.45);animation:pbPulse 2.4s ease-in-out infinite}
+.play-btn .pb-ic{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--sun);font-size:11px;padding-left:2px}
+.play-btn:hover{transform:translateY(-2px)}
+@keyframes pbPulse{0%,100%{box-shadow:0 12px 26px -10px rgba(0,0,0,.45),0 0 0 0 rgba(255,184,28,.6)}50%{box-shadow:0 12px 26px -10px rgba(0,0,0,.45),0 0 0 10px rgba(255,184,28,0)}}
+.scene-card.playing{touch-action:none;cursor:crosshair;box-shadow:0 0 0 4px var(--sun),0 50px 100px -40px rgba(16,40,30,.55)}
+.scene-card.playing svg{cursor:grab}
+.play-hud{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:16px;background:rgba(16,33,28,.86);color:#fff;backdrop-filter:blur(6px);font-size:14px}
+.play-hud b{white-space:nowrap}
+.pbar{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.18);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#7dd3a0,var(--sun));transition:width .3s var(--ease)}
+.play-hud span{font-weight:800;min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+.play-hud button{width:32px;height:32px;border:0;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;font-size:15px;cursor:pointer}
+.play-hint{position:absolute;left:50%;top:58%;translate:-50% -50%;display:grid;justify-items:center;gap:8px;padding:12px 16px;border-radius:16px;background:rgba(255,255,255,.92);font-weight:800;font-size:14px;pointer-events:none;box-shadow:0 14px 30px -14px rgba(0,0,0,.4)}
+.play-hint i{width:30px;height:30px;border-radius:50%;border:3px solid var(--green);animation:hintMove 1.6s ease-in-out infinite}
+@keyframes hintMove{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}
+.play-done{position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(420px,88%);padding:22px;border-radius:22px;background:#fff;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);animation:pdIn .5s var(--ease)}
+.play-done b{display:block;font:800 24px var(--disp);margin-bottom:6px}.play-done p{margin:0 0 14px;color:var(--mute);font-size:15px}
+.pd-b{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+@keyframes pdIn{from{opacity:0;transform:scale(.85)}}
+.scene-card.pl-win::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 70%,rgba(255,210,63,.5),transparent 60%);animation:flash 1.2s ease-out forwards}
+@keyframes flash{to{opacity:0}}
+@media (max-width:899px){.play-btn{right:10px;bottom:10px;font-size:13px;padding:8px 13px 8px 8px}.play-btn .pb-ic{width:24px;height:24px}.play-hud{left:10px;right:10px;bottom:10px;font-size:13px;gap:8px;padding:8px 8px 8px 12px}.play-done{padding:16px}.play-done b{font-size:20px}.play-done p{font-size:13.5px}}
+[hidden]{display:none!important}
+.play-hud{top:14px;bottom:auto}
+.scene-card.playing .season-ui{display:none}
+@media (max-width:899px){.play-hud{top:10px;bottom:auto}}
+.play-hint{top:auto;bottom:16%;translate:-50% 0;padding:8px 14px;font-size:13px;gap:6px;white-space:nowrap}
+.play-hint i{width:22px;height:22px}

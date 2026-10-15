@@ -19,9 +19,11 @@
     const S = ['spring', 'summer', 'autumn', 'winter'];
     const CAP = { spring: 'Frühling: Hecken in Form, Frühjahrsputz, das erste Grün.', summer: 'Sommer: Rasen gemäht, Beete gepflegt, gegossen – auch in den Ferien.', autumn: 'Herbst: Laub weg, Rinnen frei, Winter vorbereitet.', winter: 'Winter: Wege geräumt und gestreut, bevor die ersten Mieter rausgehen.' };
     let i = 1, t = 0, paused = false;
-    const set = s => { svg.dataset.season = s; $$('button', ui).forEach(b => b.classList.toggle('on', b.dataset.s === s)); cap.textContent = CAP[s]; capb.dataset.s = s; capb.classList.remove('sw'); void capb.offsetWidth; capb.classList.add('sw'); i = S.indexOf(s); };
+    const PL = { spring: 'Selbst Unkraut zupfen', summer: 'Selbst Rasen mähen', autumn: 'Selbst Laub rechen', winter: 'Selbst Schnee schippen' };
+    const set = s => { svg.dataset.season = s; const pl = $('[data-play-l]', hs); if (pl) pl.textContent = PL[s]; $$('button', ui).forEach(b => b.classList.toggle('on', b.dataset.s === s)); cap.textContent = CAP[s]; capb.dataset.s = s; capb.classList.remove('sw'); void capb.offsetWidth; capb.classList.add('sw'); i = S.indexOf(s); };
     const loop = () => { clearTimeout(t); if (paused || RM) return; t = setTimeout(() => { set(S[(i + 1) % 4]); loop(); }, 6000); };
-    ui.addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (!b) return; paused = true; ui.classList.add('paused'); clearTimeout(t); set(b.dataset.s); });
+    ui.addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (!b) return; paused = true; ui.classList.add('paused'); clearTimeout(t); set(b.dataset.s); hs.dispatchEvent(new CustomEvent('season', { detail: b.dataset.s })); });
+    hs._set = s => { set(s); hs.dispatchEvent(new CustomEvent('season', { detail: s })); }; hs._pause = () => { paused = true; ui.classList.add('paused'); clearTimeout(t); }; hs._cur = () => S[i];
     set('summer'); loop();
   }
 
