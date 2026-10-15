@@ -356,3 +356,135 @@
     $$('[data-r]').forEach((el, i) => gsap.from(el, { y: 50, opacity: 0, duration: .9, delay: (i % 3) * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
   }
 })();
+
+/* ===== Lomi Lomi, Instagram-Story-Wall & zusätzliche Bewegung ===== */
+(function () {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, IO = 'IntersectionObserver' in window;
+  const seen = (els, f, opt) => { if (!IO) return els.forEach(f); const o = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { f(e.target); o.unobserve(e.target); } }), opt || { threshold: .2 }); els.forEach(el => o.observe(el)); };
+
+  /* --- Lomi: drei Seiten, drei Zeiten --- */
+  const SIDES = [['Die Rückseite steht für die Zukunft.', 'Was darf kommen? Raum für das, was vor dir liegt.'], ['Die Vorderseite steht für das Hier und Jetzt.', 'Ganz da sein – in diesem Atemzug, in diesem Moment.'], ['Die Seite steht für die Vergangenheit.', 'Was hinter dir liegt, darf gewürdigt werden.']];
+  const st = $('[data-lsidet]');
+  $$('[data-lside]').forEach(b => b.addEventListener('click', () => {
+    $$('[data-lside]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+    const s = SIDES[+b.dataset.lside]; st.innerHTML = '<em>' + s[0] + '</em> ' + s[1]; st.classList.remove('swap'); void st.offsetWidth; st.classList.add('swap');
+  }));
+  const steps = $$('[data-lstep]'), sl = $('[data-lsteps]');
+  if (RM) steps.forEach(s => s.classList.add('in'));
+  else seen(steps, s => { s.classList.add('in'); if (sl) sl.style.setProperty('--lp', (steps.filter(x => x.classList.contains('in')).length / steps.length).toFixed(2)); }, { threshold: .25 });
+  const lp = $('[data-loplay]'), plt = $('[data-pl-toggle]');
+  if (lp && plt) {
+    const sync = () => { const on = plt.getAttribute('aria-pressed') === 'true'; lp.classList.toggle('on', on); lp.lastChild.textContent = on ? ' Musik läuft – pausieren' : ' Aloha-Playlist anhören'; };
+    lp.addEventListener('click', e => { e.stopPropagation(); plt.click(); setTimeout(sync, 80); });
+    new MutationObserver(sync).observe(plt, { attributes: true, attributeFilter: ['aria-pressed'] });
+  }
+
+  /* --- Story-Wall --- */
+  const wall = $('#instagram'), track = $('[data-swtrack]');
+  if (wall && track) {
+    const T = $$('.sw-t', track), mob = () => innerWidth < 760;
+    const vis = () => T.filter(t => !t.classList.contains('off'));
+    const now = $('[data-swnow]'), tot = $('[data-swtot]'), prog = $('[data-swprog]'), pbtn = $('[data-swplay]');
+    let cur = 0, auto = !RM, inView = false, paused = false, resumeT = 0, t0 = 0, raf = 0;
+    const DUR = 4200;
+    const pad = n => String(n).padStart(2, '0');
+    if (RM) { wall.classList.add('in'); if (pbtn) { pbtn.setAttribute('aria-pressed', 'false'); pbtn.setAttribute('aria-label', 'Automatisch weiterblättern'); } }
+    else seen([wall.querySelector('.sw-stage')], () => { vis().forEach((t, i) => t.style.setProperty('--k', i)); wall.classList.add('in'); }, { threshold: .08 });
+    if (IO) new IntersectionObserver(([e]) => { inView = e.isIntersecting; t0 = performance.now(); }, { threshold: .35 }).observe(track);
+
+    const setCur = k => {
+      const v = vis(); if (!v.length) return; cur = (k + v.length) % v.length;
+      T.forEach(t => t.classList.remove('cur')); v[cur].classList.add('cur');
+      now.textContent = pad(cur + 1); tot.textContent = pad(v.length);
+    };
+    const center = (k, smooth = true) => {
+      const v = vis(); if (!v.length) return; k = (k + v.length) % v.length; const el = v[k];
+      track.scrollTo({ left: el.offsetLeft - (track.clientWidth - el.offsetWidth) / 2, behavior: smooth && !RM ? 'smooth' : 'auto' });
+      setCur(k); t0 = performance.now();
+    };
+    let sT = 0;
+    track.addEventListener('scroll', () => { if (!mob()) return; cancelAnimationFrame(sT); sT = requestAnimationFrame(() => {
+      const c = track.scrollLeft + track.clientWidth / 2, v = vis(); let best = 0, bd = 1e9;
+      v.forEach((t, i) => { const d = Math.abs(t.offsetLeft + t.offsetWidth / 2 - c); if (d < bd) { bd = d; best = i; } });
+      if (best !== cur) { setCur(best); t0 = performance.now(); }
+    }); }, { passive: true });
+    const hold = () => { paused = true; clearTimeout(resumeT); resumeT = setTimeout(() => { paused = false; t0 = performance.now(); }, 7000); };
+    ['pointerdown', 'touchstart', 'wheel'].forEach(ev => track.addEventListener(ev, hold, { passive: true }));
+    $$('[data-swnav]').forEach(b => b.addEventListener('click', () => { hold(); center(cur + +b.dataset.swnav); }));
+    pbtn && pbtn.addEventListener('click', () => { auto = !auto; pbtn.setAttribute('aria-pressed', String(auto)); pbtn.setAttribute('aria-label', auto ? 'Automatisches Weiterblättern pausieren' : 'Automatisch weiterblättern'); t0 = performance.now(); paused = false; });
+    const lbOpen = () => !$('[data-swl]').hidden;
+    const tick = n => {
+      raf = requestAnimationFrame(tick);
+      if (!mob()) return;
+      const run = auto && inView && !paused && !document.hidden && !lbOpen();
+      if (!run) { t0 = n - (parseFloat(prog.style.width) || 0) / 100 * DUR; return; }
+      const p = Math.min(1, (n - t0) / DUR); prog.style.width = p * 100 + '%';
+      if (p >= 1) center(cur + 1);
+    };
+    raf = requestAnimationFrame(tick);
+    setCur(0);
+
+    // Filter
+    $$('[data-swf]').forEach(b => b.addEventListener('click', () => {
+      const c = b.dataset.swf;
+      $$('[data-swf]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+      const first = new Map(); if (!mob() && !RM) vis().forEach(t => first.set(t, t.getBoundingClientRect()));
+      T.forEach(t => { t.classList.toggle('off', c !== 'alle' && !t.dataset.cats.split(' ').includes(c)); t.classList.remove('pop'); });
+      const v = vis();
+      if (mob()) { track.scrollLeft = 0; setCur(0); t0 = performance.now(); prog.style.width = '0%'; }
+      if (!RM) v.forEach((t, i) => {
+        const r0 = first.get(t);
+        if (r0 && t.animate) { const r1 = t.getBoundingClientRect(); t.animate([{ transform: `translate(${r0.left - r1.left}px,${r0.top - r1.top}px) scale(${r0.width / r1.width},${r0.height / r1.height})` }, { transform: 'none' }], { duration: 650, easing: 'cubic-bezier(.22,.8,.16,1)' }); }
+        else { t.style.setProperty('--k', Math.min(i, 12)); void t.offsetWidth; t.classList.add('pop'); }
+      });
+    }));
+
+    // Lightbox
+    const L = $('[data-swl]'), li = $('[data-swli]'); let lk = 0, last = null, sx = null;
+    const fill = k => {
+      const v = vis(); lk = (k + v.length) % v.length; const b = $('.sw-b', v[lk]);
+      li.src = $('img', b).currentSrc || $('img', b).src; li.alt = $('img', b).alt;
+      li.style.animation = 'none'; void li.offsetWidth; li.style.animation = '';
+      $('[data-swlt]').textContent = b.dataset.tt; $('[data-swlx]').textContent = '„' + b.dataset.x + '“';
+      $('[data-swld]').textContent = b.dataset.d; $('[data-swltag]').textContent = b.dataset.tag;
+      $('[data-swlu]').href = b.dataset.u; $('[data-swlc]').textContent = pad(lk + 1) + ' / ' + pad(v.length);
+    };
+    const open = t => { last = document.activeElement; fill(vis().indexOf(t)); L.hidden = false; document.documentElement.style.overflow = 'hidden'; $('[data-swlx-close]').focus(); };
+    const close = () => { L.hidden = true; document.documentElement.style.overflow = ''; if (mob()) center(lk, false); last && last.focus({ preventScroll: true }); };
+    track.addEventListener('click', e => { const b = e.target.closest('.sw-b'); if (!b) return; const t = b.parentNode;
+      if (mob() && !t.classList.contains('cur')) { hold(); center(vis().indexOf(t)); return; } open(t); });
+    $('[data-swlx-close]').addEventListener('click', close);
+    L.addEventListener('click', e => { if (e.target === L) close(); });
+    $$('[data-swln]').forEach(b => b.addEventListener('click', () => fill(lk + +b.dataset.swln)));
+    document.addEventListener('keydown', e => { if (L.hidden) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') fill(lk + 1); else if (e.key === 'ArrowLeft') fill(lk - 1);
+      else if (e.key === 'Tab') { const f = $$('button, a', L).filter(x => x.offsetParent); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } } });
+    L.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+    L.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50 && e.target.closest('.swl-ph')) fill(lk + (dx < 0 ? 1 : -1)); sx = null; }, { passive: true });
+  }
+
+  /* --- Mehr Bewegung --- */
+  const fd = $$('.fol-div');
+  if (RM) fd.forEach(f => f.classList.add('in')); else seen(fd, f => f.classList.add('in'), { threshold: .6 });
+  const h2 = $$('.h2');
+  if (RM) h2.forEach(h => h.classList.add('ul')); else seen(h2, h => h.classList.add('ul'), { threshold: .6 });
+  if (!RM && window.gsap && window.ScrollTrigger) {
+    const g = window.gsap;
+    const batch = (sel, from, st = .08) => { const els = $$(sel); if (!els.length) return; window.ScrollTrigger.batch(els, { start: 'top 90%', once: true, onEnter: b => g.fromTo(b, from, { opacity: 1, y: 0, x: 0, scale: 1, rotate: 0, clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'power3.out', stagger: st, overwrite: true, clearProps: 'clipPath' }) }); };
+    batch('.mo', { opacity: 0, y: 60, scale: .92 });
+    batch('.oil', { opacity: 0, y: 30, scale: .8 }, .06);
+    batch('.kc', { opacity: 0, x: -30 });
+    batch('.cv-list li', { opacity: 0, x: 40 }, .05);
+    batch('.lo-way li', { opacity: 0, y: 60, rotate: 2 }, .1);
+    batch('.lo-ph figure', { opacity: 0, scale: .85, y: 40 }, .15);
+    batch('.lo-q', { opacity: 0, y: 30 });
+    batch('.nz-stack figure', { opacity: 0, scale: .7, rotate: -8 }, .12);
+    // Parallax auf Fotos (über die CSS-Eigenschaft "translate", kollidiert nicht mit Hover-Transforms)
+    $$('.qs-ph img, .lo-p1 img, .oe-vortrag, .fl-side').forEach(im => {
+      if (im.tagName === 'IMG' && !im.classList.contains('fl-side')) im.style.scale = '1.12';
+      g.fromTo(im, { '--py': -18 }, { '--py': 18, ease: 'none', scrollTrigger: { trigger: im, start: 'top bottom', end: 'bottom top', scrub: true }, onUpdate() { im.style.translate = '0 ' + (parseFloat(g.getProperty(im, '--py')) || 0).toFixed(1) + 'px'; } });
+    });
+    $$('.sec-h .kick').forEach(k => g.from(k, { opacity: 0, x: -30, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: k, start: 'top 92%', once: true } }));
+  }
+})();
