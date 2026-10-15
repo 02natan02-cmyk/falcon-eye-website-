@@ -128,7 +128,7 @@
 
   /* ---------- Hero: Höhenmesser aus dem Video ---------- */
   const hv = $('.hero-v'), altEl = $('[data-alt]');
-  if (hv && altEl) { const upd = () => { const d = hv.duration || 20.7, p = (hv.currentTime % d) / d, a = p < .5 ? 62 - (p / .5) * 59 : 3 + ((p - .5) / .5) * 59; altEl.textContent = Math.max(2, Math.round(a)); }; hv.addEventListener('timeupdate', upd); }
+  if (hv && altEl) { const upd = () => { const d = hv.duration || 35.9, p = (hv.currentTime % d) / d, a = p < .5 ? 42 - (p / .5) * 39 : 3 + ((p - .5) / .5) * 39; altEl.textContent = Math.max(2, Math.round(a)); }; hv.addEventListener('timeupdate', upd); }
   if (hv) { const tryPlay = () => { const p = hv.play(); p && p.catch(() => {}); }; hv.addEventListener('canplay', tryPlay, { once: true }); tryPlay(); }
 
   /* =====================================================================
