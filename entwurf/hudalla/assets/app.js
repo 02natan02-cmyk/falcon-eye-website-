@@ -17,7 +17,7 @@
   if (hs) {
     const svg = $('svg.scene', hs), ui = $('.season-ui', hs), cap = $('[data-season-cap] span'), capb = $('[data-season-cap]');
     const S = ['spring', 'summer', 'autumn', 'winter'];
-    const CAP = { spring: 'Frühling: Hecken in Form, Frühjahrsputz, das erste Grün.', summer: 'Sommer: Rasen gemäht, Beete gepflegt, gegossen – auch in den Ferien.', autumn: 'Herbst: Laub weg, Rinnen frei, Winter vorbereitet.', winter: 'Winter: Wege geräumt und gestreut, bevor die ersten Mieter rausgehen.' };
+    const CAP = { spring: 'Frühling: Hecken in Form, Frühjahrsputz, das erste Grün.', summer: 'Sommer: Rasen gemäht, Beete gepflegt, gegossen – auch in den Ferien.', autumn: 'Herbst: Laub weg, Wege frei, Winter vorbereitet.', winter: 'Winter: Wege geräumt und gestreut, bevor die ersten Mieter rausgehen.' };
     let i = 1, t = 0, paused = false;
     const PL = { spring: 'Selbst Unkraut zupfen', summer: 'Selbst Rasen mähen', autumn: 'Selbst Laub rechen', winter: 'Selbst Schnee schippen' };
     const set = s => { svg.dataset.season = s; const pl = $('[data-play-l]', hs); if (pl) pl.textContent = PL[s]; $$('button', ui).forEach(b => b.classList.toggle('on', b.dataset.s === s)); cap.textContent = CAP[s]; capb.dataset.s = s; capb.classList.remove('sw'); void capb.offsetWidth; capb.classList.add('sw'); i = S.indexOf(s); };
@@ -104,7 +104,7 @@
       ['treppe', 'Treppenhausreinigung', 'Treppen, Flure, Handläufe', [['wöchentlich', 52], ['14-tägig', 26], ['monatlich', 12]]],
       ['gruen', 'Grünanlagenpflege', 'Rasen, Beete, Wege', [['wöchentlich (Apr–Okt)', 30], ['14-tägig (Apr–Okt)', 15], ['monatlich (Apr–Okt)', 7]]],
       ['hecke', 'Hecken- & Gehölzschnitt', 'Form- und Pflegeschnitt', [['2× im Jahr', 2], ['1× im Jahr', 1]]],
-      ['laub', 'Laubbeseitigung', 'Rasen, Wege, Rinnen', [['wöchentlich (Okt–Nov)', 8], ['3× im Herbst', 3]]],
+      ['laub', 'Laubbeseitigung', 'Rasen, Wege, Beete', [['wöchentlich (Okt–Nov)', 8], ['3× im Herbst', 3]]],
       ['winter', 'Winterdienst', 'Räumen und Streuen inkl. Räumpflicht', [['ganze Saison (Nov–März)', 0]]],
       ['muell', 'Mülltonnen-Service', 'raus- und reinstellen, Müllplatz sauber', [['wöchentlich', 52], ['14-tägig', 26]]],
       ['technik', 'Kontrollgang Haustechnik', 'Heizung, Wasser, Licht, Türen', [['monatlich', 12], ['wöchentlich', 52], ['quartalsweise', 4]]],
