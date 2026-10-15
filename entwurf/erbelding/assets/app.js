@@ -9,7 +9,7 @@
 
   /* Lenis */
   var lenis = null;
-  if (window.Lenis && !RM) {
+  if (window.Lenis && !RM && document.documentElement.dataset.page !== 'planer') {
     lenis = new Lenis({ lerp: 0.11, smoothWheel: true });
     if (hasG) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(function (t) { lenis.raf(t * 1000); }); gsap.ticker.lagSmoothing(0); }
     else { (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0); }
@@ -224,6 +224,41 @@
       if (via === 'mail') location.href = 'mailto:kuechenstudio-erbelding@t-online.de?subject=' + encodeURIComponent('Beratungsanfrage: ' + what) + '&body=' + encodeURIComponent(msg);
       else window.open('https://wa.me/491745181818?text=' + encodeURIComponent(msg), '_blank', 'noopener');
     });
+  }
+
+
+  /* VR-Teaser: echte 3D-Küche, "VR-Blick" = Augenhöhe mit Brillen-Rand */
+  var vr = $('[data-vr]');
+  if (vr) {
+    var host = $('[data-vr3d]', vr), K3 = null;
+    var st = (function () {
+      var items = [], id = 1, W = 460, D = 380;
+      function at(t, w, along, extra) { var d = { us: 60, sp: 60, kf: 60, gs: 60, hs: 60, ws: 35, hb: 50 }[t]; var it = Object.assign({ id: id++, t: t, w: w, x: along, z: d / 2, r: 0 }, extra || {}); items.push(it); }
+      var a = 0; [['hs', 60, { v: 'kuehl' }], ['hs', 60, { v: 'backofen' }], ['us', 60], ['us', 60], ['sp', 90], ['gs', 60], ['us', 70]].forEach(function (q) { at(q[0], q[1], a + q[1] / 2, q[2]); a += q[1]; });
+      var b = 120; [60, 60].forEach(function (w) { at('ws', w, b + w / 2); b += w; }); b = 360; at('ws', 100, b + 50, { v: 'glas' });
+      items.push({ id: id++, t: 'in', w: 240, d: 100, x: 230, z: 235, r: 0, v: 'kochfeld' });
+      return { room: { w: W, d: D, walls: { N: 1, E: 1, S: 0, W: 1 } }, open: [{ id: 99, t: 'fenster', wall: 'N', s: 245, w: 110, y: 105, h: 115 }], items: items, style: { front: '#7d8c75', wood: null, finish: 'matt', top: 'eiche', handle: 'schwarz', wall: '#f2eee8', floor: 'eiche' } };
+    })();
+    var go = function () {
+      new Promise(function (res, rej) { if (window.PelPlanner3D) return res(); var sc = document.createElement('script'); sc.src = 'js/planner3d.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); })
+        .then(function () { var l = $('.pt-load', host); if (l) l.remove(); K3 = PelPlanner3D(host, {}); K3.set(st); })
+        .catch(function () { var l = $('.pt-load', host); if (l) l.textContent = '3D konnte nicht geladen werden.'; });
+    };
+    if ('IntersectionObserver' in window) { var io3 = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io3.disconnect(); go(); } }, { rootMargin: '400px' }); io3.observe(vr); } else go();
+    $$('[data-vrv]', vr).forEach(function (b) { b.addEventListener('click', function () { $$('[data-vrv]', vr).forEach(function (x) { x.classList.toggle('on', x === b); }); vr.classList.toggle('goggles', b.dataset.vrv === 'augen'); if (K3) K3.view(b.dataset.vrv); }); });
+    // Farbe der Musterküche wechselt passend zum Budget-Regler
+    var rngT = $('[data-tier]'); if (rngT) rngT.addEventListener('input', function () { if (!K3) return; var v = +rngT.value; st.style = Object.assign({}, st.style, [{ front: '#f4f2ee', top: 'beton', handle: 'bar' }, { front: '#7d8c75', top: 'eiche', handle: 'schwarz' }, { front: '#1d1e20', top: 'marmor', handle: 'grifflos' }][v]); K3.set(st); });
+  }
+
+  /* Unterlagen senden */
+  var ulf = $('[data-ulform]');
+  if (ulf) {
+    $$('[data-ul]').forEach(function (b) { b.addEventListener('click', function () { $$('[data-ul]').forEach(function (x) { x.classList.toggle('on', x === b); }); $('[data-ul-val]').value = b.dataset.ul; $('[data-ul-title]').textContent = { 'Aufmaß / Grundriss': 'Aufmaß oder Grundriss schicken', 'Eigenes Projekt': 'Ihr eigenes Projekt schicken', 'Gegenangebot prüfen': 'Angebot kostenlos prüfen lassen', 'Für Kita / Betrieb': 'Anfrage für Kita, Büro oder Betrieb' }[b.dataset.ul]; }); });
+    var fi = $('[data-ul-files]'), drop = $('[data-drop]');
+    fi.addEventListener('change', function () { $('[data-ul-list]').innerHTML = [].map.call(fi.files, function (f) { return '<li>' + f.name + ' <em>' + (f.size / 1e6).toFixed(1).replace('.', ',') + ' MB</em></li>'; }).join(''); });
+    ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function () { drop.classList.add('over'); }); }); ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function () { drop.classList.remove('over'); }); });
+    ulf.addEventListener('submit', function (e) { var t = 0; [].forEach.call(fi.files, function (f) { t += f.size; }); if (t > 9.5e6) { e.preventDefault(); $('[data-ul-msg]').textContent = 'Zusammen über 10 MB – bitte weniger oder kleinere Dateien wählen, oder per WhatsApp schicken.'; return; } $('[name="_next"]', ulf).value = location.href.split('#')[0].split('?')[0] + '?gesendet=1#unterlagen'; });
+    if (/[?&]gesendet=1/.test(location.search)) $('[data-ul-sent]').hidden = false;
   }
 
   window.addEventListener('load', function () { if (hasG) ScrollTrigger.refresh(); });
