@@ -365,7 +365,7 @@
   function undo() { if (hist.length < 2) return; fut.push(hist.pop()); des(hist[hist.length - 1]); change(true); }
   $$('[data-undo]').forEach(b => b.addEventListener('click', undo));
   function fromHash() {
-    const h = location.hash.slice(1); if (!h) return false;
+    let h = location.hash.slice(1); if (!h && /[?&]gesendet=1/.test(location.search)) { try { h = (sessionStorage.getItem('kp-last') || '').slice(1); } catch (er) {} } if (!h) return false;
     try {
       if (h.startsWith('k=')) { des(unb64(h.slice(2))); return true; }
       const p = h.split('|'); const fm = { zeile: 'zeile', zwei: 'zwei', l: 'l', u: 'u', insel: 'insel', theke: 'l' }[p[0]];
@@ -452,7 +452,7 @@
       const fi = $('[data-files]', form), files = fi ? fi.files : []; let total = 0; for (const f of files) total += f.size;
       if (total > 9.5e6) { e.preventDefault(); $('[data-form-msg]', form).textContent = 'Die Dateien sind zusammen größer als 10 MB.'; return; }
       $('[name="Entwurf"]', form).value = summary() + '\n\nLink: ' + location.href.split('#')[0] + lastHash;
-      $('[name="_next"]', form).value = location.href.split('#')[0].split('?')[0] + '?gesendet=1' + lastHash;
+      $('[name="_next"]', form).value = location.href.split('#')[0].split('?')[0] + '?gesendet=1'; try { sessionStorage.setItem('kp-last', lastHash); } catch (er) {}
       if (window.DataTransfer) {
         e.preventDefault(); b0.disabled = true; b0.textContent = 'Wird gesendet …';
         try { const c = await composite(); const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); const dt = new DataTransfer(); dt.items.add(new File([blob], 'kuechenentwurf.jpg', { type: 'image/jpeg' })); $('[name="Entwurf-Bild"]', form).files = dt.files; } catch (err) { }
