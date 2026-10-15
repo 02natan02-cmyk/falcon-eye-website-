@@ -154,7 +154,7 @@
       '(min-width: 701px)': function () {
         var dist = function () { return Math.max(0, track.scrollWidth - window.innerWidth); };
         var tw = gsap.to(track, { x: function () { return -dist(); }, ease: 'none',
-          scrollTrigger: { trigger: '.ku-pin', start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 } });
+          scrollTrigger: { trigger: '.ku-pin', start: 'top top', end: function () { return '+=' + Math.round(dist() * 0.35); }, pin: true, scrub: 0.4, invalidateOnRefresh: true, anticipatePin: 1 } });
         return function () { tw.kill(); gsap.set(track, { x: 0 }); };
       }
     });
