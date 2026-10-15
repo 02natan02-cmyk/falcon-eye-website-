@@ -52,7 +52,7 @@
   $$('video[data-src],video[data-d]').forEach(v => {
     v.muted = true; v.setAttribute('muted', '');
     const load = () => { if (v.src) return; const s = pickSrc(v); if (s) { v.src = s; } };
-    if (v.classList.contains('hero-v') || v.closest('.phero')) { if (portrait() && v.classList.contains('hero-v')) v.poster = 'vid/hero_poster_m.jpg'; load(); }
+    if (v.classList.contains('hero-v') || v.closest('.phero')) { if (portrait() && v.classList.contains('hero-v')) v.poster = 'vid/hero_poster_m_turm.jpg'; load(); }
     else onView(v, load, '600px');
   });
   const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { if (!v.src && (v.dataset.src || v.dataset.d)) v.src = pickSrc(v); const p = v.play(); p && p.catch(() => {}); } else v.pause(); }), { threshold: .05 });
