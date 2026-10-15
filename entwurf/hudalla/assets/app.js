@@ -170,14 +170,53 @@
     if (/gesendet=dm/.test(location.search)) $('[data-dmsent]', dm).hidden = false;
   }
 
+    /* ---------- Logo-Intro ---------- */
+  const intro = $('[data-intro]'), hlogo = $('.hdr .lg-i');
+  const logoIn = () => { hlogo && hlogo.classList.add('lg-draw'); };
+  if (intro && !document.documentElement.classList.contains('no-intro') && !RM) {
+    $('.intro-lg', intro).classList.add('lg-draw');
+    const done = () => { if (intro.classList.contains('out')) return; intro.classList.add('out'); try { sessionStorage.setItem('hud-intro', '1'); } catch (e) {} setTimeout(logoIn, 350); setTimeout(() => intro.remove(), 1000); };
+    intro.addEventListener('click', done); setTimeout(done, 2100);
+  } else { intro && intro.remove(); logoIn(); }
+
+  /* ---------- Einsatzbericht ---------- */
+  const eb = $('[data-eb]');
+  if (eb) {
+    const msgs = $$('.msg', eb), ty = $('.typing', eb), st = $('[data-eb-status]', eb);
+    if (!RM) {
+      eb.classList.add('js-eb'); let run = false;
+      const play = async () => {
+        run = true; const w = ms => new Promise(r => setTimeout(r, ms));
+        for (const m of msgs) {
+          if (m.classList.contains('in')) { ty.classList.add('show'); st.textContent = 'schreibt …'; await w(1100); ty.classList.remove('show'); st.textContent = 'online'; }
+          else await w(700);
+          m.classList.add('show'); await w(900);
+        }
+      };
+      new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting && !run) { play(); o.disconnect(); } }), { threshold: .45 }).observe(eb);
+    }
+  }
+
+  /* ---------- Ablauf ---------- */
+  const ab = $('[data-ab]');
+  if (ab) {
+    const lis = $$('li', ab);
+    const upd = () => { const r = ab.getBoundingClientRect(), vh = innerHeight; const p = Math.max(0, Math.min(1, (vh * .75 - r.top) / (r.height + vh * .2))); ab.style.setProperty('--p', p.toFixed(3)); lis.forEach((l, i) => l.classList.toggle('on', p >= i / (lis.length - 1) - .02 || p > .98)); };
+    addEventListener('scroll', upd, { passive: true }); upd();
+  }
+
+  /* ---------- Unterschrift ---------- */
+  const sig = $('[data-sig]');
+  if (sig) new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { sig.classList.add('on'); o.disconnect(); } }), { threshold: .6 }).observe(sig.parentElement);
+
   /* ---------- Animationen ---------- */
   const count = el => { const to = +el.dataset.count; if (RM) return; const t0 = performance.now(); const f = t => { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); }; el.textContent = '0'; requestAnimationFrame(f); };
   const cio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { count(e.target); cio.unobserve(e.target); } }), { threshold: .6 });
   $$('[data-count]').forEach(el => cio.observe(el));
   if (window.gsap && !RM) {
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('[data-a]', { y: 34, opacity: 0, duration: 1, ease: 'power3.out', stagger: .09, delay: .1 });
-    $$('.sec-h > *, [data-r], .sv-g, .ja-g, .kg-vis, .wd-live, .oc-g, .dm-f, .map-w, .ko-cards').filter(el => !el.matches('.fw, .wy-g article') && !el.closest('[data-r]:not(:scope)')).forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
+    gsap.from('[data-a]', { y: 34, opacity: 0, duration: 1, ease: 'power3.out', stagger: .09, delay: document.querySelector('[data-intro]') ? 2.2 : .1 });
+    $$('.sec-h > *, [data-r], .sv-g, .ja-g, .kg-vis, .eb-v, .wd-live, .oc-g, .dm-f, .map-w, .ko-cards').filter(el => !el.matches('.fw, .wy-g article') && !el.closest('[data-r]:not(:scope)')).forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
     gsap.to('.hero-v .scene-card', { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
     $$('.fw-g .fw, .wy-g article').forEach((el, i) => gsap.from(el, { y: 50, opacity: 0, duration: .8, delay: (i % 4) * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
   }
