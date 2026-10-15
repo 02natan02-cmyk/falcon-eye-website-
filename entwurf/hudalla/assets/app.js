@@ -15,11 +15,11 @@
   /* ---------- Hero: Jahreszeiten ---------- */
   const hs = $('[data-hero-scene]');
   if (hs) {
-    const svg = $('svg.scene', hs), ui = $('.season-ui', hs), cap = $('[data-season-cap]', hs);
+    const svg = $('svg.scene', hs), ui = $('.season-ui', hs), cap = $('[data-season-cap] span'), capb = $('[data-season-cap]');
     const S = ['spring', 'summer', 'autumn', 'winter'];
     const CAP = { spring: 'Frühling: Hecken in Form, Frühjahrsputz, das erste Grün.', summer: 'Sommer: Rasen gemäht, Beete gepflegt, gegossen – auch in den Ferien.', autumn: 'Herbst: Laub weg, Rinnen frei, Winter vorbereitet.', winter: 'Winter: Wege geräumt und gestreut, bevor die ersten Mieter rausgehen.' };
     let i = 1, t = 0, paused = false;
-    const set = s => { svg.dataset.season = s; $$('button', ui).forEach(b => b.classList.toggle('on', b.dataset.s === s)); cap.textContent = CAP[s]; i = S.indexOf(s); };
+    const set = s => { svg.dataset.season = s; $$('button', ui).forEach(b => b.classList.toggle('on', b.dataset.s === s)); cap.textContent = CAP[s]; capb.dataset.s = s; capb.classList.remove('sw'); void capb.offsetWidth; capb.classList.add('sw'); i = S.indexOf(s); };
     const loop = () => { clearTimeout(t); if (paused || RM) return; t = setTimeout(() => { set(S[(i + 1) % 4]); loop(); }, 6000); };
     ui.addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (!b) return; paused = true; ui.classList.add('paused'); clearTimeout(t); set(b.dataset.s); });
     set('summer'); loop();
@@ -201,7 +201,7 @@
   const ab = $('[data-ab]');
   if (ab) {
     const lis = $$('li', ab);
-    const upd = () => { const r = ab.getBoundingClientRect(), vh = innerHeight; const p = Math.max(0, Math.min(1, (vh * .75 - r.top) / (r.height + vh * .2))); ab.style.setProperty('--p', p.toFixed(3)); lis.forEach((l, i) => l.classList.toggle('on', p >= i / (lis.length - 1) - .02 || p > .98)); };
+    const upd = () => { const r = ab.getBoundingClientRect(), vh = innerHeight; const p = Math.max(0, Math.min(1, (vh * .75 - r.top) / (r.height + vh * .2))); ab.parentElement.style.setProperty('--p', p.toFixed(3)); ab.parentElement.classList.toggle('go', p > 0 && p < .99); lis.forEach((l, i) => l.classList.toggle('on', p >= i / (lis.length - 1) - .02 || p > .98)); };
     addEventListener('scroll', upd, { passive: true }); upd();
   }
 
