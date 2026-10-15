@@ -157,6 +157,40 @@
     }
     function closeD() { dlg.hidden = true; if (window.__lenis) window.__lenis.start(); if (last) last.focus(); }
     $$('.dz-t', g).forEach(function (t) { t.addEventListener('click', function () { openD(+t.dataset.dz, t); }); });
+    /* Mobil: Karussell mit Fokus-Karte, Zähler, Pfeilen & sanftem Autoplay */
+    var mq = window.matchMedia('(max-width:760px)'), nav = document.createElement('div'), cur = null, auto = 0, touched = false, inView = false;
+    nav.className = 'dz-nav';
+    nav.innerHTML = '<button type="button" class="dz-arw" data-dzp aria-label="Vorheriges Detail">←</button><div class="dz-cnt"><b data-dzn>01</b><span>/ <i data-dzall>17</i></span></div><div class="dz-bar"><i data-dzbar></i></div><button type="button" class="dz-arw" data-dzn2 aria-label="Nächstes Detail">→</button>';
+    g.parentNode.insertBefore(nav, g.nextSibling);
+    function vis() { return $$('.dz-t', g).filter(function (t) { return !t.hidden; }); }
+    function pad2(n) { return (n < 10 ? '0' : '') + n; }
+    function upd() {
+      if (!mq.matches) { $$('.dz-t', g).forEach(function (t) { t.classList.remove('cur'); }); return; }
+      var v = vis(), mid = g.scrollLeft + g.clientWidth / 2, best = v[0], bd = 1e9;
+      v.forEach(function (t) { var c = t.offsetLeft + t.offsetWidth / 2, d = Math.abs(c - mid); if (d < bd) { bd = d; best = t; } });
+      if (best !== cur) { if (cur) cur.classList.remove('cur'); cur = best; if (cur) cur.classList.add('cur'); }
+      var i = v.indexOf(cur) + 1; $('[data-dzn]', nav).textContent = pad2(i); $('[data-dzall]', nav).textContent = pad2(v.length);
+      $('[data-dzbar]', nav).style.width = (v.length ? i / v.length * 100 : 0) + '%';
+    }
+    function go(d) {
+      var v = vis(), i = v.indexOf(cur) + d; if (i >= v.length) i = 0; if (i < 0) i = v.length - 1;
+      var t = v[i]; if (t) g.scrollTo({ left: t.offsetLeft - (g.clientWidth - t.offsetWidth) / 2, behavior: 'smooth' });
+    }
+    g.addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true });
+    ['touchstart', 'pointerdown'].forEach(function (ev) { g.addEventListener(ev, function () { touched = true; }, { passive: true }); });
+    $('[data-dzp]', nav).addEventListener('click', function () { touched = true; go(-1); });
+    $('[data-dzn2]', nav).addEventListener('click', function () { touched = true; go(1); });
+    $$('[data-dzc]').forEach(function (b) { b.addEventListener('click', function () { g.scrollLeft = 0; cur = null; setTimeout(upd, 30); }); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting;
+      if (inView && mq.matches && !touched && !RMQ()) {
+        if (!g.dataset.hinted) { g.dataset.hinted = 1; g.classList.add('hint'); setTimeout(function () { g.classList.remove('hint'); }, 1600); }
+        if (!auto) auto = setInterval(function () { if (inView && !touched && dlg.hidden && mq.matches) go(1); else if (touched) { clearInterval(auto); auto = 0; } }, 4200);
+      }
+    }, { threshold: .5 }).observe(g);
+    function RMQ() { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    (mq.addEventListener ? mq.addEventListener('change', upd) : mq.addListener(upd));
+    window.addEventListener('resize', upd); upd();
     $('[data-dzx]', dlg).addEventListener('click', closeD);
     dlg.addEventListener('click', function (e) { if (e.target === dlg) closeD(); });
     document.addEventListener('keydown', function (e) { if (!dlg.hidden && e.key === 'Escape') closeD(); });
@@ -436,5 +470,15 @@
     }
     requestAnimationFrame(loop);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { var on = es[0].isIntersecting; if (on && !run) { run = true; requestAnimationFrame(loop); } else if (!on) run = false; }).observe(h);
+  })();
+  /* Bilder in Wisch-Leisten sicher laden (iOS/Android laden lazy-Bilder in Querscrollern teils nie) */
+  (function () {
+    var imgs = $$('img[data-eager], .dz-m img');
+    function eager(list) { list.forEach(function (im) { if (im.loading === 'lazy' || im.getAttribute('loading') === 'lazy') { im.loading = 'eager'; var s = im.src; if (!im.complete || !im.naturalWidth) { im.src = ''; im.src = s; } } }); }
+    if (!('IntersectionObserver' in window)) { eager(imgs); return; }
+    var secs = []; imgs.forEach(function (im) { var s = im.closest('section') || document.body; if (secs.indexOf(s) < 0) secs.push(s); });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; io.unobserve(e.target); eager($$('img[data-eager], .dz-m img', e.target)); }); }, { rootMargin: '1200px 0px' });
+    secs.forEach(function (s) { io.observe(s); });
+    setTimeout(function () { eager(imgs); }, 6000);
   })();
 })();

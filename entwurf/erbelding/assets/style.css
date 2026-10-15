@@ -1076,3 +1076,39 @@ a.ex:hover{transform:translateY(-5px);box-shadow:0 30px 60px -36px rgba(16,38,74
 @media (max-width:899px){.hc-vig{background:linear-gradient(180deg,rgba(6,14,30,.5),transparent 16%,rgba(6,14,30,.35) 26%,rgba(6,14,30,.88) 44%,rgba(6,14,30,.97))}}
 .hc-doors span{top:72%;font-size:clamp(14px,1.4vw,18px);letter-spacing:.35em}
 .hc-doors i{backface-visibility:visible}
+
+/* --- Bild-Absicherung für ältere Mobil-Browser ohne aspect-ratio --- */
+@supports not (aspect-ratio:1/1){
+  .zr-c figure{position:relative;height:0;padding-top:100%}.zr-c figure img{position:absolute;inset:0}
+  .ort-c figure{position:relative;height:0;padding-top:75%}.ort-c figure img{position:absolute;inset:0}
+}
+.zr-c figure img,.ort-c figure img{display:block;max-width:none}
+.ort-c figure{min-height:180px;background:#e9e3d8}
+.dz-nav{display:none}
+/* --- Details zum Einplanen: mobiles Karussell --- */
+@media (max-width:760px){
+  .dz-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1*var(--gut));padding:0 var(--gut) 4px;scroll-padding-inline:var(--gut)}
+  .dz-chips::-webkit-scrollbar{display:none}
+  .dz-chips button{flex:none}
+  .dz-g{display:flex;grid-template-columns:none;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1*var(--gut));padding:14px 11vw 22px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .dz-g::-webkit-scrollbar{display:none}
+  .dz-g .dz-t,.dz-g .dz-t:nth-child(n){flex:0 0 78vw;grid-row:auto;grid-column:auto;min-height:0;height:min(98vw,440px);padding:20px;border-radius:26px;scroll-snap-align:center;scroll-snap-stop:always;transform:scale(.88);opacity:.55;filter:saturate(.7);transition:transform .45s var(--ease),opacity .45s,filter .45s,box-shadow .45s}
+  .dz-g .dz-t.cur{transform:none;opacity:1;filter:none;box-shadow:0 40px 70px -30px rgba(16,38,74,.85)}
+  .dz-t.cur .dz-m img{animation:dzkb 9s ease-in-out infinite alternate}
+  @keyframes dzkb{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.14) translate(-2%,-2%)}}
+  .dz-t .dz-tag{font-size:11px;padding:6px 12px}
+  .dz-t b{font-size:26px;line-height:1.08;transform:translateY(10px);opacity:.75;transition:transform .5s var(--ease) .1s,opacity .5s .1s}
+  .dz-t.cur b{transform:none;opacity:1}
+  .dz-t .dz-more{align-self:flex-start;margin-top:14px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:14px;color:#fff;opacity:0;transform:translateY(8px);transition:opacity .4s .2s,transform .4s .2s}
+  .dz-t.cur .dz-more{opacity:1;transform:none}
+  .dz-g.hint{animation:dzhint 1.4s var(--ease)}
+  @keyframes dzhint{0%,100%{transform:none}40%{transform:translateX(-34px)}}
+  .dz-nav{display:flex;align-items:center;gap:14px;margin-top:4px}
+  .dz-arw{flex:none;width:48px;height:48px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:20px;cursor:pointer}
+  .dz-cnt{display:flex;align-items:baseline;gap:6px;font-family:var(--disp)}
+  .dz-cnt b{font:800 34px/1 var(--disp);color:var(--acc-d);letter-spacing:-.03em;min-width:1.4em}
+  .dz-cnt span{font-weight:700;color:var(--mute)}
+  .dz-bar{flex:1;height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+  .dz-bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .35s var(--ease)}
+}
+@media (max-width:760px) and (prefers-reduced-motion:reduce){.dz-t.cur .dz-m img{animation:none}}
