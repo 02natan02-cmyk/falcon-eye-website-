@@ -10,7 +10,7 @@
   const toast = t => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); };
 
   let lenis = null;
-  if (hasG && window.Lenis && !reduce) { lenis = new Lenis({ lerp: .1 }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
+  if (hasG && window.Lenis && !reduce && page !== 'planer') { lenis = new Lenis({ lerp: .1 }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
 
   /* ---------- Header ---------- */
   const hdr = $('.hdr'); let lastY = 0;
@@ -38,47 +38,44 @@
   $$('video[data-src]').forEach(v => { v.muted = true; onView(v, () => { v.src = v.dataset.src; const p = v.play(); p && p.catch(() => {}); }); });
 
   /* =====================================================================
-     INTRO: alte Ruppenthal-Seite – Schutzfolie abziehen – Pellegrin
+     INTRO: Gespräch – Skizze – Zuhause – aus Ruppenthal wird Pellegrin
      ===================================================================== */
   const intro = $('.intro');
-  const heroIn = () => { if (!hasG || reduce) return; gsap.from('.hero-c > *', { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1 }); };
+  const heroIn = () => { if (!hasG || reduce) return; gsap.from('.hero-c > *', { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1 }); gsap.fromTo('.hero-pic img', { scale: 1.06 }, { scale: 1, duration: 2.4, ease: 'power2.out' }); };
   if (intro) {
     const force = /[?&]intro/.test(location.search);
-    if (!hasG || reduce || (store.get('pel-intro') && !force)) { intro.classList.add('gone'); heroIn(); }
+    if (!hasG || reduce || (store.get('pel-intro2') && !force)) { intro.classList.add('gone'); heroIn(); }
     else {
-      store.set('pel-intro', '1'); lenis && lenis.stop(); root.style.overflow = 'hidden';
-      const old = $('.old', intro), flap = $('.peel-flap', intro), hint = $('.intro-hint', intro);
-      let W = innerWidth, H = innerHeight; addEventListener('resize', () => { W = innerWidth; H = innerHeight; setD(d); });
-      // Halbebene x - y > c  (c = W - d) ist abgezogen
-      const clipPoly = (c, keepPeeled) => { const pts = [[0, 0], [W, 0], [W, H], [0, H]], out = []; const inside = p => keepPeeled ? (p[0] - p[1] > c) : (p[0] - p[1] <= c);
-        for (let i = 0; i < 4; i++) { const a = pts[i], b = pts[(i + 1) % 4]; const ia = inside(a), ib = inside(b); if (ia) out.push(a); if (ia !== ib) { const fa = a[0] - a[1] - c, fb = b[0] - b[1] - c, t = fa / (fa - fb); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); } } return out; };
-      let d = 0;
-      const setD = v => { d = v; const c = W - d; const keep = clipPoly(c, false), peel = clipPoly(c, true);
-        old.style.clipPath = keep.length ? `polygon(${keep.map(p => `${p[0]}px ${p[1]}px`).join(',')})` : 'polygon(0 0,0 0,0 0)';
-        const refl = peel.map(([x, y]) => [y + c, x - c]); flap.style.clipPath = refl.length > 2 ? `polygon(${refl.map(p => `${p[0]}px ${p[1]}px`).join(',')})` : 'polygon(0 0,0 0,0 0)';
-        old.querySelector('.peel-shade').style.setProperty('--so', Math.min(1, d / 300)); };
-      setD(0);
-      let auto = null, done = false, dragging = false;
-      const finish = () => { if (done) return; done = true; hint && hint.remove(); old.style.display = 'none'; flap.style.display = 'none'; const L = $('.intro-logo', intro);
-        const tl = gsap.timeline();
-        tl.to(L, { opacity: 1, y: 0, duration: .8, ease: 'power3.out' })
-          .to(L.querySelectorAll('.pm-box,.pm-stem'), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0)
-          .from(L.querySelectorAll('.pm-ring,.pm-ring2'), { scale: 0, transformOrigin: '50% 50%', transformBox: 'fill-box', duration: .7, ease: 'back.out(2.2)', stagger: .12 }, .5)
-          .to('.intro-line.l1', { opacity: 1, duration: .6 }, .9)
-          .to('.intro-line.l2', { opacity: 1, duration: .1 }, 1.5)
-          .to('.intro-line.l2 span', { opacity: 1, y: 0, duration: .55, stagger: .35, ease: 'power2.out' }, 1.5)
-          .to(intro, { opacity: 0, duration: .7, delay: .9, onComplete: () => { intro.classList.add('gone'); } })
-          .add(() => { root.style.overflow = ''; lenis && lenis.start(); heroIn(); }, '-=.5');
-      };
-      const animTo = (to, dur) => { const o = { v: d }; auto = gsap.to(o, { v: to, duration: dur, ease: 'power2.inOut', onUpdate: () => setD(o.v), onComplete: () => { if (to >= W + H) finish(); } }); };
-      const startAuto = () => { if (dragging || done) return; animTo(W + H + 40, 2.9); };
-      gsap.timeline().to({}, { duration: .5 }).add(() => { const o = { v: 0 }; gsap.to(o, { v: 70, duration: .5, ease: 'power2.out', onUpdate: () => { if (!dragging) setD(o.v); } }); });
-      const t1 = setTimeout(startAuto, 2200);
-      intro.addEventListener('pointerdown', e => { if (e.target.closest('.intro-skip')) return; dragging = true; clearTimeout(t1); auto && auto.kill(); intro.setPointerCapture(e.pointerId); });
-      intro.addEventListener('pointermove', e => { if (!dragging || done) return; setD(Math.max(d, (W - e.clientX) + e.clientY)); });
-      intro.addEventListener('pointerup', () => { if (!dragging) return; dragging = false; animTo(W + H + 40, Math.max(.5, 1.3 * (1 - d / (W + H)))); });
-      $('.intro-skip', intro).addEventListener('click', () => { clearTimeout(t1); auto && auto.kill(); setD(W + H + 40); finish(); });
-      setTimeout(() => { if (!intro.classList.contains('gone')) { root.style.overflow = ''; lenis && lenis.start(); } }, 14000);
+      store.set('pel-intro2', '1'); lenis && lenis.stop(); root.style.overflow = 'hidden';
+      const port = innerHeight > innerWidth * 1.05, sk = $(port ? '.sk-m' : '.sk-d', intro); $(port ? '.sk-d' : '.sk-m', intro).remove(); sk.style.display = 'block';
+      const lines = $$('polyline', sk), hole = $('.sk-hole', sk), vb = sk.viewBox.baseVal, R = Math.hypot(vb.width, vb.height) * .62;
+      gsap.set(lines, { strokeDasharray: 1, strokeDashoffset: 1 });
+      const L = $('.intro-logo', intro);
+      const end = () => { intro.classList.add('gone'); root.style.overflow = ''; lenis && lenis.start(); };
+      const tl = gsap.timeline({ onComplete: end });
+      tl.to('.in-cap .c1', { opacity: 1, y: 0, duration: .9, ease: 'power2.out' }, .25)
+        .to(lines, { strokeDashoffset: 0, duration: 1.1, ease: 'power1.inOut', stagger: { each: 1.7 / lines.length } }, .9)
+        .to('.in-cap .c1', { opacity: 0, y: -16, duration: .45 }, 1.75)
+        .to('.in-cap .c2', { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, 2.3)
+        .to('.in-cap .c2', { opacity: 0, y: -16, duration: .5 }, 3.5)
+        .to(hole, { attr: { r: R }, duration: 1.7, ease: 'power2.inOut' }, 3.5)
+        .to($('.sk-lines', sk), { opacity: .12, duration: 1.2 }, 3.9)
+        .to('.in-cap .c3', { opacity: 1, y: 0, duration: .9, ease: 'power2.out' }, 4.1)
+        .to('.in-cap .c3', { opacity: 0, duration: .6 }, 5.7)
+        .to('.in-dim', { opacity: 1, duration: .9 }, 5.6)
+        .to('.in-old', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, 5.9)
+        .to('.in-arrow', { opacity: 1, duration: .5 }, 6.4)
+        .to('.in-old', { opacity: .35, filter: 'grayscale(1) blur(1px)', duration: .8 }, 6.6)
+        .to(L, { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 6.6)
+        .to(L.querySelectorAll('.pm-box,.pm-stem'), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 6.6)
+        .from(L.querySelectorAll('.pm-ring,.pm-ring2'), { scale: 0, transformOrigin: '50% 50%', transformBox: 'fill-box', duration: .7, ease: 'back.out(2.2)', stagger: .12 }, 7.0)
+        .to('.in-claim', { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, 7.4)
+        .add(() => heroIn(), 9.2)
+        .to(intro, { opacity: 0, duration: .9, ease: 'power2.inOut' }, 9.2);
+      // Tippen beschleunigt, Überspringen springt ans Ende
+      intro.addEventListener('pointerdown', e => { if (e.target.closest('.intro-skip')) return; tl.timeScale(3.2); });
+      $('.intro-skip', intro).addEventListener('click', () => { tl.progress(1); });
+      setTimeout(() => { if (!intro.classList.contains('gone')) end(); }, 16000);
     }
   } else heroIn();
 
@@ -101,10 +98,10 @@
   if (grid) {
     $$('.filters button').forEach(b => b.addEventListener('click', () => { $$('.filters button').forEach(x => x.classList.toggle('on', x === b)); const f = b.dataset.f; $$('.kc', grid).forEach(k => k.classList.toggle('hide', f !== '*' && !k.dataset.tags.includes(f))); hasG && ScrollTrigger.refresh(); }));
     const lb = document.createElement('div'); lb.className = 'lbx'; lb.hidden = true; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
-    lb.innerHTML = '<button class="lbx-x" aria-label="Schließen">×</button><div class="lbx-img"><img alt=""></div><div class="lbx-bar"><button data-p aria-label="Vorheriges Bild">←</button><div><b></b><p class="small" style="color:#cfc6ba;margin:4px 0 0"></p></div><a class="btn btn-copper sm" href="#">Ähnlich planen</a><button data-n aria-label="Nächstes Bild">→</button></div>';
+    lb.innerHTML = '<button class="lbx-x" aria-label="Schließen">×</button><div class="lbx-img"><img alt=""></div><div class="lbx-bar"><button data-p aria-label="Vorheriges Bild">←</button><div><b></b><p class="small" style="color:#cfc6ba;margin:4px 0 0"></p></div><a class="btn btn-copper sm" data-lp href="#">Ähnlich planen</a><a class="btn btn-wa sm" data-lw target="_blank" rel="noopener" href="#">So eine will ich</a><button data-n aria-label="Nächstes Bild">→</button></div>';
     document.body.appendChild(lb);
     const cards = $$('.kc', grid); let ci = 0, ii = 0;
-    const show = () => { const c = cards[ci], n = +c.dataset.n; $('img', lb).src = `img/k/${c.dataset.k}_${ii}.webp`; $('img', lb).alt = $('b', c).textContent; $('b', lb).textContent = $('b', c).textContent + (n > 1 ? ` · ${ii + 1}/${n}` : ''); $('p', lb).textContent = $('span', c).textContent; $('a', lb).href = $('.kc-plan', c).getAttribute('href'); };
+    const show = () => { const c = cards[ci], n = +c.dataset.n; $('img', lb).src = `img/k/${c.dataset.k}_${ii}.webp`; $('img', lb).alt = $('b', c).textContent; $('b', lb).textContent = $('b', c).textContent + (n > 1 ? ` · ${ii + 1}/${n}` : ''); $('p', lb).textContent = $('span', c).textContent; $('[data-lp]', lb).href = $('.kc-plan', c).getAttribute('href'); $('[data-lw]', lb).href = WA + '?text=' + encodeURIComponent('Hallo Herr Pellegrin, mir gefällt die Küche „' + $('b', c).textContent + '“ auf Ihrer Website. Können wir über so eine Küche für mich sprechen?'); };
     const vis = () => cards.filter(c => !c.classList.contains('hide'));
     const step = dir => { const c = cards[ci], n = +c.dataset.n; if (ii + dir >= 0 && ii + dir < n) ii += dir; else { const v = vis(), k = (v.indexOf(c) + dir + v.length) % v.length; ci = cards.indexOf(v[k]); ii = dir > 0 ? 0 : +v[k].dataset.n - 1; } show(); };
     const open = i => { ci = i; ii = 0; show(); lb.hidden = false; lenis && lenis.stop(); };
@@ -171,56 +168,32 @@
   /* =====================================================================
      PLANER
      ===================================================================== */
-  if (page === 'planer') {
-    const st = { ...BASE, frontWood: null, extras: [], line: 'Nolte' };
-    const NAMES = { zeile: 'Küchenzeile', zwei: 'Zweizeilig', l: 'L-Form', u: 'U-Form', insel: 'Mit Kochinsel', theke: 'L-Form mit Theke' };
-    const TOPN = { eiche: 'Eiche', nuss: 'Nussbaum', beton: 'Beton', marmor: 'Marmor schwarz', keramik: 'Keramik hell', schwarz: 'Schwarz' };
-    const HN = { grifflos: 'grifflos', bar: 'Edelstahlgriffe', schwarz: 'schwarze Griffe', gold: 'Messinggriffe' };
-    const frontName = () => { const b = $$('[data-front]').find(x => x.classList.contains('on')); return b ? b.getAttribute('aria-label') : st.front; };
-    // aus Link (#shape|front|finish|top|handle|wood|a|b|c|...)
-    const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); if (!h) return; const p = h.split('|'); const [sh, fr, fi, tp, hd, wd, a, b, c, tall, wall, hood, line] = p; if (NAMES[sh]) st.shape = sh; if (/^[0-9a-f]{6}$/i.test(fr)) st.front = '#' + fr; if (fi) st.finish = fi; if (TOPN[tp]) st.worktop = tp; if (HN[hd]) st.handle = hd; if (wd === 'eiche' || wd === 'nuss') st.frontWood = wd; if (+a) st.a = +a; if (+b) st.b = +b; if (+c) st.c = +c; if (tall) st.tall = tall === '1'; if (wall) st.wallCab = wall === '1'; if (hood) st.hood = hood; if (line) st.line = line; };
-    const toHash = () => [st.shape, st.front.replace('#', ''), st.finish, st.worktop, st.handle, st.frontWood || '', st.a, st.b, st.c, st.tall ? 1 : 0, st.wallCab ? 1 : 0, st.hood, st.line].join('|');
-    fromHash(); addEventListener('hashchange', () => { fromHash(); upd(); });
-    // UI synchronisieren
-    const sync = () => {
-      $$('[data-shape]').forEach(b => b.classList.toggle('on', b.dataset.shape === st.shape));
-      $$('[data-front]').forEach(b => b.classList.toggle('on', st.frontWood ? b.dataset.front === 'wood:' + st.frontWood : b.dataset.front.toLowerCase() === st.front.toLowerCase()));
-      $$('[data-top]').forEach(b => b.classList.toggle('on', b.dataset.top === st.worktop));
-      [['finish', st.finish], ['handle', st.handle], ['hood', st.hood], ['line', st.line]].forEach(([k, v]) => $$(`[data-${k}] button`).forEach(b => b.classList.toggle('on', b.dataset.v === v)));
-      $('[data-opt="tall"]').checked = st.tall; $('[data-opt="wallCab"]').checked = st.wallCab;
-      const need = { zeile: ['a'], zwei: ['a', 'b'], l: ['a', 'b'], u: ['a', 'b', 'c'], insel: ['a', 'b'], theke: ['a', 'b'] }[st.shape];
-      $$('[data-dim]').forEach(l => { const k = l.dataset.dim; l.classList.toggle('off', !need.includes(k)); $('input', l).value = st[k]; $('b', l).textContent = st[k] + ' cm'; $('span', l).textContent = { a: 'Wand A (Fensterwand)', b: st.shape === 'zwei' ? 'Zweite Zeile' : st.shape === 'insel' ? 'Raumtiefe' : 'Wand B (links)', c: 'Wand C (rechts)' }[k]; });
-      plan2d(); summary(); history.replaceState(null, '', '#' + toHash());
-    };
-    const plan2d = () => { const el = $('[data-2d]'); const s = 220 / Math.max(st.a, st.b + 60, 400), A = st.a * s, B = st.b * s, C = st.c * s, D = 60 * s; const r = (x, y, w, h, c = '#c0673f') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="${c}" fill-opacity=".85"/>`; let g = r(10, 10, A, D);
-      if (['l', 'u', 'theke'].includes(st.shape)) g += r(10, 10 + D, D, B - D); if (st.shape === 'u') g += r(10 + A - D, 10 + D, D, C - D); if (st.shape === 'zwei') g += r(10, 10 + D + 120 * s, B, D); if (st.shape === 'insel') { const IL = Math.max(160, Math.min(st.a - 80, st.b)) * s; g += r(10 + (A - IL) / 2, 10 + D + 115 * s, IL, 100 * s, '#1c1a17'); } if (st.shape === 'theke') g += r(10 + D + 90 * s, 10 + D + 115 * s, Math.max(140, Math.min(st.a - 120, 240)) * s, 62 * s, '#1c1a17');
-      const t = (x, y, s2) => `<text x="${x}" y="${y}" font-size="11" fill="#6b6359" font-family="DM Sans">${s2}</text>`;
-      el.innerHTML = `<svg viewBox="0 0 ${Math.max(A + 30, 260)} ${Math.max(B, C) + 40}" aria-hidden="true"><rect x="10" y="10" width="${A}" height="${Math.max(B, C, 120 * s + D * 2) + 10}" fill="none" stroke="#d6ccbe" stroke-dasharray="4 4"/>${g}${t(10 + A / 2 - 16, 8, 'A ' + st.a)}${['l', 'u', 'theke', 'zwei', 'insel'].includes(st.shape) ? t(14 + D, 10 + Math.max(B, 60) - 4, (st.shape === 'insel' ? 'Tiefe ' : 'B ') + st.b) : ''}</svg>`; };
-    const summary = () => { const s = $('[data-sum]'); s.innerHTML = [NAMES[st.shape], st.a + ' cm', (st.frontWood ? (st.frontWood === 'eiche' ? 'Eiche' : 'Nussbaum') : frontName()) + ' ' + st.finish, 'Platte ' + TOPN[st.worktop], HN[st.handle], st.line].map(x => `<span>${x}</span>`).join(''); };
-    let K = null; const upd = () => { sync(); if (K) K.set({ ...st }); };
-    load3d().then(() => { const host = $('[data-3d]'); $('.pt-load', host).remove(); K = PelKitchen(host, { autoRotate: true, onInteract: () => $('[data-spin]').classList.remove('on') }); K.set({ ...st }); }).catch(() => { $('[data-3d] .pt-load').textContent = '3D-Ansicht konnte nicht geladen werden. Sie können trotzdem planen und senden.'; });
-    $$('[data-shape]').forEach(b => b.addEventListener('click', () => { st.shape = b.dataset.shape; upd(); }));
-    $$('[data-dim] input').forEach(i => i.addEventListener('input', () => { st[i.closest('[data-dim]').dataset.dim] = +i.value; upd(); }));
-    $$('[data-front]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.front; if (v.startsWith('wood:')) { st.frontWood = v.slice(5); st.front = '#8a6a4a'; } else { st.frontWood = null; st.front = v; } upd(); }));
-    $$('[data-top]').forEach(b => b.addEventListener('click', () => { st.worktop = b.dataset.top; upd(); }));
-    ['finish', 'handle', 'hood', 'line'].forEach(k => $$(`[data-${k}] button`).forEach(b => b.addEventListener('click', () => { st[k] = b.dataset.v; upd(); })));
-    $$('[data-opt]').forEach(c => c.addEventListener('change', () => { st[c.dataset.opt] = c.checked; upd(); }));
-    $$('[data-extras] button').forEach(b => b.addEventListener('click', () => { b.classList.toggle('on'); st.extras = $$('[data-extras] button.on').map(x => x.textContent); }));
-    $$('[data-view]').forEach(b => b.addEventListener('click', () => { K && K.view(b.dataset.view); $('[data-spin]').classList.remove('on'); }));
-    $('[data-spin]').addEventListener('click', e => { const on = e.currentTarget.classList.toggle('on'); K && K.spin(on); });
-    // Schritte
-    let cur = 0; const go = i => { cur = Math.max(0, Math.min(4, i)); $$('.pl-s').forEach(s => s.classList.toggle('on', +s.dataset.s === cur)); $$('[data-step]').forEach(b => { b.classList.toggle('on', +b.dataset.step === cur); b.classList.toggle('done', +b.dataset.step < cur); }); $('[data-prev]').style.visibility = cur ? 'visible' : 'hidden'; $('[data-next]').style.display = cur === 4 ? 'none' : ''; if (innerWidth < 900) { const p = $('.pl-panel'); window.scrollTo({ top: p.offsetTop - 62 - innerHeight * .46 + 10, behavior: 'smooth' }); } };
-    $$('[data-step]').forEach(b => b.addEventListener('click', () => go(+b.dataset.step))); $('[data-prev]').addEventListener('click', () => go(cur - 1)); $('[data-next]').addEventListener('click', () => go(cur + 1)); go(0);
-    // Senden
-    const text = () => { const name = $('[data-p-name]').value.trim(), tel = $('[data-p-tel]').value.trim(), when = $('[data-p-when]').value; const link = location.href.split('#')[0] + '#' + toHash();
-      return `Hallo Herr Pellegrin,\n\nich habe im Online-Planer eine Küche entworfen:\n\n• Form: ${NAMES[st.shape]} (Wand A ${st.a} cm${st.shape !== 'zeile' ? `, ${st.shape === 'insel' ? 'Raumtiefe' : 'B'} ${st.b} cm` : ''}${st.shape === 'u' ? `, C ${st.c} cm` : ''})\n• Fronten: ${st.frontWood ? (st.frontWood === 'eiche' ? 'Eiche' : 'Nussbaum') : frontName()}, ${st.finish}, ${HN[st.handle]}\n• Arbeitsplatte: ${TOPN[st.worktop]}\n• Hochschränke: ${st.tall ? 'ja' : 'nein'} · Hängeschränke: ${st.wallCab ? 'ja' : 'nein'}\n• Dunstabzug: ${st.hood === 'bora' ? 'im Kochfeld' : 'Wandhaube'}\n• Wünsche: ${st.extras.join(', ') || '—'}\n• Ausstattungslinie: ${st.line}\n• Zeitpunkt: ${when}\n\nMein Entwurf zum Ansehen: ${link}\n\nViele Grüße\n${name}${tel ? '\nTel. ' + tel : ''}`; };
-    $$('[data-send]').forEach(b => b.addEventListener('click', async () => { const m = b.dataset.send;
-      if (m === 'mail') location.href = `mailto:${MAIL}?subject=${encodeURIComponent('Mein Küchenentwurf – ' + NAMES[st.shape])}&body=${encodeURIComponent(text())}`;
-      if (m === 'wa') window.open(WA + '?text=' + encodeURIComponent(text()), '_blank');
-      if (m === 'img') { if (!K) return toast('3D-Ansicht nicht verfügbar'); const a = document.createElement('a'); a.href = K.snapshot(); a.download = 'meine-kueche-pellegrin.jpg'; document.body.appendChild(a); a.click(); a.remove(); toast('Bild gespeichert'); }
-      if (m === 'link') { const l = location.href.split('#')[0] + '#' + toHash(); try { await navigator.clipboard.writeText(l); toast('Link kopiert'); } catch (e) { prompt('Link zu Ihrem Entwurf:', l); } } }));
-    sync();
+  /* ---------- Drohnenflug: Scroll steuert den Flug ---------- */
+  const fly = $('[data-fly]');
+  if (fly) {
+    const cv = $('[data-fly-canvas]', fly), cx = cv.getContext('2d'), N = 130, imgs = [], bar = $('[data-fly-bar]', fly), steps = $$('.fl-steps li', fly);
+    let loaded = 0, cur = -1, want = 0;
+    const draw = i => { const im = imgs[i]; if (!im || !im.complete || !im.naturalWidth) return false; cx.drawImage(im, 0, 0, cv.width, cv.height); cur = i; return true; };
+    const load = () => { for (let i = 0; i < N; i++) { const im = new Image(); im.decoding = 'async'; im.src = `img/fly/f${String(i + 1).padStart(3, '0')}.webp`; im.onload = () => { loaded++; if (i === 0 || i === want) draw(want); }; imgs[i] = im; } };
+    onView(fly, load, '800px');
+    const setP = p => { p = Math.max(0, Math.min(1, p)); want = Math.round(p * (N - 1)); if (want !== cur) { if (!draw(want)) { for (let k = want; k >= 0; k--) if (draw(k)) break; } } bar.style.transform = `scaleX(${p})`; steps.forEach((li, j) => { const a = +li.dataset.at, b = steps[j + 1] ? +steps[j + 1].dataset.at : 1.01; li.classList.toggle('on', p >= a && p < b); li.classList.toggle('done', p >= b); }); };
+    if (hasG && !reduce) ScrollTrigger.create({ trigger: fly, start: 'top top', end: 'bottom bottom', scrub: true, onUpdate: st => setP(st.progress) });
+    else { setP(.7); }
+    setP(0);
   }
+
+  /* ---------- Unterlagen senden ---------- */
+  const ulf = $('[data-ulform]');
+  if (ulf) {
+    $$('[data-ul]').forEach(b => b.addEventListener('click', () => { $$('[data-ul]').forEach(x => x.classList.toggle('on', x === b)); $('[data-ul-val]').value = b.dataset.ul; $('[data-ul-title]').textContent = { 'Aufmaß / Grundriss': 'Aufmaß oder Grundriss schicken', 'Eigenes Projekt': 'Ihr eigenes Projekt schicken', 'Gegenangebot prüfen': 'Angebot kostenlos prüfen lassen', 'Fotos vom Raum': 'Fotos vom Raum schicken' }[b.dataset.ul]; }));
+    const fi = $('[data-ul-files]'), drop = $('[data-drop]');
+    fi.addEventListener('change', () => { $('[data-ul-list]').innerHTML = [...fi.files].map(f => `<li>${f.name} <em>${(f.size / 1e6).toFixed(1).replace('.', ',')} MB</em></li>`).join(''); });
+    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, () => drop.classList.add('over'))); ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('over')));
+    ulf.addEventListener('submit', e => { let t = 0; for (const f of fi.files) t += f.size; if (t > 9.5e6) { e.preventDefault(); $('[data-ul-msg]').textContent = 'Zusammen über 10 MB – bitte weniger oder kleinere Dateien wählen, oder per WhatsApp schicken.'; return; } $('[name="_next"]', ulf).value = location.href.split('#')[0].split('?')[0] + '?gesendet=1#unterlagen'; });
+    if (/[?&]gesendet=1/.test(location.search)) $('[data-ul-sent]').hidden = false;
+  }
+
+  /* Planer: siehe assets/planer.js */
 
   /* ---------- Anker ---------- */
   $$('a[href^="#"], a[href^="index.html#"]').forEach(a => a.addEventListener('click', e => { const h = a.getAttribute('href').replace('index.html', ''); if (page !== 'home' && a.getAttribute('href').startsWith('index.html')) return; const t = h.length > 1 && $(h); if (!t) return; e.preventDefault(); lenis ? lenis.scrollTo(t, { offset: -70 }) : t.scrollIntoView({ behavior: 'smooth' }); }));
