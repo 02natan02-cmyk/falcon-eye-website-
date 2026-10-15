@@ -11,6 +11,7 @@
 
   let lenis = null;
   if (hasG && window.Lenis && !reduce && page !== 'planer') { lenis = new Lenis({ lerp: .1 }); lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
+  window.__lenis = lenis;
 
   /* ---------- Header ---------- */
   const hdr = $('.hdr'); let lastY = 0;
@@ -117,7 +118,7 @@
   /* ---------- Küchen-Finder ---------- */
   const fd = $('[data-finder]');
   if (fd) {
-    const K = $$('.kc').map(c => ({ k: c.dataset.k, tags: c.dataset.tags, t: $('b', c).textContent, d: $('span', c).textContent, plan: $('.kc-plan', c).getAttribute('href') }));
+    const kd = $('#k-data'); let K = []; try { K = kd ? JSON.parse(kd.textContent) : $$('.kc').map(c => ({ k: c.dataset.k, tags: c.dataset.tags, t: $('b', c).textContent, d: $('span', c).textContent, plan: $('.kc-plan', c).getAttribute('href') })); } catch (e) {}
     const ans = []; const qs = $$('.fi-q', fd), res = $('[data-res]', fd);
     const show = i => { qs.forEach((q, j) => q.classList.toggle('on', j === i)); res.hidden = i < 3; };
     qs.forEach((q, i) => $$('button', q).forEach(b => b.addEventListener('click', () => { ans[i] = b.dataset.v; if (i < 2) show(i + 1); else finish(); })));
