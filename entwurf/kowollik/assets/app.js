@@ -146,7 +146,7 @@
     if (!hasG || reduce) return;
     gsap.from('.hero .ln > span, .phero .ln > span', { yPercent: 110, duration: 1.2, ease: 'power4.out', stagger: .12 });
     gsap.from('.hero .kicker, .hero .lead, .hero .ctas, .hero-side, .phero .kicker, .phero .lead', { opacity: 0, y: 30, duration: 1, ease: 'power3.out', stagger: .1, delay: .3 });
-    gsap.fromTo('.hero-img', { scale: 1.25 }, { scale: 1.12, duration: 2.4, ease: 'power3.out' });
+    gsap.fromTo('.hero-img', { scale: 1.12 }, { scale: 1.04, duration: 2.4, ease: 'power3.out' });
   };
   if (hasG && !reduce && $('.hero')) {
     gsap.to('.hero-img', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
