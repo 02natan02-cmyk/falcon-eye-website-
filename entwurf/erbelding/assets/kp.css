@@ -206,3 +206,25 @@ html[data-page="planer"] .concept{display:none}
 .ah .kick,.ah .h2,.ki .kick,.ki .h2{text-align:left;margin-left:0;margin-right:0;justify-content:flex-start;align-self:flex-start}
 .ah-r{width:100%;align-self:stretch}.ah-two{align-self:flex-start}
 .kp-progress{position:fixed;left:0;top:0;right:0;height:3px;z-index:9999;background:linear-gradient(90deg,var(--copper),color-mix(in srgb,var(--copper) 60%,#fff));transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+
+/* Grundriss: Fenster & Türen */
+.kp-plan{border-radius:14px;background:#fff;box-shadow:0 1px 0 var(--line),0 14px 40px -26px rgba(0,0,0,.35);padding:6px}
+.kp-plan svg{display:block;width:100%;height:auto;max-height:300px;touch-action:none;user-select:none;-webkit-user-select:none}
+.kp-pop-op{cursor:grab}.kp-pop-op:hover text{text-decoration:underline}
+.kp-opadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.kp-opadd button{display:flex;align-items:center;justify-content:center;gap:5px;padding:10px 6px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:600 13px var(--sans);cursor:pointer;color:var(--ink)}
+.kp-opadd button:hover{border-color:var(--copper)}.kp-opadd i{font-style:normal;color:var(--copper);font-weight:700}
+.kp-op:hover>*:first-child{stroke:var(--copper)}
+/* Stil-Erweiterungen */
+.kp-fin button{flex:1}
+.kp-bk{background:var(--c,#eee)}
+.kp-bk-wand{background:#f3efe9!important}
+.kp-bk-platte{background:var(--tc,#b98a5c)!important}
+.kp-bk-fliese{background:repeating-linear-gradient(0deg,#d6d0c6 0 1.5px,transparent 1.5px 9px),repeating-linear-gradient(90deg,#d6d0c6 0 1.5px,transparent 1.5px 18px),#f6f4ef!important}
+.kp-bk-glas{background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 45%),var(--fc,#22304a)!important}
+/* Abendlicht */
+.kp-cams .kp-moodb{background:#1f1c19;color:#ffe7b8}.kp-cams .kp-moodb.on{background:#ffe7b8;color:#1f1c19}
+.kp.kp-night .kp-stage{background:#1d1a17}
+.kp.kp-night .kp-live{background:rgba(30,27,24,.85);color:#f3eee6}
+@media (max-width:999px){.kp-cams{left:8px;right:8px;justify-content:flex-end;flex-wrap:wrap}.kp-cams button{padding:6px 9px;font-size:11.5px}}
+@media (max-width:999px){.kp[data-step="0"] .kp-toast,.kp[data-step="2"] .kp-toast,.kp[data-step="3"] .kp-toast{top:auto;bottom:16px;transform:translate(-50%,140%)}.kp[data-step="0"] .kp-toast.on,.kp[data-step="2"] .kp-toast.on,.kp[data-step="3"] .kp-toast.on{transform:translate(-50%,0)}}

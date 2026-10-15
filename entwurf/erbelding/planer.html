@@ -7,11 +7,11 @@
 <meta name="description" content="Planen Sie Ihre Küche online in 3D – Raum einstellen, Schränke stellen, prüfen lassen und mit Aufmaß und Fotos an Barbara Erbelding schicken.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#10264a">
-<link rel="icon" href="img/favicon.png?v=1792086765">
+<link rel="icon" href="img/favicon.png?v=1792101744">
 <script>try{if(!sessionStorage.getItem('erb-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/[?&]nointro/.test(location.search))document.documentElement.classList.add('hc-first')}catch(e){}</script>
 <link rel="preload" href="fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=1792086765">
-<link rel="stylesheet" href="assets/kp.css?v=1792086765">
+<link rel="stylesheet" href="assets/style.css?v=1792101744">
+<link rel="stylesheet" href="assets/kp.css?v=1792101744">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HomeGoodsStore", "name": "Küchenstudio Erbelding", "foundingDate": "1983", "description": "Familienbetrieb seit 1983 (anfangs Radio- und Fernsehtechnik, später Bäder), seit Anfang der 1990er Jahre Küchenstudio.", "telephone": "+491745181818", "email": "kuechenstudio-erbelding@t-online.de", "address": {"@type": "PostalAddress", "streetAddress": "Hauptstraße 125", "postalCode": "66459", "addressLocality": "Kirkel-Limbach", "addressCountry": "DE"}}</script>
 </head>
 <body>
@@ -32,7 +32,7 @@
   <section class="kp-stage" aria-label="3D-Ansicht">
     <div class="kp-3d" data-kp-3d><span class="kp-load">Ihre Küche wird in 3D aufgebaut …</span></div>
     <p class="kp-live"><i></i><b>Planungstisch Limbach</b> · live in 3D</p>
-    <div class="kp-cams" role="group" aria-label="Blickwinkel"><button type="button" data-cam="perspektive" class="on">Übersicht</button><button type="button" data-cam="augen">Reinstellen</button><button type="button" data-cam="top">Von oben</button></div>
+    <div class="kp-cams" role="group" aria-label="Blickwinkel"><button type="button" data-cam="perspektive" class="on">Übersicht</button><button type="button" data-cam="augen">Reinstellen</button><button type="button" data-cam="top">Von oben</button><button type="button" class="kp-moodb" data-mood aria-pressed="false">☾ Abend</button></div>
   </section>
 
   <section class="kp-build" aria-label="Ihre Wände">
@@ -53,7 +53,10 @@
       <p class="kp-p sm" style="margin-top:-4px">Standard sind 86–90 cm. Ihre ideale Höhe verrät der <a href="index.html#arbeitshoehe">Höhen-Rechner</a>.</p>
       <p class="kp-l">Hängeschränke</p>
       <button type="button" class="kp-tg" data-kp-top aria-pressed="true"><span></span>Hängeschränke über der Arbeitsfläche</button>
-      <p class="kp-p sm">Das Fenster können Sie in der Wandansicht mit dem Finger verschieben.</p>
+      <p class="kp-l">Fenster & Türen</p>
+      <div class="kp-plan" data-kp-plan></div>
+      <div class="kp-opadd"><button type="button" data-addop="fenster"><i>＋</i>Fenster</button><button type="button" data-addop="balkon"><i>＋</i>Balkontür</button><button type="button" data-addop="tuer"><i>＋</i>Tür</button></div>
+      <p class="kp-p sm">Antippen zum Ändern oder Entfernen. Anfassen und an jede Wand ziehen.</p>
       <div class="kp-next"><button type="button" class="btn btn-ink" data-kgo="1">Weiter: Schränke reinziehen →</button></div>
     </section>
     <section class="kp-pane on" data-kpane>
@@ -68,7 +71,11 @@
       <div class="kp-quick"><button type="button" data-style="hell"><i style="--a:#f1eee8;--b:#b98a5c"></i>Hell</button><button type="button" data-style="dunkel"><i style="--a:#232426;--b:#b98a5c"></i>Dunkel</button><button type="button" data-style="holz"><i style="--a:#c39a6b;--b:#1d1d1f"></i>Holz</button><button type="button" data-style="natur"><i style="--a:#d9cfbf;--b:#e7e4de"></i>Natur</button><button type="button" data-style="farbe"><i style="--a:#7f8e77;--b:#e7e4de"></i>Salbei</button><button type="button" data-style="blau"><i style="--a:#22304a;--b:#e7e4de"></i>Nachtblau</button></div>
       <p class="kp-l">Fronten</p><div class="kp-sws" data-kp-fronts></div>
       <p class="kp-l">Griffe</p><div class="kp-handles" data-kp-handles></div>
+      <p class="kp-l">Oberfläche</p><div class="kp-seg kp-fin" data-kp-finish></div>
       <p class="kp-l">Arbeitsplatte</p><div class="kp-sws" data-kp-tops></div>
+      <p class="kp-l">Nischenrückwand</p><div class="kp-sws" data-kp-backs></div>
+      <p class="kp-l">Wandfarbe</p><div class="kp-sws" data-kp-wallc></div>
+      <p class="kp-l">Boden</p><div class="kp-sws" data-kp-floors></div>
       <div class="kp-next"><button type="button" class="btn btn-copper" data-kgo="3">Weiter: Entwurf an Barbara schicken →</button></div>
     </section>
     <section class="kp-pane" data-kpane>
@@ -127,8 +134,8 @@
     </div>
     <div class="ki-demo">
       <div class="ki-ba" data-ba style="--p:52%">
-        <img src="img/ki/vorher.webp?v=1792086765" alt="Leerer Raum vor dem Umbau" loading="lazy" decoding="async">
-        <div class="ki-after"><img data-ki-img src="img/ki/hell.webp?v=1792086765" alt="Derselbe Raum mit neuer Küche (KI-Vorschau)" loading="lazy" decoding="async"></div>
+        <img src="img/ki/vorher.webp?v=1792101744" alt="Leerer Raum vor dem Umbau" loading="lazy" decoding="async">
+        <div class="ki-after"><img data-ki-img src="img/ki/hell.webp?v=1792101744" alt="Derselbe Raum mit neuer Küche (KI-Vorschau)" loading="lazy" decoding="async"></div>
         <span class="ki-lab l">Vorher</span><span class="ki-lab r">Zukunftsblick</span>
         <input type="range" min="0" max="100" value="52" aria-label="Vorher/Nachher vergleichen" data-ba-r>
         <i class="ki-knob" aria-hidden="true"></i>
@@ -153,9 +160,9 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/ki.js?v=1792086765"></script>
-<script src="assets/kp.js?v=1792100385"></script>
-<script src="assets/app.js?v=1792086765"></script>
-<script src="assets/v10.js?v=1792086765"></script>
+<script src="assets/ki.js?v=1792101744"></script>
+<script src="assets/kp.js?v=1792101744"></script>
+<script src="assets/app.js?v=1792101744"></script>
+<script src="assets/v10.js?v=1792101744"></script>
 </body>
 </html>
