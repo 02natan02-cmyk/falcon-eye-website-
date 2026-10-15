@@ -15,6 +15,7 @@
     else { (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0); }
     document.documentElement.classList.add('lenis');
   }
+  window.__lenis = lenis;
   $$('a[href^="#"],a[href^="index.html#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var h = a.getAttribute('href').replace('index.html', '');
@@ -80,7 +81,7 @@
 
   /* Hero: Blaupause + VR-Brille */
   var hero = $('.hero');
-  if (hero && !$('.hero-bp[hidden]')) {
+  if (hero && $('.bp', hero) && !$('.hero-bp[hidden]')) {
     var svgs = $$('.bp', hero);
     var active = function () { for (var i = 0; i < svgs.length; i++) if (svgs[i].getBoundingClientRect().width > 0 && getComputedStyle(svgs[i]).display !== 'none') return svgs[i]; return svgs[0]; };
     // Linien zeichnen
@@ -228,15 +229,6 @@
 
 
 
-  /* Ausstellung: Hotspots */
-  var au = $('[data-ausst]');
-  if (au) {
-    var pop = $('[data-hspop]', au), seen = {};
-    var close = function () { pop.classList.remove('on'); $$('.hs', au).forEach(function (h) { h.classList.remove('on'); }); };
-    $$('.hs', au).forEach(function (h) { h.addEventListener('click', function (e) { e.stopPropagation(); var i = h.dataset.hs; $$('[data-hsc]', pop).forEach(function (c) { c.hidden = c.dataset.hsc !== i; }); $$('.hs', au).forEach(function (x) { x.classList.toggle('on', x === h); }); h.classList.add('seen'); seen[i] = 1; var n = Object.keys(seen).length; $('.au-hint', au).textContent = n >= 7 ? 'Alles entdeckt – jetzt live ansehen?' : (7 - n) + ' von 7 Details noch offen'; var l = parseFloat(h.style.left); pop.classList.toggle('left', l > 55); pop.classList.add('on'); }); });
-    $('.hs-x', pop).addEventListener('click', close); au.addEventListener('click', function (e) { if (!e.target.closest('.hs-pop')) close(); });
-  }
-
   /* VR-Teaser: echte 3D-Küche, "VR-Blick" = Augenhöhe mit Brillen-Rand */
   var vr = $('[data-vr]');
   if (vr) {
@@ -347,23 +339,5 @@
     /* Mausrad senkrecht -> waagerecht, solange Track noch Platz hat */
     onS();
   })();
-  /* BORA zerlegt */
-  (function () {
-    var sec = $('[data-bx-sec]'); if (!sec) return;
-    var st = $('[data-bx3d]', sec), lis = $$('[data-bxlist] li', sec), temp = $('[data-bxtemp]', sec), vid = $('.bx-vid', sec);
-    function upd() {
-      var r = sec.getBoundingClientRect(), vh = window.innerHeight;
-      var p = (vh * .85 - r.top) / (r.height * .75); p = Math.max(0, Math.min(1, p));
-      var e = RM ? 1 : (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
-      st.style.setProperty('--e', e.toFixed(3));
-      var k = Math.min(lis.length - 1, Math.floor(p * lis.length));
-      lis.forEach(function (li, i) { li.classList.toggle('on', i <= k && p > .05); });
-      if (temp) temp.textContent = Math.round(40 + 160 * e) + '°';
-    }
-    window.addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true });
-    window.addEventListener('resize', upd); upd();
-    if (vid && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {}); } else vid.pause(); }); }, { threshold: .3 }).observe(vid);
-  })();
-
   window.addEventListener('load', function () { if (hasG) ScrollTrigger.refresh(); });
 })();
