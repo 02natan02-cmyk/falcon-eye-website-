@@ -2,139 +2,122 @@
 (function () {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const IT = window.GT_ITEMS || {};
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let L = 'de';
+  const tr = (de, pl) => L === 'pl' ? pl : de;
 
-  /* Header */
+  /* ---------- Sprache DE / PL ---------- */
+  function setLang(l) {
+    L = l; document.documentElement.lang = l;
+    $$('[data-pl]').forEach(el => {
+      if (el.dataset.de === undefined) el.dataset.de = el.textContent;
+      el.textContent = l === 'pl' ? el.dataset.pl : el.dataset.de;
+    });
+    $$('[data-plh]').forEach(el => {
+      if (el.dataset.deh === undefined) el.dataset.deh = el.innerHTML;
+      el.innerHTML = l === 'pl' ? el.dataset.plh : el.dataset.deh;
+    });
+    $$('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+    const fl = $('[data-flang]'); if (fl) fl.value = l.toUpperCase();
+    try { localStorage.setItem('gt-lang', l); } catch (e) { }
+    paintStatus(); calc();
+  }
+  $$('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+  /* ---------- Header ---------- */
   const hdr = $('[data-hdr]');
   const onScroll = () => { if (hdr) hdr.classList.toggle('sc', scrollY > 40); };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  /* Berlin-Zeit & Öffnungsstatus (Mo–Sa 8:30–18:30) */
-  function berlin() { const p = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()); const g = t => p.find(x => x.type === t).value; const wd = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].indexOf(g('weekday').replace('.', '')); return { wd, m: +g('hour') % 24 * 60 + +g('minute') }; }
-  function status() {
-    const { wd, m } = berlin(), O = 510, C = 1110, workday = wd >= 0 && wd <= 5;
-    if (workday && m >= O && m < C) { const left = C - m; return { open: true, t: 'Jetzt geöffnet', s: left <= 60 ? `noch ${left} Min.` : 'bis 18:30 Uhr', wd }; }
-    let nx; if (workday && m < O) nx = 'heute ab 8:30 Uhr'; else if (wd === 5 || wd === 6) nx = 'Montag ab 8:30 Uhr'; else nx = 'morgen ab 8:30 Uhr';
-    return { open: false, t: 'Gerade geschlossen', s: nx, wd };
-  }
+  /* ---------- Öffnungsstatus (Mo–Sa 8:30–18:30, Berliner Zeit) ---------- */
+  function berlin() { const p = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()); const g = t => p.find(x => x.type === t).value; return { wd: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].indexOf(g('weekday').replace('.', '')), m: +g('hour') % 24 * 60 + +g('minute') }; }
   function paintStatus() {
-    const st = status();
-    $$('[data-nowpill]').forEach(p => { p.classList.toggle('open', st.open); $('b', p).textContent = st.open ? 'Geöffnet' : 'Geschlossen'; });
-    const n = $('[data-now]'); if (n) { n.classList.toggle('open', st.open); $('[data-now-t]').textContent = st.t; $('[data-now-s]').textContent = '· ' + st.s; }
-    $$('[data-hours] li').forEach(li => li.classList.toggle('today', +li.dataset.day === st.wd));
+    const { wd, m } = berlin(), O = 510, C = 1110, work = wd >= 0 && wd <= 5, open = work && m >= O && m < C;
+    let s; if (open) { const left = C - m; s = left <= 60 ? tr(`noch ${left} Min.`, `jeszcze ${left} min`) : tr('bis 18:30 Uhr', 'do 18:30'); }
+    else if (work && m < O) s = tr('heute ab 8:30 Uhr', 'dziś od 8:30'); else if (wd >= 5) s = tr('Montag ab 8:30 Uhr', 'w poniedziałek od 8:30'); else s = tr('morgen ab 8:30 Uhr', 'jutro od 8:30');
+    $$('[data-nowpill]').forEach(p => { p.classList.toggle('open', open); $('b', p).textContent = open ? tr('Geöffnet', 'Otwarte') : tr('Geschlossen', 'Zamknięte'); });
+    const n = $('[data-now]'); if (n) { n.classList.toggle('open', open); $('[data-now-t]').textContent = open ? tr('Jetzt geöffnet', 'Teraz otwarte') : tr('Gerade geschlossen', 'Teraz zamknięte'); $('[data-now-s]').textContent = ' · ' + s; }
+    $$('[data-hours] li').forEach(li => li.classList.toggle('today', +li.dataset.day === wd));
   }
-  paintStatus(); setInterval(paintStatus, 60000);
+  setInterval(paintStatus, 60000);
 
-  /* Tag & Abend */
-  const dn = $('[data-dn]'), hint = $('[data-dnhint]');
-  function setNight(on, user) {
-    document.body.classList.toggle('night', on); if (dn) dn.setAttribute('aria-pressed', on);
-    if (hint) { if (user) hint.style.opacity = 0; else hint.textContent = on ? 'Oder lieber die Sonne?' : 'Tippen Sie mal auf den Mond.'; }
-  }
-  const h = berlin().m / 60; setNight(h >= 19 || h < 7);
-  if (dn) dn.addEventListener('click', () => setNight(!document.body.classList.contains('night'), true));
-
-  /* Hero-Parallax */
-  const par = $$('[data-par]'), hero = $('[data-hero]');
-  if (!reduce && hero) { let tk = 0; addEventListener('scroll', () => { if (tk) return; tk = requestAnimationFrame(() => { tk = 0; const y = Math.min(scrollY, hero.offsetHeight); par.forEach(g => g.style.transform = `translateY(${y * (+g.dataset.par) * .35}px)`); }); }, { passive: true }); }
-
-  /* Einblenden */
+  /* ---------- Einblenden ---------- */
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-  $$('.rv, .rings').forEach(el => io.observe(el));
+  $$('.rv').forEach(el => io.observe(el));
 
-  /* ---------------- Garten einrichten ---------------- */
-  const svg = $('[data-psvg]'), stage = $('[data-stage]'), gItems = $('[data-items]'), tool = $('[data-ptool]');
-  let items = [], uid = 1, sel = null, ground = 'rasen';
-  const Y0 = 205, Y1 = 552, K = 1.05;
-  const sc = y => (.5 + (y - 172) / (560 - 172) * .7) * K;
-  function render() {
-    if (!gItems) return;
-    gItems.innerHTML = [...items].sort((a, b) => a.y - b.y).map(it => {
-      const d = IT[it.t]; if (!d) return ''; const [n, , w, hh] = d, s = sc(it.y);
-      return `<g class="git${sel === it.id ? ' on' : ''}" data-id="${it.id}" transform="translate(${it.x} ${it.y}) scale(${it.f ? -s : s} ${s})"><ellipse rx="${w * .46}" ry="${Math.max(6, w * .07)}" fill="rgba(25,45,15,.25)"/><use href="#it-${it.t}" x="${-(w + 4) / 2}" y="${-(hh + 22)}" width="${w + 4}" height="${hh + 22}"/><rect class="sel" x="${-w / 2 - 10}" y="${-hh - 22}" width="${w + 20}" height="${hh + 32}" rx="10"/><title>${n}</title></g>`;
-    }).join('');
-    stage.dataset.g = ground; $$('[data-ground]').forEach(b => { if (b.tagName === 'BUTTON') b.classList.toggle('on', b.dataset.ground === ground); });
-    list(); placeTool(); save();
-  }
-  function list() {
-    const ul = $('[data-plist]'), cnt = {}; items.forEach(i => cnt[i.t] = (cnt[i.t] || 0) + 1);
-    const keys = Object.keys(cnt); $('[data-pcount]').textContent = items.length;
-    ul.innerHTML = keys.length ? keys.map(k => `<li><span><b>${cnt[k]}×</b> ${IT[k][0]}</span><small>${IT[k][1]}</small></li>`).join('') : '<li class="empty">Noch leer – tippen Sie links ein Möbelstück an.</li>';
-  }
-  function placeTool() {
-    const it = items.find(i => i.id === sel); if (!it) { tool.hidden = true; return; }
-    const g = $(`[data-id="${it.id}"]`, gItems); if (!g) { tool.hidden = true; return; }
-    const r = g.getBoundingClientRect(), s = stage.getBoundingClientRect();
-    tool.hidden = false; tool.style.left = Math.max(110, Math.min(s.width - 110, r.left - s.left + r.width / 2)) + 'px'; tool.style.top = Math.max(56, r.top - s.top - 6) + 'px';
-  }
-  function save() { const v = items.map(i => `${i.t}.${Math.round(i.x)}.${Math.round(i.y)}${i.f ? '.f' : ''}`).join('_'); try { history.replaceState(null, '', items.length || ground !== 'rasen' ? '#g=' + ground + '~' + v : location.pathname + location.search); } catch (e) { } }
-  function load() { const m = location.hash.match(/^#g=([a-z]+)~(.*)$/); if (!m) return false; ground = m[1]; items = m[2].split('_').filter(Boolean).map(s => { const [t, x, y, f] = s.split('.'); return IT[t] ? { id: uid++, t, x: +x, y: +y, f: f === 'f' } : null; }).filter(Boolean); return true; }
-  function spot() { for (let k = 0; k < 40; k++) { const x = 160 + Math.random() * 680, y = 300 + Math.random() * 220; if (items.every(i => Math.hypot(i.x - x, (i.y - y) * 1.6) > 120)) return { x, y }; } return { x: 500, y: 420 }; }
-  function add(t, at) { const p = at || spot(); const it = { id: uid++, t, x: p.x, y: p.y, f: false }; items.push(it); sel = it.id; render(); const g = $(`[data-id="${it.id}"]`, gItems); if (g && g.animate && !reduce) g.animate([{ opacity: 0, transform: g.getAttribute('transform').replace(/translate\(([\d.]+) ([\d.]+)\)/, (a, x, y) => `translate(${x}px, ${y - 60}px)`) }, { opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.3,1.4,.5,1)' }); }
-  const DEMO = [['vogelhaus', 120, 300], ['schaukel', 470, 330], ['kuebel', 800, 300], ['bank', 230, 455], ['laterne', 340, 440], ['tisch', 690, 470], ['stuhl', 590, 470], ['stuhl', 790, 470, 1], ['igel', 880, 535], ['kuebel', 70, 540]];
-  function demo() { items = DEMO.map(([t, x, y, f]) => ({ id: uid++, t, x, y, f: !!f })); sel = null; render(); }
-  function pt(e) { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
-  let drag = null;
-  if (svg) {
-    svg.addEventListener('pointerdown', e => {
-      const g = e.target.closest('.git'); if (!g) { if (sel) { sel = null; render(); } return; }
-      const it = items.find(i => i.id === +g.dataset.id), p = pt(e);
-      drag = { it, dx: it.x - p.x, dy: it.y - p.y, x0: e.clientX, y0: e.clientY, on: false }; svg.setPointerCapture(e.pointerId); e.preventDefault();
-    });
-    svg.addEventListener('pointermove', e => {
-      if (!drag) return; if (!drag.on && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 5) return; drag.on = true; stage.classList.add('drag'); tool.hidden = true;
-      const p = pt(e); drag.it.x = Math.max(40, Math.min(960, p.x + drag.dx)); drag.it.y = Math.max(Y0, Math.min(Y1, p.y + drag.dy)); sel = drag.it.id;
-      if (!drag.raf) drag.raf = requestAnimationFrame(() => { drag && (drag.raf = 0); render(); tool.hidden = true; });
-    });
-    const end = () => { if (!drag) return; const d = drag; drag = null; stage.classList.remove('drag'); if (!d.on) sel = sel === d.it.id ? null : d.it.id; render(); };
-    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
-    tool.addEventListener('click', e => { const b = e.target.closest('[data-pt]'); if (!b) return; const it = items.find(i => i.id === sel); if (!it) return; const k = b.dataset.pt;
-      if (k === 'flip') it.f = !it.f; if (k === 'front') it.y = Math.min(Y1, it.y + 50); if (k === 'del') { items = items.filter(i => i !== it); sel = null; } render(); });
-    $$('[data-pal]').forEach(b => b.addEventListener('click', () => add(b.dataset.pal)));
-    $$('[data-ground]').forEach(b => { if (b.tagName === 'BUTTON') b.addEventListener('click', () => { ground = b.dataset.ground; render(); }); });
-    $('[data-pclear]').addEventListener('click', () => { items = []; sel = null; render(); });
-    $('[data-pdemo]').addEventListener('click', demo);
-    addEventListener('resize', placeTool); addEventListener('keydown', e => { if (sel && (e.key === 'Delete' || e.key === 'Backspace') && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { items = items.filter(i => i.id !== sel); sel = null; render(); } });
-    if (!load()) demo(); else render();
-  }
-  $$('[data-addit]').forEach(b => b.addEventListener('click', () => { add(b.dataset.addit); $('#einrichten').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }));
+  /* ---------- Hero: Garnitur folgt der Maus ---------- */
+  const set = $('[data-tilt]'), hero = $('[data-hero]');
+  if (set && hero && !reduce && matchMedia('(pointer:fine)').matches) hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; set.style.transform = `perspective(900px) rotateY(${x * 10}deg) rotateX(${-y * 6}deg) translateY(${y * -10}px)`; });
 
-  /* Liste ins Formular */
-  const msg = $('[data-msg]');
-  const GN = { rasen: 'Rasen', deck: 'Holzterrasse', stone: 'Pflaster' };
-  const INT = { schaukel: 'Hollywoodschaukel', bank: 'Gartenmöbel', tisch: 'Gartenmöbel', stuhl: 'Gartenmöbel', hocker: 'Gastronomie', vogelhaus: 'Vogelhaus', kuebel: 'Gartendeko & Figuren', laterne: 'Gartendeko & Figuren', igel: 'Gartendeko & Figuren' };
-  const sendBtn = $('[data-psend]');
-  if (sendBtn) sendBtn.addEventListener('click', () => {
-    if (!items.length) { add('bank'); return; }
-    const cnt = {}; items.forEach(i => cnt[i.t] = (cnt[i.t] || 0) + 1);
-    msg.value = 'Mein Garten (online zusammengestellt):\n' + Object.keys(cnt).map(k => `– ${cnt[k]}× ${IT[k][0]} (${IT[k][1]})`).join('\n') + `\nUntergrund: ${GN[ground]}\n\nBitte um Preis und Liefertermin.`;
-    msg.dispatchEvent(new Event('input')); $('[data-glink]').value = location.href;
-    const want = new Set(Object.keys(cnt).map(k => INT[k])); $$('[data-int] input').forEach(c => { if (want.has(c.value)) c.checked = true; });
-    $('#kontakt').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); setTimeout(() => $('[name="Name"]').focus({ preventScroll: true }), 700);
-  });
-  $$('[data-pickmsg]').forEach(a => a.addEventListener('click', () => { msg.value = a.dataset.pickmsg; const c = $('[data-int] input[value="Gutschein"]'); if (c) c.checked = true; }));
+  /* ---------- Drehbühne Eiche ---------- */
+  const st = $('[data-stage]'), its = $$('[data-st]'), caps = $$('[data-stc]'), dots = $$('[data-std]'); let si = 0;
+  function show(i) {
+    const n = its.length; si = (i + n) % n;
+    its.forEach((el, k) => { el.classList.toggle('on', k === si); el.classList.toggle('l', k === (si - 1 + n) % n); el.classList.toggle('r', k === (si + 1) % n); });
+    caps.forEach((c, k) => c.classList.toggle('on', k === si)); dots.forEach((d, k) => d.classList.toggle('on', k === si));
+    const no = $('[data-stno]'); if (no) no.textContent = String(si + 1).padStart(2, '0');
+    const img = $('img', its[(si + 1) % n]); if (img) img.loading = 'eager';
+  }
+  if (st) {
+    $$('[data-stn]').forEach(b => b.addEventListener('click', () => show(si + +b.dataset.stn)));
+    dots.forEach((d, k) => d.addEventListener('click', () => show(k)));
+    let x0 = null; st.addEventListener('pointerdown', e => { x0 = e.clientX; }); addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40) show(si + (dx < 0 ? 1 : -1)); });
+    st.addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(si + 1); if (e.key === 'ArrowLeft') show(si - 1); });
+    show(0);
+  }
+  const ask = $('[data-ask]'); if (ask) ask.addEventListener('click', () => { const n = (window.GT && GT.oak[si]) || ['', '']; prefill(tr(`Ich interessiere mich für die Garnitur „${n[0]}“ aus Eiche. Ist sie noch da, und was kostet sie?`, `Interesuje mnie dębowy komplet „${n[1]}”. Czy jest jeszcze dostępny i ile kosztuje?`), 'Gartenmöbel aus Eiche'); });
+  const deal = $('[data-deal]'); if (deal) deal.addEventListener('click', () => prefill(tr('Welche Restposten gibt es gerade zu Sonderpreisen?', 'Jakie ostatnie sztuki są teraz w cenach specjalnych?'), 'Sonderangebote'));
+  function prefill(msg, interest) { const m = $('[data-msg]'); if (m) { m.value = msg; } const c = $(`[data-int] input[value="${interest}"]`); if (c) c.checked = true; }
 
-  /* Liefer-Rechner */
+  /* ---------- Schaukel ---------- */
+  const sw = $('[data-swing]'), swimg = $('[data-swimg]');
+  let ang = 0, vel = 0, raf = 0;
+  function step() { vel += -ang * .018; vel *= .992; ang += vel; if (sw) sw.style.transform = `rotate(${ang}deg)`; if (Math.abs(ang) > .02 || Math.abs(vel) > .02) raf = requestAnimationFrame(step); else { raf = 0; ang = vel = 0; sw.style.transform = ''; } }
+  function push(f = 1.6) { if (reduce) return; vel += f; if (!raf) raf = requestAnimationFrame(step); }
+  const pb = $('[data-push]'); if (pb) pb.addEventListener('click', () => push(ang > 0 ? -1.8 : 1.8));
+  if (sw) { sw.addEventListener('pointerdown', e => { const r = sw.getBoundingClientRect(); push(e.clientX < r.left + r.width / 2 ? 1.6 : -1.6); });
+    new IntersectionObserver(([en], o) => { if (en.isIntersecting) { push(1.2); o.disconnect(); } }, { threshold: .5 }).observe(sw); }
+  $$('[data-sw]').forEach(b => b.addEventListener('click', () => { $$('[data-sw]').forEach(x => x.classList.toggle('on', x === b)); swimg.style.opacity = 0; setTimeout(() => { swimg.src = 'img/c/' + b.dataset.sw + '.webp'; swimg.onload = () => { swimg.style.opacity = 1; push(1.4); }; }, 250); }));
+
+  /* ---------- Taschenlampe im Figurenhof ---------- */
+  const torch = $('[data-torch]');
+  if (torch) {
+    let user = false, t0 = performance.now(), on = false;
+    const set = (x, y, r) => { torch.style.setProperty('--mx', x + 'px'); torch.style.setProperty('--my', y + 'px'); if (r) torch.style.setProperty('--rr', r + 'px'); };
+    const R = () => Math.max(170, Math.min(300, torch.clientWidth * .2));
+    torch.addEventListener('pointermove', e => { user = true; const r = torch.getBoundingClientRect(); set(e.clientX - r.left, e.clientY - r.top, R()); });
+    torch.addEventListener('pointerdown', e => { user = true; const r = torch.getBoundingClientRect(); set(e.clientX - r.left, e.clientY - r.top, R() * 1.15); });
+    new IntersectionObserver(([en]) => { on = en.isIntersecting; if (on) loop(); }).observe(torch);
+    function loop() { if (!on) return; if (!user && !reduce) { const t = (performance.now() - t0) / 1000, w = torch.clientWidth, h = torch.clientHeight; set(w * (.55 + .3 * Math.sin(t * .45)), h * (.55 + .18 * Math.sin(t * .8)), R()); } requestAnimationFrame(loop); }
+    set(torch.clientWidth * .7, torch.clientHeight * .55, R());
+  }
+
+  /* ---------- Liefer-Rechner ---------- */
   const km = $('[data-kmr]'), wert = $('[data-wert]'), path = $('[data-rt]'), truck = $('[data-truck]');
   function calc() {
     if (!km) return; const k = +km.value, v = +wert.value, res = $('[data-dres]'), sub = $('[data-dsub]');
     $('[data-kmo]').textContent = k + ' km'; $('[data-wo]').textContent = v.toLocaleString('de-DE') + ' €';
-    $$('[data-km]', $('[data-orte]')).forEach(b => b.classList.toggle('on', +b.dataset.km === k));
-    const p = Math.max(.04, Math.min(1, k / 60)); path.style.setProperty('--p', p * 100); const L = path.getTotalLength(), P = path.getPointAtLength(L * p); truck.setAttribute('transform', `translate(${P.x} ${P.y - 8})`);
+    $$('[data-ort]').forEach(b => b.classList.toggle('on', +b.dataset.ort === k));
+    const p = Math.max(.04, Math.min(1, k / 60)), Lp = path.getTotalLength(), P = path.getPointAtLength(Lp * p); path.style.strokeDasharray = `${Lp * p} ${Lp}`; truck.setAttribute('transform', `translate(${P.x} ${P.y - 8})`);
     res.classList.remove('pay');
-    if (v >= 1000 && k <= 10) { res.innerHTML = 'Lieferung <b>kostenlos</b>'; sub.textContent = 'Frei Haus – wir bringen alles bis in den Garten.'; }
-    else if (v >= 1000) { const c = k - 10; res.classList.add('pay'); res.innerHTML = `Lieferung <b>${c} €</b>`; sub.textContent = `Die ersten 10 km sind frei, danach 1 € pro Kilometer (${c} km).`; }
-    else { res.classList.add('pay'); res.innerHTML = 'Lieferung <b>nach Absprache</b>'; sub.textContent = `Noch ${(1000 - v).toLocaleString('de-DE')} € bis zur kostenlosen Lieferung – oder einfach selbst abholen.`; }
+    if (v >= 1000 && k <= 10) { res.innerHTML = tr('Lieferung <b>kostenlos</b>', 'Dostawa <b>gratis</b>'); sub.textContent = tr('Frei Haus – bis zu Ihnen nach Hause.', 'Bezpłatnie – prosto pod Twój dom.'); }
+    else if (v >= 1000) { const c = k - 10; res.classList.add('pay'); res.innerHTML = tr(`Lieferung <b>${c},00 €</b>`, `Dostawa <b>${c},00 €</b>`); sub.textContent = tr(`10 km frei, dann ${c} km × 1,00 €.`, `10 km gratis, potem ${c} km × 1,00 €.`); }
+    else { res.classList.add('pay'); res.innerHTML = tr('Lieferung <b>auf Anfrage</b>', 'Dostawa <b>na zapytanie</b>'); sub.textContent = tr(`Noch ${(1000 - v).toLocaleString('de-DE')} € bis zur kostenlosen Lieferung – oder einfach selbst abholen.`, `Jeszcze ${(1000 - v).toLocaleString('de-DE')} € do darmowej dostawy – albo odbierz sam.`); }
   }
-  if (km) { [km, wert].forEach(i => i.addEventListener('input', calc)); $$('[data-km]', $('[data-orte]')).forEach(b => b.addEventListener('click', () => { km.value = b.dataset.km; calc(); })); calc(); }
+  if (km) { [km, wert].forEach(i => i.addEventListener('input', calc)); $$('[data-ort]').forEach(b => b.addEventListener('click', () => { km.value = b.dataset.ort; calc(); })); }
 
-  /* Formular (AJAX, bleibt auf der Seite) */
+  /* ---------- Formular ---------- */
   const kf = $('[data-kf]');
   if (kf) kf.addEventListener('submit', async e => {
-    e.preventDefault(); const b = $('[data-ksend]'), ok = $('[data-kok]'), er = $('[data-kerr]'); ok.hidden = er.hidden = true; b.disabled = true; b.textContent = 'Wird gesendet …';
+    e.preventDefault(); const b = $('[data-ksend]'), ok = $('[data-kok]'), er = $('[data-kerr]'); ok.hidden = er.hidden = true; b.disabled = true; const lbl = b.textContent; b.textContent = tr('Wird gesendet …', 'Wysyłanie …');
     const fd = new FormData(kf), ints = fd.getAll('Interesse'); fd.delete('Interesse'); fd.set('Interesse', ints.join(', ') || '–');
-    try { const r = await fetch(kf.action, { method: 'POST', body: fd, headers: { Accept: 'application/json' } }); if (!r.ok) throw 0; ok.hidden = false; kf.reset(); b.textContent = 'Gesendet ✓'; }
-    catch (x) { er.hidden = false; b.disabled = false; b.textContent = 'Anfrage senden'; }
+    try { const r = await fetch(kf.action, { method: 'POST', body: fd, headers: { Accept: 'application/json' } }); if (!r.ok) throw 0; ok.hidden = false; kf.reset(); b.textContent = '✓'; }
+    catch (x) { er.hidden = false; b.disabled = false; b.textContent = lbl; }
   });
+
+  /* ---------- Start ---------- */
+  let start = 'de';
+  const q = new URLSearchParams(location.search).get('lang');
+  try { start = q || localStorage.getItem('gt-lang') || ((navigator.language || '').toLowerCase().startsWith('pl') ? 'pl' : 'de'); } catch (e) { start = q || 'de'; }
+  if (start === 'pl') setLang('pl'); else { paintStatus(); calc(); }
 })();
