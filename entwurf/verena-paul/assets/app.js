@@ -165,9 +165,24 @@
   const huna = $$('.huna-w span');
   if (huna.length) new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { huna.forEach((s, i) => setTimeout(() => s.classList.add('on'), RM ? 0 : i * 450)); o.disconnect(); } }), { threshold: .6 }).observe($('.huna-w'));
 
+
+  /* ---------- Neuseeland ---------- */
+  (() => {
+    const q = $$('[data-nzq] blockquote'); let i = 0;
+    if (q.length && !RM) setInterval(() => { if (document.hidden) return; q[i].classList.remove('on'); i = (i + 1) % q.length; q[i].classList.add('on'); }, 6500);
+    const st = $('[data-nzstack]');
+    if (st && 'IntersectionObserver' in window && !RM) { st.classList.add('wait'); new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { st.classList.remove('wait'); o.disconnect(); } }), { threshold: .25 }).observe(st); }
+  })();
+  /* ---------- Reel neue Liege ---------- */
+  (() => {
+    const r = $('[data-reel]'); if (!r) return;
+    const v = $('video', r), b = $('[data-reelsnd]', r);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const p = v.play(); p && p.catch(() => {}); } else v.pause(); }), { threshold: .35 }).observe(v);
+    b && b.addEventListener('click', () => { v.muted = !v.muted; b.textContent = v.muted ? '🔇' : '🔊'; b.setAttribute('aria-pressed', String(!v.muted)); b.setAttribute('aria-label', v.muted ? 'Ton an' : 'Ton aus'); if (!v.muted) { const p = v.play(); p && p.catch(() => {}); } });
+  })();
   /* ---------- Film ---------- */
   const film = $('[data-film]');
-  film && $('.fl-play', film).addEventListener('click', async () => {
+  film && $('.fl-play', film) && $('.fl-play', film).addEventListener('click', async () => {
     let ok = false; try { ok = (await fetch('media/film.mp4', { method: 'HEAD' })).ok; } catch (e) {}
     if (ok) { film.innerHTML = '<video src="media/film.mp4" controls autoplay playsinline style="width:100%;aspect-ratio:16/10;object-fit:cover"></video>'; }
     else { film.classList.add('soon'); $('.fl-tag', film).textContent = 'Der Film von Falcon Eye kommt hier hinein 🎬'; }
