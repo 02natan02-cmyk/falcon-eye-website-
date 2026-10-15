@@ -188,7 +188,7 @@ ticker = '<div class="ticker" aria-label="Kunden und Partner"><div class="row">'
 home_main = f'''<main id="main">
 <section class="eye" aria-label="Falcon Eye">
   <div class="stage">
-    <video id="heroVid" src="media/hero.mp4" poster="media/hero.jpg" data-mobile-src="media/hero_m.mp4" data-mobile-poster="media/r_norway.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <video id="heroVid" poster="media/hero.jpg" data-mobile-src="media/hero_m.mp4" data-mobile-poster="media/hero_m.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video><script>(function(v){var m=innerWidth<700;v.poster=m?"media/hero_m.jpg":"media/hero.jpg";v.src=m?"media/hero_m.mp4":"media/hero.mp4";})(document.getElementById("heroVid"))</script>
     <canvas id="eyeCanvas" aria-hidden="true"></canvas>
     <div class="scan"></div>
     <div class="boot" aria-hidden="true"><span>FALCON EYE OSD</span><span>GPS 14 SAT &nbsp; LINK 100%</span><span>CAM 6K &nbsp; 50 FPS</span><span>LIPO 6S 25.2V</span></div>
@@ -218,7 +218,7 @@ home_main = f'''<main id="main">
   <div><b>0 €</b><span>für Anfrage und Angebot – ihr wisst vorher, was es kostet</span></div>
 </div>
 
-<section class="fly" style="height:420vh" data-frames="127" data-src="seq/f{{n}}.jpg" data-alt="12" data-alt-to="1.2" data-secs="9" aria-label="Durchflug: Scrollen steuert die Drohne">
+<section class="fly" style="height:420vh" data-frames="127" data-src="seq/f{{n}}.webp" data-alt="12" data-alt-to="1.2" data-secs="9" aria-label="Durchflug: Scrollen steuert die Drohne">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>12</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
@@ -259,7 +259,7 @@ home_main = f'''<main id="main">
   </div>
 </section>
 
-<section class="fly" style="height:460vh" data-frames="148" data-src="seq2/r{{n}}.jpg" data-alt="2.4" data-alt-to="1.1" data-secs="21" aria-label="Durchflug durch das Polizeipräsidium">
+<section class="fly" style="height:460vh" data-frames="148" data-src="seq2/r{{n}}.webp" data-alt="2.4" data-alt-to="1.1" data-secs="21" aria-label="Durchflug durch das Polizeipräsidium">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>2</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>

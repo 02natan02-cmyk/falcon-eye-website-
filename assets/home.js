@@ -11,8 +11,8 @@
   const wordImg = new Image(); wordImg.src = 'media/wordmark.png';
   const poster = new Image();
   /* phones: lighter, portrait hero clip that fills the screen and loads fast */
-  if (innerWidth < 700 && vid.dataset.mobileSrc) { vid.poster = vid.dataset.mobilePoster; vid.src = vid.dataset.mobileSrc; vid.load(); vid.play().catch(() => {}); poster.src = vid.dataset.mobilePoster; }
-  else poster.src = 'media/hero.jpg';
+  if (innerWidth < 700 && vid.dataset.mobileSrc && vid.src.indexOf('hero_m') < 0) { vid.poster = vid.dataset.mobilePoster; vid.src = vid.dataset.mobileSrc; vid.load(); vid.play().catch(() => {}); poster.src = vid.dataset.mobilePoster; }
+  else poster.src = innerWidth < 700 && vid.dataset.mobilePoster ? vid.dataset.mobilePoster : 'media/hero.jpg';
   const lerp = (a, b, t) => a + (b - a) * t, smooth = t => t * t * (3 - 2 * t);
   const cover = (src, w, h, vw, vh, rx = 0, ry = 0) => { const k = Math.max(vw / w, vh / h); ex.drawImage(src, rx + (vw - w * k) / 2, ry + (vh - h * k) / 2, w * k, h * k); };
   /* mobile: start playback on first touch/scroll if autoplay was blocked (data saver / low power) */
