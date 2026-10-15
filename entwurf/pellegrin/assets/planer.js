@@ -1,9 +1,9 @@
-/* Pellegrin – freier Küchenplaner (Grundriss + 3D) – Entwurf Falcon Eye */
+/* Freier Küchenplaner (Grundriss + 3D) – Entwurf Falcon Eye */
 (function () {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const root = $('[data-planner]'); if (!root) return;
-  const MAIL = root.dataset.mail, WA = root.dataset.wa;
+  const MAIL = root.dataset.mail, WA = root.dataset.wa, STUDIO = root.dataset.studio || 'Pellegrin Küchenstudio · St. Wendel', GREET = root.dataset.greet || 'Hallo Herr Pellegrin', ACC = root.dataset.acc || '#c0673f';
   const SVGNS = 'http://www.w3.org/2000/svg';
 
   /* ---------------- Katalog ---------------- */
@@ -178,7 +178,7 @@
     const r = svg.getBoundingClientRect(); pxPerCm = r.width ? Math.min(r.width / (W + 2 * M), r.height / (D + 2 * M)) : 1;
     const fs = Math.max(9, 12.5 / pxPerCm), sw = 1 / pxPerCm;
     const fF = frontFill(), tC = lum(fF) > .55 ? '#1c1a17' : '#fff';
-    let h = `<defs><pattern id="pg" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="rgba(28,26,23,.07)" stroke-width="${sw}"/></pattern><pattern id="ph" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#c0673f" stroke-width="${1.6 * sw}" opacity=".5"/></pattern></defs>`;
+    let h = `<defs><pattern id="pg" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="rgba(28,26,23,.07)" stroke-width="${sw}"/></pattern><pattern id="ph" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="${ACC}" stroke-width="${1.6 * sw}" opacity=".5"/></pattern></defs>`;
     h += `<rect x="${-M}" y="${-M}" width="${W + 2 * M}" height="${D + 2 * M}" fill="#f7f3ec"/><rect x="0" y="0" width="${W}" height="${D}" fill="#fffdf9"/><rect x="0" y="0" width="${W}" height="${D}" fill="url(#pg)"/>`;
     // Wände
     const T = 14, wl = S.room.walls;
@@ -189,8 +189,8 @@
       if (!wl[o.wall]) return; const [x0, y0, x1, y1] = wallSeg(o), on = selOpen === o.id;
       const horiz = y0 === y1, nx = horiz ? 0 : (o.wall === 'W' ? 1 : -1), nz = horiz ? (o.wall === 'N' ? 1 : -1) : 0;
       const rx = Math.min(x0, x1) - (horiz ? 0 : (o.wall === 'W' ? T : 0)), ry = Math.min(y0, y1) - (horiz ? (o.wall === 'N' ? T : 0) : 0), rw = horiz ? Math.abs(x1 - x0) : T, rh = horiz ? T : Math.abs(y1 - y0);
-      if (o.t === 'fenster') h += `<g data-open="${o.id}" style="cursor:grab"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="#dcefff" stroke="${on ? '#c0673f' : '#6f8fa8'}" stroke-width="${(on ? 3 : 1.2) * sw}"/><line x1="${x0 - nx * T / 2}" y1="${y0 - nz * T / 2}" x2="${x1 - nx * T / 2}" y2="${y1 - nz * T / 2}" stroke="#6f8fa8" stroke-width="${sw}"/></g>`;
-      else { const len = o.w, sx = x0, sy = y0, ex = x0 + nx * len, ey = y0 + nz * len; h += `<g data-open="${o.id}" style="cursor:grab"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="#fffdf9" stroke="${on ? '#c0673f' : 'none'}" stroke-width="${3 * sw}"/>${o.t === 'tuer' ? `<path d="M${sx} ${sy} L${ex} ${ey} A${len} ${len} 0 0 ${(o.wall === 'N' || o.wall === 'E') ? 1 : 1} ${x1} ${y1}" fill="rgba(192,103,63,.05)" stroke="#9a8f82" stroke-width="${sw}" stroke-dasharray="${4 * sw} ${3 * sw}"/>` : ''}</g>`; }
+      if (o.t === 'fenster') h += `<g data-open="${o.id}" style="cursor:grab"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="#dcefff" stroke="${on ? ACC : '#6f8fa8'}" stroke-width="${(on ? 3 : 1.2) * sw}"/><line x1="${x0 - nx * T / 2}" y1="${y0 - nz * T / 2}" x2="${x1 - nx * T / 2}" y2="${y1 - nz * T / 2}" stroke="#6f8fa8" stroke-width="${sw}"/></g>`;
+      else { const len = o.w, sx = x0, sy = y0, ex = x0 + nx * len, ey = y0 + nz * len; h += `<g data-open="${o.id}" style="cursor:grab"><rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="#fffdf9" stroke="${on ? ACC : 'none'}" stroke-width="${3 * sw}"/>${o.t === 'tuer' ? `<path d="M${sx} ${sy} L${ex} ${ey} A${len} ${len} 0 0 ${(o.wall === 'N' || o.wall === 'E') ? 1 : 1} ${x1} ${y1}" fill="rgba(192,103,63,.05)" stroke="#9a8f82" stroke-width="${sw}" stroke-dasharray="${4 * sw} ${3 * sw}"/>` : ''}</g>`; }
     });
     // Maßketten
     h += `<g fill="#6e655b" font-family="DM Sans,system-ui,sans-serif" font-size="${fs}" text-anchor="middle"><text x="${W / 2}" y="${-T - 12 / pxPerCm}">${W} cm</text><text transform="translate(${-T - 12 / pxPerCm} ${D / 2}) rotate(-90)">${D} cm</text></g>`;
@@ -198,7 +198,7 @@
     const draw = it => {
       const c = CAT[it.t], d = depth(it), isW = c.layer === 'wall', on = sel === it.id, bad = col.has(it.id);
       let inner = '';
-      const body = isW ? `fill="url(#ph)" stroke="${bad ? '#d33' : on ? '#c0673f' : '#c0673f'}" stroke-dasharray="${on ? 0 : 5 * sw} ${3 * sw}"` : `fill="${c.free ? '#e8e1d6' : c.tall ? shade(fF, -.12) : fF}" stroke="${bad ? '#d33' : on ? '#c0673f' : 'rgba(0,0,0,.35)'}"`;
+      const body = isW ? `fill="url(#ph)" stroke="${bad ? '#d33' : on ? ACC : ACC}" stroke-dasharray="${on ? 0 : 5 * sw} ${3 * sw}"` : `fill="${c.free ? '#e8e1d6' : c.tall ? shade(fF, -.12) : fF}" stroke="${bad ? '#d33' : on ? ACC : 'rgba(0,0,0,.35)'}"`;
       inner += `<rect x="${-it.w / 2}" y="${-d / 2}" width="${it.w}" height="${d}" rx="${2}" ${body} stroke-width="${(on || bad ? 3 : 1) * sw}"/>`;
       if (!isW) inner += `<line x1="${-it.w / 2 + 2}" y1="${d / 2 - 2}" x2="${it.w / 2 - 2}" y2="${d / 2 - 2}" stroke="${tC}" stroke-opacity=".55" stroke-width="${2 * sw}"/>`;
       if (isSink(it)) { const cx = it.t === 'in' ? 0 : 0; inner += `<rect x="${cx - Math.min(25, it.w / 2 - 8)}" y="${-d / 2 + 12}" width="${Math.min(50, it.w - 16)}" height="36" rx="6" fill="#d9dde0" stroke="#555" stroke-width="${sw}"/><circle cx="${cx}" cy="${-d / 2 + 30}" r="3" fill="#555"/>`; }
@@ -382,13 +382,13 @@
     g.fillStyle = '#f7f3ec'; g.fillRect(0, 0, 1800, 1000);
     if (K) { const im = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = K.snapshot(); }); const s = Math.max(1000 / im.height, 1040 / im.width); g.save(); g.beginPath(); g.rect(0, 0, 1040, 1000); g.clip(); g.drawImage(im, (1040 - im.width * s) / 2, (1000 - im.height * s) / 2, im.width * s, im.height * s); g.restore(); }
     const p = await planPng(); if (p) { const s = Math.min(700 / p.width, 640 / p.height); g.drawImage(p, 1070 + (700 - p.width * s) / 2, 120, p.width * s, p.height * s); }
-    g.fillStyle = '#1c1a17'; g.font = '600 34px Georgia, serif'; g.fillText('Mein Küchenentwurf', 1070, 70); g.font = '18px system-ui, sans-serif'; g.fillStyle = '#6e655b'; g.fillText('Pellegrin Küchenstudio · St. Wendel', 1070, 98);
+    g.fillStyle = '#1c1a17'; g.font = '600 34px Georgia, serif'; g.fillText('Mein Küchenentwurf', 1070, 70); g.font = '18px system-ui, sans-serif'; g.fillStyle = '#6e655b'; g.fillText(STUDIO, 1070, 98);
     g.font = '17px system-ui, sans-serif'; g.fillStyle = '#1c1a17'; let y = 800; summary().split('\n').slice(0, 7).forEach(l => { g.fillText(l.length > 70 ? l.slice(0, 68) + '…' : l, 1070, y); y += 26; });
     return c;
   }
   $$('[data-send]').forEach(b => b.addEventListener('click', async () => {
     const k = b.dataset.send, name = $('[name="Name"]').value.trim(), tel = $('[name="Telefon"]').value.trim();
-    const text = `Hallo Herr Pellegrin,\n\nich habe meine Küche online geplant:\n\n${summary()}\n\nEntwurf ansehen: ${location.href.split('#')[0]}${lastHash}\n\n${name}${tel ? '\nTel. ' + tel : ''}`;
+    const text = `${GREET},\n\nich habe meine Küche online geplant:\n\n${summary()}\n\nEntwurf ansehen: ${location.href.split('#')[0]}${lastHash}\n\n${name}${tel ? '\nTel. ' + tel : ''}`;
     if (k === 'wa') window.open(WA + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
     if (k === 'mail') location.href = `mailto:${MAIL}?subject=${encodeURIComponent('Mein Küchenentwurf')}&body=${encodeURIComponent(text)}`;
     if (k === 'img') { const c = await composite(); const a = document.createElement('a'); a.download = 'kuechenentwurf-pellegrin.jpg'; a.href = c.toDataURL('image/jpeg', .9); a.click(); }
