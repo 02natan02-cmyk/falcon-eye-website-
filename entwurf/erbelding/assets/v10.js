@@ -347,4 +347,94 @@
     $$('.rl').forEach(function (r) { r.addEventListener('click', function (e) { if (r.getAttribute('data-pos') !== '0' || e.target.closest('a,button')) return; var l = $('.rl-open', r); if (l) window.open(l.href, '_blank', 'noopener'); }); });
     var sw = $('[data-auswipe]'), sc = $('[data-auscroll]'); if (sw && sc) sw.addEventListener('click', function () { sc.scrollTo({ left: sc.scrollLeft < 20 ? sc.scrollWidth : 0, behavior: 'smooth' }); });
   })();
+
+  /* ================= v11: Geschichte ================= */
+  (function () {
+    var sec = $('[data-fw]'); if (!sec) return;
+    var signs = sec.dataset.signs.split('|'), years = sec.dataset.years.split('|'), tabs = $$('[data-fws]', sec), txts = $$('[data-fwt]', sec);
+    var sign = $('.fw-sign', sec), yr = $('.fw-year', sec), cur = -1, timer = 0, auto = !RM;
+    function set(i, user) {
+      if (user) { auto = false; clearTimeout(timer); }
+      if (i === cur) return; cur = i; sec.setAttribute('data-s', i);
+      tabs.forEach(function (b, j) { b.classList.toggle('on', j === i); b.classList.toggle('run', auto && j === i); b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+      txts.forEach(function (t, j) { t.hidden = j !== i; });
+      sign.classList.add('swap'); setTimeout(function () { sign.textContent = signs[i]; sign.classList.remove('swap'); }, 250); yr.textContent = years[i];
+      if (auto) { clearTimeout(timer); timer = setTimeout(function () { if (auto) set((cur + 1) % tabs.length); }, 5500); }
+    }
+    tabs.forEach(function (b, i) { b.addEventListener('click', function () { set(i, true); }); });
+    $('.fw-win', sec).addEventListener('click', function () { set((cur + 1) % tabs.length, true); });
+    sec.setAttribute('data-s', 0); cur = 0;
+    if ('IntersectionObserver' in window && auto) { var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); cur = -1; set(0); } }, { threshold: .4 }); io.observe(sec); }
+  })();
+
+  /* ================= v11: Lift-Hängeschrank ================= */
+  (function () {
+    var sec = $('[data-lift]'); if (!sec) return;
+    var svg = $('[data-liftsvg]', sec), cab = $('[data-cab]', svg), a1 = $('[data-arm1]', svg), a2 = $('[data-arm2]', svg), fa = $('[data-forearm]', svg), lab = $('[data-liftlab]', svg);
+    var btn = $('[data-liftbtn]', sec), rng = $('[data-liftr]', sec), v = 0, tgt = 0, raf = 0;
+    // Maße in cm, Wand bei x=-8, Boden bei y=250 (SVG-y = 250 - Höhe)
+    var WX = -8, P1 = 110, P2 = 95, L = 95, T0 = 90, T1 = 20;
+    function draw(t) {
+      var e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, th = (T0 + (T1 - T0) * e) * Math.PI / 180;
+      var ax = WX + L * Math.cos(th), ay = P1 + L * Math.sin(th), bx = WX + L * Math.cos(th), by = P2 + L * Math.sin(th);
+      a1.setAttribute('x2', ax.toFixed(2)); a1.setAttribute('y2', (250 - ay).toFixed(2)); a1.setAttribute('y1', 250 - P1);
+      a2.setAttribute('x2', bx.toFixed(2)); a2.setAttribute('y2', (250 - by).toFixed(2)); a2.setAttribute('y1', 250 - P2);
+      cab.setAttribute('transform', 'translate(' + (ax + 0.5).toFixed(2) + ' ' + (250 - ay).toFixed(2) + ')');
+      var hx = 140 - 30 * e, hy = 154 - 14 * e; fa.setAttribute('d', 'M164 144 L' + hx.toFixed(1) + ' ' + hy.toFixed(1));
+      lab.textContent = t < .15 ? 'Oben: außer Reichweite' : t > .9 ? 'Unten: bequem in Greifhöhe' : 'Fährt vor und herunter …';
+      sec.classList.toggle('down', t > .9);
+    }
+    var from = 0, t0 = 0, DUR = 2400;
+    function loop(now) { var k = Math.min(1, (now - t0) / DUR); v = from + (tgt - from) * k; draw(v); rng.value = Math.round(v * 100); if (k < 1) raf = requestAnimationFrame(loop); else raf = 0; }
+    function go(t) { from = v; t0 = performance.now(); tgt = t; cancelAnimationFrame(raf); raf = 0; btn.textContent = t > .5 ? 'Wieder hochfahren' : 'Hängeschrank herunterfahren'; btn.setAttribute('aria-pressed', t > .5 ? 'true' : 'false'); if (RM) { v = t; draw(v); rng.value = t * 100; return; } if (!raf) raf = requestAnimationFrame(loop); }
+    btn.addEventListener('click', function () { go(tgt > .5 ? 0 : 1); });
+    rng.addEventListener('input', function () { cancelAnimationFrame(raf); raf = 0; v = tgt = rng.value / 100; draw(v); btn.textContent = v > .5 ? 'Wieder hochfahren' : 'Hängeschrank herunterfahren'; });
+    svg.addEventListener('click', function () { go(tgt > .5 ? 0 : 1); }); svg.style.cursor = 'pointer';
+    draw(0);
+    if (!RM && 'IntersectionObserver' in window) { var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); setTimeout(function () { go(1); }, 700); } }, { threshold: .5 }); io.observe(svg); }
+  })();
+
+  /* ================= v11: Ablauf, Spüle, Abluft ================= */
+  (function () {
+    var ab = $('[data-ablauf]');
+    if (ab) { var lis = $$('li', ab); var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) { if (!es[0].isIntersecting) return; io.disconnect(); lis.forEach(function (l, i) { setTimeout(function () { l.classList.add('lit'); ab.style.setProperty('--abp', ((i + 1) / lis.length * 100) + '%'); }, RM ? 0 : 250 * i); }); }, { threshold: .4 }) : null; if (io) io.observe(ab); }
+    var cap = $('[data-sinkcap]'); $$('.sp-btns button').forEach(function (b) { b.addEventListener('click', function () { if (cap) cap.textContent = b.textContent.trim(); }); });
+    $$('[data-spm]').forEach(function (b) { b.addEventListener('click', function () { $$('[data-spm]').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); }); $$('[data-spmt]').forEach(function (t) { t.hidden = t.dataset.spmt !== b.dataset.spm; }); }); });
+    $$('[data-abzshow]').forEach(function (b) { b.addEventListener('click', function () { var t = $('[data-abzl="abluft"]'); if (t) t.click(); var c = $('[data-abzc]'); if (c) { var r = c.getBoundingClientRect(); scrollToY(r.top + scrollY - 100); } }); });
+  })();
+
+  /* ================= v11: Hero (Intro, Varianten, Staub, Mobil-Video) ================= */
+  (function () {
+    var h = $('[data-hero]'); if (!h) return;
+    var V = (location.search.match(/[?&]hero=([abc])/) || [])[1];
+    if (V) { h.setAttribute('data-v', V); var im = $('[data-hcimg]', h), mk = $('[data-hcmask]', h);
+      if (V === 'b') { im.src = 'img/d2.webp'; mk.style.backgroundImage = 'url(img/k3.webp)'; }
+      if (V === 'c') { im.src = 'img/aus.webp'; mk.style.backgroundImage = 'url(img/d1.webp)'; } }
+    var root = document.documentElement;
+    if (root.classList.contains('hc-first')) {
+      h.classList.add('intro');
+      var fin = function () { h.classList.add('open'); h.classList.remove('intro'); setTimeout(function () { h.classList.add('done'); root.classList.remove('hc-first'); }, 1500); try { sessionStorage.setItem('erb-intro', '1'); } catch (e) {} ['click', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) { window.removeEventListener(ev, skip); }); };
+      var skip = function () { fin(); h.classList.add('done'); };
+      ['click', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, skip, { passive: true, once: true }); });
+      setTimeout(function () { h.classList.add('open'); }, 550);
+      setTimeout(function () { h.classList.remove('intro'); }, 1250);
+      setTimeout(fin, 2300);
+    } else h.classList.add('done');
+    /* Mobil: Hochformat-Reel als Hintergrund */
+    var mv = $('[data-hcmv]', h);
+    if (mv && mq('(max-width:899px)')) { mv.preload = 'auto'; var p = mv.play(); if (p && p.catch) p.catch(function () {}); }
+    /* Warme Staubpartikel */
+    var cv = $('[data-hcdust]', h); if (!cv || RM) return;
+    var cx = cv.getContext('2d'), P = [], run = true, W, H;
+    function size() { var d = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+    size(); window.addEventListener('resize', size);
+    for (var i = 0; i < 46; i++) P.push({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 2.2, v: .00012 + Math.random() * .00035, w: Math.random() * 6.3, a: .15 + Math.random() * .45 });
+    function loop(t) {
+      cx.clearRect(0, 0, W, H);
+      P.forEach(function (p) { p.y -= p.v * 16; if (p.y < -.05) { p.y = 1.05; p.x = Math.random(); } var x = (p.x + Math.sin(t / 3000 + p.w) * .01) * W, y = p.y * H; var g = cx.createRadialGradient(x, y, 0, x, y, p.r * 3); g.addColorStop(0, 'rgba(255,214,160,' + p.a + ')'); g.addColorStop(1, 'rgba(255,214,160,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, p.r * 3, 0, 6.3); cx.fill(); });
+      if (run) requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { var on = es[0].isIntersecting; if (on && !run) { run = true; requestAnimationFrame(loop); } else if (!on) run = false; }).observe(h);
+  })();
 })();
