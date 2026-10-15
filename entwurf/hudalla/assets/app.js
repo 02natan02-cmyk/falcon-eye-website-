@@ -66,6 +66,7 @@
     const pick = n => { touched = true; clearInterval(auto); show(n); };
     hots.forEach((h, j) => h.addEventListener('click', () => pick(j)));
     $$('.kg-list li').forEach((l, j) => l.addEventListener('click', () => pick(j)));
+    $$('.kg-list li').forEach((l, j) => l.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(j); } }));
     show(0);
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !touched && !RM && !auto) auto = setInterval(() => show((k + 1) % hots.length), 4200); else if (!e.isIntersecting) { clearInterval(auto); auto = 0; } }, { threshold: .4 });
     io.observe($('.kg-house'));
@@ -218,8 +219,10 @@
   if (window.gsap && !RM) {
     gsap.registerPlugin(ScrollTrigger);
     gsap.from('[data-a]', { y: 34, opacity: 0, duration: 1, ease: 'power3.out', stagger: .09, delay: document.querySelector('[data-intro]') ? 2.2 : .1 });
-    $$('.sec-h > *, [data-r], .sv-g, .ja-g, .kg-vis, .eb-v, .wd-live, .oc-g, .dm-f, .map-w, .ko-cards').filter(el => !el.matches('.fw, .wy-g article') && !el.closest('[data-r]:not(:scope)')).forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
+    $$('.sec-h > *, [data-r], .sv-g, .ja-g, .kg-vis, .eb-v, .wd-live, .oc-g, .dm-f, .map-w, .ko-cards').filter(el => !el.matches('.fw, .wy-g article, .wy-g > a') && !el.closest('[data-r]:not(:scope)')).forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
     gsap.to('.hero-v .scene-card', { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-    $$('.fw-g .fw, .wy-g article').forEach((el, i) => gsap.from(el, { y: 50, opacity: 0, duration: .8, delay: (i % 4) * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
+    $$('.fw-g .fw, .wy-g article, .wy-g > a').forEach((el, i) => gsap.from(el, { y: 50, opacity: 0, duration: .8, delay: (i % 4) * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
   }
 })();
+
+;(function(){ document.querySelectorAll('[data-role]').forEach(a => a.addEventListener('click', () => { const s = document.querySelector('[data-ocf="rolle"]'); if (s) { s.value = a.dataset.role; s.dispatchEvent(new Event('change', { bubbles: true })); s.dispatchEvent(new Event('input', { bubbles: true })); } })); })();

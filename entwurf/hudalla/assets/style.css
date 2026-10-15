@@ -82,7 +82,7 @@ section{position:relative}
 .fuer,.sv,.kg,.oc,.dm,.geb,.ko{padding:clamp(80px,10vw,140px) 0}
 .fw-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .fw{padding:28px 24px;border-radius:var(--r);background:#fff;box-shadow:0 1px 0 var(--line),0 24px 50px -36px rgba(0,0,0,.4);transition:transform .35s var(--ease),box-shadow .35s}
-.fw:hover{transform:translateY(-6px);box-shadow:0 1px 0 var(--line),0 34px 60px -30px rgba(0,0,0,.4)}
+.fw{display:block;color:inherit;text-decoration:none}.fw-go{display:inline-block;margin-top:14px;font-weight:700;font-size:14px;color:var(--green);border-bottom:2px solid var(--sun)}.fw:focus-visible,.fw:hover{transform:translateY(-6px);box-shadow:0 1px 0 var(--line),0 34px 60px -30px rgba(0,0,0,.4)}
 .fw .ic{width:46px;height:46px;padding:10px;border-radius:14px;background:var(--mint);color:var(--green);margin-bottom:18px}
 .fw h3{font-size:21px;margin-bottom:8px}.fw p{margin:0;color:var(--mute);font-size:15.5px}
 /* Leistungen */
@@ -236,7 +236,7 @@ section{position:relative}
 .why{position:relative;padding:clamp(80px,10vw,140px) 0;background:var(--green);color:#fff;overflow:hidden}
 .why::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,184,28,.25),transparent 70%)}
 .wy-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.14);border-radius:24px;overflow:hidden}
-.wy-g article{padding:28px 24px;background:var(--green)}
+.wy-g article,.wy-g>a{padding:28px 24px;background:var(--green)}.wy-g>a{display:block;color:inherit;text-decoration:none;transition:background .3s}.wy-g>a:hover,.wy-g>a:focus-visible{background:#246b56}.wy-go{display:inline-block;margin-top:12px;font-weight:700;font-size:14px;color:var(--sun)}
 .wy-n{display:block;font:800 clamp(40px,4.5vw,60px)/1 var(--disp);color:var(--sun2);margin-bottom:12px}
 .wy-g h3{font-size:19px;margin-bottom:6px}.wy-g p{margin:0;color:#cde3d9;font-size:15px}
 .quote{margin:clamp(40px,6vw,70px) 0 0;text-align:center}
@@ -454,3 +454,9 @@ section{position:relative}
 .rv-sum{display:grid;align-content:center;justify-items:start;background:var(--ink);color:#fff}.rv-big{font:800 64px/1 var(--disp)}.rv-sum p{margin:6px 0 0;color:#b8c9c2}
 .rv-c blockquote{font-size:17px;line-height:1.55}
 @media (min-width:900px){.rv-track{overflow:visible;display:grid;grid-template-columns:.8fr 1fr 1fr 1fr}.rv-c{flex:none}}
+
+.trust a{display:grid;gap:2px;color:inherit;text-decoration:none;border:0}.trust li{transition:transform .25s,box-shadow .25s}.trust li:hover{transform:translateY(-3px)}.trust li:has(a){padding:0}.trust li a{padding:12px 18px}
+a.rv-c{display:block;color:inherit;text-decoration:none;transition:transform .25s,box-shadow .25s}a.rv-c:hover,a.rv-c:focus-visible{transform:translateY(-4px);box-shadow:0 0 0 2px var(--sun),0 24px 50px -36px rgba(0,0,0,.4)}.rv-by{display:block}.rv-by small{display:block}.rv-sum .rv-p{background:linear-gradient(90deg,var(--sun) var(--p),rgba(255,255,255,.25) var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
+.kg-list li:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+@media (max-width:899px){.season-ui button{min-height:40px}.ja-months button{min-height:40px}.hot{min-width:40px;min-height:40px}.sv-t span{min-width:0}.sv-t b{overflow-wrap:break-word;hyphens:auto}}
+.legal{padding:130px 0 80px;max-width:780px}.legal h2{font:800 20px/1.3 var(--disp);margin:32px 0 8px}.legal h1{margin-bottom:10px}.legal p{line-height:1.65;margin:0 0 12px}.legal a{color:var(--green)}.legal-f{padding:30px 0}.ftr p a{display:inline-block;padding:11px 0}.ftr-b a{display:inline-block;padding:11px 0}

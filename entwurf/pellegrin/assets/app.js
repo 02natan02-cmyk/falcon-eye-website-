@@ -99,7 +99,7 @@
   if (grid) {
     $$('.filters button').forEach(b => b.addEventListener('click', () => { $$('.filters button').forEach(x => x.classList.toggle('on', x === b)); const f = b.dataset.f; $$('.kc', grid).forEach(k => k.classList.toggle('hide', f !== '*' && !k.dataset.tags.includes(f))); if (f !== '*') { grid.classList.add('all'); const km = $('.k-more'); if (km) km.hidden = true; } hasG && ScrollTrigger.refresh(); }));
     const lb = document.createElement('div'); lb.className = 'lbx'; lb.hidden = true; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
-    lb.innerHTML = '<button class="lbx-x" aria-label="Schließen">×</button><div class="lbx-img"><img alt=""></div><div class="lbx-bar"><button data-p aria-label="Vorheriges Bild">←</button><div><b></b><p class="small" style="color:#cfc6ba;margin:4px 0 0"></p></div><a class="btn btn-copper sm" data-lp href="#">Ähnlich planen</a><a class="btn btn-wa sm" data-lw target="_blank" rel="noopener" href="#">So eine will ich</a><button data-n aria-label="Nächstes Bild">→</button></div>';
+    lb.innerHTML = '<button class="lbx-x" aria-label="Schließen">×</button><div class="lbx-img"><img alt=""></div><div class="lbx-bar"><button data-p aria-label="Vorheriges Bild">←</button><div><b></b><p class="small" style="color:#cfc6ba;margin:4px 0 0"></p></div><a class="btn btn-copper sm" data-lp href="planer.html">Ähnlich planen</a><a class="btn btn-wa sm" data-lw target="_blank" rel="noopener" href="https://wa.me/4917656791796">So eine will ich</a><button data-n aria-label="Nächstes Bild">→</button></div>';
     document.body.appendChild(lb);
     const cards = $$('.kc', grid); let ci = 0, ii = 0;
     const show = () => { const c = cards[ci], n = +c.dataset.n; $('img', lb).src = `img/k/${c.dataset.k}_${ii}.webp`; $('img', lb).alt = $('b', c).textContent; $('b', lb).textContent = $('b', c).textContent + (n > 1 ? ` · ${ii + 1}/${n}` : ''); $('p', lb).textContent = $('span', c).textContent; $('[data-lp]', lb).href = $('.kc-plan', c).getAttribute('href'); $('[data-lw]', lb).href = WA + '?text=' + encodeURIComponent('Hallo Herr Pellegrin, mir gefällt die Küche „' + $('b', c).textContent + '“ auf Ihrer Website. Können wir über so eine Küche für mich sprechen?'); };
@@ -151,7 +151,7 @@
   if (stp && hasG) { const lis = $$('li', stp); ScrollTrigger.create({ trigger: stp, start: 'top 75%', end: 'bottom 55%', scrub: true, onUpdate: s => { stp.style.setProperty('--p', s.progress); lis.forEach((l, i) => l.classList.toggle('on', s.progress >= i / lis.length + .02)); } }); }
 
   /* ---------- Marken ---------- */
-  const mk = $('[data-mk]'); if (mk) mk.addEventListener('input', () => $$('.mk-c').forEach(c => c.classList.toggle('on', +c.dataset.i === +mk.value)));
+  const mk = $('[data-mk]'); if (mk) mk.addEventListener('input', () => $$('.mk-c').forEach(c => c.classList.toggle('on', +c.dataset.i === +mk.value))); if (mk) $$('.mk-c').forEach(c => c.addEventListener('click', () => { mk.value = c.dataset.i; mk.dispatchEvent(new Event('input')); }));
 
   /* ---------- Termin ---------- */
   const tf = $('[data-termin]');

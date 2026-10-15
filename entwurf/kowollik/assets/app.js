@@ -558,6 +558,7 @@
     const close = () => { post.hidden = true; vid.pause(); };
     $$('.ig-tile', ph).forEach(t => t.addEventListener('click', () => open(+t.dataset.i)));
     $('.ig-back', ph).addEventListener('click', close);
+    const lbt = $('[data-ig-latest-btn]'); if (lbt) lbt.addEventListener('click', () => { open(0); ph.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
     const doLike = () => { like.classList.add('on'); like.textContent = '♥'; heart.classList.remove('pop'); void heart.offsetWidth; heart.classList.add('pop'); };
     like.addEventListener('click', () => { if (like.classList.contains('on')) { like.classList.remove('on'); like.textContent = '♡'; } else doLike(); });
     let lastTap = 0; $('.ig-media', ph).addEventListener('pointerup', () => { const n = Date.now(); if (n - lastTap < 320) doLike(); lastTap = n; });
