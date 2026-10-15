@@ -71,9 +71,9 @@
   const heroIn = () => { if (!hasG || reduce) return; gsap.from('.hero-c > *', { y: 46, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .09 }); gsap.from('.hud > span', { opacity: 0, duration: 1, delay: .4, stagger: .1 }); };
   if (intro) {
     const force = /[?&]intro/.test(location.search);
-    if (!hasG || reduce || (store.get('zh-intro2') && !force)) { intro.classList.add('gone'); heroIn(); }
+    if (!hasG || reduce || !force) { /* Intro nur noch mit ?intro – der Kirchturm-Flug ist der erste Eindruck */ intro.classList.add('gone'); heroIn(); }
     else {
-      store.set('zh-intro2', '1'); lenis && lenis.stop(); root.style.overflow = 'hidden';
+      intro.classList.remove('gone'); lenis && lenis.stop(); root.style.overflow = 'hidden';
       const cv = $('.ib', intro), ctx = cv.getContext('2d'), mark = $('.intro-mark', intro);
       let W, H, dpr = DPR(); const fit = () => { dpr = DPR(); W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; }; fit(); addEventListener('resize', fit);
       const S = () => Math.min(W, H);
@@ -221,7 +221,14 @@
     const sealX = () => W * (1 - seal);
     const add = (x, y, r) => drops.push({ x, y, r: r || (2.4 + Math.random() * 4.2) * dpr, vx: 0, vy: 0, life: 0 });
     $('[data-seal]').addEventListener('input', e => seal = +e.target.value / 100);
-    rain.addEventListener('pointerdown', e => { const r = rain.getBoundingClientRect(); for (let i = 0; i < 26; i++) add((e.clientX - r.left) * dpr + (Math.random() - .5) * 140 * dpr, (e.clientY - r.top) * dpr + (Math.random() - .5) * 100 * dpr); });
+    const sealIn = $('[data-seal]');
+    const shower = (cx, cy) => { const r = rain.getBoundingClientRect(); for (let i = 0; i < 26; i++) add((cx - r.left) * dpr + (Math.random() - .5) * 140 * dpr, (cy - r.top) * dpr + (Math.random() - .5) * 100 * dpr); };
+    let pd = null;
+    const setSealX = cx => { const r = rain.getBoundingClientRect(); seal = Math.max(0, Math.min(1, 1 - (cx - r.left) / r.width)); sealIn.value = Math.round(seal * 100); rain.classList.add('dragged'); };
+    rain.addEventListener('pointerdown', e => { pd = { x: e.clientX, y: e.clientY, drag: false, id: e.pointerId }; const r = rain.getBoundingClientRect(); if (Math.abs(e.clientX - (r.left + r.width * (1 - seal))) < 34) { pd.drag = true; try { rain.setPointerCapture(e.pointerId); } catch (_) {} setSealX(e.clientX); } });
+    rain.addEventListener('pointermove', e => { if (!pd) return; const dx = e.clientX - pd.x, dy = e.clientY - pd.y; if (!pd.drag && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { pd.drag = true; try { rain.setPointerCapture(e.pointerId); } catch (_) {} } if (pd.drag) setSealX(e.clientX); });
+    rain.addEventListener('pointerup', e => { if (pd && !pd.drag) shower(e.clientX, e.clientY); pd = null; });
+    rain.addEventListener('pointercancel', () => { pd = null; });
     $('[data-storm]').addEventListener('click', () => storm = 4.5);
     if (fine) rain.addEventListener('pointermove', e => { const r = rain.getBoundingClientRect(); const t = ((e.clientX - r.left) / r.width - .5) * 1.1; gx = Math.sin(t); gy = Math.cos(t); });
     rain.addEventListener('pointerleave', () => { gx = 0; gy = 1; });
@@ -237,6 +244,7 @@
       ctx.fillStyle = s; ctx.fillRect(0, 0, W, H);
       ctx.drawImage(wet, 0, 0);
       ctx.strokeStyle = 'rgba(63,224,229,.85)'; ctx.setLineDash([6 * dpr, 6 * dpr]); ctx.lineWidth = 2 * dpr; ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke(); ctx.setLineDash([]);
+      { const ky = H / 2, kr = 19 * dpr; ctx.fillStyle = 'rgba(63,224,229,.95)'; ctx.beginPath(); ctx.arc(sx, ky, kr, 0, 7); ctx.fill(); ctx.fillStyle = '#05262b'; ctx.font = `800 ${15 * dpr}px system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('‹ ›', sx, ky + dpr); }
     };
     const step = (t) => {
       requestAnimationFrame(step); if (!vis) return; const dt = Math.min(.05, (t - last) / 1000 || .016); last = t;
@@ -311,11 +319,12 @@
     const src = i => `seq/${dir}/f${String(i + 1).padStart(3, '0')}.webp`;
     let frames = new Array(N), cur = 0, shown = -1, started = false;
     const load = i => { if (frames[i]) return; const im = new Image(); im.decoding = 'async'; im.src = src(i); frames[i] = im; im.onload = () => { if (Math.abs(i - cur) < 4) draw(cur, true); }; };
-    const order = []; for (const s of [16, 8, 4, 2, 1]) for (let i = 0; i < N; i += s) if (!order.includes(i)) order.push(i);
+    const order = []; for (const s of [6, 3, 1]) for (let i = 0; i < N; i += s) if (!order.includes(i)) order.push(i);
     let oi = 0; const pump = () => { for (let k = 0; k < 5 && oi < order.length; k++, oi++) load(order[oi]); if (oi < order.length) setTimeout(pump, 70); };
     const start = () => { if (started) return; started = true; load(0); pump(); };
     onView(fpv, start, '1400px');
-    const size = () => { const d = DPR(); cv.width = cv.clientWidth * d; cv.height = cv.clientHeight * d; const nd = portrait() ? 'm' : 'd'; if (nd !== dir && started) { dir = nd; frames = new Array(N); oi = 0; load(cur); pump(); } draw(cur, true); };
+    let lw = 0, lh = 0;
+    const size = () => { const d = Math.min(DPR(), 2), w = Math.round(cv.clientWidth * d), h = Math.round(cv.clientHeight * d); if (w === lw && Math.abs(h - lh) < 160 * d && lw) return; lw = w; lh = h; cv.width = w; cv.height = h; const nd = portrait() ? 'm' : 'd'; if (nd !== dir && started) { dir = nd; frames = new Array(N); oi = 0; load(cur); pump(); } draw(cur, true); };
     const nearest = i => { for (let k = 0; k < N; k++) for (const j of [i - k, i + k]) if (j >= 0 && j < N && frames[j] && frames[j].complete && frames[j].naturalWidth) return frames[j]; return null; };
     function draw(i, force) { if (!force && i === shown) return; const im = nearest(i); if (!im) return; shown = i; const W = cv.width, H = cv.height, s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s; ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); }
     addEventListener('resize', size); size();
@@ -325,7 +334,9 @@
       fcs.forEach((f, i) => { const [a, b] = vis[i]; const o = p < a - .05 || p > b + .05 ? 0 : Math.min(1, (p - a + .05) / .06, (b + .05 - p) / .06); f.style.opacity = i === 0 && p < .04 ? 1 : Math.max(0, o); f.style.transform = `translateY(${(1 - Math.max(0, o)) * 30}px)`; });
       alt.textContent = Math.max(1, Math.round(p < .6 ? 12 - p * 10 : 6 - (p - .6) * 12)); hb.style.transform = `scaleX(${p})`;
     };
-    const onP = p => { cur = Math.min(N - 1, Math.max(0, Math.round(p * (N - 1)))); draw(cur); phase(p); };
+    let tgt = 0, fpos = 0, raf = 0;
+    const tick = () => { raf = 0; fpos += (tgt - fpos) * .22; if (Math.abs(tgt - fpos) < .05) fpos = tgt; cur = Math.round(fpos); draw(cur); if (fpos !== tgt) raf = requestAnimationFrame(tick); };
+    const onP = p => { tgt = Math.min(N - 1, Math.max(0, p * (N - 1))); if (!raf) raf = requestAnimationFrame(tick); phase(p); };
     if (hasG) ScrollTrigger.create({ trigger: fpv, start: 'top top', end: 'bottom bottom', scrub: true, onUpdate: s => onP(s.progress) });
     addEventListener('scroll', () => { const r = fpv.getBoundingClientRect(); const p = Math.min(1, Math.max(0, -r.top / (fpv.offsetHeight - innerHeight))); if (!hasG) onP(p); }, { passive: true });
     phase(0);
