@@ -124,3 +124,71 @@
   st.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
   st.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) show(cur + (dx < 0 ? 1 : -1)); });
 })();
+
+/* ===== Review 16.10.: Zeitstrahl „87 Tage“, Lichtschalter, Karte auf Klick, WhatsApp kompakt, Kopfzeile im Hero ===== */
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const once = (el, fn, opt) => { if (!el) return; if (!('IntersectionObserver' in window)) { fn(); return; } const o = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { o.disconnect(); fn(); } }, opt || { threshold: .45 }); o.observe(el); };
+
+  /* ---------- Handschrift: vom Rohbau (30. Juni, Tag 0) bis zur fertigen Küche (25. September, Tag 87) ---------- */
+  const tl = $('[data-hwtl]');
+  if (tl) {
+    const sec = tl.closest('.hw'), cards = $$('.hw-s', sec), track = $('.hw-steps', sec);
+    const num = $('[data-hwtl-n]', tl), unit = $('[data-hwtl-u]', tl), lab = $('[data-hwtl-l]', tl), bar = $('.hw-tl-bar', tl), ms = $$('.hw-tl-m', tl), band = $('.hw-tl-band', tl);
+    const STEPS = [{ d: 0, l: 'Aufmaß im Rohbau' }, { d: 10, l: 'Der 3D-Entwurf steht' }, { d: null, l: 'Montage im September' }, { d: 87, l: 'Fertig – derselbe Raum' }];
+    const AT = [0, 10, 63, 87]; // ab Tag 63 = 1. September
+    const bars = d => { bar.style.setProperty('--p', d / 87); ms.forEach(m => m.classList.toggle('on', d >= +m.dataset.d - .01)); band.classList.toggle('on', d >= 63); };
+    const lit = f => cards.forEach((c, i) => c.classList.toggle('lit', f(i)));
+    const txt = (n, i) => { if (n === null) { num.textContent = 'Sept.'; unit.textContent = ''; } else { num.textContent = n; unit.textContent = n === 1 ? 'Tag' : 'Tage'; } lab.textContent = STEPS[i].l; };
+    const mob = () => innerWidth <= 640;
+    sec.classList.add('tl-js');
+    if (mob() && track) {
+      // Handy: Wischen durch die Karten = Reise durch die Zeit
+      let cur = -1, shown = 0, raf = 0;
+      const go = i => {
+        if (i === cur) return; cur = i; lit(k => k === i);
+        const to = [0, 10, 75, 87][i], from = shown, sd = STEPS[i].d; cancelAnimationFrame(raf);
+        if (sd === null) txt(null, i);
+        if (RM) { shown = to; bars(to); if (sd !== null) txt(sd, i); return; }
+        const t0 = performance.now();
+        const f = now => { const t = Math.min(1, (now - t0) / 650), v = from + (to - from) * (1 - Math.pow(1 - t, 3)); shown = v; bars(v); if (sd !== null) txt(Math.round(sd === to ? v : sd), i); if (t < 1) raf = requestAnimationFrame(f); };
+        raf = requestAnimationFrame(f);
+      };
+      const pick = () => { const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : 1; let i = Math.round(track.scrollLeft / step); if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) i = cards.length - 1; go(Math.max(0, Math.min(cards.length - 1, i))); };
+      let q = 0; track.addEventListener('scroll', () => { if (!q) q = requestAnimationFrame(() => { q = 0; pick(); }); }, { passive: true });
+      go(0);
+    } else {
+      // Desktop: einmal von Tag 0 bis Tag 87 laufen, Karten leuchten nacheinander auf
+      const end = () => { bars(87); lit(() => true); txt(87, 3); bar.style.setProperty('--head', 0); };
+      if (RM) end();
+      else {
+        bars(0); lit(i => i === 0); txt(0, 0);
+        once(tl, () => {
+          const t0 = performance.now(), T = 3400; bar.style.setProperty('--head', 1);
+          const f = now => { const t = Math.min(1, (now - t0) / T), d = 87 * (1 - Math.pow(1 - t, 2.4)); const s = AT.reduce((a, v, i) => d >= v - .01 ? i : a, 0); bars(d); lit(i => i <= s); txt(Math.round(d), s); if (t < 1) requestAnimationFrame(f); else end(); };
+          requestAnimationFrame(f);
+        }, { threshold: .6 });
+      }
+    }
+  }
+
+  /* ---------- Pellegrin-Detail: Licht im Foto selbst schalten ---------- */
+  const lt = $('.lt');
+  if (lt && $('.lt-fx', lt)) {
+    const sw = $('.lt-sw', lt), bs = $$('[data-lt]', lt); let touched = false;
+    const set = (k, on) => { lt.classList.toggle(k === 'out' ? 'lo' : 'li', on); const b = bs.find(x => x.dataset.lt === k); if (b) b.setAttribute('aria-pressed', on ? 'true' : 'false'); };
+    lt.classList.add('fx'); if (sw) sw.hidden = false;
+    bs.forEach(b => b.addEventListener('click', () => { touched = true; set(b.dataset.lt, b.getAttribute('aria-pressed') !== 'true'); }));
+    if (RM) { set('out', true); set('in', true); }
+    else { set('out', false); set('in', false); once(lt, () => { setTimeout(() => { if (!touched) set('out', true); }, 600); setTimeout(() => { if (!touched) set('in', true); }, 1700); }, { threshold: .55 }); }
+  }
+
+  /* ---------- Karte erst auf Klick laden (keine Verbindung zu OpenStreetMap ohne Zustimmung) ---------- */
+  $$('[data-map]').forEach(m => { const b = $('[data-map-load]', m); if (!b) return; b.addEventListener('click', () => { const f = document.createElement('iframe'); f.title = m.dataset.title || 'Karte'; f.src = m.dataset.src; m.appendChild(f); m.classList.add('on'); f.setAttribute('tabindex', '0'); f.focus({ preventScroll: true }); }); });
+
+  /* ---------- WhatsApp-Knopf kompakt nach dem Einstieg, Kopfzeile im Hero hinterlegt ---------- */
+  const fab = $('.wa-fab'), hdr = $('.hdr'); let rq = 0;
+  const onS = () => { rq = 0; const y = scrollY; if (fab) fab.classList.toggle('mini', y > innerHeight * .85); if (hdr) hdr.classList.toggle('lift', y > 24); };
+  addEventListener('scroll', () => { if (!rq) rq = requestAnimationFrame(onS); }, { passive: true }); onS();
+})();

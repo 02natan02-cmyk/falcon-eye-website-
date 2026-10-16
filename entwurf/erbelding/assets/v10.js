@@ -488,4 +488,13 @@
     secs.forEach(function (s) { io.observe(s); });
     setTimeout(function () { eager(imgs); }, 6000);
   })();
+  /* ================= Review 16.10.: Karte auf Klick, Referenz-Symbole, WhatsApp kompakt ================= */
+  (function () {
+    $$('[data-map]').forEach(function (m) { var b = $('[data-map-load]', m); if (!b) return; b.addEventListener('click', function () { var f = document.createElement('iframe'); f.title = m.getAttribute('data-title') || 'Karte'; f.src = m.getAttribute('data-src'); m.appendChild(f); m.classList.add('on'); f.setAttribute('tabindex', '0'); try { f.focus({ preventScroll: true }); } catch (e) {} }); });
+    var refs = $('.refs');
+    if (refs) { if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) refs.classList.add('draw'); else { refs.classList.add('pre'); var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); refs.classList.add('draw'); } }, { threshold: .35 }); io.observe(refs); } }
+    var fab = $('.wa-fab'), rq = 0;
+    function onS() { rq = 0; if (fab) fab.classList.toggle('mini', window.scrollY > innerHeight * .85); }
+    if (fab) { window.addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(onS); }, { passive: true }); onS(); }
+  })();
 })();

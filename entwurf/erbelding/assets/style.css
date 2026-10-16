@@ -1139,3 +1139,70 @@ a.ex:hover{transform:translateY(-5px);box-shadow:0 30px 60px -36px rgba(16,38,74
 .gsw.on{box-shadow:0 0 0 2.5px var(--acc);transform:scale(1.08)}
 .sw-name{margin:4px 0 2px;font:700 13.5px/1.3 var(--body);color:var(--ink)}.sw-name b{color:var(--acc-d)}
 body.hs-open .concept{opacity:0;pointer-events:none;transition:opacity .3s}
+
+/* ===== Review 16.10.: Lesbarkeit, Zeitreise-Karten, Dorf-Raster, Referenzen, Schnäppchen, Karte, Entwurf-Hinweis, WhatsApp kompakt ===== */
+/* Kicker im hellen Arbeitshöhe-Block war fast unsichtbar (helle Schrift auf hellem Grund) */
+.ah .kick a{background:rgba(224,112,63,.12);color:var(--acc-d)}
+.ah .kick a:hover{background:var(--acc);color:#fff}
+/* Zeitreise: Karten ohne Zitat nicht mehr halb leer – Jahreszahl als Wasserzeichen, Link unten bündig */
+.zr-c{display:flex;flex-direction:column}
+.zr-t{position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden}
+.zr-t>*{position:relative;z-index:1}
+.zr-go{margin-top:auto;padding-top:16px;align-self:flex-start;font:700 13px var(--body);color:var(--acc-d);text-decoration:none}
+.zr-go:hover{text-decoration:underline}
+.zr-yr{position:absolute!important;z-index:0!important;right:-4px;bottom:-22px;font:800 clamp(78px,7vw,104px)/1 var(--disp);letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px rgba(16,38,74,.11);pointer-events:none;transition:-webkit-text-stroke-color .5s}
+.zr-c:hover .zr-yr{-webkit-text-stroke-color:rgba(224,112,63,.35)}
+/* Mitten in Limbach: letzte Karte füllt die Reihe als große Zitat-Karte */
+@media (min-width:561px){
+  .ort-c:nth-child(6){grid-column:1/-1;flex-direction:row;background:var(--blue);color:#fff}
+  .ort-c:nth-child(6) figure{position:relative;flex:0 0 40%;aspect-ratio:auto;min-height:300px;padding-top:0;height:auto}
+  .ort-c:nth-child(6) figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+  .ort-c:nth-child(6)>div{display:flex;flex-direction:column;justify-content:center;padding:clamp(26px,4vw,60px)}
+  .ort-c:nth-child(6) .ort-y{color:#ffb08c}
+  .ort-c:nth-child(6) h3{color:#fff}
+  .ort-c:nth-child(6) p{font:800 clamp(22px,2.3vw,32px)/1.25 var(--disp);letter-spacing:-.015em;color:#fff;max-width:26ch}
+  .ort-c:nth-child(6) .ort-go{color:#ffc2a3}
+}
+/* Referenzen: Anfrage-Links bündig unten, Symbole zeichnen sich beim Erscheinen */
+a.ref{display:flex;flex-direction:column}
+a.ref .ref-go{margin-top:auto;padding-top:14px}
+a.ref p:last-of-type{margin-bottom:0}
+.ref svg path{stroke-dasharray:240;stroke-dashoffset:0}
+.refs.pre .ref svg path{stroke-dashoffset:240}
+.refs.draw .ref svg path{animation:ref-draw 1.6s var(--ease) both}
+.refs.draw .ref:nth-child(2) svg path{animation-delay:.12s}.refs.draw .ref:nth-child(3) svg path{animation-delay:.24s}.refs.draw .ref:nth-child(4) svg path{animation-delay:.36s}.refs.draw .ref:nth-child(5) svg path{animation-delay:.48s}
+@keyframes ref-draw{from{stroke-dashoffset:240}to{stroke-dashoffset:0}}
+.ref:hover svg{transform:translateY(-3px) rotate(-4deg);transition:transform .4s var(--ease)}
+/* Schnäppchen: Texte im Video kollidieren nicht mehr mit der Beschriftung */
+.dl::after{background:linear-gradient(180deg,rgba(16,38,74,0) 22%,rgba(16,38,74,.55) 48%,rgba(16,38,74,.94) 74%)}
+/* Karte: erst auf Klick laden – Blaupausen-Look mit Radar */
+.map-c{position:relative;height:380px;border-radius:var(--r);overflow:hidden;background:#0d2142;border:1px solid var(--nline);isolation:isolate}
+.map-c::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(169,201,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(169,201,255,.08) 1px,transparent 1px),linear-gradient(rgba(169,201,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(169,201,255,.04) 1px,transparent 1px);background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:center}
+.map-scan{position:absolute;left:68%;top:50%;width:760px;height:760px;margin:-380px 0 0 -380px;border-radius:50%;background:conic-gradient(from 0deg,rgba(224,112,63,.28),rgba(224,112,63,0) 22%,transparent);animation:map-scan 6s linear infinite;-webkit-mask:radial-gradient(circle,#000 0,#000 60%,transparent 61%);mask:radial-gradient(circle,#000 0,#000 60%,transparent 61%)}
+.map-c::after{content:"";position:absolute;left:68%;top:50%;width:460px;height:460px;margin:-230px 0 0 -230px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(169,201,255,.16),0 0 0 70px rgba(169,201,255,0),0 0 0 71px rgba(169,201,255,.1);pointer-events:none}
+@keyframes map-scan{to{transform:rotate(360deg)}}
+.map-pin{position:absolute;left:68%;top:50%;width:46px;height:46px;margin:-46px 0 0 -23px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--acc);box-shadow:0 14px 30px -8px rgba(224,112,63,.8);z-index:2}
+.map-pin b{position:absolute;inset:0;display:grid;place-items:center;transform:rotate(45deg);color:#fff;font:800 20px var(--disp)}
+.map-pin i{position:absolute;left:50%;top:100%;width:16px;height:6px;margin:6px 0 0 -8px;border-radius:50%;background:rgba(0,0,0,.35);transform:rotate(45deg)}
+.map-in{position:absolute;left:clamp(16px,4vw,48px);top:50%;transform:translateY(-50%);max-width:420px;padding:26px 28px;border-radius:20px;background:rgba(255,253,249,.97);color:var(--ink);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);z-index:3}
+.map-in p{margin:0}
+.map-k{font:700 11.5px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--acc-d)}
+.map-a{margin:8px 0 2px!important;font-size:16px;color:var(--mute)}.map-a b{display:block;font:800 26px/1.1 var(--disp);letter-spacing:-.02em;color:var(--ink);margin-bottom:4px}
+.map-p{font-size:14px;color:var(--mute)}
+.map-in .ctas{margin-top:18px;gap:10px}.map-in .btn-line{color:var(--ink)}
+.map-n{margin-top:12px!important;font-size:12px;color:#7d8597}
+.map-c.on iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4}
+.map-c.on>:not(iframe){display:none}
+@media (max-width:700px){.map-c{height:auto;min-height:380px}.map-scan,.map-c::after,.map-pin{left:50%}.map-pin{top:96px}.map-scan,.map-c::after{top:72px}.map-in{position:relative;left:auto;top:auto;transform:none;margin:160px 14px 14px;max-width:none;padding:22px}.map-c.on{height:300px;min-height:0}}
+@media (prefers-reduced-motion:reduce){.map-scan,.refs.draw .ref svg path{animation:none}}
+/* Entwurf-Hinweis als schmale Lasche am linken Rand (deckt keine Buttons mehr ab) */
+@media (min-width:901px){
+  .concept{left:0;bottom:auto;top:50%;padding:14px 7px;border-radius:10px 0 0 10px;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-size:11px;letter-spacing:.04em;background:rgba(16,38,74,.82);transition:background .3s,padding .3s,opacity .3s}
+  .concept:hover{background:var(--blue);padding-left:11px}
+}
+/* WhatsApp-Knopf: nach dem Einstieg kompakt, beim Überfahren wieder mit Text */
+.wa-fab span{max-width:240px;overflow:hidden;white-space:nowrap;transition:max-width .45s var(--ease),opacity .3s}
+.wa-fab{transition:transform .3s var(--ease),padding .45s var(--ease),gap .45s var(--ease)}
+.wa-fab.mini{padding:0 15px;gap:0}.wa-fab.mini span{max-width:0;opacity:0}
+.wa-fab.mini:hover,.wa-fab.mini:focus-visible{padding:0 20px 0 16px;gap:10px}.wa-fab.mini:hover span,.wa-fab.mini:focus-visible span{max-width:240px;opacity:1}
+@media (max-width:700px){.zr-yr{font-size:124px;bottom:-30px;right:-8px}}
