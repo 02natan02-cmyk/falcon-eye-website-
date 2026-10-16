@@ -512,6 +512,8 @@ input,textarea{font:inherit}
   .saw-sec{height:460vh}
   .log{width:78%;right:-14%;top:18%;height:clamp(84px,20vw,150px)}
   .saw{width:clamp(130px,30vw,200px)}
+  .saw-sec .saw-hint{display:none}
+  .log{top:26%}
   .sl{grid-template-columns:1fr;justify-items:center;text-align:center;bottom:0;gap:12px}
   .sl-disc{width:clamp(170px,46vw,260px)}
   .sl-t{max-width:560px}
