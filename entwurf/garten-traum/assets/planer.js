@@ -283,7 +283,7 @@
   hzEl.addEventListener('pointerup', () => { hzDrag = null; hzEl.classList.remove('on'); persist(); });
 
   /* ---------- Ablage: antippen oder ins Bild ziehen ---------- */
-  $$('[data-cat]').forEach(b => b.addEventListener('click', () => { $$('[data-cat]').forEach(x => x.classList.toggle('on', x === b)); const c = b.dataset.cat; $$('[data-add]').forEach(t => t.hidden = !(c === 'all' || t.dataset.cat === c)); }));
+  $$('.pl-cats [data-cat]').forEach(b => b.addEventListener('click', () => { $$('.pl-cats [data-cat]').forEach(x => x.classList.toggle('on', x === b)); const c = b.dataset.cat; $$('[data-add]').forEach(t => t.hidden = !(c === 'all' || t.dataset.cat === c)); }));
   $$('[data-add]').forEach(t => {
     let st = null, ghost = null;
     t.addEventListener('pointerdown', e => { st = { x: e.clientX, y: e.clientY, id: e.pointerId, drag: false }; });

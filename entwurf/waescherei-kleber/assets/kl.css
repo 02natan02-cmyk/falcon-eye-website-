@@ -216,7 +216,7 @@ input,textarea{font:inherit}
 .sg-done{position:absolute;inset:18%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(11,29,71,.86);backdrop-filter:blur(4px);animation:pop .6s cubic-bezier(.2,1.6,.3,1)}
 .sg-done[hidden]{display:none}
 @keyframes pop{from{transform:scale(.5);opacity:0}}
-.sg-big{margin:0;font:900 clamp(30px,3.6vw,46px)/1 var(--fd);font-stretch:75%;color:var(--yellow)}
+.sg-done .sg-big{margin:0;font:900 clamp(30px,3.6vw,46px)/1 var(--fd);font-stretch:75%;color:var(--yellow)}
 .sg-done p{margin:6px 12px 12px;font-size:15px}
 .line{position:relative;height:110px;margin-top:20px}
 .line-rope{position:absolute;left:-10%;right:-10%;top:18px;height:2px;background:#d8dee9;border-radius:2px;transform:rotate(-1deg)}

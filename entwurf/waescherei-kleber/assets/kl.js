@@ -214,7 +214,7 @@
     let grab = null;
     const pt = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * W / r.height }; };
     cv.addEventListener('pointerdown', e => {
-      const p = pt(e), hit = Query.point(items, p)[0]; if (!hit) return;
+      const p = pt(e), hits = Query.point(items, p); let hit = hits[hits.length - 1]; if (!hit && opts.onPick) { let best = null, bd = 1e9; for (const b of items) { const d = Math.hypot(b.position.x - p.x, b.position.y - p.y); if (d < bd) { bd = d; best = b; } } if (bd < R * .14) hit = best; } if (!hit) return;
       if (opts.onPick) { opts.onPick(hit); return; }
       if (e.pointerType !== 'mouse') { Body.setVelocity(hit, { x: (Math.random() - .5) * 10, y: -10 }); return; }
       grab = Constraint.create({ pointA: p, bodyB: hit, pointB: { x: p.x - hit.position.x, y: p.y - hit.position.y }, stiffness: .2, damping: .1, length: 0 });
@@ -291,7 +291,7 @@
     const best = +store.get('kl-socks') || 0; if (best) bEl.textContent = fmt(best);
     let D;
     D = makeDrum(cv, { omega: .006, water: 0, baffles: 3, onPick: b => pick(b) });
-    if (!D) return;
+    if (!D) return; window.__klSocks = D;
     function fill() {
       D.items.slice().forEach(b => D.removeItem(b)); line.innerHTML = ''; sel.clear(); pairs = 0; pEl.textContent = '0 / 8';
       const list = []; SOCKS.forEach((s, i) => { list.push(i, i); }); list.sort(() => Math.random() - .5);
