@@ -25,8 +25,9 @@
   let S = { scene: 'rasen', hz: .4, depth: true, shadows: true, sun: 15, items: [] };
   let photo = null, sel = -1, W = 0, H = 0, DPR = Math.min(2, window.devicePixelRatio || 1);
   const hist = [];
+  let demo = false; // Beispiel-Möbel beim ersten Öffnen – verschwinden, sobald der Kunde selbst etwas hineinstellt
   const snap = () => { hist.push(JSON.stringify(S.items)); if (hist.length > 40) hist.shift(); };
-  const persist = () => { try { localStorage.setItem('gt-planer', JSON.stringify({ scene: S.scene === 'photo' ? 'rasen' : S.scene, hz: S.hz, depth: S.depth, shadows: S.shadows, sun: S.sun, items: S.items })); } catch (e) {} };
+  const persist = () => { try { localStorage.setItem('gt-planer', JSON.stringify({ scene: S.scene === 'photo' ? 'rasen' : S.scene, hz: S.hz, depth: S.depth, shadows: S.shadows, sun: S.sun, items: demo ? [] : S.items })); } catch (e) {} };
   try { const o = JSON.parse(localStorage.getItem('gt-planer') || 'null'); if (o && Array.isArray(o.items)) { S = Object.assign(S, o); S.items = S.items.filter(it => PROD[it.k]); } } catch (e) {}
   S.items.forEach(it => load(it.k));
 
@@ -188,7 +189,10 @@
   function placeTool() {
     if (sel < 0 || !S.items[sel]) { tool.hidden = true; return; }
     const g = geo(S.items[sel]); tool.hidden = false;
-    const tw = tool.offsetWidth || 260; tool.style.left = clamp(g.cx, tw / 2 + 6, W - tw / 2 - 6) + 'px'; tool.style.top = Math.max(54, g.y - 8) + 'px';
+    const tw = tool.offsetWidth || 260, th = tool.offsetHeight || 46; tool.style.left = clamp(g.cx, tw / 2 + 6, W - tw / 2 - 6) + 'px';
+    // über dem Möbel, sonst darunter, sonst oben am Bildrand – damit die Leiste das Stück nicht verdeckt
+    let top = g.y - 8; if (top - th < 4) { top = g.y + g.h + 14 + th; if (top > H - 4) top = Math.max(th + 6, Math.min(g.y - 8, H - 4)); }
+    tool.style.top = top + 'px';
     $('[data-bri]').value = S.items[sel].bri || 0;
   }
   function list() {
@@ -202,13 +206,20 @@
   /* ---------- Bearbeiten ---------- */
   let zc = S.items.reduce((m, it) => Math.max(m, it.z || 0), 0);
   function add(k, x, y) {
-    if (!PROD[k]) return; snap(); load(k);
+    if (!PROD[k]) return; if (demo) { demo = false; S.items = []; hist.length = 0; } snap(); load(k);
     const n = S.items.length; const beton = PROD[k].cat === 'beton';
     const it = { k, x: x ?? clamp(.5 + ((n % 5) - 2) * .12, .15, .85), y: y ?? clamp((beton ? .8 : .86) - (n % 3) * .05, S.hz + .1, .97), s: 1, flip: false, bri: 0, z: ++zc };
     S.items.push(it); sel = S.items.length - 1; persist(); draw();
     return it;
   }
   const pt = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+  // Handy: Wischen über leere Bildfläche scrollt die Seite weiter – nur wer ein Möbel (oder den Griff) berührt, verschiebt es
+  cv.addEventListener('touchstart', e => {
+    const t = e.touches[0], [px, py] = pt(t);
+    let grab = hit(px, py) >= 0 || (e.touches.length > 1 && sel >= 0);
+    if (!grab && sel >= 0) { const g = geo(S.items[sel]); grab = Math.hypot(px - (g.x + g.w), py - (g.y + g.h)) < 26; }
+    if (grab) e.preventDefault();
+  }, { passive: false });
   const ptrs = new Map(); let act = null;
   cv.addEventListener('pointerdown', e => {
     cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, pt(e));
@@ -216,7 +227,7 @@
     const [px, py] = pt(e);
     if (sel >= 0) { const g = geo(S.items[sel]); if (Math.hypot(px - (g.x + g.w), py - (g.y + g.h)) < 22) { snap(); act = { t: 'scale', s0: S.items[sel].s, d0: Math.hypot(px - g.cx, py - g.by) || 1, cx: g.cx, by: g.by }; return; } }
     const i = hit(px, py);
-    if (i >= 0) { sel = i; snap(); const it = S.items[i]; act = { t: 'move', dx: px - it.x * W, dy: py - it.y * H }; it.z = ++zc; }
+    if (i >= 0) { sel = i; snap(); demo = false; const it = S.items[i]; act = { t: 'move', dx: px - it.x * W, dy: py - it.y * H }; it.z = ++zc; }
     else { sel = -1; act = null; }
     draw();
   });
@@ -242,7 +253,7 @@
   });
   cv.tabIndex = 0;
   function act0(a) {
-    if (sel < 0) return; const it = S.items[sel]; snap();
+    if (sel < 0) return; const it = S.items[sel]; snap(); demo = false;
     if (a === 'flip') it.flip = !it.flip;
     if (a === 'front') it.z = ++zc;
     if (a === 'back') it.z = Math.min(...S.items.map(x => x.z)) - 1;
@@ -335,7 +346,7 @@
   document.addEventListener('gt-lang', () => { list(); });
 
   let rw = 0; addEventListener('resize', () => { if (stage.clientWidth !== rw) { rw = stage.clientWidth; resize(); } });
-  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); rw = stage.clientWidth; resize(); if (!S.items.length) { add('set4', .4, .86); add('adler', .78, .74); sel = -1; hist.length = 0; draw(); } } }, { rootMargin: '400px' });
+  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); rw = stage.clientWidth; resize(); if (!S.items.length) { add('set4', .4, .86); add('adler', .78, .74); sel = -1; hist.length = 0; demo = true; persist(); draw(); } } }, { rootMargin: '400px' });
   io.observe(stage);
   if (S.scene !== 'photo') $$('[data-scene]').forEach(x => x.classList.toggle('on', x.dataset.scene === S.scene)); else S.scene = 'rasen';
 })();

@@ -11,8 +11,8 @@
 
   /* ---------------- Sprache DE / PL ---------------- */
   const T = {
-    de: { open: 'Jetzt geöffnet', closed: 'Geschlossen', until: 'bis 18:30 Uhr', opens: 'öffnet', today: 'heute', tomorrow: 'morgen', mon: 'Montag', at: 'um', free: 'Lieferung kostenlos', cost: 'Lieferung ca.', ask: 'Preis für die Lieferung auf Anfrage', km: 'ca. {k} km Straße von Kirkel', min: 'Unter 1.000 € Einkaufswert: Lieferpreis bitte kurz anfragen.', yours: 'Ihr Ort', pick: 'Ort antippen oder Nadel setzen', sent: 'Danke! Ihre Anfrage ist angekommen.', askMsg: 'Hallo, ich interessiere mich für: {n}. Bitte um Preis und Verfügbarkeit.', dealMsg: 'Hallo, ich interessiere mich für Restposten / Sonderangebote. Was ist noch da?', toPlan: '„{n}“ steht jetzt in Ihrem Garten – ziehen Sie es an die richtige Stelle.' },
-    pl: { open: 'Teraz otwarte', closed: 'Zamknięte', until: 'do 18:30', opens: 'otwarcie', today: 'dziś', tomorrow: 'jutro', mon: 'w poniedziałek', at: 'o', free: 'Dostawa bezpłatna', cost: 'Dostawa ok.', ask: 'Cena dostawy na zapytanie', km: 'ok. {k} km drogą od Kirkel', min: 'Przy zakupach poniżej 1000 €: prosimy zapytać o cenę dostawy.', yours: 'Twoje miejsce', pick: 'Dotknij miejscowości albo postaw pinezkę', sent: 'Dziękujemy! Twoje zapytanie dotarło.', askMsg: 'Dzień dobry, interesuje mnie: {n}. Proszę o cenę i dostępność.', dealMsg: 'Dzień dobry, interesują mnie ostatnie sztuki / oferty specjalne. Co jeszcze jest dostępne?', toPlan: '„{n}” stoi teraz w Twoim ogrodzie – przeciągnij w odpowiednie miejsce.' }
+    de: { open: 'Jetzt geöffnet', closed: 'Geschlossen', until: 'bis 18:30 Uhr', opens: 'öffnet', today: 'heute', tomorrow: 'morgen', mon: 'Montag', at: 'um', free: 'Lieferung kostenlos', cost: 'Lieferung ca.', ask: 'Preis für die Lieferung auf Anfrage', km: 'ca. {k} km Straße von Kirkel', min: 'Unter 1.000 € Einkaufswert: Lieferpreis bitte kurz anfragen.', yours: 'Ihr Ort', pick: 'Ort antippen oder Nadel setzen', sent: 'Danke! Ihre Anfrage ist angekommen.', askMsg: 'Hallo, ich interessiere mich für: {n}. Bitte um Preis und Verfügbarkeit.', dealMsg: 'Hallo, ich interessiere mich für Restposten / Sonderangebote. Was ist noch da?', toPlan: '„{n}“ steht jetzt in Ihrem Garten – ziehen Sie es an die richtige Stelle.', gaMsg: 'Hallo, wir möchten eine Gaststube / einen Biergarten mit Massivholz einrichten. Bitte um einen Rückruf.' },
+    pl: { open: 'Teraz otwarte', closed: 'Zamknięte', until: 'do 18:30', opens: 'otwarcie', today: 'dziś', tomorrow: 'jutro', mon: 'w poniedziałek', at: 'o', free: 'Dostawa bezpłatna', cost: 'Dostawa ok.', ask: 'Cena dostawy na zapytanie', km: 'ok. {k} km drogą od Kirkel', min: 'Przy zakupach poniżej 1000 €: prosimy zapytać o cenę dostawy.', yours: 'Twoje miejsce', pick: 'Dotknij miejscowości albo postaw pinezkę', sent: 'Dziękujemy! Twoje zapytanie dotarło.', askMsg: 'Dzień dobry, interesuje mnie: {n}. Proszę o cenę i dostępność.', dealMsg: 'Dzień dobry, interesują mnie ostatnie sztuki / oferty specjalne. Co jeszcze jest dostępne?', toPlan: '„{n}” stoi teraz w Twoim ogrodzie – przeciągnij w odpowiednie miejsce.', gaMsg: 'Dzień dobry, chcemy urządzić salę / ogródek piwny meblami z litego drewna. Prosimy o kontakt.' }
   };
   let LANG = 'de';
   const tr = (k, o = {}) => (T[LANG][k] || T.de[k] || k).replace(/\{(\w+)\}/g, (m, x) => o[x] ?? m);
@@ -22,6 +22,8 @@
     document.documentElement.lang = LANG;
     $$('[data-pl]').forEach(el => { if (el.dataset.de === undefined) el.dataset.de = el.textContent; el.textContent = LANG === 'pl' ? el.dataset.pl : el.dataset.de; });
     $$('[data-plh]').forEach(el => { if (el.dataset.deh === undefined) el.dataset.deh = el.innerHTML; el.innerHTML = LANG === 'pl' ? el.dataset.plh : el.dataset.deh; });
+    $$('[data-pla]').forEach(el => { if (el.dataset.dea === undefined) el.dataset.dea = el.getAttribute('aria-label') || ''; el.setAttribute('aria-label', LANG === 'pl' ? el.dataset.pla : el.dataset.dea); });
+    $$('[data-plt]').forEach(el => { if (el.dataset.det === undefined) el.dataset.det = el.getAttribute('title') || ''; el.setAttribute('title', LANG === 'pl' ? el.dataset.plt : el.dataset.det); });
     $$('[data-lang]').forEach(b => { const on = b.dataset.lang === LANG; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     const fl = $('[data-flang]'); if (fl) fl.value = LANG.toUpperCase();
     if (!initial) store.set('gt-lang', LANG);
@@ -171,7 +173,7 @@
         ctx.save(); ctx.scale(SC, SC);
         if (t < 1.0 && Math.random() < .6) smoke.push({ x: (t / .72) * W * (.92 + Math.random() * .12), y: pad + Math.random() * lh * lines.length, r: 10 + Math.random() * 14, a: .16, vy: -.5 - Math.random() * .6, vx: (Math.random() - .5) * .4 });
         smoke = smoke.filter(p => (p.a -= .0025) > 0);
-        for (const p of smoke) { p.x += p.vx; p.y += p.vy; p.r += .35; const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r); g.addColorStop(0, `rgba(210,190,170,${p.a})`); g.addColorStop(1, 'rgba(210,190,170,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill(); }
+        for (const p of smoke) { p.x += p.vx; p.y += p.vy; p.r += .35; const ed = clamp(Math.min(W - p.x, p.x, p.y, H - p.y) / p.r, 0, 1), pa = p.a * ed * ed; const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r); g.addColorStop(0, `rgba(210,190,170,${pa})`); g.addColorStop(1, 'rgba(210,190,170,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill(); }
         ctx.restore();
         if (t < 1.08 || smoke.length) raf = requestAnimationFrame(step);
         else { ctx.putImageData(img, 0, 0); cv.classList.add('done'); }
@@ -192,35 +194,55 @@
   if (sawSec) {
     const log = $('[data-log]'), saw = $('.saw', sawSec), sl = $$('.sl', sawSec), prog = $$('[data-sp]', sawSec);
     const dust = $('[data-dust]', sawSec), dctx = dust.getContext('2d'), stage = $('[data-sawstage]', sawSec);
-    let parts = [], sawing = false, vis = false, lastK = -1;
+    let parts = [], sawing = false, vis = false, lastK = -1, base = [];
     inView(sawSec, v => vis = v);
-    function rsD() { const r = stage.getBoundingClientRect(); dust.width = r.width; dust.height = r.height; }
+    // unverschobene Lage jeder Scheibe (relativ zur Bühne) – einmal messen statt jedes Bild
+    function measure() {
+      const sr = stage.getBoundingClientRect();
+      base = sl.map(s => { const d = $('.sl-disc', s), t = d.style.transform; d.style.transform = 'none'; const r = d.getBoundingClientRect(); d.style.transform = t; return { x: r.left - sr.left + r.width / 2, y: r.top - sr.top + r.height / 2, w: r.width }; });
+    }
+    function rsD() { const r = stage.getBoundingClientRect(); dust.width = r.width; dust.height = r.height; measure(); }
     rsD(); addEventListener('resize', rsD);
+    const total = () => sawSec.offsetHeight - innerHeight;
+    // Stapel: ein Klick springt zum Kapitel
+    prog.forEach((b, i) => b.addEventListener('click', () => {
+      if (RM) { sl[i].scrollIntoView({ block: 'center' }); return; }
+      const n = sl.length, p = (i + .86) / (n * 1.04);
+      scrollTo({ top: sawSec.getBoundingClientRect().top + scrollY + p * total() + 2, behavior: 'smooth' });
+    }));
     function update() {
-      const r = sawSec.getBoundingClientRect(), total = sawSec.offsetHeight - innerHeight;
-      const p = clamp(-r.top / total, 0, 1), n = sl.length, f = p * n * 1.04;
+      const r = sawSec.getBoundingClientRect(), T = total();
+      const p = clamp(-r.top / T, 0, 1), n = sl.length, f = p * n * 1.04;
       const k = Math.min(n - 1, Math.floor(f)), u = clamp(f - k, 0, 1);
       log.style.transform = `translateX(${(k + (u > .45 ? 1 : 0)) * 3.2}%)`;
       sawing = u < .42 && p > 0 && p < 1;
       saw.classList.toggle('down', u < .42); saw.classList.toggle('run', sawing || u < .5);
       const sr = stage.getBoundingClientRect(), lr = log.getBoundingClientRect();
+      const lx = lr.left - sr.left, ly = lr.top - sr.top + lr.height / 2;
+      if (!base.length || !base[0].w) measure();
       sl.forEach((s, i) => {
-        const disc = $('.sl-disc', s), txt = $('.sl-t', s);
-        let o = 0, prog2 = 0;
-        if (i < k) { o = 0; } else if (i === k) { prog2 = clamp((u - .3) / .4, 0, 1); o = u < .3 ? 0 : 1; } else o = 0;
+        const disc = $('.sl-disc', s), txt = $('.sl-t', s), b = base[i] || { x: 0, y: 0, w: 1 };
+        let o = 0, prog2 = 0, fly = -1;
+        if (i === k) { prog2 = clamp((u - .3) / .4, 0, 1); o = u < .3 ? 0 : 1; }
+        else if (i === k - 1 && u < .3) { fly = clamp(u / .3, 0, 1); o = fly < .97 ? 1 : 0; } // vorige Scheibe rollt in den Stapel
         if (i === n - 1 && p >= .999) { prog2 = 1; o = 1; }
-        s.style.opacity = o; s.classList.toggle('on', o > .5);
-        if (o > 0) {
-          const dr = disc.getBoundingClientRect();
+        s.style.opacity = o; s.classList.toggle('on', o > .5 && fly < 0);
+        if (o > 0 && fly >= 0) {
+          const mr = $('i', prog[i]).getBoundingClientRect(), e2 = ease(fly);
+          const tx = lerp(0, mr.left - sr.left + mr.width / 2 - b.x, e2), ty = lerp(0, mr.top - sr.top + mr.height / 2 - b.y, e2) - Math.sin(e2 * Math.PI) * 80;
+          disc.style.transform = `translate(${tx}px,${ty}px) rotate(${lerp(0, -300, e2)}deg) scale(${lerp(1, mr.width / b.w, e2)})`;
+          txt.style.opacity = clamp(1 - fly * 3, 0, 1); txt.style.transform = 'none';
+        } else if (o > 0) {
           // Start: Stamm-Ende, Ziel: Endposition
-          const ex = (lr.left - dr.left) - dr.width * .45 + lr.width * 0, ey = (lr.top + lr.height / 2) - (dr.top + dr.height / 2);
+          const ex = lx - b.x, ey = ly - b.y;
           const e2 = ease(prog2);
           const tx = lerp(ex, 0, e2), ty = lerp(ey, 0, e2) - Math.sin(e2 * Math.PI) * 60;
-          disc.style.transform = `translate(${tx}px,${ty}px) perspective(800px) rotateY(${lerp(-78, 0, e2)}deg) rotate(${lerp(-14, 0, e2)}deg) scale(${lerp(lr.height / dr.height, 1, e2)})`;
-          txt.style.opacity = clamp((prog2 - .55) / .45, 0, 1); txt.style.transform = `translateY(${(1 - clamp((prog2 - .55) / .45, 0, 1)) * 20}px)`;
+          disc.style.transform = `translate(${tx}px,${ty}px) perspective(800px) rotateY(${lerp(-78, 0, e2)}deg) rotate(${lerp(-14, 0, e2)}deg) scale(${lerp(lr.height / b.w, 1, e2)})`;
+          const to = clamp((prog2 - .42) / .3, 0, 1);
+          txt.style.opacity = to; txt.style.transform = `translateY(${(1 - to) * 18}px)`;
         }
       });
-      prog.forEach((b, i) => b.classList.toggle('on', i < k || (i === k && u > .45) || p >= .999));
+      prog.forEach((b, i) => { b.classList.toggle('on', i < k - 1 || (i === k - 1 && u >= .29)); b.classList.toggle('cur', i === k && u >= .3); });
       if (k !== lastK) { lastK = k; }
       // Sägestaub
       if (sawing && vis) {
@@ -238,7 +260,7 @@
       }
       requestAnimationFrame(loop);
     }
-    if (RM) { sl.forEach(s => { s.style.opacity = 1; s.style.position = 'relative'; }); }
+    if (RM) { sl.forEach(s => { s.style.opacity = 1; s.style.position = 'relative'; }); prog.forEach(b => b.classList.add('on')); }
     else requestAnimationFrame(loop);
   }
 
@@ -246,7 +268,8 @@
   const board = $('[data-board]');
   let LBlist = [];
   if (board) {
-    const inner = $('[data-boardin]', board), items = $$('.pr', board), P = G.photos || [];
+    const inner = $('[data-boardin]', board), all = $$('.pr', board), P = G.photos || [];
+    let items = all.slice();
     let rows, rowH, pos = [], Wt = 0, off = 0, vel = 0, drag = null, moved = 0, hover = false, vis = false;
     inView(board, v => vis = v);
     function layout() {
@@ -254,7 +277,7 @@
       const xs = new Array(rows).fill(0); pos = [];
       const rnd = (i, s) => { const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return x - Math.floor(x); };
       items.forEach((it, i) => {
-        const ar = (P[i] && P[i][3]) || 1.33, ih = rowH * (.62 + rnd(i, 1) * .16), w = Math.min(ih * ar, innerWidth * (innerWidth < 640 ? .7 : .36));
+        const pi = +it.dataset.pr, ar = (P[pi] && P[pi][3]) || 1.33, ih = rowH * (.62 + rnd(i, 1) * .16), w = Math.min(ih * ar, innerWidth * (innerWidth < 640 ? .7 : .36));
         let r = 0; for (let j = 1; j < rows; j++) if (xs[j] < xs[r]) r = j;
         const x = xs[r] + 30 + rnd(i, 2) * 30, y = r * rowH + (rowH - ih - 36) * rnd(i, 3) + 14;
         it.style.setProperty('--w', w + 18 + 'px'); it.style.setProperty('--ar', w / ih); it.style.setProperty('--r', ((rnd(i, 4) - .5) * 7).toFixed(2) + 'deg');
@@ -263,14 +286,15 @@
       Wt = Math.max(...xs) + 40;
       render();
     }
+    let fits = false;
     function render() {
-      const vw = board.clientWidth;
+      const vw = board.clientWidth; fits = Wt <= vw;
       items.forEach((it, i) => {
-        let x = ((pos[i].x + off) % Wt + Wt) % Wt; if (x > vw + 60) x -= Wt;
+        let x = fits ? pos[i].x + (vw - Wt) / 2 : ((pos[i].x + off) % Wt + Wt) % Wt; if (!fits && x > vw + 60) x -= Wt;
         it.style.left = x + 'px'; it.style.top = pos[i].y + 'px';
       });
       let best = 0, bd = 1e9; const c = vw / 2;
-      items.forEach((it, i) => { let x = ((pos[i].x + off) % Wt + Wt) % Wt; const d = Math.abs(x + pos[i].w / 2 - c); if (d < bd) { bd = d; best = i; } });
+      items.forEach((it, i) => { let x = fits ? pos[i].x + (vw - Wt) / 2 : ((pos[i].x + off) % Wt + Wt) % Wt; const d = Math.abs(x + pos[i].w / 2 - c); if (d < bd) { bd = d; best = i; } });
       const bn = $('[data-bn]'); if (bn) bn.textContent = String(best + 1).padStart(2, '0');
     }
     board.addEventListener('pointerdown', e => { if (e.button) return; drag = { x: e.clientX, y: e.clientY, o: off, t: performance.now(), id: e.pointerId, axis: null }; moved = 0; vel = 0; });
@@ -285,17 +309,31 @@
     addEventListener('pointerup', up); addEventListener('pointercancel', up);
     board.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); off -= e.deltaX; render(); } }, { passive: false });
     board.addEventListener('pointerenter', () => hover = true); board.addEventListener('pointerleave', () => hover = false);
-    items.forEach((it, i) => it.addEventListener('click', e => { if (moved > 8) { e.preventDefault(); return; } openLB(i); }));
+    all.forEach(it => it.addEventListener('click', e => { if (moved > 8) { e.preventDefault(); return; } openLB(items.indexOf(it)); }));
+    // Filter: Board sortiert sich neu, Lightbox blättert nur durch die Auswahl
+    const btot = $('[data-btot]'), mkLB = () => { LBlist = items.map(it => { const p = P[+it.dataset.pr]; return { src: 'img/f/' + p[0] + '.webp', de: p[1], pl: p[2] }; }); };
+    $$('[data-pf]').forEach(b => b.addEventListener('click', () => {
+      const k = b.dataset.pf;
+      $$('[data-pf]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+      items = all.filter(it => k === 'all' || it.dataset.pc.split(' ').includes(k));
+      all.forEach(it => { const on = items.includes(it); it.hidden = !on; it.classList.remove('pop'); });
+      off = 0; vel = 0; layout(); mkLB(); if (btot) btot.textContent = items.length;
+      items.forEach((it, j) => { it.style.setProperty('--d', (j % 12) * 35 + 'ms'); void it.offsetWidth; it.classList.add('pop'); });
+    }));
+    // Bilder im Querscroller vorladen, sobald das Board in die Nähe kommt (nicht nur lazy)
+    inView(board, v => { if (v) all.forEach(it => { const im = $('img', it); if (im.loading === 'lazy') im.loading = 'eager'; }); }, '600px');
     $$('[data-bstep]').forEach(b => b.addEventListener('click', () => { const tgt = off - (+b.dataset.bstep) * Math.min(420, board.clientWidth * .6); const s = off; let t0; const an = ts => { if (!t0) t0 = ts; const k = clamp((ts - t0) / 600, 0, 1); off = lerp(s, tgt, ease(k)); render(); if (k < 1) requestAnimationFrame(an); }; requestAnimationFrame(an); }));
-    function loop() { if (vis && !drag) { if (Math.abs(vel) > .05) { off += vel; vel *= .95; render(); } else if (!hover && !RM) { off -= .35; render(); } } requestAnimationFrame(loop); }
+    function loop() { if (vis && !drag && !fits) { if (Math.abs(vel) > .05) { off += vel; vel *= .95; render(); } else if (!hover && !RM) { off -= .35; render(); } } requestAnimationFrame(loop); }
     layout(); addEventListener('resize', layout); requestAnimationFrame(loop);
-    LBlist = P.map(p => ({ src: 'img/f/' + p[0] + '.webp', de: p[1], pl: p[2] }));
+    mkLB();
   }
   /* Lightbox */
-  const lb = $('[data-lb]'); let lbi = 0;
+  const lb = $('[data-lb]'); let lbi = 0, lbBack = null;
   function showLB() { const it = LBlist[lbi]; if (!it) return; $('[data-lbimg]').src = it.src; $('[data-lbimg]').alt = it.de; $('[data-lbcap]').textContent = LANG === 'pl' ? it.pl : it.de; }
   function openLB(i) { lbi = i; showLB(); lb.hidden = false; document.body.style.overflow = 'hidden'; $('[data-lbx]').focus(); }
-  function closeLB() { lb.hidden = true; document.body.style.overflow = ''; }
+  function closeLB() { lb.hidden = true; document.body.style.overflow = ''; if (lbBack) { LBlist = lbBack; lbBack = null; } }
+  // eigene Bildfolge öffnen (z. B. Gastronomie), danach wieder der Rundgang
+  function openSet(keys, i) { const P = G.photos || []; lbBack = LBlist; LBlist = keys.map(k => { const p = P.find(x => x[0] === k) || [k, '', '']; return { src: 'img/f/' + k + '.webp', de: p[1], pl: p[2] }; }); openLB(i); }
   if (lb) {
     $('[data-lbx]').addEventListener('click', closeLB);
     lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
@@ -313,12 +351,12 @@
     inView(turn, v => vis = v);
     const keys = G.turn || [], prod = G.prod || {};
     function place() {
-      const W = turn.clientWidth, Hh = turn.clientHeight, R = Math.min(W * .5, 400), tilt = .26;
+      const W = turn.clientWidth, Hh = turn.clientHeight, R = Math.min(W * .4, 330), tilt = .26;
       disc.style.setProperty('--rot', (-A) + 'deg');
       let front = 0, fz = -2;
       its.forEach((it, i) => {
         const a = (A + i * step) * Math.PI / 180, x = Math.sin(a) * R, z = Math.cos(a);
-        const zz = (z + 1) / 2, sc = .24 + .76 * Math.pow(zz, 3), k = keys[i], pw = prod[k] ? prod[k].w : 230, bw = Math.min(W * .62, 470) * clamp(pw / 240, .75, 1.05);
+        const zz = (z + 1) / 2, sc = .24 + .76 * Math.pow(zz, 3), k = keys[i], pw = prod[k] ? prod[k].w : 230, bw = Math.min(W * .74, 560) * clamp(pw / 240, .78, 1.05);
         it.style.setProperty('--w', bw + 'px');
         it.style.transform = `translate(calc(-50% + ${x}px), calc(-100% + ${z * R * tilt}px)) scale(${sc})`;
         it.style.zIndex = Math.round(z * 100) + 100; it.style.opacity = (.12 + .88 * zz * zz).toFixed(2);
@@ -464,7 +502,7 @@
       }
       // flüssige Oberfläche beim Gießen
       if (fill > 0 && fill < 1) { x.fillStyle = 'rgba(230,228,220,.55)'; x.fillRect(OX, level - 2, BW, 3); }
-      pour.style.height = (fill > 0 && fill < 1 ? Math.max(10, (level - 0) / (puff.height || 600) * 100) : 0) + '%';
+      if (fill > 0 && fill < 1) { const vr = cast.querySelector('.cast-v').getBoundingClientRect(), cr = cv.getBoundingClientRect(); pour.style.height = Math.max(8, cr.top - vr.top + level - 86) + 'px'; } else pour.style.height = '0px';
       const st = p > .86 ? 3 : p > .46 ? 2 : p > .28 ? 1 : 0; steps.forEach((s, i) => s.classList.toggle('on', i <= st));
     }
     function loop() {
@@ -483,7 +521,7 @@
     const init = () => { build(); lastP = -1; };
     if (cimg.complete) init(); else cimg.addEventListener('load', init, { once: true });
     addEventListener('resize', () => { init(); });
-    if (RM) { shards = []; } else requestAnimationFrame(loop);
+    if (RM) { shards = []; steps.forEach(x => x.classList.add('on')); } else requestAnimationFrame(loop);
     $$('[data-fg]').forEach(b => b.addEventListener('click', () => {
       $$('[data-fg]').forEach(y => { y.classList.toggle('on', y === b); y.setAttribute('aria-pressed', y === b); });
       cimg.addEventListener('load', () => { init(); override = performance.now(); }, { once: true });
@@ -505,23 +543,25 @@
     const NS = 'http://www.w3.org/2000/svg', el = (n, a = {}, p = map) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
     const LON0 = 6.975, LAT0 = 49.455, S = 13.8, CL = Math.cos(49.3 * Math.PI / 180) * 111.32;
     const prj = (lat, lon) => [(lon - LON0) * CL * S, (LAT0 - lat) * 111.32 * S];
-    map.setAttribute('viewBox', '0 0 600 430'); const LEFT = ['Bexbach', 'Landstuhl', 'Waldmohr', 'Kirkel'];
+    map.setAttribute('viewBox', '0 0 600 430'); const LEFT = ['Landstuhl', 'Waldmohr', 'Kirkel', 'Neunkirchen', 'Spiesen-Elversberg'];
     const hav = (a, b) => { const R = 6371, dLa = (b[0] - a[0]) * Math.PI / 180, dLo = (b[1] - a[1]) * Math.PI / 180, x = Math.sin(dLa / 2) ** 2 + Math.cos(a[0] * Math.PI / 180) * Math.cos(b[0] * Math.PI / 180) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
     const shop = G.shop || [49.3244, 7.2873], [sx, sy] = prj(...shop);
     // Landschaft
     el('rect', { width: 600, height: 430, fill: '#e9e0cd' });
     [[49.29, 7.25, 60, 30], [49.40, 7.25, 70, 40], [49.22, 7.12, 55, 34], [49.38, 7.48, 80, 44], [49.20, 7.33, 50, 30], [49.46, 7.05, 60, 36]].forEach(([la, lo, rx, ry]) => { const [x, y] = prj(la, lo); el('ellipse', { cx: x, cy: y, rx, ry, fill: '#cfdcae', opacity: .7 }); });
-    const road = (pts, lbl) => { const d = pts.map((p, i) => { const [x, y] = prj(...p); return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }).join(' '); el('path', { d, fill: 'none', stroke: '#fff', 'stroke-width': 6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); el('path', { d, fill: 'none', stroke: '#e6b25f', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); const [lx, ly] = prj(...pts[Math.floor(pts.length / 2)]); const g = el('g', { transform: `translate(${lx} ${ly})` }); el('rect', { x: -13, y: -9, width: 26, height: 18, rx: 4, fill: '#2f5fb3' }, g); el('text', { x: 0, y: 4.5, 'text-anchor': 'middle', fill: '#fff', style: 'font:600 11px Familjen,sans-serif' }, g).textContent = lbl; };
-    road([[49.234, 6.996], [49.262, 7.06], [49.28, 7.12], [49.297, 7.21], [49.31, 7.29], [49.33, 7.34], [49.385, 7.36], [49.41, 7.52], [49.44, 7.77]], 'A6');
-    road([[49.346, 7.18], [49.33, 7.25], [49.30, 7.30], [49.27, 7.33], [49.249, 7.36]], 'A8');
+    const road = (pts, lbl, li) => { const d = pts.map((p, i) => { const [x, y] = prj(...p); return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }).join(' '); el('path', { d, fill: 'none', stroke: '#fff', 'stroke-width': 6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); el('path', { d, fill: 'none', stroke: '#e6b25f', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); const [lx, ly] = prj(...pts[li ?? Math.floor(pts.length / 2)]); const g = el('g', { transform: `translate(${lx} ${ly})` }); el('rect', { x: -13, y: -9, width: 26, height: 18, rx: 4, fill: '#2f5fb3' }, g); el('text', { x: 0, y: 4.5, 'text-anchor': 'middle', fill: '#fff', style: 'font:600 11px Familjen,sans-serif' }, g).textContent = lbl; };
+    road([[49.234, 6.996], [49.262, 7.06], [49.28, 7.12], [49.297, 7.21], [49.31, 7.29], [49.33, 7.34], [49.385, 7.36], [49.41, 7.52], [49.44, 7.77]], 'A6', 1);
+    road([[49.346, 7.18], [49.33, 7.25], [49.30, 7.30], [49.27, 7.33], [49.249, 7.36]], 'A8', 3);
     const ringR = 8 * S; el('circle', { cx: sx, cy: sy, r: ringR, class: 'ring' });
-    const rl = el('text', { x: sx + ringR * .72, y: sy - ringR * .72, style: 'font:500 11px Mono,monospace', fill: '#4f7a1e' }); rl.textContent = '10 km';
+    const rl = el('text', { x: sx, y: sy - ringR - 6, 'text-anchor': 'middle', style: 'font:500 11px Mono,monospace', fill: '#4f7a1e' }); rl.textContent = '10 km';
     const route = el('path', { class: 'route', d: '' });
     const truck = el('g', { opacity: 0 }); el('rect', { x: -11, y: -9, width: 15, height: 10, rx: 2, fill: '#c4843f' }, truck); el('path', { d: 'M4 -6 h5 l4 4 v3 h-9z', fill: '#1d140d' }, truck); el('circle', { cx: -7, cy: 2, r: 2.6, fill: '#1d140d' }, truck); el('circle', { cx: 8, cy: 2, r: 2.6, fill: '#1d140d' }, truck);
     const towns = [];
-    (G.orte || []).forEach(([n, la, lo]) => { const [x, y] = prj(la, lo); if (x < 4 || x > 596 || y < 4 || y > 426) return; const g = el('g', { class: 'town', tabindex: 0, role: 'button', 'aria-label': n }); el('circle', { cx: x, cy: y, r: 5 }, g); const lf = LEFT.includes(n); const tt = el('text', { x: lf ? x - 8 : x + 8, y: y + 4, 'text-anchor': lf ? 'end' : 'start' }, g); tt.textContent = n; g.addEventListener('click', ev => { ev.stopPropagation(); pick([la, lo], n, g); }); g.addEventListener('keydown', ev => { if (ev.key === 'Enter') pick([la, lo], n, g); }); towns.push(g); });
-    const shopG = el('g', { class: 'shop' }); el('circle', { cx: sx, cy: sy, r: 13, fill: '#fff' }, shopG); el('circle', { cx: sx, cy: sy, r: 9 }, shopG); el('path', { d: `M${sx} ${sy - 5} l4 6 h-8z`, fill: '#9cc25a' }, shopG); el('rect', { x: sx - 118, y: sy - 34, width: 108, height: 24, rx: 12, fill: '#244726' }, shopG); const stx = el('text', { x: sx - 64, y: sy - 17, 'text-anchor': 'middle', fill: '#fff', style: 'font:400 14px Gloock,serif' }, shopG); stx.textContent = 'Garten-Traum';
+    (G.orte || []).forEach(([n, la, lo]) => { const [x, y] = prj(la, lo); if (x < 4 || x > 596 || y < 4 || y > 426) return; const g = el('g', { class: 'town', tabindex: 0, role: 'button', 'aria-label': n }); el('circle', { cx: x, cy: y, r: 17, class: 'hit' }, g); el('circle', { cx: x, cy: y, r: 5 }, g); const lf = LEFT.includes(n); const tt = el('text', { x: lf ? x - 8 : x + 8, y: y + 4, 'text-anchor': lf ? 'end' : 'start' }, g); tt.textContent = n; g.addEventListener('click', ev => { ev.stopPropagation(); pick([la, lo], n, g); }); g.addEventListener('keydown', ev => { if (ev.key === 'Enter') pick([la, lo], n, g); }); towns.push(g); });
+    const shopG = el('g', { class: 'shop' }); el('circle', { cx: sx, cy: sy, r: 13, fill: '#fff' }, shopG); el('circle', { cx: sx, cy: sy, r: 9 }, shopG); el('path', { d: `M${sx} ${sy - 5} l4 6 h-8z`, fill: '#9cc25a' }, shopG); el('rect', { x: sx + 12, y: sy + 9, width: 108, height: 24, rx: 12, fill: '#244726' }, shopG); el('path', { d: `M${sx + 8} ${sy + 6} l14 5 l-6 6z`, fill: '#244726' }, shopG); const stx = el('text', { x: sx + 66, y: sy + 26, 'text-anchor': 'middle', fill: '#fff', style: 'font:400 14px Gloock,serif' }, shopG); stx.textContent = 'Garten-Traum';
     const pin = el('g', { opacity: 0 }); el('path', { d: 'M0 0 C -9 -12 -9 -24 0 -24 C 9 -24 9 -12 0 0 Z', fill: '#ff6a1a', stroke: '#fff', 'stroke-width': 2 }, pin); el('circle', { cx: 0, cy: -16, r: 3.4, fill: '#fff' }, pin);
+    // Handy: Ausschnitt um Kirkel vergrößern, damit Orte lesbar und antippbar bleiben
+    const fitVB = () => map.setAttribute('viewBox', innerWidth < 640 ? '12 56 500 340' : '0 0 600 430'); fitVB(); addEventListener('resize', fitVB);
     let sel = null, an;
     const wert = $('[data-wert]'), wo = $('[data-wo]'), res = $('[data-dres]'), sub = $('[data-dsub]');
     const fmt = n => n.toLocaleString(LANG === 'pl' ? 'pl-PL' : 'de-DE');
@@ -568,6 +608,10 @@
     $('#kontakt').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
   }
   window.GTprefill = prefill;
+  const GA = ['gastro_saal', 'gastro_bar', 'gastro_kamin', 'gastro_raum2', 'gastro_raum1', 'vogelbach'];
+  $$('[data-ga]').forEach(b => b.addEventListener('click', () => openSet(GA, Math.max(0, GA.indexOf(b.dataset.ga)))));
+  const gaAll = $('[data-gaall]'); if (gaAll) gaAll.addEventListener('click', () => openSet(GA, 0));
+  const gaAsk = $('[data-gaask]'); if (gaAsk) gaAsk.addEventListener('click', e => { e.preventDefault(); prefill(tr('gaMsg'), ['Gastronomie']); });
   $$('[data-deal]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); prefill(tr('dealMsg'), ['Restposten / Sonderangebote']); }));
   if (form) {
     form.addEventListener('submit', async e => {
@@ -586,7 +630,13 @@
 
   /* ---------------- Dock ---------------- */
   const dock = $('[data-dock]');
-  if (dock) { const pl = $('#planer'); inView(pl, v => $$('a', dock)[1].classList.toggle('on', !v), '0px'); }
+  if (dock) {
+    const pl = $('#planer'); inView(pl, v => $$('a', dock)[1].classList.toggle('on', !v), '0px');
+    // beim Gestalten im Planer und im Formular macht die Leiste Platz
+    const stg = $('[data-stage]'), kf = $('[data-kf]'); let a = false, b2 = false;
+    const upd = () => dock.classList.toggle('away', a || b2);
+    inView(stg, v => { a = v; upd(); }, '-25% 0px'); inView(kf, v => { b2 = v; upd(); }, '-20% 0px');
+  }
 
   setLang(startLang, true);
 })();
