@@ -149,12 +149,12 @@
       cx.beginPath(); cx.moveTo(60, 360); cx.bezierCurveTo(160, 300, 260, 330, 330, 240); cx.stroke();
       // links: offenes Eichenregal mit Gläsern
       rr(0, 156, 250, 12, 2, '#b5835a'); cx.fillStyle = '#93673f'; cx.fillRect(0, 166, 250, 3);
-      [[30, 112, 34, 44, '#e9dccb'], [74, 124, 26, 32, '#c0673f'], [112, 100, 30, 56, '#efe6d8'], [170, 118, 40, 38, '#7d8c75']].forEach(function (j) { rr(j[0], j[1], j[2], j[3], 6, j[4]); cx.fillStyle = 'rgba(255,255,255,.18)'; cx.fillRect(j[0] + 4, j[1] + 6, 4, j[3] - 12); });
+      [[30, 112, 34, 44, '#e9dccb'], [74, 124, 26, 32, '#7f7d4c'], [112, 100, 30, 56, '#efe6d8'], [170, 118, 40, 38, '#7d8c75']].forEach(function (j) { rr(j[0], j[1], j[2], j[3], 6, j[4]); cx.fillStyle = 'rgba(255,255,255,.18)'; cx.fillRect(j[0] + 4, j[1] + 6, 4, j[3] - 12); });
       // rechts: Oberschrank Anthrazit mit Eichenkante
       rr(W - 240, 34, 240, 150, 4, '#3a3633'); cx.fillStyle = '#b5835a'; cx.fillRect(W - 240, 178, 240, 6);
       cx.fillStyle = 'rgba(255,214,170,.55)'; cx.fillRect(W - 232, 186, 224, 3);
       // Haube
-      if (mode === 'haube') { cx.fillStyle = '#3d3936'; cx.fillRect(404, 0, 52, 84); cx.beginPath(); cx.moveTo(318, 142); cx.lineTo(542, 142); cx.lineTo(474, 82); cx.lineTo(386, 82); cx.closePath(); cx.fillStyle = '#4a4542'; cx.fill(); cx.fillStyle = '#c0673f'; cx.fillRect(326, 138, 208, 4); }
+      if (mode === 'haube') { cx.fillStyle = '#3d3936'; cx.fillRect(404, 0, 52, 84); cx.beginPath(); cx.moveTo(318, 142); cx.lineTo(542, 142); cx.lineTo(474, 82); cx.lineTo(386, 82); cx.closePath(); cx.fillStyle = '#4a4542'; cx.fill(); cx.fillStyle = '#7f7d4c'; cx.fillRect(326, 138, 208, 4); }
       // Arbeitsplatte Keramik hell + Unterschrank (aufgeschnitten)
       cx.fillStyle = '#ece6dc'; cx.fillRect(0, 360, W, 18); cx.fillStyle = '#cfc6b8'; cx.fillRect(0, 374, W, 4);
       rr(0, 378, W, 202, 0, '#2c2927');
@@ -176,22 +176,22 @@
         rr(408, 386, 44, 22, 5, '#d98c62'); pill('Fettfilter', 462, 397, 'rgba(246,241,233,.92)', '#1c1a17');
         rr(500, 452, 80, 36, 10, '#cfc6b8'); cx.save(); cx.translate(540, 470); cx.rotate(performance.now() / 120 * (level / 6)); cx.fillStyle = '#4a4440'; for (var b = 0; b < 5; b++) { cx.rotate(Math.PI * 2 / 5); cx.fillRect(-2, -14, 4, 14); } cx.restore(); pill('Gebläse', 590, 470, 'rgba(246,241,233,.92)', '#1c1a17');
         if (luft === 'umluft') { rr(560, 574, 90, 28, 6, '#1d1a18'); for (var h = 0; h < 8; h++) { cx.fillStyle = '#433d39'; cx.fillRect(566 + h * 10, 578, 6, 20); } pill('Aktivkohle', 560, 556, 'rgba(246,241,233,.92)', '#1c1a17'); txt(FS > 1.3 ? 'saubere Luft →' : 'gereinigte Luft zurück in die Küche →', 790, 615, '#f6efe6', 12, 'right'); }
-        else { cx.fillStyle = '#d9cfc0'; cx.fillRect(770, 360, 30, 250); cx.fillStyle = 'rgba(0,0,0,.12)'; for (var z = 0; z < 12; z++) cx.fillRect(770, 368 + z * 20, 30, 1.5); txt('Außenwand', 762, 446, '#f0b896', 12, 'right'); txt('nach draußen →', 762, 500, '#f6efe6', 13, 'right'); }
+        else { cx.fillStyle = '#d9cfc0'; cx.fillRect(770, 360, 30, 250); cx.fillStyle = 'rgba(0,0,0,.12)'; for (var z = 0; z < 12; z++) cx.fillRect(770, 368 + z * 20, 30, 1.5); txt('Außenwand', 762, 446, '#d5d8bf', 12, 'right'); txt('nach draußen →', 762, 500, '#f6efe6', 13, 'right'); }
       }
       var ig = cx.createRadialGradient(340, 356, 4, 340, 356, 90); var pul = .45 + .1 * Math.sin(performance.now() / 300) + level / 30; ig.addColorStop(0, 'rgba(255,110,60,' + pul + ')'); ig.addColorStop(1, 'rgba(255,110,60,0)'); cx.fillStyle = ig; cx.fillRect(250, 340, 180, 22);
       // Kupfertopf
-      var gp = cx.createLinearGradient(284, 0, 396, 0); gp.addColorStop(0, '#9c4f2c'); gp.addColorStop(.45, '#e09a70'); gp.addColorStop(1, '#a2532f'); cx.fillStyle = gp; rr(284, 300, 112, 52, 6, gp);
-      cx.fillStyle = '#f0b896'; cx.fillRect(282, 298, 116, 6); cx.fillStyle = '#7a5a46'; cx.fillRect(266, 310, 18, 5); cx.fillRect(396, 310, 18, 5);
+      var gp = cx.createLinearGradient(284, 0, 396, 0); gp.addColorStop(0, '#9c4f2c'); gp.addColorStop(.45, '#e09a70'); gp.addColorStop(1, '#5f5d36'); cx.fillStyle = gp; rr(284, 300, 112, 52, 6, gp);
+      cx.fillStyle = '#d5d8bf'; cx.fillRect(282, 298, 116, 6); cx.fillStyle = '#7a5a46'; cx.fillRect(266, 310, 18, 5); cx.fillRect(396, 310, 18, 5);
       // Dampf
       for (var j = 0; j < parts.length; j++) { var p = parts[j], gg = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r); var al = p.a * (mode === 'abzug' ? .62 : .78); gg.addColorStop(0, 'rgba(255,248,240,' + al + ')'); gg.addColorStop(1, 'rgba(255,248,240,0)'); cx.fillStyle = gg; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.3); cx.fill(); }
       cx.lineCap = 'round'; for (j = 0; j < flow.length; j++) { var f = flow[j], q = pathPt(f.P, f.t); if (f.P !== HOOD && f.t > .03) { var q0 = pathPt(f.P, f.t - .03); cx.strokeStyle = f.P === PATH_U && f.t > .78 ? 'rgba(190,220,180,.35)' : 'rgba(240,184,150,.35)'; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(q0[0], q0[1]); cx.lineTo(q[0], q[1]); cx.stroke(); } var clean = f.P === PATH_U && f.t > .78; cx.fillStyle = f.P === HOOD ? 'rgba(255,248,240,.7)' : (f.t < .2 ? 'rgba(255,248,240,.85)' : clean ? 'rgba(190,220,180,.95)' : 'rgba(240,184,150,.9)'); cx.beginPath(); cx.arc(q[0] + (Math.random() - .5) * 4, q[1] + (Math.random() - .5) * 4, 3.2, 0, 6.3); cx.fill(); }
       if (haze > .01) { cx.fillStyle = 'rgba(214,204,192,' + (haze * .42) + ')'; cx.fillRect(0, 0, W, 360); }
       // Geschwindigkeit
       arrow(252, 282, 252, 232, '#f6efe6'); pill('Dunst steigt: ≤ 1 m/s', 252, 214, 'rgba(28,26,23,.75)', '#f6efe6', 'right');
-      if (mode === 'abzug') { arrow(476, 296, 448, 340, '#f0b896'); pill('ca. 4 m/s nach unten', 486, 290, '#c0673f', '#fff'); }
+      if (mode === 'abzug') { arrow(476, 296, 448, 340, '#d5d8bf'); pill('ca. 4 m/s nach unten', 486, 290, '#7f7d4c', '#fff'); }
       else { var ht = FS > 1.3 ? 'Der Rest bleibt im Raum.' : 'Was die Haube nicht erwischt, bleibt im Raum.'; pill(ht, 790, 300, 'rgba(28,26,23,.86)', '#f6efe6', 'right'); }
       var bt = mode === 'abzug' ? 'Kochfeldabzug · ' + (luft === 'umluft' ? 'Umluft' : 'Abluft') : 'Dunsthaube'; cx.font = 'italic 400 ' + (17 * FS) + 'px Fraunces, Georgia, serif'; var bw = cx.measureText(bt).width + 30;
-      var bh = 18 + 16 * FS; rr(W - bw - 16, 14, bw, bh, 8, mode === 'abzug' ? 'rgba(192,103,63,.95)' : 'rgba(246,241,233,.95)'); cx.fillStyle = mode === 'abzug' ? '#fff' : '#1c1a17'; cx.textAlign = 'left'; cx.fillText(bt, W - bw - 1, 14 + bh / 2 + 6 * FS);
+      var bh = 18 + 16 * FS; rr(W - bw - 16, 14, bw, bh, 8, mode === 'abzug' ? 'rgba(127,125,76,.95)' : 'rgba(246,241,233,.95)'); cx.fillStyle = mode === 'abzug' ? '#fff' : '#1c1a17'; cx.textAlign = 'left'; cx.fillText(bt, W - bw - 1, 14 + bh / 2 + 6 * FS);
     }
     function loop(t) { var dt = Math.min(3, (t - (last || t)) / 16.7); last = t; step(dt); draw(); if (run) raf = requestAnimationFrame(loop); }
     function setCap() { cap.textContent = mode === 'haube' ? 'Mit Haube zieht der Dunst erst an Gesicht und Oberschrank vorbei nach oben – was am Rand vorbeigeht, verteilt sich in der Küche.' : luft === 'umluft' ? 'Umluft: erst Fettfilter, dann Aktivkohle – die gereinigte Luft kommt unten am Sockel zurück in die Küche.' : 'Abluft: Der Dunst läuft durch einen Kanal im Unterschrank nach draußen.'; }

@@ -1,4 +1,4 @@
-/* KI-Vorschau: Vorher/Nachher + Stil-Chips + Anfrage */
+/* Ihre Küche in Ihrem Raum: Vorher/Nachher-Beispiele aus der Foto-Projektion + Stil-Chips */
 (function () {
   'use strict';
   document.querySelectorAll('.ki').forEach(sec => {
@@ -6,7 +6,7 @@
     if (ba && r) { const set = v => ba.style.setProperty('--p', v + '%'); r.addEventListener('input', () => set(r.value));
       // sanftes Einladen: einmal hin und her wischen, wenn sichtbar
       const io = new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; io.disconnect(); if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; let t0 = null; const step = t => { t0 = t0 || t; const k = (t - t0) / 2200; if (k >= 1) { set(52); r.value = 52; return; } const v = 52 + Math.sin(k * Math.PI * 2) * 34; set(v); r.value = v; requestAnimationFrame(step); }; setTimeout(() => requestAnimationFrame(step), 400); }, { threshold: .5 }); io.observe(ba); }
-    const pre = {}; sec.querySelectorAll('[data-ki]').forEach(b => { const src = img.src.replace(/[^/]+\.webp$/, b.dataset.ki + '.webp'); pre[b.dataset.ki] = src; (new Image()).src = src;
+    const pre = {}; sec.querySelectorAll('[data-ki]').forEach(b => { const src = img.src.replace(/[^/?]+\.webp(\?[^#]*)?$/, b.dataset.ki + '.webp$1'); pre[b.dataset.ki] = src; (new Image()).src = src;
       b.addEventListener('click', () => { sec.querySelectorAll('[data-ki]').forEach(x => x.classList.toggle('on', x === b)); img.animate ? img.animate([{ opacity: .2, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0)' }], { duration: 500, easing: 'ease-out' }) : 0; img.src = src;
         const rad = sec.querySelector(`input[name="Stil"][value="${b.textContent}"]`); if (rad) rad.checked = true; const sm = sec.querySelector('[data-kidet] summary span'); if (sm) sm.textContent = '📷 Meinen Raum in „' + b.textContent + '“ zeigen'; }); });
     const f = sec.querySelector('[data-kiform]'); if (!f) return;

@@ -5,7 +5,7 @@
   const hasG = !!(window.gsap && window.ScrollTrigger); if (hasG) gsap.registerPlugin(ScrollTrigger);
   const page = root.dataset.page;
   const store = { get(k) { try { return sessionStorage.getItem(k) } catch (e) { return null } }, set(k, v) { try { sessionStorage.setItem(k, v) } catch (e) {} } };
-  const TEL = '+4968519397460', MAIL = 'info@kueche-ruppenthal.de', WA = 'https://wa.me/4917656791796';
+  const TEL = '+4968519397460', MAIL = 'info@pellegrin-kuechenstudio.de', WA = 'https://wa.me/4917656791796';
   const onView = (el, fn, margin = '300px') => { if (!el) return; let d = false; const go = () => { if (!d) { d = true; fn(); } }; const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: margin }); io.observe(el); const chk = () => { if (d) return removeEventListener('scroll', chk); const r = el.getBoundingClientRect(); if (r.top < innerHeight + 300 && r.bottom > -300) go(); }; addEventListener('scroll', chk, { passive: true }); setTimeout(chk, 400); };
   const toast = t => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); };
 
@@ -22,7 +22,7 @@
   $$('.mnav a').forEach(a => a.addEventListener('click', () => { root.classList.remove('menu-open'); lenis && lenis.start(); }));
 
   /* ---------- Öffnungszeiten ---------- */
-  const HRS = { 1: [600, 1080], 2: [600, 1080], 3: [600, 840], 4: [600, 1080], 5: [600, 1080], 6: [540, 720] };
+  const HRS = { 1: [600, 990], 2: [600, 990], 3: [600, 840], 4: [600, 990], 5: [600, 990], 6: [540, 720] };
   const DN = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
   const fmt = m => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`.replace(':00', '');
   const berlin = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()).map(x => [x.type, x.value])); return { d: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday), m: (+p.hour % 24) * 60 + +p.minute }; };
@@ -45,9 +45,9 @@
   const heroIn = () => { if (!hasG || reduce) return; gsap.from('.hero-c > *', { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1 }); gsap.fromTo('.hero-pic img', { scale: 1.06 }, { scale: 1, duration: 2.4, ease: 'power2.out' }); };
   if (intro) {
     const force = /[?&]intro/.test(location.search);
-    if (!hasG || reduce || (store.get('pel-intro2') && !force)) { intro.classList.add('gone'); heroIn(); }
+    if (!hasG || reduce || (store.get('pel-intro3') && !force)) { intro.classList.add('gone'); heroIn(); }
     else {
-      store.set('pel-intro2', '1'); lenis && lenis.stop(); root.style.overflow = 'hidden';
+      store.set('pel-intro3', '1'); lenis && lenis.stop(); root.style.overflow = 'hidden';
       const port = innerHeight > innerWidth * 1.05, sk = $(port ? '.sk-m' : '.sk-d', intro); $(port ? '.sk-d' : '.sk-m', intro).remove(); sk.style.display = 'block';
       const lines = $$('polyline', sk), hole = $('.sk-hole', sk), vb = sk.viewBox.baseVal, R = Math.hypot(vb.width, vb.height) * .62;
       gsap.set(lines, { strokeDasharray: 1, strokeDashoffset: 1 });
@@ -67,16 +67,15 @@
         .to('.in-old', { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, 5.9)
         .to('.in-arrow', { opacity: 1, duration: .5 }, 6.4)
         .to('.in-old', { opacity: .35, filter: 'grayscale(1) blur(1px)', duration: .8 }, 6.6)
-        .to(L, { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 6.6)
-        .to(L.querySelectorAll('.pm-box,.pm-stem'), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 6.6)
-        .from(L.querySelectorAll('.pm-ring,.pm-ring2'), { scale: 0, transformOrigin: '50% 50%', transformBox: 'fill-box', duration: .7, ease: 'back.out(2.2)', stagger: .12 }, 7.0)
-        .to('.in-claim', { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, 7.4)
-        .add(() => heroIn(), 9.2)
-        .to(intro, { opacity: 0, duration: .9, ease: 'power2.inOut' }, 9.2);
+        .to(L, { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, 6.5)
+        .add(() => { window.plPlay && window.plPlay(L.querySelector('.plogo')); }, 6.5)
+        .to('.in-claim', { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, 8.6)
+        .add(() => heroIn(), 10.4)
+        .to(intro, { opacity: 0, duration: .9, ease: 'power2.inOut' }, 10.4);
       // Tippen beschleunigt, Überspringen springt ans Ende
       intro.addEventListener('pointerdown', e => { if (e.target.closest('.intro-skip')) return; tl.timeScale(3.2); });
       $('.intro-skip', intro).addEventListener('click', () => { tl.progress(1); });
-      setTimeout(() => { if (!intro.classList.contains('gone')) end(); }, 16000);
+      setTimeout(() => { if (!intro.classList.contains('gone')) end(); }, 17000);
     }
   } else heroIn();
 
