@@ -704,3 +704,49 @@ em.gloss{font-style:italic;background:linear-gradient(100deg,var(--red) 0%,var(-
 @media (max-width:900px){.check-g .car-top{order:2}}
 .social a{min-height:44px}
 @media (max-width:900px){.rail{gap:0;padding:0 4px}.rail a{padding:8px}}
+
+/* =====================================================================
+   Review-Runde: Mobile-Fixes, Lesbarkeit, Wow-Upgrades
+   ===================================================================== */
+/* Designentwurf-Hinweis verdeckt den Footer nicht mehr */
+.concept{transition:opacity .4s,transform .4s var(--ease)}
+.concept.off{opacity:0;transform:translateY(12px);pointer-events:none}
+
+/* Lackierstraße (Desktop): Zahlen mit eigener Glasfläche, damit sie über Bildern lesbar bleiben */
+.rail::before{content:"";position:absolute;left:-5px;width:34px;top:6px;bottom:6px;border-radius:99px;background:rgba(12,13,15,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 0 1px rgba(255,255,255,.06);z-index:-1}
+
+/* Kontakt: E-Mail bricht nicht mehr mitten im Wort, Live-Status am Telefon */
+@media (min-width:1101px){.k-g{grid-template-columns:1fr 1fr 1.32fr 1.2fr}}
+.kc-st{display:flex;margin-top:8px;font-size:11px}
+.kc-st b{font:500 11px/1 var(--mono)!important;color:var(--muted)}
+.kc-st.open b{color:#7be3a2}
+
+/* CTA-Band: Die Überschrift ist „verbeult" – und springt beim Erscheinen zurück in Form */
+.cta-band .h2.dent{position:relative;perspective:600px}
+.dent .wd{display:inline-block;white-space:nowrap}
+.dent .lt{display:inline-block;transform-origin:50% 100%;transform:translateY(calc(var(--d) * .2em)) scale(calc(1 - var(--d) * .14),calc(1 - var(--d) * .2)) rotateX(calc(var(--d) * 38deg));filter:brightness(calc(1 - var(--d) * .45));transition:transform .55s var(--ease),filter .55s}
+.dent.popped .lt{transform:translateY(calc(var(--p,0) * .16em)) scale(1,calc(1 - var(--p,0) * .16)) rotateX(calc(var(--p,0) * 30deg));filter:brightness(calc(1 - var(--p,0) * .4));transition:transform .9s cubic-bezier(.3,1.9,.45,1) calc(var(--o) * 38ms),filter .6s calc(var(--o) * 38ms)}
+.dent.popped.touching .lt{transition:transform .18s ease-out,filter .18s}
+.dent::after{content:"";position:absolute;inset:-6% -4%;pointer-events:none;background:repeating-linear-gradient(100deg,transparent 0 28px,rgba(255,255,255,.55) 28px 34px,transparent 34px 60px);mix-blend-mode:overlay;-webkit-mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);-webkit-mask-size:40% 100%;mask-size:40% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:-60% 0;mask-position:-60% 0;opacity:0}
+.dent.popped::after{animation:dentsweep 1.8s var(--ease) .9s}
+@keyframes dentsweep{0%{opacity:1;-webkit-mask-position:-60% 0;mask-position:-60% 0}100%{opacity:1;-webkit-mask-position:160% 0;mask-position:160% 0}}
+.dent-hint{display:block;margin-top:-6px;margin-bottom:18px;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:0;transition:opacity .6s 1.6s}
+.dent.popped+.dent-hint{opacity:1}
+
+@media (max-width:900px){
+  /* Lackierstraße auf dem Handy: schmale Leiste direkt auf dem Dock statt Pille mitten im Text */
+  .rail{left:0!important;right:0;top:auto!important;bottom:calc(68px + var(--sb))!important;display:flex!important;justify-content:space-around;align-items:center;gap:0!important;height:30px;padding:0 10px!important;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;background:rgba(12,13,15,.92)!important;transform:translateY(calc(100% + 70px))!important;opacity:0;transition:transform .5s var(--ease),opacity .4s}
+  .rail.show{transform:none!important;opacity:1}
+  .rail::before{display:none}
+  .rail-line{display:block!important;left:24px;right:24px;top:50%;bottom:auto;width:auto;height:2px;margin-top:-1px}
+  .rail-line i{transform-origin:left}
+  .rail a{padding:0 4px!important;gap:5px;z-index:1}
+  .rail a b{width:20px!important;height:20px!important;font-size:11px!important}
+  .rail a span{display:none!important}
+  .rail a.on span{display:inline!important;opacity:1;transform:none;padding:0;background:none;font-size:11px;color:#fff;text-transform:uppercase;letter-spacing:.06em}
+  .rail a.on{background:rgba(12,13,15,.92);padding:0 8px 0 4px!important;border-radius:99px}
+  .hours.big div{font-size:15px;padding:12px 10px;gap:10px}
+  .hours span:last-child{white-space:nowrap;font-size:12px}
+}
+@media (max-width:380px){.hours span:last-child{font-size:11px}}
+@media (prefers-reduced-motion:reduce){.dent .lt{transform:none!important;filter:none!important}.dent::after{display:none}}

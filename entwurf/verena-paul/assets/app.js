@@ -18,8 +18,19 @@
   const onS = () => { hdr.classList.toggle('solid', scrollY > (innerWidth < 900 ? 40 : hero.offsetHeight - 90)); document.documentElement.classList.toggle('scrolled', scrollY > 60); };
   addEventListener('scroll', onS, { passive: true }); onS();
   const bur = $('[data-burger]'), mn = $('[data-mnav]');
-  bur.addEventListener('click', () => { const o = bur.getAttribute('aria-expanded') !== 'true'; bur.setAttribute('aria-expanded', o); mn.hidden = !o; hdr.classList.toggle('solid', o || scrollY > (innerWidth < 900 ? 40 : hero.offsetHeight - 90)); });
-  $$('a', mn).forEach(a => a.addEventListener('click', () => { bur.setAttribute('aria-expanded', 'false'); mn.hidden = true; }));
+  bur.addEventListener('click', () => { const o = bur.getAttribute('aria-expanded') !== 'true'; bur.setAttribute('aria-expanded', o); mn.hidden = !o; document.documentElement.classList.toggle('menu-open', o); hdr.classList.toggle('solid', o || scrollY > (innerWidth < 900 ? 40 : hero.offsetHeight - 90)); });
+  $$('a', mn).forEach(a => a.addEventListener('click', () => { bur.setAttribute('aria-expanded', 'false'); mn.hidden = true; document.documentElement.classList.remove('menu-open'); }));
+  /* Menü-Punkt des aktuellen Kapitels hervorheben */
+  (() => {
+    const links = $$('.nav a, .mnav a'), secs = $$('main > section[id]'); if (!('IntersectionObserver' in window) || !secs.length) return;
+    const navs = $$('.nav, .mnav').map(n => { const L = $$('a', n); return { L, T: L.map(a => $(a.getAttribute('href'))).filter(Boolean) }; });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const S = e.target;
+      navs.forEach(({ L, T }) => { let act = null; /* letztes Menüziel, das vor oder auf dem sichtbaren Abschnitt liegt */
+        T.forEach(t => { if (t === S || (t.compareDocumentPosition(S) & Node.DOCUMENT_POSITION_FOLLOWING)) { if (!act || (act.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)) act = t; } });
+        if (S.id === 'top') act = null;
+        L.forEach(a => { const on = !!act && a.getAttribute('href') === '#' + act.id; a.classList.toggle('on', on); on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'); }); }); }), { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(s => io.observe(s));
+  })();
 
   /* ---------- Meer (Canvas) ---------- */
   const cv = $('[data-sea]');
@@ -167,9 +178,10 @@
   setCur(0);
   if ('IntersectionObserver' in window) new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { STS.forEach((st, i) => setTimeout(() => $$('img', st).forEach(im => { im.loading = 'eager'; if (im.decode) im.decode().catch(() => {}); }), i < 4 ? 0 : 400 + i * 120)); o.disconnect(); } }), { rootMargin: '1200px' }).observe(pin);
   const desk = () => innerWidth >= 900 && window.gsap && window.ScrollTrigger;
+  const tdist = () => track.scrollWidth - innerWidth + (parseFloat(getComputedStyle(track).paddingLeft) || 0);
   const goSt = i => {
     i = Math.max(0, Math.min(STS.length - 1, i));
-    if (desk() && tripST) { const dist = track.scrollWidth - innerWidth, x = Math.min(dist, STS[i].offsetLeft - (innerWidth - STS[i].offsetWidth) / 2); scrollTo({ top: tripST.start + Math.max(0, x) / dist * (tripST.end - tripST.start) + 2, behavior: RM ? 'auto' : 'smooth' }); }
+    if (desk() && tripST) { const dist = tdist(), x = Math.min(dist, STS[i].offsetLeft - (innerWidth - STS[i].offsetWidth) / 2); scrollTo({ top: tripST.start + Math.max(0, x) / dist * (tripST.end - tripST.start) + 2, behavior: RM ? 'auto' : 'smooth' }); }
     else track.scrollTo({ left: STS[i].offsetLeft - (track.clientWidth - STS[i].offsetWidth) / 2, behavior: RM ? 'auto' : 'smooth' });
   };
   $$('[data-go]').forEach(b => b.addEventListener('click', () => goSt(+b.dataset.go)));
@@ -179,7 +191,7 @@
     gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.matchMedia({
       '(min-width: 900px)': () => {
-        const dist = () => track.scrollWidth - innerWidth;
+        const dist = tdist;
         const tw = gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: pin, start: 'top top', end: () => '+=' + dist() * 1.05, pin: true, scrub: .7, invalidateOnRefresh: true, onUpdate: s => {
           const p = s.progress; bar.style.width = p * 100 + '%'; plane.style.left = p * 100 + '%';
           const x = p * dist() + innerWidth * .55; let k = 0; STS.forEach((st, i) => { if (st.offsetLeft <= x) k = i; }); setCur(k);
@@ -214,7 +226,15 @@
   if (tw) {
     const svgT = $('svg.tree', tw), ty = $('[data-ty]'), tt = $('[data-tt]'), F = $$('.fr', tw);
     const FD = F.map(f => f.getAttribute('aria-label'));
-    const pick = i => { F.forEach((f, j) => f.classList.toggle('on', j === i)); const [y, ...r] = FD[i].split(': '); ty.textContent = y; tt.textContent = r.join(': '); };
+    const link = $('[data-tlink]', tw), tdot = $('[data-tdot]', tw), card = $('[data-tcard]', tw); let curF = 0;
+    const drawLink = () => { if (!link) return; if (innerWidth < 900) { link.removeAttribute('d'); return; }
+      const wr = tw.getBoundingClientRect(), fr = $('.fr-c', F[curF]).getBoundingClientRect(), cr = card.getBoundingClientRect();
+      const x1 = fr.left + fr.width / 2 - wr.left, y1 = fr.top + fr.height / 2 - wr.top, x2 = cr.left - wr.left - 3, y2 = cr.top + cr.height / 2 - wr.top, mx = x1 + (x2 - x1) * .55;
+      link.setAttribute('d', `M${x1.toFixed(1)} ${y1.toFixed(1)} C${mx.toFixed(1)} ${(y1 - 30).toFixed(1)}, ${(mx + 20).toFixed(1)} ${y2.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+      tdot.setAttribute('cx', x2.toFixed(1)); tdot.setAttribute('cy', y2.toFixed(1));
+      link.classList.remove('draw'); void link.getBoundingClientRect(); link.classList.add('draw'); };
+    const pick = i => { curF = i; F.forEach((f, j) => f.classList.toggle('on', j === i)); const [y, ...r] = FD[i].split(': '); ty.textContent = y; tt.textContent = r.join(': '); requestAnimationFrame(drawLink); };
+    addEventListener('resize', () => requestAnimationFrame(drawLink));
     F.forEach((f, i) => { f.addEventListener('click', () => pick(i)); f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(i); } }); f.addEventListener('mouseenter', () => pick(i)); });
     const grow = () => { const r = tw.getBoundingClientRect(), vh = innerHeight; const g = RM ? 1 : Math.max(0, Math.min(1, (vh * .9 - r.top) / (r.height * .75))); svgT.style.setProperty('--g', g.toFixed(3)); tw.classList.toggle('leafy', g > .55); tw.classList.toggle('fruity', g > .8); if (g > .8 && !tw._auto) { tw._auto = 1; let k = 0; const a = setInterval(() => { if (tw._touched) return clearInterval(a); pick(k = (k + 1) % F.length); }, 3200); } };
     tw.addEventListener('pointerdown', () => tw._touched = 1);
@@ -226,11 +246,21 @@
   if (window.gsap && !RM) $$('.mo img').forEach((im, i) => gsap.fromTo(im, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: im, start: 'top bottom', end: 'bottom top', scrub: true } }));
 
   /* ---------- Finder ---------- */
-  const ft = $('[data-ft]'), fd = $('[data-fd]'), fl = $('[data-fl]'), fres = $('[data-fres]');
+  const ft = $('[data-ft]'), fd = $('[data-fd]'), fl = $('[data-fl]'), fres = $('[data-fres]'); let fsel = null;
+  const qk = m => '<li class="fi-qk"><span>Schnellwahl</span>' + (m === 'soul' ? D.feel : D.body).map((d, i) => `<button type="button" data-qm="${m}" data-qi="${i}">${d.l}</button>`).join('') + '</li>';
   const show = (title, text, list) => { ft.textContent = title; fd.textContent = text; fl.innerHTML = list.map(x => `<li><a href="${D.wa}?text=${encodeURIComponent('Aloha Verena, ich interessiere mich für: ' + x + '. Wann hättest du Zeit?')}" target="_blank" rel="noopener">${x}<span aria-hidden="true">→</span></a></li>`).join(''); fres.animate && fres.animate([{ opacity: .3, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); };
-  $$('[data-fmode]').forEach(b => b.addEventListener('click', () => { $$('[data-fmode]').forEach(x => x.classList.toggle('on', x === b)); $$('[data-fp]').forEach(p => p.classList.toggle('on', p.dataset.fp === b.dataset.fmode)); if (b.dataset.fmode === 'soul') show('Wie fühlst du dich?', 'Wähle das Gefühl, das am ehesten passt.', []); else show('Tippe auf eine Stelle', 'Nacken, Rücken, Knie – oder einfach das Gefühl, dass etwas nicht im Fluss ist.', []); }));
-  $$('.bp').forEach(b => b.addEventListener('click', () => { $$('.bp').forEach(x => x.classList.toggle('on', x === b)); const d = D.body[+b.dataset.bp]; show(d.l, 'Damit kann ich dich unterstützen – was genau passt, besprechen wir beim ersten Termin.', d.r); }));
-  $$('[data-feel]').forEach(b => b.addEventListener('click', () => { $$('[data-feel]').forEach(x => x.classList.toggle('on', x === b)); const d = D.feel[+b.dataset.feel]; show(d.l, d.t, d.r); }));
+  $$('[data-fmode]').forEach(b => b.addEventListener('click', () => { const m = b.dataset.fmode; $$('[data-fmode]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', String(x === b)); }); $$('[data-fp]').forEach(p => p.classList.toggle('on', p.dataset.fp === m)); fsel = null; $$('.bp, [data-feel]').forEach(x => x.classList.remove('on')); if (m === 'soul') show('Wie fühlst du dich?', 'Wähle das Gefühl, das am ehesten passt – links oder hier.', []); else show('Tippe auf eine Stelle', 'Nacken, Rücken, Knie – oder einfach das Gefühl, dass etwas nicht im Fluss ist.', []); fl.innerHTML = qk(m); }));
+  $$('.bp').forEach(b => b.addEventListener('click', () => { $$('.bp').forEach(x => x.classList.toggle('on', x === b)); const d = D.body[+b.dataset.bp]; fsel = d; show(d.l, 'Diese Angebote passen zu diesem Bereich – was für dich infrage kommt, besprechen wir persönlich.', d.r); }));
+  $$('[data-feel]').forEach(b => b.addEventListener('click', () => { $$('[data-feel]').forEach(x => x.classList.toggle('on', x === b)); const d = D.feel[+b.dataset.feel]; fsel = d; show(d.l, d.t, d.r); }));
+  fl.innerHTML = qk('body');
+  fl.addEventListener('click', e => { const q = e.target.closest('[data-qi]'); if (!q) return; const t = q.dataset.qm === 'soul' ? $$('[data-feel]')[+q.dataset.qi] : $$('.bp')[+q.dataset.qi]; t && t.click(); });
+  const fcta = $('[data-fcta]');
+  fcta && fcta.addEventListener('click', () => {
+    if (!fsel) return; const f = $('[data-form]'), ta = f && $('textarea', f); if (!ta) return;
+    const chip = x => /Lomi/.test(x) ? 'Lomi Lomi Nui' : /Frauen/.test(x) ? 'Frauenmassage' : /Massage/.test(x) ? 'Massage' : /HUNA/.test(x) ? 'HUNA' : /Transform/.test(x) ? 'Transformation' : /TERRA/.test(x) ? 'dōTERRA' : /Bowen/.test(x) ? 'Bowen-Therapie' : /Klang/.test(x) ? 'Klangschalen' : /Kennenlern/.test(x) ? null : 'Physiotherapie';
+    fsel.r.map(chip).forEach(v => { const c = v && $(`input[name="Interesse"][value="${v}"]`, f); if (c) c.checked = true; });
+    if (!ta.value.trim() || ta.dataset.pre === '1') { ta.value = 'Mich interessiert: ' + fsel.l + ' (' + fsel.r.join(', ') + '). '; ta.dataset.pre = '1'; }
+  });
 
   /* ---------- Atmen ---------- */
   const bw = $('[data-bwrap]'), bt = $('[data-bt]'), bn = $('[data-bn]'), bbtn = $('[data-breath]'), brr = $('[data-br-r]'); let bRun = false;
@@ -239,6 +269,7 @@
   bbtn.addEventListener('click', async () => {
     if (bRun) { bRun = false; return; }
     bRun = true; bbtn.lastChild.textContent = ' Stopp';
+    if (innerWidth < 900) { const r = bw.getBoundingClientRect(); if (r.bottom > innerHeight || r.top < 70) bw.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }); }
     for (let r = 1; r <= 3 && bRun; r++) {
       brr.textContent = `Runde ${r} von 3`;
       breatheSound(1.7, 4); await phase('in', 'Einatmen', 4);
@@ -257,9 +288,12 @@
 
   /* ---------- Neuseeland ---------- */
   (() => {
-    const q = $$('[data-nzq] blockquote'); let i = 0;
-    if (q.length && !RM) setInterval(() => { if (document.hidden) return; q[i].classList.remove('on'); i = (i + 1) % q.length; q[i].classList.add('on'); }, 6500);
-    const st = $('[data-nzstack]');
+    const q = $$('[data-nzq] blockquote'), st = $('[data-nzstack]'), figs = st ? $$('figure', st) : [], dots = $$('[data-nzd]'); let i = 0, timer = 0;
+    const set = k => { if (!q.length) return; q[i].classList.remove('on'); i = (k + q.length) % q.length; q[i].classList.add('on'); const p = +q[i].dataset.nzp;
+      figs.forEach((f, j) => f.classList.toggle('front', j === p)); dots.forEach((d, j) => { d.classList.toggle('on', j === i); d.setAttribute('aria-pressed', String(j === i)); }); };
+    const loop = () => { clearInterval(timer); if (!RM) timer = setInterval(() => { if (!document.hidden) set(i + 1); }, 6500); };
+    if (q.length) { set(0); loop(); }
+    dots.forEach(d => d.addEventListener('click', () => { set(+d.dataset.nzd); loop(); }));
     if (st && 'IntersectionObserver' in window && !RM) { st.classList.add('wait'); new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { st.classList.remove('wait'); o.disconnect(); } }), { threshold: .25 }).observe(st); }
   })();
   /* ---------- Reel neue Liege ---------- */
@@ -309,7 +343,7 @@
   /* ---------- Aloha-Wörterbuch ---------- */
   (() => {
     const W = D.words || [], card = $('.wb-card'); if (!card) return; let cur = 0;
-    const show = i => { cur = i; const w = W[i]; $('[data-ww]').textContent = w.w; $('[data-wp]').textContent = w.p; $('[data-wm]').textContent = w.m; $('[data-wn]').textContent = w.n; const a = $('[data-wsrc]'); a.href = w.su; a.textContent = 'Quelle: ' + w.sn + ' ↗'; $$('[data-w]').forEach((b, j) => b.classList.toggle('on', j === i)); card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); };
+    const show = i => { cur = i; const w = W[i]; $('[data-ww]').textContent = w.w; $('[data-wp]').textContent = w.p; $('[data-wm]').textContent = w.m; $('[data-wn]').textContent = w.n; const a = $('[data-wsrc]'); a.href = w.su; a.textContent = 'Quelle: ' + w.sn + '\u00a0↗'; $$('[data-w]').forEach((b, j) => b.classList.toggle('on', j === i)); card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); };
     $$('[data-w]').forEach(b => b.addEventListener('click', () => show(+b.dataset.w)));
     const say = $('[data-wsay]');
     if (!('speechSynthesis' in window)) say.hidden = true;
@@ -390,9 +424,32 @@
     let cur = 0, auto = !RM, inView = false, paused = false, resumeT = 0, t0 = 0, raf = 0;
     const DUR = 4200;
     const pad = n => String(n).padStart(2, '0');
+    /* Abschluss-Kachel: füllt die freien Felder der letzten Reihe (Desktop), beim Filtern gleichmäßige Kacheln */
+    const more = $('[data-swmore]');
+    const fillMore = () => {
+      if (!more) return; more.style.gridColumn = more.style.gridRow = ''; more.classList.remove('band');
+      if (mob()) return;
+      more.style.display = 'none';
+      const cs = getComputedStyle(track), cols = cs.gridTemplateColumns.split(' ').length, gx = parseFloat(cs.columnGap) || 12, gy = parseFloat(cs.rowGap) || 12;
+      const cw = (track.clientWidth - gx * (cols - 1)) / cols, rh = parseFloat(cs.gridAutoRows) || 160, occ = new Set(); let maxR = 0;
+      vis().forEach(t => { const c0 = Math.round((t.offsetLeft - track.offsetLeft) / (cw + gx)), r0 = Math.round((t.offsetTop - track.offsetTop) / (rh + gy)), w = Math.max(1, Math.round((t.offsetWidth + gx) / (cw + gx))), h = Math.max(1, Math.round((t.offsetHeight + gy) / (rh + gy)));
+        for (let a = 0; a < h; a++) for (let b = 0; b < w; b++) occ.add((r0 + a) + ',' + (c0 + b)); maxR = Math.max(maxR, r0 + h); });
+      more.style.display = '';
+      const last = maxR - 1, free = []; for (let c = 0; c < cols; c++) if (!occ.has(last + ',' + c)) free.push(c);
+      if (!free.length) { more.style.gridColumn = '1 / -1'; more.style.gridRow = String(maxR + 1); more.classList.add('band'); return; }
+      let best = [free[0]], run = [free[0]]; for (let k = 1; k < free.length; k++) { if (free[k] === free[k - 1] + 1) run.push(free[k]); else run = [free[k]]; if (run.length > best.length) best = run.slice(); }
+      const up = last > 0 && best.every(c => !occ.has((last - 1) + ',' + c));
+      more.style.gridColumn = (best[0] + 1) + ' / ' + (best[best.length - 1] + 2);
+      more.style.gridRow = up ? last + ' / span 2' : String(last + 1);
+      if (best.length >= 3 && !up) more.classList.add('band');
+    };
+    fillMore(); let fmT = 0; addEventListener('resize', () => { clearTimeout(fmT); fmT = setTimeout(fillMore, 200); });
     if (RM) { wall.classList.add('in'); if (pbtn) { pbtn.setAttribute('aria-pressed', 'false'); pbtn.setAttribute('aria-label', 'Automatisch weiterblättern'); } }
     else seen([wall.querySelector('.sw-stage')], () => { vis().forEach((t, i) => t.style.setProperty('--k', i)); wall.classList.add('in'); }, { threshold: .08 });
     if (IO) new IntersectionObserver(([e]) => { inView = e.isIntersecting; t0 = performance.now(); }, { threshold: .35 }).observe(track);
+    $$('.sw-b img', track).forEach(im => { const done = () => im.parentNode.classList.add('ld'); im.complete && im.naturalWidth ? done() : im.addEventListener('load', done, { once: true }); });
+    /* Bilder rechtzeitig laden, damit keine leeren Kacheln aufblitzen */
+    if (IO) new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { $$('img', track).forEach((im, i) => setTimeout(() => { im.loading = 'eager'; }, i * 40)); o.disconnect(); } }), { rootMargin: '1400px 0px' }).observe(wall);
 
     const setCur = k => {
       const v = vis(); if (!v.length) return; cur = (k + v.length) % v.length;
@@ -432,6 +489,7 @@
       $$('[data-swf]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
       const first = new Map(); if (!mob() && !RM) vis().forEach(t => first.set(t, t.getBoundingClientRect()));
       T.forEach(t => { t.classList.toggle('off', c !== 'alle' && !t.dataset.cats.split(' ').includes(c)); t.classList.remove('pop'); });
+      track.classList.toggle('flat', c !== 'alle'); fillMore();
       const v = vis();
       if (mob()) { track.scrollLeft = 0; setCur(0); t0 = performance.now(); prog.style.width = '0%'; }
       if (!RM) v.forEach((t, i) => {
@@ -464,6 +522,16 @@
     L.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50 && e.target.closest('.swl-ph')) fill(lk + (dx < 0 ? 1 : -1)); sx = null; }, { passive: true });
   }
 
+  /* --- Werdegang: Linie wächst mit, erreichte Jahre leuchten --- */
+  const cvl = $('.cv-list');
+  if (cvl) {
+    const lis = $$('li', cvl); let cvT = 0;
+    const cvUp = () => { cvT = 0; const r = cvl.getBoundingClientRect(), mid = innerHeight * .62; if (r.top > innerHeight || r.bottom < 0) return;
+      cvl.style.setProperty('--cvp', Math.max(0, Math.min(1, (mid - r.top) / r.height)).toFixed(3));
+      lis.forEach(li => li.classList.toggle('lit', li.getBoundingClientRect().top + 22 < mid)); };
+    addEventListener('scroll', () => { if (!cvT) cvT = requestAnimationFrame(cvUp); }, { passive: true }); cvUp();
+  }
+
   /* --- Mehr Bewegung --- */
   const fd = $$('.fol-div');
   if (RM) fd.forEach(f => f.classList.add('in')); else seen(fd, f => f.classList.add('in'), { threshold: .6 });
@@ -479,7 +547,6 @@
     batch('.lo-way li', { opacity: 0, y: 60, rotate: 2 }, .1);
     batch('.lo-ph figure', { opacity: 0, scale: .85, y: 40 }, .15);
     batch('.lo-q', { opacity: 0, y: 30 });
-    batch('.nz-stack figure', { opacity: 0, scale: .7, rotate: -8 }, .12);
     // Parallax auf Fotos (über die CSS-Eigenschaft "translate", kollidiert nicht mit Hover-Transforms)
     $$('.qs-ph img, .lo-p1 img, .oe-vortrag, .fl-side').forEach(im => {
       if (im.tagName === 'IMG' && !im.classList.contains('fl-side')) im.style.scale = '1.12';

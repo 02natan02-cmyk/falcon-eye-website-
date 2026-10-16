@@ -801,3 +801,144 @@ a.fl-tag{text-decoration:none}a.concept{text-decoration:none}
 .lo-step:nth-child(2) .lo-sim img{object-position:50% 18%}
 .lo-badge{animation:none}.lo-bfol{animation:spin 28s linear infinite}
 @media (max-width:759px){.sw-ctl{padding-right:calc(var(--gut) + 74px);gap:8px}.sw-ctl [data-swnav="1"]{order:1}.sw-ctl .sw-meter{order:2}.sw-ctl .sw-pp{order:3}.sw-ctl [data-swnav="-1"]{order:0}}
+
+/* ===================== Review-Durchgang (Sektion für Sektion) ===================== */
+/* Kopf: aktives Kapitel + Handy-Menü scrollbar, Badge/Player weichen */
+.nav a.on::after{transform:scaleX(1)}
+.mnav{max-height:calc(100svh - 64px);overflow-y:auto;overscroll-behavior:contain}
+.mnav a{font-size:25px;padding:11px 0;transition:color .3s}.mnav a.on{color:var(--coral)}
+.mnav:not([hidden]) a{animation:mnin .55s var(--ease) both}
+.mnav a:nth-child(2){animation-delay:.03s}.mnav a:nth-child(3){animation-delay:.06s}.mnav a:nth-child(4){animation-delay:.09s}.mnav a:nth-child(5){animation-delay:.12s}.mnav a:nth-child(6){animation-delay:.15s}.mnav a:nth-child(7){animation-delay:.18s}.mnav a:nth-child(8){animation-delay:.21s}.mnav a:nth-child(9){animation-delay:.24s}.mnav a:nth-child(10){animation-delay:.27s}
+@keyframes mnin{from{opacity:0;transform:translateX(-18px)}}
+.concept,.pl,.fab{transition:opacity .3s}
+.menu-open .concept,.menu-open .pl,.menu-open .fab{opacity:0!important;pointer-events:none}
+
+/* Reise (Handy): eine Station passt besser auf einen Bildschirm */
+@media (max-width:899px){
+  .st{gap:14px;padding:14px}
+  .st-ph{height:min(70vw,290px)}
+  .st h3{font-size:28px;margin-bottom:10px}
+  .st-y{font-size:80px}
+}
+
+/* Neuseeland: Zitat holt sein Foto nach vorn */
+.nz-stack figure{transition:transform .9s var(--ease),opacity .9s,box-shadow .6s;cursor:zoom-in}
+.nz-stack figure.front{z-index:4;transform:rotate(calc(var(--r) * .3)) translateY(-12px) scale(1.06);box-shadow:0 46px 80px -26px rgba(0,0,0,.85),0 0 0 2px rgba(255,196,107,.6)}
+.nz-stack figure.front:hover{transform:rotate(0) translateY(-12px) scale(1.08)}
+.nz-dots{display:flex;gap:4px;margin:8px 0 0 -8px}
+.nz-dots button{width:48px;height:32px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.nz-dots i{position:relative;display:block;width:32px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
+.nz-dots i::after{content:"";position:absolute;inset:0;background:var(--sun);transform-origin:left;transform:scaleX(0)}
+.nz-dots .on i::after{animation:nzfill 6.5s linear forwards}
+.nz-dots button:hover i{background:rgba(255,255,255,.45)}
+@keyframes nzfill{to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.nz-dots .on i::after{transform:scaleX(1)}}
+
+/* Lebensbaum: wiegt im Wind, Faden zur Karte, lesbare Jahreszahlen am Handy */
+.tree .t-sway{transform-box:view-box;transform-origin:400px 690px;animation:tsway 10s ease-in-out infinite}
+@keyframes tsway{0%,100%{transform:rotate(-.35deg)}50%{transform:rotate(.4deg)}}
+.tree-link{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:1;transition:opacity .6s}
+.tree-link path{fill:none;stroke:var(--coral);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:1;opacity:.7}
+.tree-link path.draw{animation:tlink 1s var(--ease) both}
+@keyframes tlink{from{stroke-dashoffset:1}}
+.tree-link circle{fill:var(--coral)}
+.tree-w:not(.fruity) .tree-link{opacity:0}
+.tree-card{z-index:2;transition:box-shadow .4s}
+@media (max-width:899px){.tree-link{display:none}.tree .fr text{font-size:30px;stroke-width:7}.tree .fr-c{r:13px}.tree .fr-h{r:22px}}
+
+/* Momente: ruhiges Mosaik statt ausgefranster Spalten */
+.mo-g{columns:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(150px,15.5vw,232px);grid-auto-flow:dense;gap:14px}
+.mo{margin:0;min-height:0;cursor:zoom-in}
+.mo.tall{grid-row:span 2}.mo.wide{grid-column:span 2}
+.mo img{height:100%;object-fit:cover}
+@media (max-width:899px){.mo-g{columns:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:clamp(120px,38vw,190px);gap:10px}.mo{margin:0}.mo figcaption{font-size:12px;padding:4px 9px;left:6px;right:6px;bottom:6px}}
+
+/* Angebot: Fußzeile der Karten sauber getrennt + zwölfte Kachel */
+a.tr,.tr{display:flex;flex-direction:column}
+.tr>small{display:block;margin-top:auto;padding-top:2px}
+.tr .ic{flex:none}.tr-go{align-self:flex-start}
+.tr-go{margin-top:12px}
+.tr-cta{justify-content:center;padding:34px 30px;background:radial-gradient(circle at 88% 8%,rgba(255,196,107,.3),transparent 45%),linear-gradient(160deg,var(--deep),var(--night));color:#fff}
+.tr-cta::after{display:none}
+.tr-cta>*:not(svg){position:relative}
+.tr-cta .tr-k{color:var(--sun)}
+.tr-cta h3{color:#fff;font-size:30px;line-height:1.1}.tr-cta h3 em{color:var(--coral2)}
+.tr-cta p{color:#c6dcdc}
+.tr-cta-b{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}.btn-line:hover{background:rgba(255,255,255,.1)}
+.tr-cfol{position:absolute;right:-60px;top:-60px;width:240px;height:auto;opacity:.2;pointer-events:none;animation:spin 70s linear infinite}
+.tr-cfol circle{stroke:var(--sun);stroke-width:.6}
+/* Finder: Schnellwahl im leeren Feld */
+.fi-r li.fi-qk{display:flex;flex-wrap:wrap;gap:8px;padding:0;background:none;box-shadow:none}
+.fi-r li.fi-qk::before{display:none}
+.fi-qk span{width:100%;font:500 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.fi-qk button{padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:15px;transition:background .25s,color .25s,transform .3s var(--ease)}
+.fi-qk button:hover,.fi-qk button:focus-visible{background:var(--deep);color:#fff;transform:translateY(-2px)}
+
+/* Lomi (Handy): Fakten zum Wischen statt langer Liste */
+@media (max-width:640px){
+  .lo-facts{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-left:calc(var(--gut) * -1);margin-right:calc(var(--gut) * -1);padding:6px var(--gut) 18px;scrollbar-width:none}
+  .lo-facts::-webkit-scrollbar{display:none}
+  .lo-f{flex:0 0 82%;scroll-snap-align:center}
+  .lo-swipe{display:block;margin-top:0}
+}
+@media (min-width:641px){.lo-swipe{display:none!important}}
+
+/* Story-Wall: Abschluss-Kachel */
+.sw-more{position:relative;min-width:0;list-style:none;opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease) .4s,transform .9s var(--ease) .4s}
+.wall.in .sw-more{opacity:1;transform:none}
+.sw-more a{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:4px;height:100%;min-height:150px;padding:18px 20px;border-radius:18px;overflow:hidden;text-decoration:none;color:#fff;background:radial-gradient(circle at 85% 12%,rgba(255,196,107,.45),transparent 50%),linear-gradient(135deg,var(--coral),#c94f6d 55%,#5b4d6e);box-shadow:0 24px 50px -30px rgba(0,0,0,.9);transition:transform .5s var(--ease),box-shadow .5s}
+.sw-more a:hover,.sw-more a:focus-visible{transform:translateY(-6px) scale(1.01);box-shadow:0 40px 70px -30px rgba(0,0,0,.95),0 0 0 2px rgba(255,196,107,.6);outline:none}
+.sw-more .ic{position:absolute;left:20px;top:18px;width:30px;height:30px}
+.sw-more b{font:300 clamp(40px,4vw,64px)/1 var(--serif)}
+.sw-more a>span:not(.sw-mfol){position:relative;font-size:15px;line-height:1.35;max-width:26ch}
+.sw-more i{position:relative;font-style:normal;font-size:13px;opacity:.85}
+.sw-mfol{position:absolute;right:-40px;top:-40px;width:210px;opacity:.28;pointer-events:none}
+.sw-mfol svg{width:100%;height:auto;animation:spin 50s linear infinite}
+.sw-mfol circle{stroke:#fff;stroke-width:.7}
+.sw-more.band a{flex-direction:row;align-items:center;justify-content:flex-start;gap:22px;padding-left:72px}
+.sw-more.band .ic{top:50%;translate:0 -50%}
+.sw-track.flat .sw-t{grid-column:auto;grid-row:span 2}
+@media (max-width:759px){
+  .sw-more{flex:0 0 74vw;height:min(98vw,520px);padding:0 6px;scroll-snap-align:center;opacity:1;transform:none;transition:none}
+  .sw-more a{justify-content:center;transform:scale(.9)}
+}
+
+/* Wusstest du?: Öl-Karten ohne Foto bekommen eine lebendige Illustration */
+.fc.np .fc-f{background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--t) 42%,transparent),transparent 58%),linear-gradient(165deg,var(--c),#123039 88%)}
+.fc-oil{position:absolute!important;left:50%;top:5%;width:60%;max-width:230px;translate:-50% 0;pointer-events:none;z-index:0!important}
+.fc-oil svg{display:block;width:100%;height:auto;overflow:visible}
+.fo-d{fill:var(--t)}.fo-h{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;opacity:.75}
+.fo-dw{transform-box:fill-box;transform-origin:50% 0;animation:fodrop 5s infinite}
+@keyframes fodrop{0%{transform:translateY(-4px) scale(.35);opacity:0;animation-timing-function:cubic-bezier(.2,.8,.3,1)}14%{transform:none;opacity:1}58%{transform:translateY(3px) scaleY(1.05);opacity:1;animation-timing-function:cubic-bezier(.6,0,.9,.4)}72%{transform:translateY(46px) scaleY(1.12);opacity:1}76%,100%{transform:translateY(50px) scale(.6,.3);opacity:0}}
+.fo-r ellipse{fill:none;stroke:var(--t);stroke-width:2.4;opacity:0;transform-box:fill-box;transform-origin:center;animation:foripple 5s ease-out infinite}
+.fo-r ellipse:nth-child(2){animation-delay:.3s}.fo-r ellipse:nth-child(3){animation-delay:.6s}
+@keyframes foripple{0%,71%{transform:scale(.15);opacity:0}75%{opacity:1}100%{transform:scale(1.25);opacity:0}}
+.fc-oil::before{content:"";position:absolute;left:50%;top:44%;width:120%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--t) 38%,transparent),transparent 62%);z-index:-1}
+.fo-p circle{fill:#fff;opacity:0;animation:fofloat 6s ease-in-out infinite}
+.fo-p circle:nth-child(2){animation-delay:-1.2s}.fo-p circle:nth-child(3){animation-delay:-2.4s}.fo-p circle:nth-child(4){animation-delay:-3.6s}.fo-p circle:nth-child(5){animation-delay:-4.8s}
+@keyframes fofloat{0%{transform:translateY(24px);opacity:0}35%{opacity:.85}100%{transform:translateY(-70px);opacity:0}}
+.fc.np .fc-f::after{background:linear-gradient(180deg,transparent 40%,rgba(8,28,36,.75) 85%)}
+@media (prefers-reduced-motion:reduce){.fo-dw,.fo-r ellipse,.fo-p circle{animation:none}.fo-r ellipse:first-child{opacity:.6;transform:scale(.85)}.fo-p circle{opacity:.5}}
+
+/* Öle: Shop bleibt beim Lesen im Blick (Desktop) */
+@media (min-width:900px){.oele{overflow:clip}.oe-g{align-items:start}.oe-r{position:sticky;top:110px;margin-top:70px}}
+
+/* Werdegang: Zeitstrahl wächst mit, erreichte Jahre leuchten */
+.cv-list{position:relative}
+.cv-list::after{content:"";position:absolute;left:-1.5px;top:0;width:1.5px;height:100%;background:linear-gradient(var(--coral),var(--sun));transform-origin:top;transform:scaleY(var(--cvp,0))}
+.cv-list li::before{z-index:1;transition:background .4s,box-shadow .4s,transform .4s var(--ease)}
+.cv-list li.lit::before{background:var(--coral);box-shadow:0 0 0 5px rgba(255,127,97,.18);transform:scale(1.15)}
+.cv-list li b,.cv-list li span{transition:color .5s}
+.cv-list li:not(.lit) b{color:#eab2a4}.cv-list li:not(.lit) span{color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.cv-list::after{transform:scaleY(1)}}
+
+/* Story-Wall: sanfter Schimmer, solange ein Bild noch lädt */
+.sw-b{background:linear-gradient(110deg,#10303b 30%,#1a4552 50%,#10303b 70%) 0 0/300% 100%;animation:swsk 1.8s linear infinite}
+.sw-b img{position:relative}
+@keyframes swsk{to{background-position:-300% 0}}
+.sw-b.ld{animation:none;background:#123}
+@media (prefers-reduced-motion:reduce){.sw-b{animation:none}}
+
+/* Werdegang: Einflug der Zeilen erzeugt keine Überbreite */
+.cv{overflow-x:clip}

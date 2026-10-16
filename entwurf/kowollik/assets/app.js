@@ -425,11 +425,38 @@
       let cur = 0; stations.forEach((st, i) => { if (y >= st.offsetTop) cur = i + 1; });
       links.forEach((a, i) => { a.classList.toggle('on', i + 1 === cur); a.classList.toggle('done', i + 1 < cur); });
       const p = Math.max(0, Math.min(1, (y - top) / (end - top)));
-      if (line) line.style.transform = `scaleY(${p})`;
+      if (line) line.style.transform = innerWidth <= 900 ? `scaleX(${p})` : `scaleY(${p})`;
       if (car) { const h = rail.offsetHeight - 32; car.style.transform = `translateY(${p * (h - 20)}px) rotate(90deg)`; }
     };
     addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
     links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = $(a.getAttribute('href')); lenis ? lenis.scrollTo(t, { offset: -20 }) : t.scrollIntoView({ behavior: 'smooth' }); }));
+  }
+
+  /* ---------- Designentwurf-Hinweis: über dem Footer ausblenden ---------- */
+  const cpt = $('.concept'), ftr = $('.ftr');
+  if (cpt && ftr) new IntersectionObserver(([e]) => cpt.classList.toggle('off', e.isIntersecting), { rootMargin: '0px 0px -40px 0px' }).observe(ftr);
+
+  /* ---------- CTA-Band: verbeulte Überschrift springt zurück in Form ---------- */
+  const dh = $('.cta-band .h2');
+  if (dh && !reduce) {
+    const words = dh.textContent.trim().split(/\s+/); let n = 0; const tot = words.join('').length;
+    dh.innerHTML = words.map(w => `<span class="wd">${[...w].map(ch => `<span class="lt" data-k="${n++}">${ch}</span>`).join('')}</span>`).join(' ');
+    dh.setAttribute('aria-label', words.join(' ')); dh.classList.add('dent');
+    const lts = $$('.lt', dh), c = (tot - 1) / 2, dc = Math.round(tot * .42);
+    lts.forEach(l => { const k = +l.dataset.k, x = (k - dc) / (tot * .3); l.style.setProperty('--d', Math.max(0, Math.exp(-x * x) * .95).toFixed(3)); l.style.setProperty('--o', Math.abs(k - dc)); l.setAttribute('aria-hidden', 'true'); });
+    const hint = document.createElement('span'); hint.className = 'dent-hint'; hint.textContent = fine ? 'Mit der Maus eindrücken' : 'Antippen und drücken'; dh.after(hint);
+    const pop = () => { if (dh.classList.contains('popped')) return; setTimeout(() => dh.classList.add('popped'), 350); };
+    const dio = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { dio.disconnect(); pop(); } }, { rootMargin: '0px 0px -20% 0px' }); dio.observe(dh);
+    const chk = () => { const r = dh.getBoundingClientRect(); if (r.top < innerHeight * .8 && r.bottom > 0) { removeEventListener('scroll', chk); pop(); } }; addEventListener('scroll', chk, { passive: true });
+    // eindrücken: wo Maus/Finger ist, gibt das Blech nach – und federt zurück
+    const band = dh.closest('.cta-band'); let raf = 0, px = -1e4, py = -1e4, down = !fine;
+    const press = () => { raf = 0; lts.forEach(l => { const r = l.getBoundingClientRect(), d = Math.hypot(r.left + r.width / 2 - px, (r.top + r.height / 2 - py) * 1.4), p = Math.max(0, 1 - d / 140) * (down ? 1 : .55); l.style.setProperty('--p', p.toFixed(3)); }); };
+    const mv = e => { if (!dh.classList.contains('popped')) return; px = e.clientX; py = e.clientY; dh.classList.add('touching'); raf || (raf = requestAnimationFrame(press)); };
+    const out = () => { dh.classList.remove('touching'); lts.forEach(l => l.style.setProperty('--p', 0)); };
+    band.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || down) mv(e); });
+    band.addEventListener('pointerdown', e => { down = true; mv(e); });
+    band.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') { down = false; out(); } });
+    band.addEventListener('pointerleave', out); band.addEventListener('pointercancel', out);
   }
 
   /* unfall checklist */

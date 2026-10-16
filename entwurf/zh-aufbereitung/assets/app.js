@@ -141,8 +141,10 @@
     let x = 0, W = 0, H = 0, drips = [], vis = false, lastX = 0;
     const size = () => { const d = DPR(); W = cv.width = st.clientWidth * d; H = cv.height = st.clientHeight * d; };
     size(); new ResizeObserver(size).observe(st);
-    const set = v => { v = Math.max(0, Math.min(100, v)); const dx = v - x; x = v; st.style.setProperty('--x', v + '%'); inp.value = Math.round(v); bf.classList.toggle('part', v > 4); const was = bf.classList.contains('done'); bf.classList.toggle('done', v > 95); if (was !== bf.classList.contains('done')) countDone();
+    const knob = $('.bf-blade i', st);
+    const set = v => { v = Math.max(0, Math.min(100, v)); const dx = v - x; x = v; st.style.setProperty('--x', v + '%'); { const w = st.clientWidth, kw = (knob && knob.offsetWidth) || 52, px = v / 100 * w, h = kw / 2 + 6; st.style.setProperty('--ko', (Math.max(h, Math.min(w - h, px)) - px - kw / 2) + 'px'); } inp.value = Math.round(v); bf.classList.toggle('part', v > 4); const was = bf.classList.contains('done'); bf.classList.toggle('done', v > 95); if (was !== bf.classList.contains('done')) countDone();
       if (Math.abs(dx) > .4 && Math.random() < .55) drips.push({ x: v / 100 * W - Math.sign(dx) * (4 + Math.random() * 10) * DPR(), y: Math.random() * H, l: 0, v: (30 + Math.random() * 80), w: (1 + Math.random() * 1.8) * DPR(), a: .8 }); };
+    set(0); new ResizeObserver(() => set(x)).observe(st);
     inp.addEventListener('input', () => set(+inp.value));
     let down = false, sx = 0, sy = 0, dragging = false;
     st.addEventListener('pointerdown', e => { down = true; dragging = false; sx = e.clientX; sy = e.clientY; if (e.pointerType === 'mouse') { dragging = true; st.setPointerCapture(e.pointerId); move(e); } });
@@ -180,11 +182,20 @@
     let W, H, dpr = DPR(), lx = .5, ly = .35, down = false, vis = false, baseA = 1;
     const gl_ = $('[data-gloss]'), glb = $('[data-gloss-bar]');
     const measure = () => { const d = sctx.getImageData(0, 0, W, H).data; let a = 0, n = 0; for (let i = 3; i < d.length; i += 4 * 97) { n++; a += d[i]; } return a / n; };
-    const upd = () => { const m = measure(); const p = Math.max(0, Math.min(1, 1 - m / (baseA || 1))); const g = Math.round(12 + p * 88); gl_.textContent = g + ' %'; glb.style.width = g + '%'; };
+    const ok = document.createElement('span'); ok.className = 'pol-ok'; ok.innerHTML = 'Spiegelglanz <b>✓</b>'; pol.appendChild(ok);
+    const upd = () => { const m = measure(); const p = Math.max(0, Math.min(1, 1 - m / (baseA || 1))); const g = Math.min(100, Math.round(12 + p * 92)); gl_.textContent = g + ' %'; glb.style.width = g + '%'; if (g >= 96 && !pol.classList.contains('mirror')) { pol.classList.add('mirror'); gl_.textContent = '100 %'; glb.style.width = '100%'; } };
     const scratch = () => { sctx.clearRect(0, 0, W, H); sctx.lineCap = 'round';
-      for (let i = 0; i < 1500; i++) { const cx = Math.random() * W, cy = Math.random() * H, r = (20 + Math.random() * 170) * dpr, a = Math.random() * 6.28, l = .2 + Math.random() * .7; sctx.strokeStyle = `rgba(255,255,255,${.06 + Math.random() * .2})`; sctx.lineWidth = (.6 + Math.random() * 1.1) * dpr; sctx.beginPath(); sctx.arc(cx, cy, r, a, a + l); sctx.stroke(); }
-      baseA = measure() || 1; upd(); };
-    const size = () => { dpr = DPR(); W = cv.width = sw.width = Math.max(10, pol.clientWidth * dpr); H = cv.height = sw.height = Math.max(10, pol.clientHeight * dpr); scratch(); };
+      for (let i = 0; i < 1100; i++) { const cx = Math.random() * W, cy = Math.random() * H, r = (40 + Math.random() * 220) * dpr, a = Math.random() * 6.28, l = .15 + Math.random() * .55; sctx.strokeStyle = `rgba(255,255,255,${.05 + Math.random() * .2})`; sctx.lineWidth = (.5 + Math.random() * .9) * dpr; sctx.beginPath(); sctx.arc(cx, cy, r, a, a + l); sctx.stroke(); }
+      baseA = measure() || 1; pol.classList.remove('mirror'); upd(); };
+    const base = document.createElement('canvas'), bctx = base.getContext('2d');
+    const paintBase = () => { base.width = W; base.height = H; // Tiefschwarz-Metallic mit Flakes, Sicke und Türfuge
+      const g = bctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1d2a35'); g.addColorStop(.42, '#0e161d'); g.addColorStop(.6, '#0a1015'); g.addColorStop(1, '#030507'); bctx.fillStyle = g; bctx.fillRect(0, 0, W, H);
+      const sky = bctx.createLinearGradient(0, 0, 0, H * .4); sky.addColorStop(0, 'rgba(150,185,205,.16)'); sky.addColorStop(1, 'rgba(150,185,205,0)'); bctx.fillStyle = sky; bctx.fillRect(0, 0, W, H * .4);
+      for (let i = 0; i < W * H / 260; i++) { bctx.fillStyle = `rgba(${200 + Math.random() * 55 | 0},${210 + Math.random() * 45 | 0},255,${Math.random() * .16})`; bctx.fillRect(Math.random() * W, Math.random() * H, dpr, dpr); }
+      const cy = H * .62; const ln = bctx.createLinearGradient(0, 0, W, 0); ln.addColorStop(0, 'rgba(255,255,255,0)'); ln.addColorStop(.35, 'rgba(255,255,255,.32)'); ln.addColorStop(.7, 'rgba(255,255,255,.18)'); ln.addColorStop(1, 'rgba(255,255,255,0)'); bctx.fillStyle = ln; bctx.fillRect(0, cy, W, 2 * dpr); bctx.fillStyle = 'rgba(0,0,0,.45)'; bctx.fillRect(0, cy + 2 * dpr, W, 5 * dpr);
+      bctx.fillStyle = 'rgba(0,0,0,.7)'; bctx.fillRect(W * .66, 0, 2.5 * dpr, H); bctx.fillStyle = 'rgba(255,255,255,.07)'; bctx.fillRect(W * .66 + 2.5 * dpr, 0, 1 * dpr, H);
+      const hx = W * .72, hy = cy - 34 * dpr, hw = 92 * dpr, hh = 18 * dpr; bctx.fillStyle = 'rgba(0,0,0,.55)'; bctx.beginPath(); bctx.roundRect ? bctx.roundRect(hx, hy, hw, hh, hh / 2) : bctx.rect(hx, hy, hw, hh); bctx.fill(); const hg = bctx.createLinearGradient(0, hy, 0, hy + hh); hg.addColorStop(0, 'rgba(255,255,255,.35)'); hg.addColorStop(1, 'rgba(255,255,255,.02)'); bctx.fillStyle = hg; bctx.beginPath(); bctx.roundRect ? bctx.roundRect(hx + 2 * dpr, hy + 2 * dpr, hw - 4 * dpr, hh - 6 * dpr, hh / 2) : bctx.rect(hx, hy, hw, hh); bctx.fill(); };
+    const size = () => { dpr = DPR(); W = cv.width = sw.width = Math.max(10, pol.clientWidth * dpr); H = cv.height = sw.height = Math.max(10, pol.clientHeight * dpr); paintBase(); scratch(); };
     size(); let rw = pol.clientWidth; new ResizeObserver(() => { if (Math.abs(pol.clientWidth - rw) > 30) { rw = pol.clientWidth; size(); } }).observe(pol);
     visTrack(pol, v => vis = v);
     const rub = (x, y) => { sctx.globalCompositeOperation = 'destination-out'; const g = sctx.createRadialGradient(x, y, 0, x, y, 64 * dpr); g.addColorStop(0, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); sctx.fillStyle = g; sctx.beginPath(); sctx.arc(x, y, 64 * dpr, 0, 7); sctx.fill(); sctx.globalCompositeOperation = 'source-over'; };
@@ -198,13 +209,12 @@
     $('[data-polish-reset]').addEventListener('click', scratch);
     (function loop(t) { requestAnimationFrame(loop); if (!vis) return;
       if (!down && !pol.classList.contains('on')) { lx = .5 + Math.sin(t / 2600) * .3; ly = .35 + Math.sin(t / 1900) * .15; }
-      const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1a1e23'); g.addColorStop(1, '#040506'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(base, 0, 0);
       const sx = lx * W, sy = ly * H;
       const sun = ctx.createRadialGradient(sx, sy, 0, sx, sy, 280 * dpr); sun.addColorStop(0, 'rgba(255,250,235,.95)'); sun.addColorStop(.06, 'rgba(255,240,210,.55)'); sun.addColorStop(.3, 'rgba(120,140,150,.12)'); sun.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = sun; ctx.fillRect(0, 0, W, H);
       ctx.save(); ctx.beginPath(); ctx.arc(sx, sy, 320 * dpr, 0, 7); ctx.clip(); ctx.globalAlpha = .95; ctx.drawImage(sw, 0, 0); ctx.restore();
-      ctx.globalAlpha = .22; ctx.drawImage(sw, 0, 0); ctx.globalAlpha = 1;
-      ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(0, H * .64, W, 2 * dpr);
+      ctx.globalAlpha = .13; ctx.drawImage(sw, 0, 0); ctx.globalAlpha = 1;
     })();
   }
 
@@ -349,7 +359,9 @@
   }
 
   /* ---------- Glanz-Galerie: Lichtreflex beim Erscheinen ---------- */
-  $$('.sh').forEach((f, i) => onView(f, () => setTimeout(() => f.classList.add('lit'), 200 + i * 140), '-10%'));
+  $$('.sh').forEach((f, i) => { onView(f, () => setTimeout(() => f.classList.add('lit'), 200 + i * 140), '-10%');
+    const mv = e => { const r = f.getBoundingClientRect(); f.style.setProperty('--mx', (e.clientX - r.left) + 'px'); f.style.setProperty('--my', (e.clientY - r.top) + 'px'); f.classList.add('lamp'); };
+    f.addEventListener('pointermove', mv); f.addEventListener('pointerdown', mv); f.addEventListener('pointerleave', () => f.classList.remove('lamp')); f.addEventListener('pointercancel', () => f.classList.remove('lamp')); });
 
   /* ---------- Paket ---------- */
   const veh = $('[data-veh]');
@@ -357,7 +369,7 @@
     const mods = $('[data-mods]'), tv = $('[data-tk-veh]'), tl = $('[data-tk-list]'), no = $('[data-tk-no]'), tk = $('.ticket');
     let v = 'Kleinwagen';
     const roof = $('[data-m^="Dach"]', mods);
-    const render = () => { tv.textContent = v; const on = $$('button.on', mods).map(b => b.textContent); tl.innerHTML = on.length ? on.map(m => `<li>${m}</li>`).join('') : '<li style="opacity:.5">Noch nichts gewählt</li>'; no.textContent = 'Nr. ' + (1000 + (v.length * 37 + on.join('').length * 13) % 9000); tk.classList.remove('stamped'); void tk.offsetWidth; if (on.length >= 2) tk.classList.add('stamped'); };
+    let prev = []; const render = () => { tv.textContent = v; const on = $$('button.on', mods).map(b => b.textContent); tl.innerHTML = on.length ? on.map(m => `<li${prev.length && !prev.includes(m) ? ' class="new"' : ''}>${m}</li>`).join('') : '<li style="opacity:.5">Noch nichts gewählt</li>'; if (prev.length || on.length) { tk.classList.remove('bump'); void tk.offsetWidth; tk.classList.add('bump'); } prev = on.length ? on : ['—']; no.textContent = 'Nr. ' + (1000 + (v.length * 37 + on.join('').length * 13) % 9000); tk.classList.remove('stamped'); void tk.offsetWidth; if (on.length >= 2) tk.classList.add('stamped'); };
     $$('button', veh).forEach(b => b.addEventListener('click', () => { $$('button', veh).forEach(x => x.classList.toggle('on', x === b)); v = b.dataset.v; const wm = /Wohn/.test(v); roof.style.display = wm ? '' : 'none'; if (!wm) roof.classList.remove('on'); render(); }));
     $$('button', mods).forEach(b => b.addEventListener('click', () => { b.classList.toggle('on'); render(); }));
     roof.style.display = 'none';
@@ -375,10 +387,17 @@
         const D = d.daily, days = D.time.map((t, i) => ({ t: new Date(t + 'T12:00'), c: D.weathercode[i], tx: Math.round(D.temperature_2m_max[i]), pr: D.precipitation_sum[i] || 0, pp: D.precipitation_probability_max ? D.precipitation_probability_max[i] : null }));
         const wk = days.filter(x => x.t.getDay() >= 1 && x.t.getDay() <= 5); const best = (wk.length ? wk : days).reduce((a, b) => (b.pr + (b.pp || 0) / 50) < (a.pr + (a.pp || 0) / 50) ? b : a);
         const max = Math.max(5, ...days.map(x => x.pr));
-        const tile = x => { const we = x.t.getDay() === 0 || x.t.getDay() === 6, lab = x.t.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }), inner = `<small>${x.t.toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', '')}</small><span class="ic" aria-hidden="true">${ICON(x.c)}</span><b>${x.tx}°</b><span class="pr" title="${x.pr.toFixed(1)} mm"><i style="height:${Math.min(100, x.pr / max * 100)}%"></i></span><span class="mm">${we ? 'geschlossen' : x.pr.toFixed(1) + ' mm'}</span>`; return we ? `<div class="wd off" title="${lab}: geschlossen">${inner}</div>` : `<a class="wd${x === best ? ' best' : ''}" href="https://wa.me/4917624401827?text=${encodeURIComponent('Hallo Z&H, passt ein Termin oder eine Abholung am ' + lab + '?')}" target="_blank" rel="noopener" aria-label="${lab}: Termin per WhatsApp anfragen">${inner}</a>`; };
+        const tile = x => { const we = x.t.getDay() === 0 || x.t.getDay() === 6, lab = x.t.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }), inner = `<small>${x.t.toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', '')}</small><span class="ic" aria-hidden="true">${ICON(x.c)}</span><b>${x.tx}°</b><span class="pr" title="${x.pr.toFixed(1)} mm"><i style="height:${Math.min(100, x.pr / max * 100)}%"></i></span><span class="mm">${we ? 'geschlossen' : x.pr.toFixed(1) + ' mm'}</span>`; return we ? `<div class="wd off" style="--i:${days.indexOf(x)}" title="${lab}: geschlossen">${inner}</div>` : `<a class="wd${x === best ? ' best' : ''}" style="--i:${days.indexOf(x)}" href="https://wa.me/4917624401827?text=${encodeURIComponent('Hallo Z&H, passt ein Termin oder eine Abholung am ' + lab + '?')}" target="_blank" rel="noopener" aria-label="${lab}: Termin per WhatsApp anfragen">${inner}</a>`; };
         wx.innerHTML = days.map(tile).join('') +
           `<p class="wx-tip">Bester Abholtag: <b>${best.t.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}</b>. Tippen Sie auf einen Tag, um ihn per WhatsApp anzufragen. ${days.some(x => x.pr > 2) ? 'Regen in Sicht? Mit Keramikversiegelung perlt er einfach ab.' : 'Trocken und klar – perfekt für frischen Glanz.'}</p>`;
-      }).catch(() => { wx.closest('section').style.display = 'none'; });
+      sky(days.slice(0, 3).some(x => x.pr > 1) ? 'rain' : 'sun'); hasG && ScrollTrigger.refresh();
+      }).catch(() => { wx.closest('section').style.display = 'none'; hasG && ScrollTrigger.refresh(); });
+    // Himmel hinter den Kacheln: Regen, wenn welcher kommt – sonst Sonnenglanz
+    const sky = mode => { if (reduce) return; const sec = wx.closest('section'), cv = document.createElement('canvas'); cv.className = 'wx-sky'; cv.setAttribute('aria-hidden', 'true'); sec.prepend(cv); const c = cv.getContext('2d'), d = DPR(); let W, H, vis = false; const fit = () => { W = cv.width = sec.clientWidth * d; H = cv.height = sec.clientHeight * d; }; fit(); addEventListener('resize', fit); visTrack(sec, v => vis = v);
+      const P = Array.from({ length: mode === 'rain' ? 140 : 26 }, () => ({ x: Math.random(), y: Math.random(), v: .4 + Math.random() * .8, l: Math.random() }));
+      (function loop(t) { requestAnimationFrame(loop); if (!vis) return; c.clearRect(0, 0, W, H);
+        if (mode === 'rain') { c.strokeStyle = 'rgba(120,200,230,.35)'; c.lineWidth = 1.2 * d; c.beginPath(); for (const p of P) { p.y += .006 * p.v; if (p.y > 1.05) { p.y = -.05; p.x = Math.random(); } const x = p.x * W - p.y * 40 * d, y = p.y * H; c.moveTo(x, y); c.lineTo(x - 5 * d, y + 18 * d * p.v); } c.stroke(); }
+        else { const g = c.createRadialGradient(W * .88, H * .1, 0, W * .88, H * .1, H * .9); g.addColorStop(0, 'rgba(255,214,120,.35)'); g.addColorStop(1, 'rgba(255,214,120,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H); for (const p of P) { p.l += .004 * p.v; const a = Math.sin(p.l * 6.28) * .5 + .5; c.fillStyle = `rgba(255,240,200,${a * .5})`; c.beginPath(); c.arc(p.x * W, p.y * H, (1 + a * 1.6) * d, 0, 7); c.fill(); } } })(); };
     onView(wx, go, '800px');
   }
 
@@ -393,6 +412,27 @@
     $('[data-pl-ics]').addEventListener('click', () => { const { a, b } = calc(); const ev = (d, s, desc) => { const e = new Date(d); e.setDate(e.getDate() + 1); return `BEGIN:VEVENT\r\nUID:${f(d)}-${Math.random().toString(36).slice(2)}@zh-aufbereitung\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z\r\nDTSTART;VALUE=DATE:${f(d)}\r\nDTEND;VALUE=DATE:${f(e)}\r\nSUMMARY:${s}\r\nDESCRIPTION:${desc}\\nZ&H Aufbereitung · Ortsstraße 14 · 66459 Kirkel-Altstadt · Tel. 06841 / 890 200\r\nBEGIN:VALARM\r\nTRIGGER:-PT0M\r\nACTION:DISPLAY\r\nDESCRIPTION:${s}\r\nEND:VALARM\r\nEND:VEVENT\r\n`; };
       const ics = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Z&H Aufbereitung//Saisonplaner//DE\r\n${ev(a, 'Wohnmobil: Termin für Saison-Aufbereitung vereinbaren', 'Jetzt bei Z&H anrufen: Außenreinigung, Dach, Keramikversiegelung, Innenraum.')}${ev(b, 'Wohnmobil einwintern: Aufbereitung bei Z&H', 'Vor dem Winter gründlich reinigen und versiegeln lassen.')}END:VCALENDAR\r\n`;
       const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); const l = document.createElement('a'); l.href = url; l.download = 'wohnmobil-saison-zh-aufbereitung.ics'; document.body.appendChild(l); l.click(); setTimeout(() => { URL.revokeObjectURL(url); l.remove(); }, 1000); });
+  }
+
+  /* ---------- Entwurf-Hinweis: über dem Footer ausblenden ---------- */
+  const cpt = $('.concept'), ftr = $('.ftr');
+  if (cpt && ftr) new IntersectionObserver(([e]) => cpt.classList.toggle('off', e.isIntersecting), { rootMargin: '0px 0px -40px 0px' }).observe(ftr);
+
+  /* ---------- Leistungen: Schaum-Abzieher ---------- */
+  $$('[data-foam]').forEach(m => reduce ? m.classList.add('in') : onView(m, () => setTimeout(() => m.classList.add('in'), 120), '-18%'));
+
+  /* ---------- Wohnmobile: Ablauf am Wohnmobil ---------- */
+  const cvb = $('[data-cv]');
+  if (cvb) {
+    const btns = $$('[data-cv-go]'), st = $('[data-cv-state]'), re = $('[data-cv-re]');
+    const TXT = ['So kommt es an: Laufstreifen, Grünbelag, Grauschleier.', 'Dach & Rinnen: Laufstreifen und Grünbelag sind weg.', 'Wäsche & Politur: Die Außenhaut glänzt wieder.', 'Keramik drauf: Wasser perlt einfach ab.', 'Innenraum frisch – bereit für die nächste Saison.'];
+    let step = 0, auto = false, tm = 0; const seen = visTrack(cvb);
+    const set = (n, isAuto) => { step = n; cvb.dataset.step = n; cvb.dataset.act = n; for (let i = 1; i <= 4; i++) cvb.classList.toggle('s' + i, i <= n); btns.forEach(b => { const k = +b.dataset.cvGo; b.classList.toggle('on', k === n); b.classList.toggle('done', k < n); b.classList.toggle('auto', !!isAuto && k === n); b.setAttribute('aria-pressed', k === n); }); st.textContent = TXT[n]; };
+    const next = () => { if (!auto) return; if (!seen()) { tm = setTimeout(next, 800); return; } const n = step >= 4 ? 0 : step + 1; set(n, n > 0 && n < 4); tm = setTimeout(next, n === 4 ? 4600 : n === 0 ? 1500 : 2800); };
+    const play = () => { clearTimeout(tm); auto = true; set(0); tm = setTimeout(next, 1100); };
+    btns.forEach(b => b.addEventListener('click', () => { auto = false; clearTimeout(tm); set(+b.dataset.cvGo); }));
+    re && re.addEventListener('click', play);
+    set(0); if (reduce) set(4); else onView(cvb, play, '-20%');
   }
 
   /* ---------- Leistungen-Navigation ---------- */
@@ -419,5 +459,6 @@
       ctx.clearRect(0, 0, W, H); for (const b of bs) { b.y -= b.v; b.p += .02; const x = b.x + Math.sin(b.p) * 8 * dpr; ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1.2 * dpr; ctx.beginPath(); ctx.arc(x, b.y, b.r, 0, 7); ctx.stroke(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.beginPath(); ctx.arc(x - b.r * .35, b.y - b.r * .35, b.r * .18, 0, 7); ctx.fill(); }
       bs = bs.filter(b => b.y > -40); })(); }
 
+  if (reduce) $$('svg').forEach(v => v.pauseAnimations && v.pauseAnimations());
   if (hasG) { ScrollTrigger.sort(); ScrollTrigger.refresh(); addEventListener('load', () => ScrollTrigger.refresh()); }
 })();
