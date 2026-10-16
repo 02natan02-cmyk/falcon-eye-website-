@@ -85,7 +85,7 @@ input,textarea{font:inherit}
 .nav a{padding:9px 12px;border-radius:999px;text-decoration:none;font-weight:600;font-size:15px;color:var(--ink2);transition:background .2s,color .2s}
 .nav a:hover,.nav a.on{background:var(--sky);color:var(--blue)}
 .hdr-r{display:flex;align-items:center;gap:12px}
-.doorsign{position:relative;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;animation:sway 4s ease-in-out infinite}
+.doorsign{position:relative;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;animation:sway 4s ease-in-out infinite;background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 @keyframes sway{50%{transform:rotate(3deg)}}
 .ds-str{width:44px;height:10px;border:2px solid #333;border-bottom:0;border-radius:22px 22px 0 0;margin-bottom:-2px}
 .ds-card{display:flex;flex-direction:column;align-items:center;background:#fff;border:2px solid #333;border-radius:4px;padding:3px 9px 2px;min-width:96px;box-shadow:0 4px 8px -4px rgba(0,0,0,.4)}
@@ -517,3 +517,34 @@ body.sg-play .hdr{transform:translateY(-100%)}
   /* ohne Scroll-Kopplung: native Querleiste mit Einrasten statt endloser Stapel */
   .story{height:auto}.story-pin{position:relative;height:auto}.story-track{width:auto;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:28px;margin-bottom:9vh}.lm{scroll-snap-align:center}.story-bar{display:none}
 }
+
+/* ---------- Türschild: Öffnungszeiten klappen auf ---------- */
+.dsw{position:relative;z-index:5}
+.ds-card{position:relative;transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .3s}
+.ds-more{font:600 8.5px var(--fm);font-style:normal;color:var(--blue);letter-spacing:.04em;margin-top:1px;opacity:.85}
+.doorsign:hover .ds-card,.doorsign:focus-visible .ds-card{transform:translateY(2px) rotate(-2deg);box-shadow:0 8px 14px -6px rgba(0,0,0,.45)}
+.doorsign:focus-visible{outline:none}.doorsign:focus-visible .ds-card{outline:3px solid var(--blue);outline-offset:3px}
+.dsw.on .doorsign{animation:dsswing .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes dsswing{0%{transform:rotate(0)}25%{transform:rotate(-9deg)}55%{transform:rotate(6deg)}80%{transform:rotate(-2deg)}100%{transform:rotate(0)}}
+.dsw.on .ds-more{opacity:0}
+.ds-pop{position:absolute;top:calc(100% - 2px);left:50%;width:250px;margin-left:-125px;padding-top:16px;transform:translateX(var(--dx,0px));pointer-events:none;visibility:hidden;transition:visibility 0s .45s}
+.dsw.on .ds-pop{visibility:visible;pointer-events:auto;transition:visibility 0s}
+.ds-hook{position:absolute;top:0;width:2px;height:18px;background:#333;transform-origin:50% 0;transform:scaleY(0);transition:transform .2s ease-in .25s}
+.ds-hook.l{left:30%}.ds-hook.r{right:30%}
+.dsw.on .ds-hook{transform:scaleY(1);transition:transform .18s ease-out}
+.ds-paper{position:relative;background:#fffdf7;border:2px solid #333;border-radius:6px;padding:12px 14px 10px;box-shadow:0 22px 40px -14px rgba(15,23,48,.55);transform-origin:50% 0;transform:perspective(700px) rotateX(-88deg);opacity:0;transition:transform .32s cubic-bezier(.5,0,.75,0),opacity .2s .12s}
+.ds-paper::before{content:"";position:absolute;inset:6px;border:1px dashed rgba(15,23,48,.18);border-radius:3px;pointer-events:none}
+.dsw.on .ds-paper{transform:perspective(700px) rotateX(0);opacity:1;transition:transform .6s .12s cubic-bezier(.25,1.45,.45,1),opacity .15s .12s}
+.ds-h{margin:0 0 6px;font:800 13px/1 var(--fd);letter-spacing:.1em;text-transform:uppercase;text-align:center;color:var(--ink)}
+.ds-list{list-style:none;margin:0;padding:0}
+.ds-list li{display:flex;justify-content:space-between;gap:10px;padding:4px 2px;border-bottom:1px dashed rgba(15,23,48,.15);font:500 13px/1.25 var(--fm);color:var(--ink2);opacity:0;transform:translateY(-5px);transition:opacity .15s,transform .15s}
+.ds-list li:last-child{border-bottom:0}
+.dsw.on .ds-list li{opacity:1;transform:none;transition:opacity .3s calc(.3s + var(--i)*.05s),transform .3s calc(.3s + var(--i)*.05s)}
+.ds-list li b{font-weight:700;color:var(--ink)}
+.ds-list li.today{background:var(--sky);border-radius:4px;color:var(--blue);padding-inline:6px;margin-inline:-4px}
+.ds-list li.today b{color:var(--blue)}
+.ds-now{margin:8px 0 2px;text-align:center;font:800 12px var(--fd);letter-spacing:.06em;text-transform:uppercase}
+.ds-now.open{color:#16833a}.ds-now.closed{color:#c2271a}
+.ds-adr{margin:4px 0 0;text-align:center;font:500 11px/1.45 var(--fm);color:var(--ink2)}
+.ds-adr a{color:var(--blue);font-weight:700;text-decoration:none}
+@media (prefers-reduced-motion:reduce){.dsw.on .doorsign{animation:none}.ds-paper,.dsw.on .ds-paper{transform:none;transition:opacity .2s}.ds-list li,.dsw.on .ds-list li{transform:none;transition:opacity .2s}}

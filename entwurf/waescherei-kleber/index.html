@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#1546a8">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/kl.css?v=1792117622">
+<link rel="stylesheet" href="assets/kl.css?v=1792139347">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "DryCleaningOrLaundry", "name": "Wäscherei Kleber", "foundingDate": "1971", "telephone": "+4968156800", "faxNumber": "+4968156842", "email": "info@waescherei-kleber.de", "address": {"@type": "PostalAddress", "streetAddress": "Gersweilerstraße 20", "postalCode": "66117", "addressLocality": "Saarbrücken", "addressCountry": "DE"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.2324, "longitude": 6.9739}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Thursday"], "opens": "10:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Friday"], "opens": "09:00", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Saturday"], "opens": "09:00", "closes": "13:00"}], "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.2", "reviewCount": "31"}}</script>
 </head>
 <body class="home is-loading">
@@ -18,7 +18,18 @@
   <div class="hdr-in"><a class="logo" href="#top" aria-label="Wäscherei Kleber – zum Seitenanfang"><span class="logo-sign">Wäscherei Kleber</span><small>seit 1971 · Saarbrücken</small></a>
     <nav class="nav" aria-label="Hauptmenü"><a href="#trommel">Die Trommel</a><a href="#geschichte">Seit 1971</a><a href="#socken">Sockenspiel</a><a href="#mangel">Heißmangel</a><a href="#lamellen">Lamellen</a><a href="#zettel">Wäschezettel</a><a href="#besuch">Besuch</a></nav>
     <div class="hdr-r">
-      <span class="doorsign" data-doorsign aria-live="polite"><i class="ds-str"></i><span class="ds-card"><b data-dsb>…</b><small data-dss></small></span></span>
+      <div class="dsw" data-dsw>
+        <button type="button" class="doorsign" data-doorsign aria-expanded="false" aria-controls="dsPop" aria-label="Öffnungszeiten anzeigen"><i class="ds-str"></i><span class="ds-card"><b data-dsb>…</b><small data-dss></small><em class="ds-more" aria-hidden="true">Zeiten ▾</em></span></button>
+        <div class="ds-pop" id="dsPop" role="region" aria-label="Öffnungszeiten">
+          <i class="ds-hook l"></i><i class="ds-hook r"></i>
+          <div class="ds-paper">
+            <p class="ds-h">Öffnungszeiten</p>
+            <ul class="ds-list" data-hours><li data-day="1" style="--i:0"><span>Montag</span><b>10:00 – 17:00</b></li><li data-day="2" style="--i:1"><span>Dienstag</span><b>9:00 – 17:00</b></li><li data-day="3" style="--i:2"><span>Mittwoch</span><b>9:00 – 13:00</b></li><li data-day="4" style="--i:3"><span>Donnerstag</span><b>10:00 – 17:00</b></li><li data-day="5" style="--i:4"><span>Freitag</span><b>9:00 – 17:00</b></li><li data-day="6" style="--i:5"><span>Samstag</span><b>9:00 – 13:00</b></li><li data-day="0" style="--i:6"><span>Sonntag</span><b>geschlossen</b></li></ul>
+            <p class="ds-now" data-dsnow></p>
+            <p class="ds-adr">Gersweilerstraße 20 · Saarbrücken<br><a href="tel:+4968156800">☎ 0681 56800</a></p>
+          </div>
+        </div>
+      </div>
       <a class="b b-blue sm hdr-call" href="tel:+4968156800">☎ 0681 56800</a>
       <button class="burger" type="button" aria-label="Menü" aria-expanded="false" data-burger><i></i><i></i><i></i></button>
     </div>
@@ -290,5 +301,5 @@
 <div class="toast" data-toast role="status" aria-live="polite"></div>
 <script>window.KL={"hours": [["10:00", "17:00"], ["9:00", "17:00"], ["9:00", "13:00"], ["10:00", "17:00"], ["9:00", "17:00"], ["9:00", "13:00"], null]};</script>
 <script src="assets/matter.min.js" defer></script>
-<script src="assets/kl.js?v=1792117622" defer></script>
+<script src="assets/kl.js?v=1792139347" defer></script>
 </body></html>

@@ -44,10 +44,31 @@
       for (let i = 0; i < 8; i++) { const dd = (d + i) % 7, hh = H[dd]; if (!hh) continue; if (i === 0 && m >= mins(hh[0])) continue; sub = 'öffnet ' + (i === 0 ? 'heute' : i === 1 ? 'morgen' : DS[dd]) + ' ' + hh[0]; break; }
     }
     const ds = $('[data-doorsign]'); if (ds) { ds.classList.toggle('open', open); ds.classList.toggle('closed', !open); $('[data-dsb]').textContent = open ? 'Geöffnet' : 'Geschlossen'; $('[data-dss]').textContent = sub; }
+    const dn = $('[data-dsnow]'); if (dn) { dn.textContent = (open ? 'Jetzt geöffnet' : 'Jetzt geschlossen') + (sub ? ' · ' + sub.replace(' Uhr', '') : ''); dn.classList.toggle('open', open); dn.classList.toggle('closed', !open); }
     const d2 = $('[data-door2]'); if (d2) { const was = d2.classList.contains('open'); d2.classList.toggle('open', open); d2.classList.toggle('closed', !open); $('[data-ds2b]').textContent = open ? 'Geöffnet' : 'Geschlossen'; $('[data-ds2s]').textContent = sub; if (was !== open) { d2.classList.remove('flip'); void d2.offsetWidth; d2.classList.add('flip'); } }
     const todayIdx = (d + 1) % 7; $$('[data-hours] li').forEach(li => li.classList.toggle('today', +li.dataset.day === todayIdx));
   }
   status(); setInterval(status, 60000);
+
+  /* ---------------- Türschild klappt auf: alle Öffnungszeiten ---------------- */
+  const dsw = $('[data-dsw]');
+  if (dsw) {
+    const btn = $('[data-doorsign]', dsw), pop = $('.ds-pop', dsw); let tOff = 0, peekT = 0;
+    const fit = () => { pop.style.setProperty('--dx', '0px'); const r = pop.getBoundingClientRect(), m = 8; let dx = 0; if (r.right > innerWidth - m) dx = innerWidth - m - r.right; if (r.left + dx < m) dx = m - r.left; pop.style.setProperty('--dx', dx + 'px'); };
+    const setOpen = o => { clearTimeout(tOff); clearTimeout(peekT); if (o === dsw.classList.contains('on')) return; if (o) fit(); dsw.classList.toggle('on', o); btn.setAttribute('aria-expanded', o); btn.setAttribute('aria-label', o ? 'Öffnungszeiten schließen' : 'Öffnungszeiten anzeigen'); };
+    const fine = matchMedia('(hover: hover) and (pointer: fine)');
+    dsw.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && fine.matches) setOpen(true); });
+    dsw.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && fine.matches) tOff = setTimeout(() => setOpen(false), 280); });
+    btn.addEventListener('click', e => { e.stopPropagation(); if (fine.matches && e.detail > 0 && dsw.classList.contains('on')) { setOpen(false); return; } setOpen(!dsw.classList.contains('on')); });
+    document.addEventListener('click', e => { if (!dsw.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && dsw.classList.contains('on')) { setOpen(false); btn.focus(); } });
+    addEventListener('scroll', () => { if (dsw.classList.contains('on') && scrollY > 80 && !dsw.matches(':hover')) setOpen(false); }, { passive: true });
+    addEventListener('resize', () => { if (dsw.classList.contains('on')) fit(); });
+    // einmal pro Sitzung kurz auf- und zuklappen, damit man sieht, dass hier alle Zeiten stehen
+    const peek = () => { if (RM || sget('kl-dspeek')) return; sset('kl-dspeek', 1); setTimeout(() => { if (scrollY > 120) return; setOpen(true); peekT = setTimeout(() => setOpen(false), 2200); }, 1400); };
+    if (document.body.classList.contains('is-loading')) document.addEventListener('kl-ready', peek, { once: true }); else peek();
+  }
+
 
   /* ---------------- Programm-Drehknopf ---------------- */
   const dialEl = $('[data-dial]');
