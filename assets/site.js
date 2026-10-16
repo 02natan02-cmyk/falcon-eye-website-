@@ -210,6 +210,15 @@
     }));
   });
 
+
+  /* ---------- Am Set: Filmstreifen läuft beim Scrollen mit ---------- */
+  $$('[data-film]').forEach(f => {
+    const tr = $('.film-track', f); if (!tr || reduce) return;
+    let tick = false;
+    const upd = () => { tick = false; if (innerWidth <= 900) { tr.style.transform = ''; return; } const r = f.getBoundingClientRect(), max = tr.scrollWidth - innerWidth; if (max <= 0) { tr.style.transform = ''; return; } const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))); tr.style.transform = `translate3d(${-p * max}px,0,0)`; };
+    addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true }); addEventListener('resize', upd); upd();
+  });
+
   /* ---------- project filters ---------- */
   const zig = () => $$('.cases').forEach(list => $$(':scope > .case', list).filter(c => !c.hidden).forEach((c, i) => c.classList.toggle('flip', i % 2 === 1)));
   zig();

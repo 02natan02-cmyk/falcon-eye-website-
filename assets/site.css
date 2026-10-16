@@ -826,3 +826,34 @@ form.plan .sent{background:var(--steel)}
 .pillbar .filters.jump{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:40px}
 .pillbar .filters.jump::-webkit-scrollbar{display:none}
 .pillbar .filters.jump > *{flex:none}
+
+/* ---------- Hangar: Foto aus dem Hangar ---------- */
+.hg-photo{position:absolute;right:14px;bottom:14px;z-index:3;width:min(38%,240px);pointer-events:none}
+.hg-photo:empty{display:none}
+.hg-photo figure{margin:0;background:#f4f1ea;padding:8px 8px 26px;border-radius:3px;box-shadow:0 18px 40px -12px rgba(0,0,0,.75);transform:rotate(3deg);animation:hgin .5s cubic-bezier(.2,1.4,.4,1)}
+.hg-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px}
+.hg-photo figcaption{position:absolute;left:10px;right:10px;bottom:6px;font:400 11px var(--osd);letter-spacing:.08em;text-transform:uppercase;color:#3a3530;text-align:center}
+.hg-photo figure::before{content:"";position:absolute;left:50%;top:-9px;width:46px;height:18px;margin-left:-23px;background:rgba(255,208,0,.75);transform:rotate(-4deg);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+@keyframes hgin{from{opacity:0;transform:translateY(16px) rotate(-6deg) scale(.9)}}
+@media (max-width:560px){.hg-photo{width:42%;right:8px;bottom:8px}.hg-photo figure{padding:5px 5px 18px}.hg-photo figcaption{font-size:9px;bottom:3px}}
+
+/* ---------- Am Set: Filmstreifen ---------- */
+.amset{overflow:hidden;padding-bottom:clamp(60px,8vw,110px)}
+.amset .intro a{color:var(--signal)}
+.film{position:relative;margin-top:clamp(28px,4vw,48px);background:#0b0d10;padding:34px 0;border-block:1px solid #000}
+.film::before,.film::after{content:"";position:absolute;left:0;right:0;height:14px;background:repeating-linear-gradient(90deg,transparent 0 14px,#2a2f36 14px 32px,transparent 32px 46px);opacity:.9}
+.film::before{top:10px}.film::after{bottom:10px}
+.film-track{display:flex;gap:22px;padding-inline:var(--gutter);width:max-content;will-change:transform}
+.fr{--h:clamp(280px,27vw,390px);margin:0;flex:none;width:calc(var(--h)*.8);background:#14181d;border-radius:4px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+.fr.wide{width:calc(var(--h)*1.6)}
+.fr.sq{width:calc(var(--h)*1.25)}
+.fr .ph{position:relative;height:var(--h);overflow:hidden}
+.fr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform .8s cubic-bezier(.2,.7,.1,1),filter .6s}
+.fr:hover img{transform:scale(1)}
+.fr .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),transparent 40%);pointer-events:none}
+.fr figcaption{display:grid;gap:2px;padding:14px 16px 16px;position:relative}
+.fr figcaption b{font:900 22px/1 var(--display);text-transform:uppercase;color:var(--wing)}
+.fr figcaption span{color:var(--text-2);font-size:14px}
+.fr figcaption i{position:absolute;right:14px;top:14px;font:400 11px var(--osd);font-style:normal;color:var(--signal);letter-spacing:.06em}
+@media (max-width:900px){.film{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}.film::-webkit-scrollbar{display:none}.film-track{transform:none!important}.fr,.fr.wide,.fr.sq{scroll-snap-align:center;width:80vw;--h:min(96vw,62vh)}.fr.wide .ph{height:60vw}.fr.sq .ph{height:70vw}}
+@media (prefers-reduced-motion:reduce){.hg-photo figure{animation:none}.film-track{transform:none!important}}
