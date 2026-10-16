@@ -175,14 +175,12 @@
     if (/gesendet=dm/.test(location.search)) $('[data-dmsent]', dm).hidden = false;
   }
 
-    /* ---------- Logo-Intro ---------- */
-  const intro = $('[data-intro]'), hlogo = $('.hdr .lg-i');
-  const logoIn = () => { hlogo && hlogo.classList.add('lg-draw'); };
-  if (intro && !document.documentElement.classList.contains('no-intro') && !RM) {
-    $('.intro-lg', intro).classList.add('lg-draw');
-    const done = () => { if (intro.classList.contains('out')) return; intro.classList.add('out'); try { sessionStorage.setItem('hud-intro', '1'); } catch (e) {} setTimeout(logoIn, 350); setTimeout(() => intro.remove(), 1000); };
-    intro.addEventListener('click', done); setTimeout(done, 2100);
-  } else { intro && intro.remove(); logoIn(); }
+    /* ---------- Logo-Intro: Ablauf steuert das Inline-Skript hinter dem Intro-Markup ---------- */
+  // <html data-hudintro> = run (Pfeile laden) -> reveal (Vorhang öffnet, Ereignis „hud:reveal“) -> off
+  const hlogo = $('.hdr .lg-i'), introRun = () => document.documentElement.dataset.hudintro === 'run';
+  const afterIntro = fn => { if (introRun()) document.addEventListener('hud:reveal', fn, { once: true }); else fn(); };
+  const logoIn = c => { if (!hlogo) return; hlogo.classList.add(c); setTimeout(() => hlogo.classList.remove(c), 1500); };
+  if (introRun()) afterIntro(() => setTimeout(() => logoIn('lg-land'), 300)); else logoIn('lg-draw');
 
   /* ---------- Einsatzbericht ---------- */
   const eb = $('[data-eb]');
@@ -220,7 +218,8 @@
   $$('[data-count]').forEach(el => cio.observe(el));
   if (window.gsap && !RM) {
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('[data-a]', { y: 34, opacity: 0, duration: 1, ease: 'power3.out', stagger: .09, delay: document.querySelector('[data-intro]') ? 2.2 : .1 });
+    const heroIn = gsap.from('[data-a]', { y: 34, opacity: 0, duration: 1, ease: 'power3.out', stagger: .09, delay: introRun() ? .2 : .1, paused: introRun() });
+    afterIntro(() => heroIn.play());
     $$('.sec-h > *, [data-r], .sv-g, .ja-g, .kg-vis, .eb-v, .wd-live, .oc-g, .dm-f, .map-w, .ko-cards').filter(el => !el.matches('.fw, .wy-g article, .wy-g > a') && !el.closest('[data-r]:not(:scope)')).forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
     gsap.to('.hero-v .scene-card', { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
     $$('.fw-g .fw, .wy-g article, .wy-g > a').forEach((el, i) => gsap.from(el, { y: 50, opacity: 0, duration: .8, delay: (i % 4) * .08, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
