@@ -19,6 +19,9 @@
 <link rel="icon" href="media/bird.png">
 <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css?v=1792114851">
+<script>if('noModule' in HTMLScriptElement.prototype)document.documentElement.classList.add('wd3-on')</script>
+<script type="importmap">{"imports":{"three":"./js/three.module.min.js"}}</script>
+<link rel="modulepreload" href="js/three.module.min.js">
 </head>
 <body class="p-webdesign">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -36,11 +39,33 @@
   <a class="btn wa" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20ich%20h%C3%A4tte%20gern%20einen%20kostenlosen%20Website-Entwurf." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp</a>
 </div>
 <main id="main">
-<section class="wd-hero">
+<section class="wd-hero wd3" id="montage" aria-labelledby="wd-h1">
   <div class="wd-grid" aria-hidden="true"></div>
-  <div class="wrap">
+  <!-- 3D-Montage: eine Website baut sich beim Scrollen selbst (assets/wd3d.js) -->
+  <div class="wd3-stage" aria-hidden="true">
+    <canvas id="wdc"></canvas>
+    <div class="wd3-shade"></div>
+    <div class="wd3-dims"></div>
+    <div class="wd3-tags"></div>
+    <div class="wd3-live"><span><i></i>Live</span></div>
+    <div class="wd3-osd">
+      <i class="wd3-c tl"></i><i class="wd3-c tr"></i><i class="wd3-c bl"></i><i class="wd3-c br"></i>
+      <p class="wd3-tele"><span class="rec"></span><b data-tc>00:00:00:00</b><span data-tele>Bereit</span></p>
+      <div class="wd3-cap"></div>
+      <p class="wd3-cue"><span></span>Scrollen – die Seite baut sich auf</p>
+      <ol class="wd3-chap">
+        <li data-chap style="--w:14" data-n="01" data-t="Vermessen" data-d="Die Drohne misst die Bühne aus: Laptop, Handy, jeder Pixel."><b>01</b><em>Vermessen</em></li>
+        <li data-chap style="--w:14" data-n="02" data-t="Raster" data-d="Gehäuse stehen, das Raster liegt. Erst die Struktur, dann der Inhalt."><b>02</b><em>Raster</em></li>
+        <li data-chap style="--w:28" data-n="03" data-t="Bausteine" data-d="Kopfzeile, Bild, Überschrift, Buttons – Stück für Stück rastet alles ein."><b>03</b><em>Bausteine</em></li>
+        <li data-chap style="--w:12" data-n="04" data-t="Code" data-d="Darunter: eigener Code. Kein Baukasten, keine Vorlage."><b>04</b><em>Code</em></li>
+        <li data-chap style="--w:12" data-n="05" data-t="Live" data-d="Licht an. Die Seite ist online – am Rechner und auf dem Handy."><b>05</b><em>Live</em></li>
+        <li data-chap style="--w:20" data-n="06" data-t="Referenzen" data-d="Zehn Betriebe, zehn Geschichten. Keine Seite gleicht der anderen."><b>06</b><em>Referenzen</em></li>
+      </ol>
+    </div>
+  </div>
+  <div class="wd3-copy"><div class="wrap">
     <p class="wd-kick"><span class="rec"></span> REC · WEBDESIGN</p>
-    <h1>Websites, die man <em>nicht wegscrollt.</em></h1>
+    <h1 id="wd-h1">Websites, die man <em>nicht wegscrollt.</em></h1>
     <p class="lede">Wir bauen Seiten wie wir Filme drehen: mit einer Geschichte, echten Bildern und einem Moment, über den man redet. Animiert, auf dem Handy perfekt – und für jeden Betrieb komplett eigen.</p>
     <div class="ctas"><a class="btn" href="#entwurf">Kostenlosen Entwurf anfragen</a><a class="btn ghost" href="#referenzen">Referenzen ansehen</a></div>
     <ul class="wd-stats">
@@ -48,7 +73,8 @@
       <li><b>0&nbsp;€</b><span>für den ersten Entwurf</span></li>
       <li><b>100&nbsp;%</b><span>eigener Code, kein Baukasten</span></li>
     </ul>
-  </div>
+  </div></div>
+  <div class="wd3-run" aria-hidden="true"></div>
   <div class="wd-stack" aria-hidden="true">
     <img src="media/wd/gartentraum_m.webp?v=3" alt="" style="--r:-8deg;--x:-58%;--y:4%">
     <img src="media/wd/kleber_m.webp?v=3" alt="" style="--r:0deg;--x:-50%;--y:-4%">
@@ -268,6 +294,7 @@
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
 <script src="assets/site.js?v=1792114851"></script>
+<script type="module" src="assets/wd3d.js?v=1" onerror="document.documentElement.classList.remove('wd3-on')"></script>
 <style>
 .p-webdesign main{background:var(--steel)}
 .wd-kick{font:400 14px/1 var(--osd);letter-spacing:.2em;text-transform:uppercase;color:var(--signal);display:flex;align-items:center;gap:10px;margin:0 0 18px}
@@ -289,6 +316,88 @@
 .wd-stack img:nth-child(1){animation-delay:-2s;left:30%}.wd-stack img:nth-child(3){animation-delay:-4s;left:70%}.wd-stack img:nth-child(2){z-index:2;width:50%}
 @keyframes wdfl{to{transform:translate(var(--x),calc(-50% + var(--y) - 14px)) rotate(calc(var(--r) * .6))}}
 @media (max-width:900px){.wd-hero h1,.wd-hero .lede,.wd-hero .ctas,.wd-stats{max-width:none}.wd-stack{position:relative;right:auto;top:auto;transform:none;width:100%;height:420px;margin-top:40px}.wd-hero{display:block;min-height:0}}
+/* ===== 3D-Montage im Hero (aktiv nur mit .wd3-on am <html>, sonst klassischer Hero mit Handy-Stapel) ===== */
+.wd3-copy{width:100%}
+.wd3-stage,.wd3-run{display:none}
+.wd3-on .wd3{display:block;min-height:0;padding:0;overflow:visible;height:380vh;height:380svh}
+.wd3-on .wd3>.wd-grid,.wd3-on .wd3>.wd-stack{display:none}
+.wd3-on .wd3-stage{display:block;position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;z-index:0;background:linear-gradient(rgba(255,208,0,.045) 1px,transparent 1px) 0 0/64px 64px,linear-gradient(90deg,rgba(255,208,0,.045) 1px,transparent 1px) 0 0/64px 64px,var(--steel)}
+#wdc{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease}
+.wd3.gl-ready #wdc{opacity:1}
+.wd3-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(22,27,33,.95) 0%,rgba(22,27,33,.88) 30%,rgba(22,27,33,.45) 47%,rgba(22,27,33,0) 59%),linear-gradient(180deg,rgba(22,27,33,.7) 0,rgba(22,27,33,0) 15%,rgba(22,27,33,0) 80%,rgba(22,27,33,.88) 100%)}
+.wd3-on .wd3-copy{position:sticky;top:0;height:100vh;height:100svh;margin-top:-100vh;margin-top:-100svh;display:flex;align-items:center;z-index:2;pointer-events:none;padding:calc(64px + var(--safe-top)) 0 58px}
+.wd3-on .wd3-copy .wrap>*{pointer-events:auto}
+.wd3-on .wd3 h1{font-size:clamp(46px,min(8.4vw,13.4vh),128px)}
+@media (min-width:901px) and (max-width:1200px){.wd3-on .wd3 .lede{max-width:min(26em,48vw)}.wd3-on .wd3 h1{max-width:52%}}
+@media (max-height:860px){.wd3-on .wd3 .wd-stats{margin-top:28px}.wd3-on .wd3 .wd-stats b{font-size:44px}.wd3-on .wd3 h1{margin-bottom:18px}}
+/* OSD wie im FPV-Feed */
+.wd3-osd{position:absolute;inset:0;pointer-events:none;z-index:3;font-family:var(--osd);text-transform:uppercase;transition:opacity .5s}
+.wd3.is-pre .wd3-dims,.wd3.is-pre .wd3-live{opacity:0}
+.wd3-tele,.wd3-chap{opacity:var(--ot,1);transition:opacity .3s}
+.wd3-c{position:absolute;width:24px;height:24px;border:2px solid rgba(255,208,0,.6)}
+.wd3-c.tl{left:var(--gutter);top:calc(82px + var(--safe-top));border-right:0;border-bottom:0}.wd3-c.tr{right:var(--gutter);top:calc(82px + var(--safe-top));border-left:0;border-bottom:0}
+.wd3-c.bl{left:var(--gutter);bottom:64px;border-right:0;border-top:0}.wd3-c.br{right:var(--gutter);bottom:64px;border-left:0;border-top:0}
+.wd3-tele{position:absolute;right:calc(var(--gutter) + 38px);top:calc(86px + var(--safe-top));margin:0;display:flex;gap:14px;align-items:center;font-size:12px;letter-spacing:.16em;color:var(--wing);white-space:nowrap}
+.wd3-tele b{font-weight:400;color:var(--signal)}
+.wd3-tele .rec{width:9px;height:9px;border-radius:50%;background:var(--rec);animation:wdrec 1.2s steps(2) infinite}
+.wd3-cap{position:absolute;right:calc(var(--gutter) + 38px);bottom:92px;width:min(400px,29vw);text-align:right;opacity:var(--ob,1);transition:opacity .4s}
+.wd3-cap span{display:block;font-size:12px;letter-spacing:.2em;color:var(--signal);margin-bottom:10px}
+.wd3-cap strong{display:block;font:900 clamp(34px,3.4vw,52px)/.9 var(--display);letter-spacing:.005em;color:var(--wing)}
+.wd3-cap em{display:block;font:400 15px/1.45 var(--body);text-transform:none;color:var(--text-2);margin-top:10px;font-style:normal;text-shadow:0 1px 12px rgba(22,27,33,.9)}
+.wd3-cap.in span,.wd3-cap.in strong,.wd3-cap.in em{animation:wd3in .6s cubic-bezier(.2,.8,.2,1) both}.wd3-cap.in strong{animation-delay:.05s}.wd3-cap.in em{animation-delay:.1s}
+@keyframes wd3in{from{opacity:0;transform:translateY(14px)}}
+.wd3-cue{position:absolute;right:calc(var(--gutter) + 38px);bottom:96px;margin:0;display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.2em;color:var(--signal);opacity:0;transition:opacity .5s}
+.wd3-cue span{width:2px;height:30px;background:linear-gradient(var(--signal),transparent);animation:wd3cue 1.6s ease-in-out infinite}
+@keyframes wd3cue{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(.2);transform-origin:bottom}}
+.wd3.is-start .wd3-cue{opacity:1}.wd3.is-start .wd3-cap{opacity:0}
+.wd3-chap{position:absolute;left:var(--gutter);right:var(--gutter);bottom:18px;display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.wd3-chap li{position:relative;flex:var(--w) 1 0;min-width:0;height:30px;border-top:2px solid rgba(230,236,236,.16);padding-top:8px;font-size:10px;letter-spacing:.16em;color:var(--muted);white-space:nowrap;overflow:hidden;transition:color .3s}
+.wd3-chap li::before{content:"";position:absolute;left:0;top:-2px;width:100%;height:2px;background:var(--signal);transform-origin:0 50%;transform:scaleX(var(--f,0));box-shadow:0 0 12px rgba(255,208,0,.7)}
+.wd3-chap b{font-weight:400;color:var(--signal);margin-right:8px}
+.wd3-chap em{font-style:normal}
+.wd3-chap li.on{color:var(--wing)}.wd3-chap li.done{color:var(--text-2)}
+/* Maßketten, LIVE-Badge, Namensschilder */
+.wd3-dims,.wd3-tags{position:absolute;inset:0;pointer-events:none;z-index:2}
+.wd3-dims .dim{position:absolute;left:0;top:0;opacity:0;will-change:transform}
+.wd3-dims .dim b,.wd3-dims .dim i{position:absolute;left:0;white-space:nowrap}
+.wd3-dims .dim b{font:400 13px/1 var(--osd);color:var(--signal-ink);background:var(--signal);padding:6px 8px;letter-spacing:.04em;transform:translate(-50%,-135%);box-shadow:0 0 26px rgba(255,208,0,.5)}
+.wd3-dims .dim i{font:400 10px/1 var(--osd);text-transform:uppercase;letter-spacing:.16em;color:#ffe680;font-style:normal;transform:translate(-50%,-490%);text-shadow:0 1px 6px rgba(22,27,33,.9)}
+.wd3-live{position:absolute;left:0;top:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .35s}
+.wd3-live span{display:inline-flex;align-items:center;gap:8px;transform:translate(-100%,-50%) scale(.6);transition:transform .45s cubic-bezier(.3,1.6,.5,1);font:400 14px/1 var(--osd);letter-spacing:.2em;text-transform:uppercase;color:#fff;background:var(--rec);padding:8px 12px 8px 10px;border-radius:6px;box-shadow:0 0 0 4px rgba(255,59,48,.18),0 10px 30px -6px rgba(255,59,48,.7)}
+.wd3-live i{width:8px;height:8px;border-radius:50%;background:#fff;animation:wdrec 1s steps(2) infinite}
+.wd3-live.on{opacity:1}.wd3-live.on span{transform:translate(-100%,-50%) scale(1)}
+.wd3-tags{opacity:0;transition:opacity .5s}
+.wd3.tags-on .wd3-tags{opacity:1}
+.wd3-tags span{position:absolute;left:0;top:0;font:400 11px/1 var(--osd);letter-spacing:.12em;text-transform:uppercase;color:var(--wing);background:rgba(22,27,33,.78);border:1px solid var(--line);padding:6px 10px;border-radius:999px;white-space:nowrap;transition:opacity .3s,background .2s,color .2s,border-color .2s}
+.wd3-tags span.hot{background:var(--signal);color:var(--signal-ink);border-color:var(--signal)}
+/* Handy, Tablet hochkant, sehr niedrige Fenster: Text läuft über die Szene, danach die Montage */
+@media (max-width:900px),(max-height:620px){
+  .wd3-on .wd3{height:auto}
+  .wd3-on .wd3-copy{position:relative;height:auto;display:block;padding:calc(104px + var(--safe-top)) 0 72px;background:linear-gradient(180deg,rgba(22,27,33,.9) 0%,rgba(22,27,33,.82) 74%,rgba(22,27,33,0) 100%)}
+  .wd3-on .wd3-run{display:block;height:250vh;height:250svh}
+  .wd3-shade{background:linear-gradient(180deg,rgba(22,27,33,.75) 0,rgba(22,27,33,0) 22%,rgba(22,27,33,0) 56%,rgba(22,27,33,.94) 100%)}
+  .wd3-c,.wd3-cue{display:none}
+  .wd3-tele{left:var(--gutter);right:auto;top:calc(76px + var(--safe-top));font-size:10px;gap:10px}
+  .wd3-chap{top:calc(98px + var(--safe-top));bottom:auto;gap:4px}
+  .wd3-chap li{height:auto;padding-top:6px;font-size:9px}.wd3-chap em{display:none}
+  .wd3-cap{left:var(--gutter);right:var(--gutter);width:auto;bottom:calc(92px + var(--safe-bottom));text-align:left}
+  .wd3-cap strong{font-size:40px}.wd3-cap em{font-size:15px;max-width:30em}
+  .wd3-on .wd3 .wd-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:34px}
+  .wd3-on .wd3 .wd-stats b{font-size:40px}
+  .wd3-on .wd3 .wd-stats span{font-size:10px;letter-spacing:.1em;display:block;line-height:1.35}
+}
+/* Reduzierte Bewegung: statisches Endbild (die Galerie), kein Scroll-Kino */
+@media (prefers-reduced-motion:reduce){
+  .wd3-on .wd3{height:auto;min-height:100vh;min-height:100svh}
+  .wd3-on .wd3-stage{position:absolute;inset:0;height:auto}
+  .wd3-on .wd3-copy{position:relative;margin-top:0;height:auto;min-height:100vh;min-height:100svh}
+  .wd3-on .wd3-run,.wd3-chap,.wd3-cap,.wd3-cue,.wd3-tele,.wd3-c{display:none}
+}
+@media (prefers-reduced-motion:reduce) and (max-width:900px),(prefers-reduced-motion:reduce) and (max-height:620px){
+  .wd3-on .wd3{display:flex;flex-direction:column;align-items:stretch}
+  .wd3-on .wd3-stage{position:relative;inset:auto;order:2;height:64vh;height:64svh}
+  .wd3-on .wd3-copy{order:1;min-height:0;background:none;padding-bottom:24px}
+}
 .wd-refs{padding:clamp(80px,10vw,150px) 0}
 .wd-list{list-style:none;padding:0;margin:clamp(40px,6vw,80px) 0 0;display:grid;gap:clamp(70px,9vw,130px)}
 .wd-ref{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center}
