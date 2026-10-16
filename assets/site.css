@@ -857,3 +857,13 @@ form.plan .sent{background:var(--steel)}
 .fr figcaption i{position:absolute;right:14px;top:14px;font:400 11px var(--osd);font-style:normal;color:var(--signal);letter-spacing:.06em}
 @media (max-width:900px){.film{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}.film::-webkit-scrollbar{display:none}.film-track{transform:none!important}.fr,.fr.wide,.fr.sq{scroll-snap-align:center;width:80vw;--h:min(96vw,62vh)}.fr.wide .ph{height:60vw}.fr.sq .ph{height:70vw}}
 @media (prefers-reduced-motion:reduce){.hg-photo figure{animation:none}.film-track{transform:none!important}}
+
+/* ---------- Leistungen: Foto vom Set als Polaroid ---------- */
+.media-wrap{position:relative}
+.case-pol{position:absolute;right:-14px;bottom:-22px;z-index:3;width:min(36%,210px);margin:0;background:#f4f1ea;padding:7px 7px 24px;border-radius:3px;box-shadow:0 22px 44px -14px rgba(0,0,0,.8);transform:rotate(4deg);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
+.case.flip .case-pol{right:auto;left:-14px;transform:rotate(-4deg)}
+.case-pol img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:2px}
+.case-pol figcaption{position:absolute;left:8px;right:8px;bottom:5px;font:400 10px var(--osd);letter-spacing:.08em;text-transform:uppercase;color:#3a3530;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-pol::before{content:"";position:absolute;left:50%;top:-8px;width:42px;height:16px;margin-left:-21px;background:rgba(255,208,0,.75);transform:rotate(-5deg)}
+.case:hover .case-pol{transform:rotate(1deg) translateY(-6px)}
+@media (max-width:700px){.case-pol{right:6px;bottom:-16px;width:30%;padding:5px 5px 19px}.case-pol figcaption{font-size:9px;bottom:4px}.case.flip .case-pol{left:auto;right:6px;transform:rotate(4deg)}}
