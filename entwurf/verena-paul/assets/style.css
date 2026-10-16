@@ -942,3 +942,12 @@ a.tr,.tr{display:flex;flex-direction:column}
 
 /* Werdegang: Einflug der Zeilen erzeugt keine Überbreite */
 .cv{overflow-x:clip}
+
+/* Video-Credit: Falcon Eye & Pflege24-7 Media */
+.fl-cred{display:grid;gap:4px;padding:8px 12px 9px;border-radius:14px;line-height:1}
+.fl-cred small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.fl-cred span{display:flex;align-items:center;gap:7px}
+.fl-cred img{display:block;height:13px;width:auto}
+.fl-cred img+i+img{height:25px;border-radius:999px}
+.fl-cred i{font-style:normal;font-size:12px;opacity:.85}
+.fl-cred em{font-style:normal;font-size:12px;font-weight:600;letter-spacing:.02em}
