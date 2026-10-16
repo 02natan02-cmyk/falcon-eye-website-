@@ -26,7 +26,9 @@
 
   /* ---------------- Header / Menü ---------------- */
   const hdr = $('[data-hdr]'), burger = $('[data-burger]'), mnav = $('[data-mnav]'); let ly = 0;
-  const onS = () => { const y = scrollY; if (!hdr) return; hdr.classList.toggle('scrolled', y > 30); hdr.classList.toggle('hide', y > 600 && y > ly + 4 && !(mnav && !mnav.hidden)); if (y < ly - 4) hdr.classList.remove('hide'); ly = y; };
+  const onS = () => { const y = scrollY; if (!hdr) return; hdr.classList.toggle('scrolled', y > 30);
+    // nur bei deutlicher Bewegung umschalten – sonst blendet sich der Kopf beim langsamen Scrollen wieder ein
+    if (y <= 600 || y < ly - 4 || (mnav && !mnav.hidden)) hdr.classList.remove('hide'); else if (y > ly + 4) hdr.classList.add('hide'); ly = y; };
   addEventListener('scroll', onS, { passive: true }); onS();
   if (burger && mnav) { burger.addEventListener('click', () => { const o = mnav.hidden; mnav.hidden = !o; burger.setAttribute('aria-expanded', o); }); $$('a', mnav).forEach(a => a.addEventListener('click', () => { mnav.hidden = true; burger.setAttribute('aria-expanded', false); })); }
 
@@ -52,14 +54,20 @@
   if (dialEl) {
     const stops = $$('[data-dst]', dialEl), knob = $('[data-dialknob]', dialEl);
     const secs = stops.map(a => $(a.getAttribute('href')));
+    const stEl = $('#geschichte'), ftEl = $('.ftr');
     const upd = () => {
       dialEl.classList.toggle('on', scrollY > innerHeight * .6);
+      const sr = stEl && stEl.getBoundingClientRect(), pinned = sr && sr.top <= 2 && sr.bottom >= innerHeight - 2, nearEnd = ftEl && ftEl.getBoundingClientRect().top < innerHeight - 40;
+      dialEl.classList.toggle('away', !!(pinned || nearEnd));
       let k = 0; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .45) k = i; });
       stops.forEach((a, i) => a.classList.toggle('on', i === k)); knob.style.setProperty('--k', stops[k].style.getPropertyValue('--a')); $('[data-dialt]').textContent = stops[k].dataset.t;
       $$('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === stops[k].getAttribute('href')));
     };
     addEventListener('scroll', upd, { passive: true }); upd();
   }
+
+  const concept = $('.concept'), ftr0 = $('.ftr');
+  if (concept && ftr0) { const cu = () => concept.classList.toggle('away', ftr0.getBoundingClientRect().top < innerHeight - 40); addEventListener('scroll', cu, { passive: true }); cu(); }
 
   /* ---------------- Zähler ---------------- */
   $$('[data-count]').forEach(el => inView(el, v => { if (!v || el._done) return; el._done = 1; const n = +el.dataset.count; let t0; const st = ts => { if (!t0) t0 = ts; const k = clamp((ts - t0) / 1400, 0, 1); el.textContent = Math.round(n * ease(k)); if (k < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); }, '0px'));
@@ -120,7 +128,9 @@
     // Bündchen, Ferse, Spitze
     x.fillStyle = 'rgba(255,255,255,.35)'; x.fillRect(0, 0, w, h * .12); x.fillStyle = 'rgba(0,0,0,.12)'; for (let i = 4; i < lw; i += 4) x.fillRect(i, 2, 1.5, h * .12);
     x.fillStyle = s.p === 'plain' ? s.c2 : 'rgba(0,0,0,.18)'; x.beginPath(); x.arc(2 + lw * .2, h * .68 + lw * .2, lw * .55, 0, 6.28); x.fill(); x.beginPath(); x.arc(w - 2 - lw * .48, h * .68 + lw * .48, lw * .5, -1.2, 1.2); x.fill();
-    x.restore(); path(); shade(x, w, h); x.lineWidth = sel ? 4 : 1; x.strokeStyle = sel ? '#ffd23f' : 'rgba(0,0,0,.25)'; x.stroke();
+    x.restore(); path(); shade(x, w, h);
+    if (sel) { x.lineWidth = 6; x.strokeStyle = '#ffffff'; x.stroke(); x.lineWidth = 2.5; x.strokeStyle = '#1546a8'; x.stroke(); }
+    else { x.lineWidth = 1; x.strokeStyle = 'rgba(0,0,0,.25)'; x.stroke(); }
     return { c, w, h, lw };
   }
 
@@ -163,6 +173,8 @@
       items.push(b); Composite.add(eng.world, b); return b;
     }
     function removeItem(b) { Composite.remove(eng.world, b); items = items.filter(i => i !== b); }
+    // ein Teil nach oben holen: wird zuletzt gezeichnet und bei Treffern bevorzugt
+    function toTop(b) { const i = items.indexOf(b); if (i < 0 || i === items.length - 1) return; items.splice(i, 1); items.push(b); }
     let spin = 0; // 0..1 Schleuderstärke
     const holes = [];
     function drawBack() {
@@ -191,7 +203,7 @@
     function drawItems(selSet) {
       for (const b of items) {
         ctx.save(); ctx.translate(b.position.x, b.position.y); ctx.rotate(b.angle);
-        if (b._kind === 'sock') { ctx.translate(-b._off.x - b._sw / 2, -b._off.y - b._sh / 2); ctx.drawImage(selSet && selSet.has(b) ? (b._sel || (b._sel = sockSprite(b._sock, b._L, true).c)) : b._spr, 0, 0, b._sw, b._sh); }
+        if (b._kind === 'sock') { const on = selSet && selSet.has(b); if (on) { ctx.scale(1.14, 1.14); ctx.shadowColor = 'rgba(255,210,63,.95)'; ctx.shadowBlur = 16; } ctx.translate(-b._off.x - b._sw / 2, -b._off.y - b._sh / 2); ctx.drawImage(on ? (b._sel || (b._sel = sockSprite(b._sock, b._L, true).c)) : b._spr, 0, 0, b._sw, b._sh); }
         else ctx.drawImage(b._spr, -b._sw / 2, -b._sh / 2, b._sw, b._sh);
         ctx.restore();
       }
@@ -214,7 +226,7 @@
     let grab = null;
     const pt = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * W / r.height }; };
     cv.addEventListener('pointerdown', e => {
-      const p = pt(e), hits = Query.point(items, p); let hit = hits[hits.length - 1]; if (!hit && opts.onPick) { let best = null, bd = 1e9; for (const b of items) { const d = Math.hypot(b.position.x - p.x, b.position.y - p.y); if (d < bd) { bd = d; best = b; } } if (bd < R * .14) hit = best; } if (!hit) return;
+      const p = pt(e), hits = Query.point(items, p); let hit = hits[hits.length - 1]; if (!hit && opts.onPick) { let best = null, bd = 1e9; for (const b of items) { if (b._gone) continue; const d = Math.hypot(b.position.x - p.x, b.position.y - p.y); if (d < bd) { bd = d; best = b; } } if (bd < R * (e.pointerType === 'mouse' ? .13 : .21)) hit = best; } if (!hit) return;
       if (opts.onPick) { opts.onPick(hit); return; }
       if (e.pointerType !== 'mouse') { Body.setVelocity(hit, { x: (Math.random() - .5) * 10, y: -10 }); return; }
       grab = Constraint.create({ pointA: p, bodyB: hit, pointB: { x: p.x - hit.position.x, y: p.y - hit.position.y }, stiffness: .2, damping: .1, length: 0 });
@@ -224,7 +236,7 @@
     const rel = () => { if (grab) { Composite.remove(eng.world, grab); grab = null; cv.classList.remove('grab'); } };
     cv.addEventListener('pointerup', rel); cv.addEventListener('pointercancel', rel);
     return {
-      build, addItem, removeItem, step, drawBack, drawWater, drawItems, ctx,
+      build, addItem, removeItem, toTop, step, drawBack, drawWater, drawItems, ctx,
       get items() { return items; }, get R() { return R; }, get W() { return W; },
       set omega(v) { omega = v; }, get omega() { return omega; },
       set spin(v) { spin = v; }, get spin() { return spin; },
@@ -250,24 +262,32 @@
     const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
     const h1w = $$('[data-h1] .w');
     function spinNow() {
-      if (spinT > 0) return; spinT = 1; btnSp.classList.add('on'); wm.classList.add('shake'); D.waterT = 0; lcdP.textContent = 'Schleudern 1400';
-      h1w.forEach((w, i) => w.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], { duration: 900, delay: i * 90, easing: 'cubic-bezier(.5,0,.3,1)' }));
+      if (spinT > 0) return; spinT = 1; btnSp.classList.add('on'); wm.classList.add('shake'); D.waterT = 0; lcdP.textContent = 'Schleudern';
+      if (!RM) h1w.forEach((w, i) => w.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], { duration: 900, delay: i * 90, easing: 'cubic-bezier(.5,0,.3,1)' }));
     }
     knob.addEventListener('click', () => { pi = (pi + 1) % PROGS.length; knob.style.setProperty('--kn', (pi * 72) + 'deg'); lcdP.textContent = PROGS[pi].n; remain = PROGS[pi].t * 60; if (!spinT) D.waterT = PROGS[pi].w; });
-    btnS.addEventListener('click', () => { running = !running; btnS.setAttribute('aria-pressed', running); btnS.querySelector('span').textContent = running ? 'Start' : 'Pause'; });
+    const lcd = $('.wm-lcd', wm), startI = $('[data-starti]', btnS);
+    btnS.addEventListener('click', () => {
+      running = !running; startI.textContent = running ? '❚❚' : '▶︎'; $('span', btnS).textContent = running ? 'Pause' : 'Start';
+      btnS.setAttribute('aria-label', running ? 'Waschgang anhalten' : 'Waschgang starten'); btnS.classList.toggle('paused', !running); lcd.classList.toggle('paused', !running);
+    });
     btnSp.addEventListener('click', spinNow);
+    const ICON = { shirt: () => SP.shirt(30, 26, '#1d6fd8'), sock: () => sockSprite(SOCKS[1], 30).c, towel: () => SP.towel(30, 17, '#2a9d8f'), sheet: () => SP.sheet(30, 20), duck: () => SP.duck(28) };
+    $$('[data-addw]').forEach(b => { b.setAttribute('aria-label', b.title + ' in die Trommel legen'); try { const im = new Image(); im.alt = ''; im.src = ICON[b.dataset.addw]().toDataURL(); im.width = 28; im.height = 28; b.textContent = ''; b.appendChild(im); } catch (er) { } });
     $$('[data-addw]').forEach(b => b.addEventListener('click', () => {
       if (D.items.length > 26) { const old = D.items[0]; D.removeItem(old); }
       D.addItem(b.dataset.addw, D.R + (Math.random() - .5) * D.R * .3, D.R * .35, { v: { x: (Math.random() - .5) * 3, y: 6 } });
-      const r = b.getBoundingClientRect(), f = document.createElement('span'); f.textContent = b.textContent; f.style.cssText = `position:fixed;left:${r.left}px;top:${r.top}px;font-size:24px;z-index:500;pointer-events:none;transition:transform .55s cubic-bezier(.5,-.4,.3,1),opacity .55s`; document.body.appendChild(f);
-      const cr = cv.getBoundingClientRect(); requestAnimationFrame(() => { f.style.transform = `translate(${cr.left + cr.width / 2 - r.left}px,${cr.top + cr.height * .3 - r.top}px) scale(.6) rotate(-200deg)`; f.style.opacity = '0'; }); setTimeout(() => f.remove(), 600);
+      const r = b.getBoundingClientRect(), f = document.createElement('span'), ic = $('img', b); if (ic) f.appendChild(ic.cloneNode()); else f.textContent = b.textContent; f.style.cssText = `position:fixed;left:${r.left}px;top:${r.top}px;font-size:24px;z-index:500;pointer-events:none;transition:transform .55s cubic-bezier(.5,-.4,.3,1),opacity .55s`; document.body.appendChild(f);
+      const cr = cv.getBoundingClientRect(); if (RM) { f.remove(); return; } requestAnimationFrame(() => { f.style.transform = `translate(${cr.left + cr.width / 2 - r.left}px,${cr.top + cr.height * .3 - r.top}px) scale(.6) rotate(-200deg)`; f.style.opacity = '0'; }); setTimeout(() => f.remove(), 600);
     }));
-    let acc = 0;
+    let acc = 0, rmUntil = 0;
+    const wake = () => { if (!RM) return; const was = rmUntil > performance.now(); rmUntil = performance.now() + 2500; if (!was) { last = performance.now(); requestAnimationFrame(loop); } };
+    [knob, btnS, btnSp, ...$$('[data-addw]')].forEach(el => el.addEventListener('click', wake)); cv.addEventListener('pointerdown', wake);
     function loop(now) {
       const dt = Math.min(50, now - last); last = now;
       if (vis && D.W) {
         // Programm & Schleudern
-        let target = running ? PROGS[pi].o : 0;
+        let target = running && !RM ? PROGS[pi].o : 0;
         if (spinT > 0) { spinT += dt; const k = spinT / 1000; D.spin = k < 1.2 ? clamp((k - .5) / .7, 0, 1) : k < 5 ? 1 : clamp(1 - (k - 5) / 1.2, 0, 1); target = lerp(target, .24, D.spin); if (k > 6.4) { spinT = 0; D.spin = 0; btnSp.classList.remove('on'); wm.classList.remove('shake'); D.waterT = PROGS[pi].w; lcdP.textContent = PROGS[pi].n; } }
         D.omega = lerp(D.omega, target, .04);
         if (running) { remain -= dt / 1000 * 6; if (remain < 0) remain = PROGS[pi].t * 60; }
@@ -275,9 +295,9 @@
         acc += dt; let n = 0; while (acc >= 16.67 && n < 3) { D.step(16.67); acc -= 16.67; n++; } if (n === 3) acc = 0;
         const c = D.ctx; c.clearRect(0, 0, D.W, D.W); D.drawBack(); D.drawWater(false); D.drawItems(); D.drawWater(true);
       }
-      requestAnimationFrame(loop);
+      if (!RM || now < rmUntil) requestAnimationFrame(loop);
     }
-    if (!RM) requestAnimationFrame(loop); else { D.step(16); D.drawBack(); D.drawItems(); }
+    if (!RM) requestAnimationFrame(loop); else { for (let i = 0; i < 90; i++) D.step(16.67); D.drawBack(); D.drawWater(false); D.drawItems(); D.drawWater(true); }
     // erster Hinweis: kurz anschubsen, wenn das Intro weg ist
     document.addEventListener('kl-ready', () => setTimeout(() => { D.items.forEach(b => D.M.Body.setVelocity(b, { x: (Math.random() - .5) * 6, y: -6 })); }, 600), { once: true });
   }
@@ -285,53 +305,76 @@
   /* ================= Sockenspiel ================= */
   function initSocks() {
     const cv = $('[data-sgcv]'); if (!cv) return;
-    const sel = new Set(); let pairs = 0, t0 = 0, running = false, vis = false, timer = 0, last = performance.now(), acc = 0, shakeT = 0;
+    const sel = new Set(); let pairs = 0, t0 = 0, running = false, vis = false, last = performance.now(), acc = 0, shakeT = 0;
+    let selT = 0, hintB = null, hintT = 0, lastPairT = 0, idleHints = 0, focusOn = false;
     const tEl = $('[data-sgtime]'), pEl = $('[data-sgpairs]'), bEl = $('[data-sgbest]'), line = $('[data-sgline]'), done = $('[data-sgdone]'), res = $('[data-sgres]');
+    const wrap = $('[data-sgwrap]'), startBtn = $('[data-sgstart]'), shakeBtn = $('[data-sgshake]');
     const fmt = ms => { const s = ms / 1000; return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')},${Math.floor((s % 1) * 10)}`; };
     const best = +store.get('kl-socks') || 0; if (best) bEl.textContent = fmt(best);
-    let D;
-    D = makeDrum(cv, { omega: .006, water: 0, baffles: 3, onPick: b => pick(b) });
+    const L = () => innerWidth < 640 ? 80 : 70;
+    const D = makeDrum(cv, { omega: .006, water: 0, baffles: 3, onPick: b => pick(b) });
     if (!D) return; window.__klSocks = D;
+    const Body = D.M.Body;
     function fill() {
-      D.items.slice().forEach(b => D.removeItem(b)); line.innerHTML = ''; sel.clear(); pairs = 0; pEl.textContent = '0 / 8';
+      D.items.slice().forEach(b => D.removeItem(b)); line.innerHTML = ''; sel.clear(); hintB = null; pairs = 0; pEl.textContent = '0 / 8';
       const list = []; SOCKS.forEach((s, i) => { list.push(i, i); }); list.sort(() => Math.random() - .5);
-      list.forEach((i, n) => D.addItem('sock', D.R + (Math.random() - .5) * D.R * .9, D.R + (Math.random() - .2) * D.R * .7, { sock: SOCKS[i], L: innerWidth < 640 ? 78 : 70 }));
+      list.forEach(i => D.addItem('sock', D.R + (Math.random() - .5) * D.R * .9, D.R + (Math.random() - .2) * D.R * .7, { sock: SOCKS[i], L: L() }));
     }
-    function start() { fill(); running = true; t0 = performance.now(); done.hidden = true; shakeT = 1; }
+    function start() {
+      fill(); running = true; t0 = lastPairT = performance.now(); idleHints = 0; done.hidden = true; shakeT = 1; startBtn.textContent = 'Neu mischen';
+      // auf dem Handy die Trommel samt Spielstand ins Bild holen
+      if (innerWidth < 1000) { const st = $('.sg-stats').getBoundingClientRect(), r = wrap.getBoundingClientRect(); if (st.top < 0 || r.bottom > innerHeight - 72) scrollTo({ top: scrollY + st.top - 12, behavior: RM ? 'auto' : 'smooth' }); }
+    }
+    const shakeAnim = () => { if (!RM) cv.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 260 }); };
     function pick(b) {
+      if (b._gone) return;
       if (!running) { start(); return; }
       if (sel.has(b)) { sel.delete(b); return; }
-      sel.add(b);
-      if (sel.size === 2) {
-        const [a, c] = [...sel];
-        if (a._sock === c._sock) {
-          setTimeout(() => {
-            D.removeItem(a); D.removeItem(c); sel.clear(); pairs++; pEl.textContent = pairs + ' / 8';
-            const el = document.createElement('div'); el.className = 'pair'; const g = sockSprite(a._sock, 60); const [pc, px] = cnv(54, 92); px.drawImage(g.c, 0, 6, g.w * .82, g.h * .82); px.drawImage(g.c, 10, 10, g.w * .82, g.h * .82); el.appendChild(pc); line.appendChild(el);
-            if (pairs === 8) finish();
-          }, 160);
-        } else { cv.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 260 }); setTimeout(() => sel.clear(), 380); }
+      // gewählte Socke nach oben holen und kurz anheben – so liegt sie nie verdeckt
+      D.toTop(b); Body.setVelocity(b, { x: b.velocity.x * .3, y: -3.2 });
+      sel.add(b); selT = performance.now(); hintB = null;
+      if (sel.size < 2) return;
+      const [a, c] = [...sel];
+      if (a._sock === c._sock) {
+        a._gone = c._gone = true; sel.clear(); pairs++; pEl.textContent = pairs + ' / 8'; lastPairT = performance.now();
+        setTimeout(() => {
+          D.removeItem(a); D.removeItem(c);
+          const el = document.createElement('div'); el.className = 'pair'; const g = sockSprite(a._sock, 60); const [pc, px] = cnv(54, 92); px.drawImage(g.c, 0, 6, g.w * .82, g.h * .82); px.drawImage(g.c, 10, 10, g.w * .82, g.h * .82); el.appendChild(pc); line.appendChild(el);
+          if (pairs === 8) finish();
+        }, 160);
+      } else {
+        // falsches Paar: wackeln, die zuletzt angetippte Socke bleibt ausgewählt
+        shakeAnim(); sel.delete(a);
       }
     }
     function finish() {
       running = false; const ms = performance.now() - t0; const b = +store.get('kl-socks') || 0;
       const rec = !b || ms < b; if (rec) { store.set('kl-socks', Math.round(ms)); bEl.textContent = fmt(ms); }
-      res.textContent = `Ihre Zeit: ${fmt(ms)}${rec ? ' – neue Bestzeit!' : ''} Bei uns geht keine Socke verloren.`; done.hidden = false;
+      res.textContent = `Ihre Zeit: ${fmt(ms)}${rec ? ' – neue Bestzeit!' : ''} Bei uns geht keine Socke verloren.`; done.hidden = false; startBtn.textContent = 'Spiel starten';
     }
-    $('[data-sgstart]').addEventListener('click', start); $('[data-sgagain]').addEventListener('click', start);
-    $('[data-sgshake]').addEventListener('click', () => { shakeT = 1; });
-    const init = () => { if (D.build() && !D.items.length) { const list = []; SOCKS.forEach((s, i) => list.push(i, i)); list.forEach(i => D.addItem('sock', D.R + (Math.random() - .5) * D.R * .9, D.R + (Math.random() - .2) * D.R * .7, { sock: SOCKS[i], L: innerWidth < 640 ? 78 : 70 })); } };
+    startBtn.addEventListener('click', start); $('[data-sgagain]').addEventListener('click', start);
+    shakeBtn.addEventListener('click', () => { shakeT = 1; shakeBtn.classList.remove('pulse'); });
+    const init = () => { if (D.build() && !D.items.length) { const list = []; SOCKS.forEach((s, i) => list.push(i, i)); list.forEach(i => D.addItem('sock', D.R + (Math.random() - .5) * D.R * .9, D.R + (Math.random() - .2) * D.R * .7, { sock: SOCKS[i], L: L() })); } };
     init(); addEventListener('resize', () => D.build());
     inView(cv, v => vis = v, '50px');
     function loop(now) {
       const dt = Math.min(50, now - last); last = now;
       if (vis && D.W) {
-        let target = .006; if (shakeT > 0) { shakeT += dt; const k = shakeT / 1000; target = k < 1.6 ? .07 : .006; if (k > 1.6) shakeT = 0; }
+        let target = RM ? .002 : .006; if (shakeT > 0) { shakeT += dt; const k = shakeT / 1000; target = k < 1.6 ? .07 : target; if (k > 1.6) shakeT = 0; }
         D.omega = lerp(D.omega, target, .05);
+        if (running) {
+          // Hilfe 1: ist eine Socke ausgewählt und nach 4 s noch kein Partner gefunden, hüpft der Partner nach oben
+          if (sel.size === 1 && !hintB && now - selT > 4000) { const [a] = [...sel]; const pb = D.items.find(x => x !== a && !x._gone && x._sock === a._sock); if (pb) { hintB = pb; hintT = now; D.toTop(pb); Body.setVelocity(pb, { x: (Math.random() - .5) * 2, y: -5 }); } }
+          // Hilfe 2: lange kein Paar – Tipp anzeigen und "Trommel drehen" hervorheben
+          if (now - lastPairT > 15000 && idleHints < 2) { idleHints++; lastPairT = now; toast('Tipp: Socke antippen und kurz warten – der Partner hüpft hoch. Oder „Trommel drehen“.', 4200); shakeBtn.classList.remove('pulse'); void shakeBtn.offsetWidth; shakeBtn.classList.add('pulse'); }
+        }
         acc += dt; let n = 0; while (acc >= 16.67 && n < 3) { D.step(16.67); acc -= 16.67; n++; } if (n === 3) acc = 0;
         const c = D.ctx; c.clearRect(0, 0, D.W, D.W); D.drawBack(); D.drawItems(sel);
+        if (hintB && !hintB._gone && D.items.includes(hintB) && now - hintT < 2800) { const k = .5 + .5 * Math.sin((now - hintT) / 110); c.save(); c.strokeStyle = `rgba(255,210,63,${.3 + .6 * k})`; c.lineWidth = 3; c.setLineDash([6, 5]); c.beginPath(); c.arc(hintB.position.x, hintB.position.y, D.R * .2, 0, 6.28); c.stroke(); c.restore(); }
         if (running) tEl.textContent = fmt(now - t0);
       }
+      // Fokus beim Spielen auf dem Handy: Kopfzeile und Bedienleiste machen Platz
+      const focus = running && vis && innerWidth < 1000; if (focus !== focusOn) { focusOn = focus; document.body.classList.toggle('sg-play', focus); }
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
@@ -342,7 +385,7 @@
   if (story && !RM) {
     const pin = $('[data-storypin]'), track = $('[data-storytrack]'), bar = $('[data-storybar]'), lms = $$('.lm', track);
     const manual = new Map();
-    function size() { const extra = track.scrollWidth - innerWidth; story.style.setProperty('--sh', (extra + innerHeight * 1.15) + 'px'); return extra; }
+    function size() { const extra = track.scrollWidth - innerWidth, f = innerWidth < 640 ? .72 : 1; story.style.setProperty('--sh', (extra * f + innerHeight * 1.15) + 'px'); return extra; }
     let extra = size(); addEventListener('resize', () => { extra = size(); upd(); });
     function upd() {
       const r = story.getBoundingClientRect(), total = story.offsetHeight - innerHeight, p = clamp(-r.top / total, 0, 1);
@@ -365,28 +408,29 @@
   const mg = $('[data-mangle]');
   if (mg) {
     const cv = $('[data-mgcv]'), x = cv.getContext('2d'), rng = $('[data-mgr]'), roll = $('[data-mgroll]'), temp = $('[data-mgtemp]'), pkg = $('[data-pkg]'), tag = $('[data-pktag]'), nameIn = $('[data-pkname]');
-    const W = 900, Hh = 420; cv.width = W; cv.height = Hh;
+    const W = 900, Hh = innerWidth < 640 ? 640 : 420; cv.width = W; cv.height = Hh;
     const SW = Math.round(W * .44), SH = Math.round(Hh * .78), RX = W * .5;
     // Laken glatt
     const smooth = document.createElement('canvas'); smooth.width = SW; smooth.height = SH; const s = smooth.getContext('2d');
     s.fillStyle = '#fbfcff'; s.fillRect(0, 0, SW, SH); s.fillStyle = '#d4e3ff'; for (let i = 0; i < SH; i += 24) s.fillRect(0, i, SW, 3); s.fillStyle = '#1546a8'; s.fillRect(0, 10, SW, 6); s.fillRect(0, SH - 16, SW, 6);
     s.strokeStyle = 'rgba(21,70,168,.12)'; s.lineWidth = 1; s.beginPath(); s.moveTo(SW / 2, 0); s.lineTo(SW / 2, SH); s.moveTo(0, SH / 2); s.lineTo(SW, SH / 2); s.stroke();
-    // Laken zerknittert: Verschiebung + Schattierung
-    const wr = document.createElement('canvas'); wr.width = SW; wr.height = SH; const w = wr.getContext('2d');
-    const src = s.getImageData(0, 0, SW, SH), dst = w.createImageData(SW, SH);
-    // Knitter: weiche Zufallsfalten (Value-Noise, mehrere Oktaven)
-    const G = 9, grid = [...Array(G * G * 4)].map(() => Math.random());
-    const vn = (xx, yy, f, o) => { const X = xx * f, Y = yy * f, x0 = Math.floor(X), y0 = Math.floor(Y), fx = X - x0, fy = Y - y0, g = (a, b) => grid[(((a + o) % (G * 2)) + ((b + o * 3) % (G * 2)) * G * 2) % grid.length]; const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy); return lerp(lerp(g(x0, y0), g(x0 + 1, y0), sx), lerp(g(x0, y0 + 1), g(x0 + 1, y0 + 1), sx), sy); };
-    const field = new Float32Array((SW + 1) * (SH + 1));
-    for (let yy = 0; yy <= SH; yy++) for (let xx = 0; xx <= SW; xx++) { const r1 = 1 - Math.abs(2 * vn(xx, yy, .011, 0) - 1), r2 = 1 - Math.abs(2 * vn(xx * .6, yy * 1.4, .026, 5) - 1); field[yy * (SW + 1) + xx] = r1 * r1 * r1 * .8 + r2 * r2 * .35; }
-    const F = (xx, yy) => field[Math.min(SH, yy) * (SW + 1) + Math.min(SW, xx)];
-    for (let yy = 0; yy < SH; yy++) for (let xx = 0; xx < SW; xx++) {
-      const n = F(xx, yy), nx = F(xx + 1, yy) - n, ny = F(xx, yy + 1) - n;
-      const sx = clamp(Math.round(xx + nx * 70), 0, SW - 1), sy = clamp(Math.round(yy + ny * 70 + n * 5), 0, SH - 1);
-      const si = (sy * SW + sx) * 4, di = (yy * SW + xx) * 4, light = clamp(1 + (nx * -1.2 + ny * -2) * 9 - n * .06, .7, 1.08);
-      dst.data[di] = src.data[si] * light; dst.data[di + 1] = src.data[si + 1] * light; dst.data[di + 2] = src.data[si + 2] * light; dst.data[di + 3] = 255;
+    // Laken zerknittert: Höhenfeld aus vielen scharfen Knitterfalten (Grate mit Auslauf), daraus Licht + leichte Verzerrung
+    let wr = null;
+    function wrinkled() {
+      if (wr) return wr;
+      wr = document.createElement('canvas'); wr.width = SW; wr.height = SH; const w = wr.getContext('2d');
+      const src = s.getImageData(0, 0, SW, SH), dst = w.createImageData(SW, SH);
+      const cr = []; for (let i = 0; i < 46; i++) { const th = (Math.random() - .5) * 1.6 + (Math.random() < .35 ? Math.PI / 2 : 0); cr.push({ x: Math.random() * SW, y: Math.random() * SH, c: Math.cos(th), s: Math.sin(th), a: (Math.random() < .5 ? -1 : 1) * (.5 + Math.random()), w: 3 + Math.random() * 12, L: 30 + Math.random() * 120 }); }
+      const PW = SW + 1, hf = new Float32Array(PW * (SH + 1));
+      for (let yy = 0; yy <= SH; yy++) for (let xx = 0; xx <= SW; xx++) { let h = 0; for (const q of cr) { const dx = xx - q.x, dy = yy - q.y, t = dx * q.c + dy * q.s; if (t > q.L * 2.2 || t < -q.L * 2.2) continue; const d = -dx * q.s + dy * q.c; if (d > q.w * 6 || d < -q.w * 6) continue; h += q.a * Math.exp(-Math.sqrt(d * d + 1) / q.w - (t * t) / (q.L * q.L)); } hf[yy * PW + xx] = h; }
+      for (let yy = 0; yy < SH; yy++) for (let xx = 0; xx < SW; xx++) {
+        const h = hf[yy * PW + xx], hx = hf[yy * PW + xx + 1] - h, hy = hf[(yy + 1) * PW + xx] - h;
+        const sx = clamp(Math.round(xx - hx * 9), 0, SW - 1), sy = clamp(Math.round(yy - hy * 9 + h * 2), 0, SH - 1);
+        const si = (sy * SW + sx) * 4, di = (yy * SW + xx) * 4, light = clamp(1 + (hx * -.7 + hy * -1) * 1.9 - Math.abs(h) * .025, .6, 1.1);
+        dst.data[di] = src.data[si] * light; dst.data[di + 1] = src.data[si + 1] * light; dst.data[di + 2] = src.data[si + 2] * light; dst.data[di + 3] = 255;
+      }
+      w.putImageData(dst, 0, 0); return wr;
     }
-    w.putImageData(dst, 0, 0);
     let p = 0, steam = [], fold = 0, folding = false, heat = 0;
     function draw() {
       x.clearRect(0, 0, W, Hh);
@@ -397,7 +441,7 @@
       if (!folding) {
         // vor der Walze: zerknittert
         const cut = clamp(RX - left, 0, SW);
-        if (cut > 0) { x.save(); x.shadowColor = 'rgba(0,0,0,.25)'; x.shadowBlur = 14; x.drawImage(wr, 0, 0, cut, SH, left, top, cut, SH); x.restore(); }
+        if (cut > 0) { x.save(); x.shadowColor = 'rgba(0,0,0,.25)'; x.shadowBlur = 14; x.drawImage(wrinkled(), 0, 0, cut, SH, left, top, cut, SH); x.restore(); }
         // hinter der Walze: glatt
         if (cut < SW) { x.save(); x.shadowColor = 'rgba(0,0,0,.18)'; x.shadowBlur = 8; x.drawImage(smooth, cut, 0, SW - cut, SH, RX, top, SW - cut, SH); x.restore(); }
       } else {
@@ -426,9 +470,13 @@
     cv.addEventListener('pointermove', e => { if (!dr) return; const r = cv.getBoundingClientRect(); setP(dr.p + (e.clientX - dr.x) / (r.width * .44)); });
     cv.addEventListener('pointerup', () => dr = null); cv.style.touchAction = 'pan-y'; cv.style.cursor = 'ew-resize';
     function showPkg() { tag.textContent = (nameIn.value || '').trim() || 'Sie'; pkg.hidden = false; toast('Gemangelt, gefaltet, in Papier eingeschlagen – wie an der Theke.'); }
-    nameIn.addEventListener('input', () => { tag.textContent = nameIn.value.trim() || 'Sie'; });
+    // der Name auf dem Paket wandert – solange dort nichts Eigenes steht – auch auf den Wäschezettel
+    const tkName = $('[data-tkname]');
+    nameIn.addEventListener('input', () => { const v = nameIn.value.trim(); tag.textContent = v || 'Sie'; if (tkName && (!tkName.value || tkName._auto)) { tkName.value = v; tkName._auto = !!v; } });
+    if (tkName) tkName.addEventListener('input', () => { tkName._auto = false; });
     $('[data-mgagain]').addEventListener('click', () => { pkg.hidden = true; folding = false; fold = 0; p = 0; rng.value = 0; draw(); });
-    draw();
+    // Laken erst berechnen, wenn die Mangel in die Nähe kommt (spart Rechenzeit beim Laden)
+    inView(mg, v => { if (v && !wr) draw(); }, '400px');
     // Anstoß beim ersten Sichtkontakt
     let shown = false; inView(mg, v => { if (v && !shown && !RM) { shown = true; let k = 0; const auto = () => { k += .012; setP(k * .22); if (k < 1) requestAnimationFrame(auto); }; requestAnimationFrame(auto); } }, '-20% 0px');
   }
@@ -442,7 +490,9 @@
     function setPos(px) {
       const max = bl.clientWidth - sled.offsetWidth; pos = clamp(px, 0, max); sled.style.transform = `translateX(${pos}px)`;
       const sr = sled.getBoundingClientRect(), br = bl.getBoundingClientRect(); let n = 0;
-      slats.forEach(s => { const r = s.getBoundingClientRect(); if (r.left + r.width / 2 < sr.left + sr.width / 2) { if (!s.classList.contains('clean')) { s.classList.add('clean'); for (let i = 0; i < 14; i++) sp.push({ x: r.left - br.left + r.width / 2, y: 30 + Math.random() * (br.height - 60), vx: (Math.random() - .5) * 3, vy: (Math.random() - .5) * 3, a: 1, s: 1 + Math.random() * 3 }); } } if (s.classList.contains('clean')) n++; });
+      // am rechten Anschlag zählt die ganze Schlittenbreite – sonst bleibt auf schmalen Bildschirmen die letzte Lamelle schmutzig
+      const edge = pos >= max - 2 ? sr.right : sr.left + sr.width / 2;
+      slats.forEach(s => { const r = s.getBoundingClientRect(); if (r.left + r.width / 2 < edge) { if (!s.classList.contains('clean')) { s.classList.add('clean'); for (let i = 0; i < 14; i++) sp.push({ x: r.left - br.left + r.width / 2, y: 30 + Math.random() * (br.height - 60), vx: (Math.random() - .5) * 3, vy: (Math.random() - .5) * 3, a: 1, s: 1 + Math.random() * 3 }); } } if (s.classList.contains('clean')) n++; });
       cnt.textContent = n; doneEl.hidden = n < slats.length; sled.setAttribute('aria-valuenow', n);
       if (n === slats.length && !bl._t) { bl._t = 1; toast('Alle 14 Lamellen sauber – Lamelle für Lamelle, wie in Marks Maschine.'); }
       kick();
@@ -471,7 +521,9 @@
     const inner = $('[data-railin]'), hgs = $$('.hg', inner); let off = 0, vel = 0, drag = null, belt = false, vis = false, half = 0, moved = 0;
     const angs = hgs.map(() => ({ a: 0, v: 0 }));
     const rs = () => { half = inner.scrollWidth / 2; }; rs(); addEventListener('resize', rs);
+    // kleiner Anschub beim ersten Anblick: zeigt, dass die Stange beweglich ist
     inView(rail, v => vis = v);
+    let nudged = false; inView(rail, v => { if (v && !nudged && !RM) { nudged = true; setTimeout(() => { if (!drag && !belt) vel = -16; }, 500); } }, '-15% 0px');
     rail.addEventListener('pointerdown', e => { if (e.button) return; drag = { x: e.clientX, y: e.clientY, o: off, t: performance.now(), axis: null, id: e.pointerId }; moved = 0; });
     addEventListener('pointermove', e => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (!drag.axis) { if (Math.abs(dx) > 6 || Math.abs(dy) > 6) { drag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'; if (drag.axis === 'x') rail.classList.add('drag'); } return; } if (drag.axis !== 'x') return; const now = performance.now(), no = drag.o + dx; vel = (no - off) / Math.max(1, now - drag.t) * 16; drag.t = now; off = no; moved = Math.abs(dx); });
     const up = () => { if (drag) { rail.classList.remove('drag'); drag = null; } }; addEventListener('pointerup', up); addEventListener('pointercancel', up);
@@ -490,7 +542,7 @@
     }
     requestAnimationFrame(loop);
   }
-  $$('[data-pick]').forEach(a => { if (a.classList.contains('hg-tag')) return; a.addEventListener('click', () => pickSvc(a.dataset.pick)); });
+  $$('[data-pick]').forEach(a => { if (a.classList.contains('hg-tag')) return; a.addEventListener('click', () => { pickSvc(a.dataset.pick); toast('✓ ' + a.dataset.pick.split(',').join(' & ') + ' steht auf Ihrem Wäschezettel.'); }); });
 
   /* ================= Wäschezettel ================= */
   const tk = $('[data-tk]');
