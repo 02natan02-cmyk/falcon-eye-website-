@@ -588,3 +588,186 @@ a.rv-c{display:block;color:inherit;text-decoration:none;transition:transform .25
 @media (max-width:760px){.ck{left:12px;right:12px;bottom:88px;padding:12px;gap:10px;align-items:center}.ck img{width:52px;height:52px}.ck b{font-size:15px}.ck p{display:none}.ck-b .btn{padding:9px 12px;font-size:13px}}
 @media (max-width:760px){.cp-bubble{display:none}.cp-cap{font-size:11px;right:var(--gut)}}
 @media (max-width:760px){.ck-b{flex-wrap:nowrap}.ck-b .btn{white-space:nowrap}.ck b{font-size:14px;margin-bottom:6px}}
+
+/* ===================== Review 16.10. – Abschnitt für Abschnitt ===================== */
+/* Hero: Vertrauenszeile passt auf Desktop über den Entwurfs-Hinweis */
+.hero{padding-top:clamp(104px,9.2vw,130px)}
+.h1{font-size:clamp(40px,5.6vw,80px)}
+@media (max-width:899px){
+  .hero-in{display:flex;flex-direction:column;align-items:stretch;gap:0}
+  .hero-t{display:contents}
+  .hero-t>.kick{order:1}.hero-t>.h1{order:2;margin:10px 0 18px}
+  .hero-v{order:3;margin-bottom:24px}
+  .hero-t>.lead{order:4}.hero-t>.ctas{order:5}.hero-t>.trust{order:6}
+  .scene-card{aspect-ratio:4/3.1}
+}
+/* Entwurfs-Hinweis klappt nach dem Hero zu einem kleinen Chip zusammen */
+.concept{pointer-events:auto;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:opacity .3s,background .3s}
+.concept .cc-a::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sun2);margin-right:7px;vertical-align:1px}
+.concept .cc-b{display:inline-block;max-width:330px;overflow:hidden;vertical-align:bottom;transition:max-width .55s var(--ease),opacity .35s}
+.concept.mini{opacity:.82}.concept.mini .cc-b{max-width:0;opacity:0}
+.concept.mini:hover,.concept.mini:focus-visible{opacity:1}.concept.mini:hover .cc-b,.concept.mini:focus-visible .cc-b{max-width:330px;opacity:1}
+/* Marke: Zeichen bleibt beim Lesen stehen, Straße ohne harte Kante */
+.pf3{overflow:hidden;overflow:clip}
+@media (min-width:861px){.pf3-in{align-items:start}.pf3-mark{position:sticky;top:max(96px,calc(50vh - 230px))}.pf3-t{padding-top:clamp(10px,3vw,40px)}}
+.pf3-road{background:linear-gradient(transparent 0 62%,#23292e 62% 100%)}
+.cp-road{background:linear-gradient(transparent 0 64%,#262c31 64% 100%)}
+/* Für wen: Lichtkegel folgt der Maus, Markenstreifen, Links unten bündig */
+.fw{display:flex;flex-direction:column;position:relative;overflow:hidden;isolation:isolate}
+.fw p{margin:0 0 16px}.fw-go{margin-top:auto;align-self:flex-start}
+.fw::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(255,184,28,.18),transparent 70%);opacity:0;transition:opacity .35s}
+.fw:hover::before,.fw:focus-visible::before{opacity:1}
+.fw::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--hr) 0 33.3%,var(--hb) 33.3% 66.6%,var(--hg) 66.6%);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
+.fw:hover::after,.fw:focus-visible::after{transform:scaleX(1)}
+.fw .ic{transition:transform .5s var(--ease),background .3s,color .3s}
+.fw:hover .ic,.fw:focus-visible .ic{transform:rotate(-8deg) scale(1.08);background:var(--sun);color:var(--ink)}
+@media (max-width:520px){
+  .fw{display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:14px;align-items:start;padding:20px 18px}
+  .fw .ic{grid-column:1;grid-row:1/4;margin:0}
+  .fw h3,.fw p,.fw-go{grid-column:2}.fw h3{font-size:19px;margin:8px 0 4px}.fw p{font-size:15px;margin-bottom:8px}.fw-go{margin-top:0}
+  .fw-g{gap:12px}
+}
+/* Leistungen: echtes Einsatzfoto statt leerem Icon-Block */
+.sv-media{position:relative;margin:calc(-1 * clamp(26px,3vw,40px)) calc(-1 * clamp(26px,3vw,40px)) 24px;height:clamp(190px,18vw,240px);border-radius:28px 28px 0 0;overflow:hidden;background:#dfe8e2}
+.sv-media img{width:100%;height:100%;object-fit:cover;display:block}
+.sv-p.on .sv-media img,.sv-p.on .sv-ill{animation:kb 10s ease-out both}
+@keyframes kb{from{transform:scale(1.16)}to{transform:scale(1.03)}}
+.sv-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,18,0) 42%,rgba(10,22,18,.62));pointer-events:none}
+.sv-media figcaption{position:absolute;left:18px;right:84px;bottom:16px;z-index:1;display:flex;align-items:center;gap:9px;color:#fff;font:700 13.5px/1.3 var(--body)}
+.sv-media figcaption i{flex:none;width:8px;height:8px;border-radius:50%;background:#2fbf6b;box-shadow:0 0 0 4px rgba(47,191,107,.3)}
+.sv-winter figcaption i{background:var(--sun2);box-shadow:0 0 0 4px rgba(255,210,63,.3)}
+.sv-badge{position:absolute;right:16px;bottom:14px;z-index:1;width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--sun);color:var(--ink);box-shadow:0 12px 24px -10px rgba(0,0,0,.55)}
+.sv-badge .ic{width:30px;height:30px}
+.sv-p.on .sv-badge{animation:svb .6s .15s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes svb{from{transform:scale(.4) rotate(-20deg);opacity:0}}
+.sv-ill{width:100%;height:100%;display:block}
+.sv-flakes{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,#fff 1.6px,transparent 2.2px),radial-gradient(circle,rgba(255,255,255,.75) 1px,transparent 1.6px);background-size:60px 60px,34px 34px;animation:flk 7s linear infinite}
+@keyframes flk{to{background-position:60px 240px,-34px 170px}}
+.sv-p.on li{animation:tin .45s var(--ease) backwards}
+.sv-p.on li:nth-child(2){animation-delay:.05s}.sv-p.on li:nth-child(3){animation-delay:.1s}.sv-p.on li:nth-child(4){animation-delay:.15s}.sv-p.on li:nth-child(5){animation-delay:.2s}.sv-p.on li:nth-child(6){animation-delay:.25s}
+@media (max-width:899px){.sv-media{height:180px}}
+/* Kontrollgang: Taschenlampe wandert zum gewählten Punkt */
+@property --sx{syntax:'<percentage>';inherits:true;initial-value:50%}
+@property --sy{syntax:'<percentage>';inherits:true;initial-value:50%}
+.kg-house{--sx:50%;--sy:50%;--sr:84px;transition:--sx .9s var(--ease),--sy .9s var(--ease)}
+.kg-spot{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .8s;background:radial-gradient(circle at var(--sx) var(--sy),rgba(255,236,160,.34) 0,rgba(255,236,160,.08) var(--sr),rgba(12,24,20,.34) calc(var(--sr) * 2.2))}
+.kg-house.lit .kg-spot{opacity:1}.kg-house.lit .kg-scan{display:none}
+@media (max-width:899px){
+  .kg-house{--sr:46px}
+  .kg-g{display:flex;flex-direction:column;align-items:stretch;gap:0}
+  .kg-g>div:first-child{display:contents}
+  .kg-g .kick{order:1}.kg-g .h2{order:2}.kg-g .lead{order:3}.kg-vis{order:4;margin-bottom:14px}.kg-card{order:5}.kg-list{order:6}
+  .hot{width:40px;height:40px;margin:-20px 0 0 -20px;background:transparent;box-shadow:none}
+  .hot i{inset:13px;background:var(--ink);box-shadow:0 0 0 5px var(--sun),0 6px 12px rgba(0,0,0,.35)}
+  .hot.on{background:transparent}.hot.on i{background:var(--sun);box-shadow:0 0 0 5px var(--ink),0 6px 12px rgba(0,0,0,.35)}
+  .hot::before{inset:4px}
+}
+/* Rückmeldung: echtes Foto im Chat, Haken werden blau, sobald gelesen */
+.ph-photo img{width:100%;aspect-ratio:16/8;object-fit:cover;display:block}
+.msg time .tk{font-style:normal;color:#8696a0;transition:color .5s}
+.msg.read time .tk{color:#34b7f1}
+/* Winterdienst: Schneefall in drei Ebenen + Saison-Leiste */
+.wd-g{position:relative;z-index:1}
+.wd-snow{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.wd-snow i{position:absolute;inset:0;background-repeat:repeat}
+.wd-snow i:nth-child(1){background-image:radial-gradient(circle,rgba(255,255,255,.9) 1.5px,transparent 2.2px);background-size:180px 180px;opacity:.45;animation:ws1 16s linear infinite}
+.wd-snow i:nth-child(2){background-image:radial-gradient(circle,#fff 1px,transparent 1.6px);background-size:110px 110px;opacity:.3;animation:ws2 24s linear infinite}
+.wd-snow i:nth-child(3){background-image:radial-gradient(circle,#fff 2.6px,transparent 3.6px);background-size:260px 260px;opacity:.5;animation:ws3 11s linear infinite;filter:blur(.7px)}
+@keyframes ws1{to{background-position:180px 720px}}@keyframes ws2{to{background-position:-110px 660px}}@keyframes ws3{to{background-position:260px 780px}}
+.wd::after{display:none}
+.wd-sea{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.wd-sea-h{margin:0 0 8px;font:800 11.5px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#9fb3cc}
+.wd-sea-m{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.wd-sea-m li{text-align:center;padding:9px 0;border-radius:12px;background:rgba(255,255,255,.07);font:800 13px var(--body);color:#cfe2ff;transition:background .4s,color .4s}
+.wd-sea-m li.now{background:var(--sun);color:var(--ink);box-shadow:0 0 0 3px rgba(255,184,28,.25)}
+.wd-sea-m li.next{box-shadow:inset 0 0 0 2px var(--sun2);color:#fff}
+.wd-sea-t{margin:10px 0 0;font-size:14.5px;font-weight:700;color:#dbe7f5;line-height:1.45}
+.wd-now span:empty{display:none}
+/* Objekt-Check: Stempel, wenn das Verzeichnis fertig ist */
+.lv-stamp{position:absolute;right:20px;top:58px;padding:6px 12px;border:3px solid #c8202a;border-radius:10px;color:#c8202a;font:800 14px/1.1 var(--disp);letter-spacing:.1em;text-transform:uppercase;transform:rotate(-11deg);opacity:0;pointer-events:none;mix-blend-mode:multiply}
+.lv-stamp.on{opacity:.88;animation:stamp .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes stamp{0%{opacity:0;transform:rotate(-11deg) scale(2.3)}100%{opacity:.88;transform:rotate(-11deg) scale(1)}}
+/* Schaden melden: linke Spalte bleibt stehen, Notfall-Hinweis bei "Heute" */
+@media (min-width:900px){.dm-g>div:first-child{position:sticky;top:104px}}
+.sos{transition:box-shadow .4s,transform .4s var(--ease)}
+.sos.alert{box-shadow:0 0 0 4px var(--sun),0 24px 50px -20px rgba(255,160,0,.6);animation:sosP 1.4s ease-in-out 2}
+@keyframes sosP{50%{transform:scale(1.025)}}
+.dm-hint{margin:10px 0 8px;padding:12px 14px;border-radius:14px;background:#fff4dc;border:1px solid rgba(255,184,28,.6);font-size:14.5px;font-weight:600;line-height:1.45;animation:pin .4s var(--ease)}
+.dm-hint a{font-weight:800;color:var(--ink);white-space:nowrap}
+.dm+.ei{padding-top:clamp(24px,3vw,44px)}
+/* Echte Einsätze: Fortschritt, Ziehen mit der Maus, Großansicht */
+.ei-mid{display:grid;justify-items:center;gap:6px;min-width:170px}
+.ei-prog{display:block;width:150px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.ei-prog i{display:block;height:100%;width:var(--w,7%);background:linear-gradient(90deg,var(--hr),var(--hb),var(--hg));border-radius:4px;transition:width .35s var(--ease)}
+.ei-mid small{font-size:12px;color:var(--mute);font-weight:700}
+.ei-c figure{cursor:zoom-in}
+@media (hover:hover){.ei-row{cursor:grab}}
+.ei-row.drag{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}.ei-row.drag figure{cursor:grabbing}
+.lb{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:clamp(12px,4vw,48px);background:rgba(8,16,13,.93);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:lbIn .3s ease}
+@keyframes lbIn{from{opacity:0}}
+.lb figure{margin:0;display:grid;gap:14px;justify-items:center;max-width:min(1100px,100%)}
+.lb img{max-width:100%;max-height:calc(100vh - 170px);max-height:calc(100dvh - 170px);width:auto;height:auto;border-radius:16px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);animation:lbImg .4s var(--ease)}
+@keyframes lbImg{from{opacity:0;transform:scale(.96)}}
+.lb figcaption{text-align:center;color:#fff;max-width:60ch}.lb figcaption b{display:block;font:800 18px var(--disp)}.lb figcaption span{color:#c8d6d0;font-size:15px}.lb figcaption small{display:block;margin-top:6px;color:#7f978d;font-weight:800;font-size:12px;letter-spacing:.12em}
+.lb-x,.lb-b{width:50px;height:50px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:20px;cursor:pointer;transition:background .2s,color .2s}
+.lb-x{position:absolute;top:14px;right:14px}.lb-b{position:absolute;top:50%;translate:0 -50%}.lb-p{left:14px}.lb-n{right:14px}
+.lb-b:hover,.lb-x:hover{background:var(--sun);color:var(--ink)}
+@media (max-width:640px){.lb-b{top:auto;bottom:18px;translate:none}.lb-p{left:calc(50% - 60px)}.lb-n{right:calc(50% - 60px)}.lb img{max-height:calc(100dvh - 230px)}}
+/* Bewertungen: 4,5 wieder sichtbar, Sterne laufen beim Einblenden voll */
+a.rv-sum{color:#fff}
+.rv-big{display:block;margin-bottom:6px}
+.pre-stars .rv-sum .rv-s,.pre-stars .stars{clip-path:inset(0 100% 0 0)}
+.pre-stars .in .rv-sum .rv-s,.pre-stars .stars.in{clip-path:inset(0 0 0 0);transition:clip-path 1.4s cubic-bezier(.5,0,.2,1) .2s}
+/* Einsatzgebiet: Fahrwege werden gezeichnet, Orte antippbar */
+.map .rt-l{fill:none;stroke:rgba(255,210,63,.5);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.5s var(--ease) var(--d),stroke .3s,stroke-width .3s}
+.map-w.in .rt-l{stroke-dashoffset:0}
+.map .rt-f{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-dasharray:.012 .088;opacity:0;transition:opacity .6s calc(var(--d) + 1.3s);animation:rtf 4s linear infinite}
+.map-w.in .rt-f{opacity:.5}
+@keyframes rtf{to{stroke-dashoffset:-.1}}
+.map .rt.hi .rt-l{stroke:var(--sun);stroke-width:4.5}.map .rt.hi .rt-f{opacity:.95}
+.map .town.big{cursor:pointer}.map .town.big circle{transition:r .3s}.map .town.big.hi circle{fill:var(--sun)}.map .town.big.hi text{fill:var(--sun2)}
+.map .tl{paint-order:stroke;stroke:#163029;stroke-width:4px;stroke-linejoin:round}
+/* Kontakt + Kopfzeile: echter Erreichbarkeits-Status */
+.ko-now{display:inline-flex;align-items:center;gap:10px;margin:-6px 0 20px;padding:10px 16px;border-radius:16px;background:#e6f4ea;color:#1d5a3c;font-weight:700;font-size:14.5px;line-height:1.4}
+.ko-now i{width:10px;height:10px;border-radius:50%;background:#2fbf6b;flex:none;animation:ping 2s infinite}
+.ko-now.off{background:#fff3dc;color:#6e4600}.ko-now.off i{background:#f0a500;animation:none;box-shadow:0 0 0 4px rgba(240,165,0,.2)}
+.live.off{color:#8a5a00}.live.off i{background:#f0a500;animation:none}
+/* Footer: gleichmäßige Zeilen */
+.ftr-l{list-style:none;margin:0;padding:0;display:grid;gap:0;font-size:14.5px}
+.ftr-l a,.ftr-l span{display:inline-block;padding:5px 0}.ftr-l a{transition:color .2s}.ftr-l a:hover{color:#fff}
+.ftr-b{align-items:center}
+@media (max-width:899px){.ftr-l a,.ftr-l span{padding:8px 0}}
+/* Cookie-Hinweis: Knöpfe nebeneinander */
+@media (min-width:761px){.ck{width:min(480px,calc(100vw - 32px))}.ck-b{flex-wrap:nowrap}}
+@media (prefers-reduced-motion:reduce){.pre-stars .rv-sum .rv-s,.pre-stars .stars{clip-path:none}.kg-house{transition:none}.wd-snow{display:none}.map .rt-l{stroke-dashoffset:0}}
+@media (min-width:861px){.pf3-cap{top:-38px}}
+/* Entwurfs-Chip wandert als schmaler Reiter in den linken Seitenrand (überdeckt keinen Inhalt) */
+@media (min-width:900px){
+  .concept{transition:opacity .3s,left .45s var(--ease),bottom .45s var(--ease),padding .45s var(--ease),border-radius .45s}
+  .concept.mini{left:0;bottom:96px;padding:12px 7px;border-radius:0 10px 10px 0;writing-mode:vertical-rl;transform:rotate(180deg);font-size:11.5px;letter-spacing:.08em}
+  .concept.mini .cc-a::before{margin:0 0 6px;vertical-align:0}
+  .concept.mini:hover .cc-b,.concept.mini:focus-visible .cc-b{max-width:0;max-height:none;opacity:0}
+  .concept.mini .cc-b{max-height:0}
+}
+.kg-spot{background:radial-gradient(circle at var(--sx) var(--sy),rgba(255,236,160,.36) 0,rgba(255,236,160,.06) calc(var(--sr) * 1.25),rgba(10,30,40,.2) calc(var(--sr) * 2.6))}
+/* Schnee ohne sichtbares Raster: mehrere Flocken je Kachel */
+.wd-snow i:nth-child(1){background-image:radial-gradient(circle at 18% 22%,rgba(255,255,255,.95) 1.4px,transparent 2.2px),radial-gradient(circle at 67% 71%,rgba(255,255,255,.8) 1.2px,transparent 2px),radial-gradient(circle at 83% 14%,rgba(255,255,255,.7) 1px,transparent 1.8px);background-size:190px 190px}
+.wd-snow i:nth-child(2){background-image:radial-gradient(circle at 41% 63%,#fff 1px,transparent 1.6px),radial-gradient(circle at 9% 88%,rgba(255,255,255,.8) .9px,transparent 1.5px),radial-gradient(circle at 76% 37%,#fff 1px,transparent 1.6px);background-size:120px 120px}
+.wd-snow i:nth-child(3){background-image:radial-gradient(circle at 30% 40%,#fff 2.4px,transparent 3.4px),radial-gradient(circle at 78% 82%,rgba(255,255,255,.85) 2px,transparent 3px);background-size:280px 280px}
+@keyframes ws1{to{background-position:190px 760px}}@keyframes ws2{to{background-position:-120px 720px}}@keyframes ws3{to{background-position:280px 840px}}
+/* Leistungsverzeichnis auf dem Handy: Turnus bricht um statt über den Papierrand zu laufen */
+@media (max-width:520px){.lv-paper{padding:24px 16px 18px}.lv-t{table-layout:fixed}.lv-t th:last-child,.lv-t td:last-child{width:44%}.lv-t td:last-child{white-space:normal;overflow-wrap:break-word}.lv-t td{font-size:13.5px}.lv-meta{gap:4px 10px}}
+/* Hero-Buttons auf dem Handy sauber über die volle Breite */
+@media (max-width:520px){.hero .ctas .btn{flex:1 1 100%}}
+/* Bewertungen auf dem Handy: Übersichtskarte schmaler */
+@media (max-width:899px){.rv-sum{flex-basis:min(230px,60%)}.rv-big{font-size:54px}}
+/* Kontakt-Status: Punkt an der ersten Zeile */
+.ko-now{align-items:flex-start}.ko-now i{margin-top:5px}
+/* Footer auf dem Handy: zwei Spalten statt langer Liste */
+@media (max-width:520px){.ftr{padding-top:44px}.ftr-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px 16px}.ftr-in>div:first-child,.ftr-in>#datenschutz{grid-column:1/-1}.ftr-l{font-size:14px}.ftr-l a,.ftr-l span{padding:6px 0;overflow-wrap:anywhere}#datenschutz .ftr-l{grid-auto-flow:column;justify-content:start;gap:0 18px}}
+/* Jahresplan: aktueller Monat markiert */
+.ja-months button{position:relative}
+.ja-months button.now::after{content:"";position:absolute;top:5px;right:6px;width:7px;height:7px;border-radius:50%;background:#2fbf6b;box-shadow:0 0 0 3px rgba(47,191,107,.25)}
+.ja-months button.now.on::after{background:var(--ink);box-shadow:none}
+.ja-badge small{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:#e3f3e8;color:#1d5a3c;font:800 11px var(--body);letter-spacing:.06em;vertical-align:5px}
+.map .home text{paint-order:stroke;stroke:#163029;stroke-width:6px;stroke-linejoin:round}

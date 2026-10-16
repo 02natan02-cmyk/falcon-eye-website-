@@ -44,6 +44,8 @@
     const stop = () => { clearInterval(play); play = 0; pb.textContent = '▶ Jahr abspielen'; };
     pb.addEventListener('click', () => { if (play) return stop(); pb.textContent = '❚❚ Pause'; play = setInterval(() => setM((cur + 1) % 12), 2600); });
     const now = new Date().getMonth(); setM(now);
+    const nb = $$('.ja-months button')[now]; if (nb) { nb.classList.add('now'); nb.title = 'Aktueller Monat'; }
+    const mn = $('[data-mname]'); new MutationObserver(() => { if (cur === now && !mn.querySelector('small')) mn.insertAdjacentHTML('beforeend', '<small>jetzt</small>'); }).observe(mn, { childList: true }); mn.insertAdjacentHTML('beforeend', '<small>jetzt</small>');
   }
 
   /* ---------- Leistungen ---------- */
@@ -312,4 +314,134 @@
   if (!b || !drive) return; var lastTown = '', t;
   var town = road.querySelector('[data-cptown]');
   new MutationObserver(function () { var n = town.textContent; if (n === lastTown) return; lastTown = n; var r = drive.getBoundingClientRect(), rr = road.getBoundingClientRect(); b.style.setProperty('--bx', (r.left - rr.left + r.width * .38) + 'px'); b.textContent = ['Wuff!', 'Wuff wuff!', 'Da vorne!', 'Fast da!', 'Wuff!'][Math.floor(Math.random() * 5)]; b.classList.add('on'); clearTimeout(t); t = setTimeout(function () { b.classList.remove('on'); }, 1100); }).observe(town, { childList: true, characterData: true, subtree: true });
+})();
+
+/* ===================== Review 16.10. ===================== */
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var RM = matchMedia('(prefers-reduced-motion: reduce)').matches, HOVER = matchMedia('(hover:hover)').matches;
+  var raf = function (f) { var q = false; return function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; f(); }); }; };
+
+  /* Entwurfs-Hinweis: nach dem Hero nur noch kleiner Chip */
+  var cc = $('[data-concept]');
+  if (cc) { var ccu = raf(function () { cc.classList.toggle('mini', scrollY > innerHeight * .55); }); addEventListener('scroll', ccu, { passive: true }); ccu(); }
+
+  /* Erreichbarkeit: Mo–Fr 8–17 Uhr (Zeit in Nieder-Olm) */
+  (function () {
+    var now; try { var f = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()); var g = {}; f.forEach(function (p) { g[p.type] = p.value; }); now = { d: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].indexOf(g.weekday.replace('.', '')) + 1, h: +g.hour + (+g.minute) / 60 }; } catch (e) { return; }
+    if (!now.d) return;
+    var open = now.d <= 5 && now.h >= 8 && now.h < 17;
+    var next = now.d <= 5 && now.h < 8 ? 'heute ab 8 Uhr' : (now.d <= 4 ? 'morgen ab 8 Uhr' : 'Montag ab 8 Uhr');
+    var live = $('[data-live]'), ko = $('[data-now]');
+    if (live) { live.classList.toggle('off', !open); $('span', live).textContent = open ? 'Jetzt erreichbar' : 'Erreichbar ' + next; }
+    if (ko) { ko.classList.toggle('off', !open); $('span', ko).innerHTML = open ? '<b>Jetzt erreichbar</b> – Mo–Fr 8–17 Uhr direkt beim Chef.' : '<b>Gerade außerhalb der Zeiten</b> – erreichbar ' + next + '. Im Notfall trotzdem anrufen.'; }
+  })();
+
+  /* Für wen: Lichtkegel folgt der Maus */
+  if (HOVER) $$('.fw').forEach(function (c) { c.addEventListener('pointermove', function (e) { var r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }); });
+
+  /* Marke: beim Scrollen leuchtet der passende Pfeil (Desktop) */
+  var mk = $('[data-pf3]'), pl = $$('.pf3-l li');
+  if (mk && pl.length && HOVER && 'IntersectionObserver' in window) {
+    var hov = false; pl.forEach(function (l) { l.addEventListener('mouseenter', function () { hov = true; }); l.addEventListener('mouseleave', function () { hov = false; }); });
+    var cur = null;
+    var pio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) cur = e.target; else if (cur === e.target) cur = null; });
+      if (hov) return;
+      if (cur) { mk.setAttribute('data-hl', cur.dataset.k); pl.forEach(function (l) { l.classList.toggle('on', l === cur); }); }
+      else { mk.removeAttribute('data-hl'); pl.forEach(function (l) { l.classList.remove('on'); }); }
+    }, { rootMargin: '-42% 0px -42% 0px' });
+    pl.forEach(function (l) { pio.observe(l); });
+  }
+
+  /* Kontrollgang: Taschenlampe zum aktiven Punkt */
+  var kh = $('[data-kghouse]');
+  if (kh) {
+    var aim = function () { var h = $('.hot.on', kh); if (!h) return; kh.style.setProperty('--sx', h.style.getPropertyValue('--x').trim()); kh.style.setProperty('--sy', h.style.getPropertyValue('--y').trim()); };
+    new MutationObserver(aim).observe(kh, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { aim(); kh.classList.add('lit'); } }); }, { threshold: .35 }).observe(kh);
+    aim();
+  }
+
+  /* Rückmeldung: Haken werden blau, sobald der Verwalter antwortet */
+  var ebc = $('[data-eb-chat]');
+  if (ebc) {
+    var ins = $$('.msg.in', ebc), out = $('.msg.out', ebc);
+    var read = function () { ins.forEach(function (m, i) { setTimeout(function () { m.classList.add('read'); }, i * 120); }); };
+    if (RM || !$('.js-eb')) read();
+    else if (out) new MutationObserver(function (ms, o) { if (out.classList.contains('show')) { o.disconnect(); setTimeout(read, 250); } }).observe(out, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  /* Winterdienst: Saison-Leiste nach aktuellem Monat */
+  var sea = $('[data-wxsea]');
+  if (sea) {
+    var m = new Date().getMonth(), lis = $$('li', sea), t = $('[data-wxseat]');
+    var inS = m >= 10 || m <= 2;
+    lis.forEach(function (l) { l.classList.toggle('now', inS && +l.dataset.m === m); l.classList.toggle('next', !inS && l.dataset.m === '10'); });
+    t.textContent = inS ? (m === 2 ? 'Jetzt in Bereitschaft – bis zum Saisonende. Danach wird das Streugut wieder entfernt.' : 'Jetzt in Bereitschaft – die ganze Saison, bei jedem Wetter.')
+      : (m === 9 ? 'Oktober: Streugut und Geräte werden bereitgestellt – ab November in Bereitschaft.' : (m === 8 ? 'September: Die Touren für den Winter werden geplant – ab November in Bereitschaft.' : 'Sommerpause – ab November wieder in Bereitschaft.'));
+  }
+
+  /* Objekt-Check: Stempel beim Klick auf „Fertig“ */
+  var oc = $('[data-oc]'), stamp = $('[data-lvstamp]');
+  if (oc && stamp) {
+    var last = $('[data-ocs="3"]', oc), was = false;
+    oc.addEventListener('click', function (e) { if (e.target.closest('[data-ocnext]')) was = last.classList.contains('on'); }, true);
+    $('[data-ocnext]', oc).addEventListener('click', function () { if (was) { stamp.classList.remove('on'); void stamp.offsetWidth; stamp.classList.add('on'); } });
+    $('[data-ocprev]', oc).addEventListener('click', function () { stamp.classList.remove('on'); });
+  }
+
+  /* Schaden melden: „Heute“ = Notfall-Hinweis + Notfallkarte leuchtet */
+  var dmf = $('[data-dmf]');
+  if (dmf) {
+    var hint = $('[data-dmhint]'), sos = $('[data-sos]');
+    dmf.addEventListener('change', function (e) {
+      if (e.target.name !== 'Dringlichkeit') return;
+      var urgent = /Notfall/.test(e.target.value);
+      hint.hidden = !urgent; sos && sos.classList.toggle('alert', urgent);
+    });
+  }
+
+  /* Leistungen: Fotos vorladen, sobald der Abschnitt nahe ist */
+  var svs = $('#leistungen');
+  if (svs) new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { $$('.sv-media img', svs).forEach(function (i) { i.loading = 'eager'; }); o.disconnect(); } }, { rootMargin: '600px' }).observe(svs);
+
+  /* Echte Einsätze: Fortschritt, Ziehen mit der Maus, Großansicht */
+  var row = $('[data-eirow]');
+  if (row) {
+    var items = $$('.ei-c', row), prog = $('[data-eiprog]');
+    var up = raf(function () { var max = row.scrollWidth - row.clientWidth; var p = max > 0 ? row.scrollLeft / max : 0; prog && prog.style.setProperty('--w', (7 + p * 93).toFixed(1) + '%'); });
+    row.addEventListener('scroll', up, { passive: true }); up();
+    var dn = null, moved = 0;
+    row.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse' || e.button !== 0) return; dn = { x: e.clientX, l: row.scrollLeft }; moved = 0; });
+    addEventListener('pointermove', function (e) { if (!dn) return; var dx = e.clientX - dn.x; if (Math.abs(dx) > 4) { moved = Math.abs(dx); row.classList.add('drag'); row.scrollLeft = dn.l - dx; } });
+    addEventListener('pointerup', function () { if (!dn) return; dn = null; if (row.classList.contains('drag')) { row.classList.remove('drag'); var c = row.scrollLeft + row.clientWidth / 2, best = items[0], bd = 1e9; items.forEach(function (it) { var d = Math.abs(it.offsetLeft + it.offsetWidth / 2 - c); if (d < bd) { bd = d; best = it; } }); row.scrollTo({ left: best.offsetLeft - (row.clientWidth - best.offsetWidth) / 2, behavior: RM ? 'auto' : 'smooth' }); } });
+    row.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    var lb = $('[data-lb]'), li = $('[data-lbimg]'), k = 0, back = null;
+    var showLb = function (n) { k = (n + items.length) % items.length; var im = $('img', items[k]), cap = $('figcaption', items[k]); li.src = im.currentSrc || im.src; li.alt = im.alt; $('[data-lbt]').textContent = $('b', cap).textContent; $('[data-lbd]').textContent = $('span', cap).textContent; $('[data-lbc]').textContent = (k + 1) + ' / ' + items.length; li.style.animation = 'none'; void li.offsetWidth; li.style.animation = ''; };
+    var openLb = function (n) { back = document.activeElement; showLb(n); lb.hidden = false; document.documentElement.style.overflow = 'hidden'; $('[data-lbx]').focus(); };
+    var closeLb = function () { lb.hidden = true; document.documentElement.style.overflow = ''; var it = items[k]; row.scrollTo({ left: it.offsetLeft - (row.clientWidth - it.offsetWidth) / 2 }); back && back.focus && back.focus(); };
+    items.forEach(function (it, i) { var f = $('figure', it); f.tabIndex = 0; f.setAttribute('role', 'button'); f.setAttribute('aria-label', 'Großansicht: ' + $('b', it).textContent); f.addEventListener('click', function () { if (moved > 6) { moved = 0; return; } openLb(i); }); f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(i); } }); });
+    $('[data-lbx]').addEventListener('click', closeLb);
+    $$('[data-lbs]').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); showLb(k + +b.dataset.lbs); }); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+    addEventListener('keydown', function (e) { if (lb.hidden) return; if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowRight') showLb(k + 1); else if (e.key === 'ArrowLeft') showLb(k - 1); else if (e.key === 'Tab') { var f = $$('button', lb); var i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } } });
+    var sx = null; lb.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true }); lb.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) showLb(k + (dx < 0 ? 1 : -1)); sx = null; });
+  }
+
+  /* Bewertungen: Sterne laufen beim Einblenden voll */
+  if (!RM && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('pre-stars');
+    var so = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { var t = e.target.matches('.ko-rate') ? $('.stars', e.target) : e.target; t && t.classList.add('in'); so.unobserve(e.target); } }); }, { threshold: .25 });
+    $$('#stimmen, .ko-rate').forEach(function (el) { so.observe(el); });
+  }
+
+  /* Einsatzgebiet: Wege zeichnen, Ort antippen = Weg leuchtet */
+  var mw = $('.map-w');
+  if (mw) {
+    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { mw.classList.add('in'); o.disconnect(); } }, { threshold: .35 }).observe(mw);
+    var hl = function (n) { $$('.rt', mw).forEach(function (r) { r.classList.toggle('hi', r.dataset.rt === n); }); $$('[data-town]', mw).forEach(function (t) { t.classList.toggle('hi', t.dataset.town === n); }); };
+    $$('[data-town]', mw).forEach(function (t) { t.addEventListener('mouseenter', function () { hl(t.dataset.town); }); t.addEventListener('mouseleave', function () { hl(null); }); t.addEventListener('click', function () { hl(t.classList.contains('hi') ? null : t.dataset.town); }); });
+  }
 })();
