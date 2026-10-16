@@ -60,7 +60,7 @@ def footer():
       <div><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"><p>FPV-Drohnenfilme aus Saarbrücken – für Firmen, Events, Sport und alle, die gesehen werden wollen.</p>
         <p><a class="btn sm" href="kontakt.html">Dreh anfragen</a></p></div>
       <div><h4>Seiten</h4><ul><li><a href="projekte.html">Projekte</a></li><li><a href="leistungen.html">Leistungen</a></li><li><a href="ueber-uns.html">Über uns &amp; Hangar</a></li><li><a href="flight-club.html">Partner: Flight Club Saar</a></li><li><a href="kontakt.html">Kontakt</a></li></ul></div>
-      <div><h4>Kontakt</h4><ul><li><a href="{WA}" target="_blank" rel="noopener">WhatsApp</a></li><li>Telefon {PHONE_HUMAN}</li><li>info@falcon-eye.de</li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
+      <div><h4>Kontakt</h4><ul><li><a href="{WA}" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+4915156743442">Telefon {PHONE_HUMAN}</a></li><li><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
       <div><h4>Folgt uns</h4><ul><li><a href="https://www.instagram.com/falconeyesaar" target="_blank" rel="noopener">Instagram @falconeyesaar</a></li><li><a href="https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.facebook.com/profile.php?id=61559258413801" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">YouTube: Kinofilme</a></li><li><a href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a></li><li><a href="https://flightclub-saar.de/" target="_blank" rel="noopener">flightclub-saar.de</a></li></ul></div>
     </div>
     <div class="legalrow"><span>© <span data-year>2026</span> Falcon Eye, Natan Wojtasczyk</span><span><a href="impressum.html">Impressum</a> &nbsp; <a href="datenschutz.html">Datenschutz</a></span></div>
@@ -81,7 +81,9 @@ def band(title, text, quick=True):
     q = ''
     if quick:
         q = '<div class="quick">' + ''.join(f'<a href="kontakt.html#{k}">{t}</a>' for k, t in [('event', 'Event / Firmenfeier'), ('imagefilm', 'Imagefilm'), ('social', 'Social-Media-Clips'), ('sport', 'Sport &amp; Stadion'), ('hochzeit', 'Hochzeit'), ('immobilie', 'Immobilie / Gewerbe')]) + '</div>'
+    mq = ' · '.join(['Wir fliegen da durch'] * 6)
     return f'''<section class="band" aria-label="Anfrage starten">
+  <div class="band-mq" aria-hidden="true"><span>{mq} · </span><span>{mq} · </span></div>
   <div class="wrap">
     <div><h2>{title}</h2><p>{text}</p>{q}</div>
     <div class="ctas"><a class="btn dark" href="kontakt.html">Dreh anfragen</a><a class="btn ghost" href="{WA}" target="_blank" rel="noopener">WhatsApp schreiben</a></div>
@@ -133,7 +135,14 @@ FILMS = [('pyrenaeen', 'Pyrenäen Offroad', 'Enduro-Tour durch Spanien und Frank
   ('hochwasser', 'Hochwasser Saarbrücken', 'Für Fridays for Future'), ('graffiti', 'Graffiti-Workshop', 'Teamevent bei Triple A Trainer'),
   ('lostplaces', 'Lost Places', 'Hallen, Ruinen und Felsen'), ('feuerwerk', 'Feuerwerk', 'Mitten durch die Raketen'),
   ('halong', 'Ha Long Bay, Vietnam', 'Zwischen den Kalkfelsen'), ('strand', 'Strand-Enduro', 'Tief über dem Sand')]
-kino_cards = ''.join(f'<button class="kino-card" type="button" data-lb="media/film_{k}.mp4" data-title="{t}"><img src="media/film_{k}.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span><b>{t}</b><small>{d}</small></button>' for k, t, d in FILMS)
+import subprocess as _sp
+def film_len(k):
+    try:
+        d = float(_sp.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', OUT + 'media/film_' + k + '.mp4'], capture_output=True, text=True, timeout=20).stdout.strip())
+        return f'<span class="dur" aria-label="Laufzeit">{int(d // 60)}:{int(d % 60):02d}</span>'
+    except Exception:
+        return ''
+kino_cards = ''.join(f'<button class="kino-card" type="button" data-lb="media/film_{k}.mp4" data-title="{t}"><span class="th"><img src="media/film_{k}.jpg" alt="" loading="lazy">{film_len(k)}</span><span class="play" aria-hidden="true"></span><b>{t}</b><small>{d}</small></button>' for k, t, d in FILMS)
 KINO_SEC = f'''<section class="block kino" aria-labelledby="kino-h">
   <div class="wrap">
     <div class="head-row"><div><p class="kicker">Mit Ton</p><h2 class="h2 reveal" id="kino-h">Mehr Kino</h2><p class="intro reveal">Unsere Filme in voller Länge – direkt hier abspielen. Lautsprecher an.</p></div></div>
@@ -148,9 +157,10 @@ WORLD = [('halong', 'halong', 'Vietnam', 'Ha Long Bay'), ('trollstigen', 'r_trol
 world_tiles = ''.join(f'<button class="wtile{"" if l.startswith("r_") else " wide"}" type="button" data-lb="media/film_{f}.mp4" data-title="{c} – {t}" data-tall="{1 if l.startswith("r_") else 0}"><video data-auto muted loop playsinline preload="none" poster="media/{l}.jpg" src="media/{l}.mp4" aria-hidden="true"></video><span class="loc">{c}</span><b>{t}</b><span class="play" aria-hidden="true"></span></button>' for f, l, c, t in WORLD)
 WORLD_SEC = f'''<section class="block world" aria-labelledby="world-h">
   <div class="wrap">
-    <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Schon in über 20 Ländern geflogen – Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen und mehr. Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div>
+    <div class="head-row"><div><p class="kicker">Auch weltweit</p><h2 class="h2 reveal" id="world-h">Weltweit geflogen.</h2><p class="intro reveal">Schon in über 20 Ländern geflogen – Norwegen, Mongolei, Vietnam, Thailand, Pyrenäen und mehr. Aufträge und Touren rund um die Welt. Antippen für den ganzen Film.</p></div><div class="wctl"><div class="wnav"><button type="button" data-w="-1" aria-label="Zurück blättern">&#8592;</button><button type="button" data-w="1" aria-label="Weiter blättern">&#8594;</button></div><a class="btn" href="kontakt.html">Dreh anfragen – auch im Ausland</a></div></div>
   </div>
   <div class="wrow" tabindex="0" aria-label="Filme aus aller Welt, seitlich wischen">{world_tiles}</div>
+  <div class="wrap"><div class="wprog" aria-hidden="true"><i></i></div></div>
 </section>
 '''
 
@@ -178,7 +188,7 @@ reel_items = ''.join(f'<div class="item"><video muted loop playsinline preload="
 reel_dots = ''.join('<i></i>' for _ in REELS)
 
 SVC_HOME = [('events', 'events', 'Events &amp; Firmenfeiern', 'Mitten durch Bühne, Tanzfläche und Publikum.'), ('imagefilm', 'rolltreppe', 'Imagefilme', 'Euer Unternehmen in einem einzigen Flug.'),
-            ('social', 'zh_detail', 'Social-Media-Clips', 'Hochkant, mit Hook in der ersten Sekunde.'), ('sport', 'tafel', 'Sport &amp; Stadion', 'Tempo, das kein Kameramann hinterherkommt.'),
+            ('social', 'wohnmobil', 'Social-Media-Clips', 'Hochkant, mit Hook in der ersten Sekunde.'), ('sport', 'tafel', 'Sport &amp; Stadion', 'Tempo, das kein Kameramann hinterherkommt.'),
             ('gastro', 'gastro', 'Gastro &amp; Hotels', 'Euer Laden, bevor der Gast da ist.'), ('immobilie', 'img:hoermann_DJI_0726', 'Immobilien &amp; Gewerbe', 'Luftbilder, Durchflüge und Dachaufnahmen.')]
 svc_cards = ''.join(f'<a class="svc-card" href="leistungen.html#{i}">' + (f'<img src="media/{v[4:]}.jpg" alt="" loading="lazy">' if v.startswith('img:') else f'<video data-auto muted loop playsinline preload="none" poster="media/{v}.jpg" src="media/{v}.mp4" aria-hidden="true"></video>') + f'<h3>{t}</h3><p>{d}</p><span class="go">Mehr dazu</span></a>' for i, v, t, d in SVC_HOME)
 
@@ -188,7 +198,7 @@ ticker = '<div class="ticker" aria-label="Kunden und Partner"><div class="row">'
 home_main = f'''<main id="main">
 <section class="eye" aria-label="Falcon Eye">
   <div class="stage">
-    <video id="heroVid" poster="media/hero.jpg" data-mobile-src="media/hero_m.mp4" data-mobile-poster="media/hero_m.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video><script>(function(v){var m=innerWidth<700;v.poster=m?"media/hero_m.jpg":"media/hero.jpg";v.src=m?"media/hero_m.mp4":"media/hero.mp4";})(document.getElementById("heroVid"))</script>
+    <video id="heroVid" poster="media/hero.jpg" data-mobile-src="media/hero_m.mp4" data-mobile-poster="media/hero_m.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video><script>(function(v){{var m=innerWidth<700;v.poster=m?"media/hero_m.jpg":"media/hero.jpg";v.src=m?"media/hero_m.mp4":"media/hero.mp4";}})(document.getElementById("heroVid"))</script>
     <canvas id="eyeCanvas" aria-hidden="true"></canvas>
     <div class="scan"></div>
     <div class="boot" aria-hidden="true"><span>FALCON EYE OSD</span><span>GPS 14 SAT &nbsp; LINK 100%</span><span>CAM 6K &nbsp; 50 FPS</span><span>LIPO 6S 25.2V</span></div>
@@ -218,7 +228,7 @@ home_main = f'''<main id="main">
   <div><b>0 €</b><span>für Anfrage und Angebot – ihr wisst vorher, was es kostet</span></div>
 </div>
 
-<section class="fly" style="height:420vh" data-frames="127" data-src="seq/f{{n}}.webp" data-alt="12" data-alt-to="1.2" data-secs="9" aria-label="Durchflug: Scrollen steuert die Drohne">
+<section class="fly" data-nodock style="height:420vh" data-frames="127" data-src="seq/f{{n}}.webp" data-alt="12" data-alt-to="1.2" data-secs="9" aria-label="Durchflug: Scrollen steuert die Drohne">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>12</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
@@ -247,7 +257,7 @@ home_main = f'''<main id="main">
     <video muted loop playsinline preload="none" poster="media/halong.jpg" src="media/halong.mp4" aria-hidden="true"></video>
     <div class="sim-osd" aria-hidden="true"><div class="hz"><i></i></div><div class="cross"></div>
       <div class="tl"><span class="rec">SIM</span><span>THR <b data-sim="thr">0</b>%</span><span>SPD <b data-sim="spd">0</b> km/h</span></div><div class="tr"><span>ROLL <b data-sim="roll">0</b>°</span><span>PITCH <b data-sim="pitch">0</b>°</span></div></div>
-    <div class="sim-copy"><p class="kicker">Probiert es selbst</p><h2 class="h2" id="sim-h">Ihr habt die Sticks.</h2><p>Zieht an den Sticks – auf dem Handy mit beiden Daumen, am Rechner mit Maus oder W A S D und den Pfeiltasten. Linker Stick hoch = Gas, runter = bremsen. So fühlt sich FPV an.</p></div>
+    <div class="sim-copy"><p class="kicker">Probiert es selbst</p><h2 class="h2" id="sim-h">Ihr habt die Sticks.</h2><p><span class="d">Zieht mit der Maus an den Sticks – oder fliegt mit W A S D und den Pfeiltasten. Linker Stick hoch = Gas, runter = bremsen. So fühlt sich FPV an.</span><span class="m">Beide Daumen auf die Sticks: links hoch = Gas, rechts = kippen und nicken. So fühlt sich FPV an.</span></p></div>
     <div class="sticks"><div class="stick" data-stick="l" aria-label="Linker Stick: Gas und Drehen"><i></i><span>Gas / Gier</span></div><div class="stick" data-stick="r" aria-label="Rechter Stick: Rollen und Nicken"><i></i><span>Rollen / Nicken</span></div></div>
   </div>
 </section>
@@ -259,7 +269,7 @@ home_main = f'''<main id="main">
   </div>
 </section>
 
-<section class="fly" style="height:460vh" data-frames="148" data-src="seq2/r{{n}}.webp" data-alt="2.4" data-alt-to="1.1" data-secs="21" aria-label="Durchflug durch das Polizeipräsidium">
+<section class="fly" data-nodock style="height:460vh" data-frames="148" data-src="seq2/r{{n}}.webp" data-alt="2.4" data-alt-to="1.1" data-secs="21" aria-label="Durchflug durch das Polizeipräsidium">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>2</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
@@ -287,7 +297,7 @@ home_main = f'''<main id="main">
 </section>
 
 {WORLD_SEC}
-<section class="fly" style="height:440vh" data-frames="204" data-src="seq3/w{{n}}.jpg" data-alt="3" data-alt-to="140" data-secs="17" aria-label="Durchflug Norwegen: unter der Brücke in den Wasserfall">
+<section class="fly" data-nodock style="height:440vh" data-frames="204" data-src="seq3/w{{n}}.jpg" data-alt="3" data-alt-to="140" data-secs="17" aria-label="Durchflug Norwegen: unter der Brücke in den Wasserfall">
   <div class="stage">
     <canvas aria-hidden="true"></canvas><div class="scan"></div>
     <div class="osd" aria-hidden="true"><div class="tl"><span class="rec">REC <b data-clk>00:00</b></span><span>ALT <b data-alt>3</b> m</span></div><div class="tr"><span><b data-spd>0</b> km/h</span><span data-volt>25.2V</span></div><div class="cross"></div></div>
@@ -310,7 +320,7 @@ home_main = f'''<main id="main">
 </section>
 
 <section class="block" aria-labelledby="safe-h">
-  <div class="wrap"><h2 class="h2 reveal" id="safe-h">Sicher in der Luft</h2><p class="intro reveal">FPV sieht wild aus. Dahinter steckt Planung.</p>{SAFETY}</div>
+  <div class="wrap"><p class="kicker">Pre-Flight-Check</p><h2 class="h2 reveal" id="safe-h">Sicher in der Luft</h2><p class="intro reveal">FPV sieht wild aus. Dahinter steckt Planung.</p>{SAFETY}</div>
 </section>
 
 <section class="schacht" aria-labelledby="schacht-h">
@@ -384,15 +394,16 @@ def case_html(i, c):
     extra = f'<button class="btn ghost" type="button" data-lb="media/{CASE_FILM[cid][0]}.mp4" data-title="{CASE_FILM[cid][1]}" data-anlass="{anlass}" data-tall="{1 if cid in ("hochzeit", "dance") else 0}">Ganzen Film ansehen (mit Ton)</button>' if cid in CASE_FILM else ''
     return f'''<article class="case" id="{cid}" data-tags="{tags}">
   {media}
-  <div><p class="kicker">{sub}</p><h2 class="h3">{name}</h2><p>{text}</p><dl class="facts">{dl}</dl><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">Ähnlichen Dreh anfragen</a>{extra}</div></div>
+  <div class="ctext" data-no="{i+1:02d}"><p class="kicker">{sub}</p><h2 class="h3">{name}</h2><p>{text}</p><dl class="facts">{dl}</dl><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">Ähnlichen Dreh anfragen</a>{extra}</div></div>
 </article>'''
 cases = ''.join(case_html(i, c) for i, c in enumerate(CASES))
-filters = ''.join(f'<button type="button" data-f="{k}" aria-pressed="{"true" if k == "alle" else "false"}">{t}</button>' for k, t in [('alle', 'Alle'), ('event', 'Events'), ('firma', 'Firmen'), ('sport', 'Sport'), ('gastro', 'Gastro'), ('social', 'Social Media')])
+_cnt = lambda k: len(CASES) if k == 'alle' else sum(k in c[1].split() for c in CASES)
+filters = ''.join(f'<button type="button" data-f="{k}" aria-pressed="{"true" if k == "alle" else "false"}">{t}<small>{_cnt(k)}</small></button>' for k, t in [('alle', 'Alle'), ('event', 'Events'), ('firma', 'Firmen'), ('sport', 'Sport'), ('gastro', 'Gastro'), ('social', 'Social Media')])
 proj = head('Projekte – Falcon Eye FPV', 'Echte FPV-Projekte von Falcon Eye: Möbel Martin, Ludwigspark, Polizeipräsidium, Weinloft 23, Hörmann und mehr.', 'projekte') + header('projekte') + f'''<main id="main">
 {phero('stadion2', 'Projekte', 'Alles echte Flüge. Fahrt mit der Maus über ein Video oder wischt auf dem Handy seitlich – dann steuert ihr selbst durch den Flug.')}
 <section class="block" style="padding-top:60px">
   <div class="wrap">
-    <div class="filters" role="group" aria-label="Projekte filtern">{filters}</div>
+    <div class="pillbar"><div class="filters" role="group" aria-label="Projekte filtern">{filters}</div></div>
     <div class="cases">{cases}</div>
   </div>
 </section>
@@ -421,12 +432,16 @@ SVC = [
    ['Leise und unauffällig', 'Abgestimmt mit Fotograf und Videograf', 'Kurzer Film plus Clips für die Gäste'], 'hochzeit'),
   ('live', 'arena', 'Live-Übertragung', 'Das FPV-Bild live auf Leinwand oder in den Stream – für Sportevents, Shows und Messen.',
    ['Digitales FPV-Livebild', 'Übergabe an Regie oder Stream', 'Flugshow-Einlagen möglich'], 'live'),
-  ('kino', 'nacht', 'Kino-Qualität 6K', 'Unser Cinelifter trägt eine Blackmagic 6K. Für Werbespots, Musikvideos und Produktionen, die auf die große Leinwand sollen.',
+  ('kino', 'cine', 'Kino-Qualität 6K', 'Unser Cinelifter trägt eine Blackmagic 6K. Für Werbespots, Musikvideos und Produktionen, die auf die große Leinwand sollen.',
    ['Blackmagic 6K mit Wechselobjektiven', 'Raw-Material für die Farbkorrektur', 'Zusammenarbeit mit Produktionsfirmen'], 'imagefilm'),
 ]
+SVC_SRC = {'events': ('Dance-Events', 'Aus dem Projekt'), 'imagefilm': ('Möbel Martin', 'Aus dem Projekt'), 'social': ('Z &amp; H Aufbereitung', 'Aus dem Projekt'),
+           'sport': ('Ludwigspark', 'Aus dem Projekt'), 'gastro': ('Weinloft 23', 'Aus dem Projekt'), 'hochzeit': ('Hochzeit', 'Aus dem Projekt'),
+           'live': ('Dance-Events', 'Aus dem Projekt'), 'kino': ('Cinelifter', 'Aus dem Hangar')}
 def svc_row(s, i):
     sid, vid, t, d, ticks, anlass = s
-    media = (f'<div class="media"><img src="media/{vid[4:]}.jpg" alt="Luftbild Hörmann-Werk" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>' if vid and vid.startswith('img:') else clip(vid, t, 'Ziehen zum Steuern', anlass=anlass)) if vid else '<div class="clip" style="cursor:default"><div class="nosig"><canvas></canvas><span>Clip folgt</span></div></div>'
+    cap = SVC_SRC.get(sid, (t, ''))
+    media = (f'<div class="media"><img src="media/{vid[4:]}.jpg" alt="Luftbild Hörmann-Werk" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>' if vid and vid.startswith('img:') else clip(vid, cap[0], cap[1], anlass=anlass)) if vid else '<div class="clip" style="cursor:default"><div class="nosig"><canvas></canvas><span>Clip folgt</span></div></div>'
     film = ''
     if sid == 'hochzeit':
         media = media.replace('<figure class="clip ', '<figure style="aspect-ratio:9/14" class="clip tall ').replace('data-lb="media/r_hochzeit.mp4"', 'data-lb="media/film_hochzeit.mp4" data-tall="1"')
@@ -434,7 +449,7 @@ def svc_row(s, i):
     tk = ''.join(f'<li>{x}</li>' for x in ticks)
     return f'''<article class="case" id="{sid}" data-tags="x">
   <div class="media-wrap">{media}</div>
-  <div><h2 class="h3">{t}</h2><p>{d}</p><ul class="ticks">{tk}</ul><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">{t.split(" ")[0].replace("&amp;","")} anfragen</a>{film}</div></div>
+  <div class="ctext" data-no="{i+1:02d}"><h2 class="h3">{t}</h2><p>{d}</p><ul class="ticks">{tk}</ul><div class="ctas"><a class="btn" href="kontakt.html#{anlass}">{t.split(" ")[0].replace("&amp;","")} anfragen</a>{film}</div></div>
 </article>'''
 svc_rows = ''.join(svc_row(s, i) for i, s in enumerate(SVC))
 FAQ = [
@@ -448,16 +463,18 @@ FAQ = [
   ('Könnt ihr auch klassische Drohnenfotos?', 'Ja. Neben FPV haben wir Kameradrohnen für Luftbilder, Zeitraffer und ruhige Überflüge – oft im selben Termin.'),
 ]
 faq = ''.join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in FAQ)
+import json as _json
+faq_ld = '<script type="application/ld+json">' + _json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": html.unescape(q), "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a)}} for q, a in FAQ]}, ensure_ascii=False) + '</script>\n' 
 leist = head('Leistungen – Falcon Eye FPV', 'FPV-Drohnenfilme für Events, Imagefilme, Social Media, Sport, Gastro, Immobilien, Hochzeiten und Live-Übertragungen im Saarland.', 'leistungen') + header('leistungen') + f'''<main id="main">
 {phero('rolltreppe', 'Leistungen', 'Ihr sagt uns, wofür ihr den Film braucht. Wir planen den Flug, fliegen ihn und liefern ihn fertig geschnitten.')}
 <section class="block" style="padding-top:60px">
   <div class="wrap">
-    <nav class="filters" aria-label="Zu Leistung springen">{''.join(f'<a class="btn ghost sm" href="#{s[0]}">{s[2]}</a>' for s in SVC)}</nav>
+    <div class="pillbar"><nav class="filters jump" aria-label="Zu Leistung springen">{''.join(f'<a class="btn ghost sm" href="#{s[0]}">{s[2]}</a>' for s in SVC)}</nav></div>
     <div class="cases">{svc_rows}</div>
   </div>
 </section>
 <section class="block process"><div class="wrap"><h2 class="h2 reveal">So läuft ein Dreh</h2>{STEPS}</div></section>
-<section class="block" aria-labelledby="faq-h"><div class="wrap"><h2 class="h2 reveal" id="faq-h">Häufige Fragen</h2><div class="faq">{faq}</div></div></section>
+<section class="block" aria-labelledby="faq-h"><div class="wrap"><h2 class="h2 reveal" id="faq-h">Häufige Fragen</h2><div class="faq">{faq}</div></div>{faq_ld}</section>
 {band('Welche Leistung braucht ihr?', 'Tippt an, worum es geht. Den Rest klären wir am Telefon oder per WhatsApp.')}
 </main>
 ''' + footer() + scripts()
@@ -526,7 +543,7 @@ ueber = head('Über uns – Falcon Eye FPV', 'Die Crew hinter Falcon Eye: FPV-Pi
     <div class="count reveal"><b data-count="100" data-suffix="+">100+</b><span>Drohnen und mehr im Hangar – vom Winzling bis zum Kino-Lifter.</span></div>
   </div>
 </section>
-<section class="block" aria-labelledby="safe-h"><div class="wrap"><h2 class="h2 reveal" id="safe-h">Sicher in der Luft</h2><p class="intro reveal">FPV sieht wild aus. Dahinter steckt Planung.</p>{SAFETY}</div></section>
+<section class="block" aria-labelledby="safe-h"><div class="wrap"><p class="kicker">Pre-Flight-Check</p><h2 class="h2 reveal" id="safe-h">Sicher in der Luft</h2><p class="intro reveal">FPV sieht wild aus. Dahinter steckt Planung.</p>{SAFETY}</div></section>
 {band('Lust, mit uns zu fliegen?', 'Erzählt uns von eurem Projekt – wir melden uns mit einer Flugidee.')}
 </main>
 ''' + footer() + scripts()
@@ -534,7 +551,7 @@ write('ueber-uns.html', ueber)
 
 # ====================================================================== FLIGHT CLUB
 fc = head('Flight Club Saar – Partner von Falcon Eye', 'Der Flight Club Saar e.V. ist der FPV-Verein im Saarland und Partner von Falcon Eye.', 'flight-club') + header('flight-club') + f'''<main id="main">
-{phero('turm', 'Flight Club Saar', 'Der FPV-Verein im Saarland – und die Werkstatt, in der unsere Piloten groß geworden sind.', ctas=False)}
+{phero('gang', 'Flight Club Saar', 'Der FPV-Verein im Saarland – und die Werkstatt, in der unsere Piloten groß geworden sind.', ctas=False)}
 <section class="block">
   <div class="wrap reels">
     <div><div class="phone"><div class="screen"><span class="island"></span><div class="feed"><div class="item"><video data-auto muted loop playsinline preload="none" poster="media/r_fcsbanner.jpg" src="media/r_fcsbanner.mp4"></video><p class="cap"><b>Flight Club Saar e.V.</b>Flugtag am Förderturm Göttelborn</p></div></div></div></div></div>
@@ -548,9 +565,9 @@ fc = head('Flight Club Saar – Partner von Falcon Eye', 'Der Flight Club Saar e
   </div>
 </section>
 <section class="block process">
-  <div class="wrap two-col">
-    <div><h2 class="h2 reveal">Verein und Firma</h2><p class="intro reveal">Falcon Eye ist das, was passiert, wenn aus dem Hobby im Verein ein Beruf wird. Im Club probieren wir neue Drohnen und Manöver aus – was dort sitzt, fliegen wir später für Kunden.</p></div>
-    <div class="panel"><h3 class="h3">Selbst FPV fliegen?</h3><p>Wer das Fliegen lernen will, ist im Flight Club Saar richtig – Erwachsene und Jugendliche.</p><div class="trust" style="grid-template-columns:repeat(3,minmax(0,1fr));border:0"><div style="background:var(--plate);padding:12px 0"><b style="font-size:44px">30 €</b><span>Jahresbeitrag</span></div><div style="background:var(--plate);padding:12px 0"><b style="font-size:44px">20 €</b><span>unter 18 Jahren</span></div><div style="background:var(--plate);padding:12px 0"><b style="font-size:44px">20 €</b><span>einmalige Aufnahme</span></div></div><p>Alles Weitere zur Mitgliedschaft direkt beim Verein.</p><div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Mitglied werden</a></div></div>
+  <div class="wrap two-col vf">
+    <div><p class="kicker">Vom Hobby zum Beruf</p><h2 class="h2 reveal">Verein und Firma</h2><p class="intro reveal">Falcon Eye ist das, was passiert, wenn aus dem Hobby im Verein ein Beruf wird. Im Club probieren wir neue Drohnen und Manöver aus – was dort sitzt, fliegen wir später für Kunden.</p></div>
+    <div class="panel"><h3 class="h3">Selbst FPV fliegen?</h3><p>Wer das Fliegen lernen will, ist im Flight Club Saar richtig – Erwachsene und Jugendliche.</p><div class="fees"><div><b>30 €</b><span>Jahresbeitrag</span></div><div><b>20 €</b><span>unter 18 Jahren</span></div><div><b>20 €</b><span>einmalige Aufnahme</span></div></div><p>Alles Weitere zur Mitgliedschaft direkt beim Verein.</p><div class="ctas"><a class="btn" href="https://flightclub-saar.de/" target="_blank" rel="noopener">Mitglied werden</a></div></div>
   </div>
 </section>
 {band('Ihr braucht Piloten für euer Projekt?', 'Dafür ist Falcon Eye da. Schreibt uns, was ihr filmen wollt.')}
@@ -561,6 +578,22 @@ write('flight-club.html', fc)
 # ====================================================================== KONTAKT
 ANL = [('event', 'Event / Firmenfeier'), ('imagefilm', 'Imagefilm'), ('social', 'Social-Media-Clips'), ('sport', 'Sport / Stadion'), ('hochzeit', 'Hochzeit'), ('immobilie', 'Immobilie / Gewerbe'), ('live', 'Live-Übertragung'), ('sonstiges', 'Etwas anderes')]
 chips = ''.join(f'<input type="radio" name="anlass" id="a-{k}" value="{t}" data-key="{k}"><label for="a-{k}">{t}</label>' for k, t in ANL)
+import math as _m
+RADAR_PTS = [('Saarlouis', 49.313, 6.752, 'end', -4, 2.5), ('Neunkirchen', 49.350, 7.180, 'end', -4, -3), ('Homburg', 49.326, 7.338, 'start', 4, 2.5),
+             ('Trier', 49.750, 6.637, 'start', 4, 2.5), ('Kaiserslautern', 49.444, 7.769, 'middle', 0, -6), ('Luxemburg', 49.611, 6.130, 'start', 4, 2.5), ('Lothringen', 49.119, 6.176, 'start', 4, 2.5)]
+def radar_svg():
+    S0 = (49.234, 6.997); k = 1.15  # 1 km = 1.15 units, outer ring 80 km
+    rings = ''.join(f'<circle r="{r * k:.1f}"/><text class="rk" x="{r * k + 1.2:.1f}" y="-1.6">{r} km</text>' for r in (25, 50, 75))
+    blips = ''
+    for n, la, lo, anc, ox, oy in RADAR_PTS:
+        dx = (lo - S0[1]) * 111.32 * _m.cos(_m.radians(S0[0])); dy = (la - S0[0]) * 110.57
+        x, y = dx * k, -dy * k; brg = (_m.degrees(_m.atan2(dx, dy)) + 360) % 360
+        blips += f'<g class="bl" style="--d:{brg / 360 * 4:.2f}s" transform="translate({x:.1f} {y:.1f})"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="{ox}" y="{oy}" text-anchor="{anc}">{n}</text></g>'
+    return f'''<div class="radar" aria-label="Einsatzgebiet rund um Saarbrücken: Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen" role="img">
+  <div class="sweep" aria-hidden="true"></div>
+  <svg viewBox="-100 -100 200 200" aria-hidden="true"><g class="rg">{rings}<line x1="-96" y1="0" x2="96" y2="0"/><line x1="0" y1="-96" x2="0" y2="96"/></g><text class="nesw" x="0" y="-90" text-anchor="middle">N</text>{blips}<g class="home"><circle class="pg" r="7"/><circle class="pt" r="3"/><text x="0" y="12" text-anchor="middle">SAARBRÜCKEN</text></g></svg>
+  <span class="rd-osd tl">RADAR · EINSATZGEBIET</span><span class="rd-osd br">BASIS 66125</span>
+</div>'''
 kontakt = head('Kontakt – Falcon Eye FPV', 'Dreh bei Falcon Eye anfragen: Formular, WhatsApp, Telefon oder E-Mail. Antwort mit Flugidee und Festpreis.', 'kontakt') + header('kontakt').replace('<div class="dock"', '<div class="dock" hidden') + f'''<main id="main">
 <section class="block" style="padding-top:calc(130px + var(--safe-top))">
   <div class="wrap mission-grid">
@@ -575,6 +608,7 @@ kontakt = head('Kontakt – Falcon Eye FPV', 'Dreh bei Falcon Eye anfragen: Form
       </div>
     </div>
     <form class="plan" id="planner" novalidate>
+      <div class="plan-osd" aria-hidden="true"><span class="rec">MISSION PLANNER</span><span data-plan-step>SCHRITT 1 / 3</span></div>
       <div class="steps-ind" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <fieldset class="pstep"><legend>1. Worum geht's?</legend><div class="chips">{chips}</div></fieldset>
       <div class="pstep" hidden>
@@ -605,9 +639,10 @@ kontakt = head('Kontakt – Falcon Eye FPV', 'Dreh bei Falcon Eye anfragen: Form
   </div>
 </section>
 <section class="block process" aria-labelledby="gebiet-h">
-  <div class="wrap two-col">
-    <div><h2 class="h2 reveal" id="gebiet-h">Wo wir fliegen</h2><p class="intro reveal">Von Saarbrücken aus im ganzen Saarland und der Region – Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen. Für besondere Projekte auch weiter weg.</p></div>
-    <div class="panel"><h3 class="h3">Falcon Eye</h3><p>Natan Wojtasczyk<br>Römerstr. 25<br>66125 Saarbrücken</p><p>Telefon {PHONE_HUMAN}<br>info@falcon-eye.de</p></div>
+  <div class="wrap two-col gebiet">
+    <div><h2 class="h2 reveal" id="gebiet-h">Wo wir fliegen</h2><p class="intro reveal">Von Saarbrücken aus im ganzen Saarland und der Region – Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen. Für besondere Projekte auch weiter weg.</p>
+    <div class="panel addr"><h3 class="h3">Falcon Eye</h3><p>Natan Wojtasczyk<br>Römerstr. 25<br>66125 Saarbrücken</p><p><a href="tel:+4915156743442">Telefon {PHONE_HUMAN}</a><br><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></p></div></div>
+    {radar_svg()}
   </div>
 </section>
 </main>
@@ -657,7 +692,7 @@ ds = head('Datenschutz – Falcon Eye', 'Datenschutzerklärung von Falcon Eye: k
 <h2>7. Kontakt per WhatsApp</h2>
 <p>Die WhatsApp-Schaltflächen sind einfache Links. Erst wenn ihr darauf tippt, öffnet sich WhatsApp, und es gelten die Datenschutzbestimmungen der WhatsApp Ireland Ltd. (Meta). Dabei können Daten in die USA übertragen werden. Wenn ihr das nicht möchtet, nutzt bitte E-Mail oder Telefon.</p>
 <h2>8. Links zu sozialen Netzwerken</h2>
-<p>Instagram, YouTube, Facebook und die Website des Flight Club Saar sind nur verlinkt, nicht eingebunden. Das gilt auch für die Filme im Bereich „Mehr Kino“: Die Vorschaubilder liegen bei uns, das Video startet erst auf YouTube. Erst beim Anklicken verlasst ihr unsere Seite; dann gelten die Datenschutzbestimmungen des jeweiligen Anbieters.</p>
+<p>Instagram, YouTube, Facebook und die Website des Flight Club Saar sind nur verlinkt, nicht eingebunden. Die Filme im Bereich „Mehr Kino“ und alle anderen Videos liegen bei uns und werden direkt von dieser Website abgespielt – YouTube ist dabei nicht beteiligt. Erst wenn ihr einen der Links anklickt, verlasst ihr unsere Seite; dann gelten die Datenschutzbestimmungen des jeweiligen Anbieters.</p>
 <h2>9. Personen in unseren Videos</h2>
 <p>Die gezeigten Aufnahmen stammen aus Aufträgen unserer Kunden, die der Veröffentlichung zugestimmt haben. Wenn ihr euch in einem Video erkennt und nicht gezeigt werden wollt, schreibt uns – wir entfernen oder ändern die Szene.</p>
 <h2>10. Eure Rechte</h2>

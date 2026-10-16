@@ -11,8 +11,12 @@
 
   /* ---------- header, menu, dock ---------- */
   const top = $('.top'), hero = $('.eye');
+  const setHdr = () => top && document.documentElement.style.setProperty('--hdr', top.offsetHeight + 'px');
+  setHdr(); addEventListener('resize', setHdr);
+  const pillbars = $$('.pillbar');
   function onScroll() {
     const y = scrollY;
+    pillbars.forEach(b => b.classList.toggle('stuck', b.getBoundingClientRect().top <= (top ? top.offsetHeight : 0) + 1));
     if (hero) {
       top.classList.toggle('solid', y > hero.offsetHeight - innerHeight * .6);
       top.classList.toggle('inhero', y < hero.offsetHeight * .45);
@@ -181,10 +185,19 @@
   });
 
   /* ---------- tab-like selectors (hangar, case galleries) ---------- */
+  const zap = t => {
+    if (reduce || !t) return;
+    let c = t.querySelector(':scope > .zap');
+    if (!c) { c = document.createElement('canvas'); c.className = 'zap'; c.width = 96; c.height = 60; c.setAttribute('aria-hidden', 'true'); t.appendChild(c); }
+    const x = c.getContext('2d'), img = x.createImageData(96, 60); let f = 0;
+    c.classList.add('on');
+    (function n() { for (let i = 0; i < img.data.length; i += 4) { const v = Math.random() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; } x.putImageData(img, 0, 0); if (++f < 8) setTimeout(n, 34); else c.classList.remove('on'); })();
+  };
   $$('[data-switch]').forEach(group => {
     const target = $(group.dataset.switch);
     const btns = $$('[data-src]', group);
     btns.forEach(b => b.addEventListener('click', () => {
+      if (b.getAttribute('aria-selected') !== 'true') zap(target);
       btns.forEach(x => x.setAttribute('aria-selected', x === b));
       const v = $('video', target), ns = $('.nosig', target), op = $('.open', target);
       if (!b.dataset.src) { if (v) { v.pause(); v.hidden = true; } if (ns) ns.hidden = false; }
@@ -198,13 +211,53 @@
   });
 
   /* ---------- project filters ---------- */
+  const zig = () => $$('.cases').forEach(list => $$(':scope > .case', list).filter(c => !c.hidden).forEach((c, i) => c.classList.toggle('flip', i % 2 === 1)));
+  zig();
   const filt = $('.filters');
   if (filt) $$('button', filt).forEach(b => b.addEventListener('click', () => {
     $$('button', filt).forEach(x => x.setAttribute('aria-pressed', x === b));
     const k = b.dataset.f;
     $$('.case').forEach(c => c.hidden = k !== 'alle' && !c.dataset.tags.split(' ').includes(k));
-    if (hasGsap) ScrollTrigger.refresh();
+    zig();
+    const list = $('.cases'), bar = filt.closest('.pillbar');
+    if (list && bar && bar.classList.contains('stuck')) {
+      const y = list.getBoundingClientRect().top + scrollY - (top ? top.offsetHeight : 0) - bar.offsetHeight - 24;
+      if (window.FE.lenis) window.FE.lenis.scrollTo(y); else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    }
+    if (hasGsap) { ScrollTrigger.refresh(); if (!reduce) gsap.fromTo($$('.case', list).filter(c => !c.hidden).slice(0, 3), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .6, stagger: .08, ease: 'power3.out', clearProps: 'opacity,transform' }); }
   }));
+
+  /* ---------- Leistungen: jump bar follows the scroll ---------- */
+  const jump = $('.filters.jump');
+  if (jump && 'IntersectionObserver' in window) {
+    const links = $$('a[href^="#"]', jump);
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => { const on = a.getAttribute('href') === '#' + e.target.id; a.setAttribute('aria-current', on); if (on && jump.scrollWidth > jump.clientWidth) jump.scrollTo({ left: a.offsetLeft - 16, behavior: reduce ? 'auto' : 'smooth' }); });
+    }), { rootMargin: '-40% 0px -55% 0px' });
+    links.forEach(a => { const t = $(a.getAttribute('href')); if (t) io.observe(t); });
+  }
+
+  /* ---------- Weltweit: Pfeile und Fortschritt ---------- */
+  $$('.world').forEach(w => {
+    const row = $('.wrow', w), bar = $('.wprog i', w), btns = $$('[data-w]', w);
+    if (!row) return;
+    const upd = () => {
+      const max = row.scrollWidth - row.clientWidth, frac = Math.min(1, row.clientWidth / row.scrollWidth), p = max > 0 ? row.scrollLeft / max : 0;
+      if (bar) { bar.style.width = (frac * 100) + '%'; bar.style.transform = `translateX(${frac < 1 ? p * (1 - frac) / frac * 100 : 0}%)`; }
+      btns.forEach(b => b.disabled = +b.dataset.w < 0 ? row.scrollLeft < 4 : row.scrollLeft > max - 4);
+    };
+    btns.forEach(b => b.addEventListener('click', () => { const t = $('.wtile', row); row.scrollBy({ left: +b.dataset.w * (t ? t.offsetWidth + 16 : 300) * 2, behavior: reduce ? 'auto' : 'smooth' }); }));
+    row.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+  });
+
+  /* ---------- Pre-Flight-Check: Haken setzen sich nacheinander ---------- */
+  if (!reduce && 'IntersectionObserver' in window) $$('.safe').forEach(sf => {
+    $$(':scope > div', sf).forEach((d, i) => d.style.setProperty('--i', i));
+    sf.classList.add('pf-arm');
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { sf.classList.add('pf-go'); io.disconnect(); } }), { threshold: .25 });
+    io.observe(sf);
+  });
 
   /* ---------- booking planner ---------- */
   const plan = $('#planner');
@@ -214,7 +267,8 @@
     if (pick) pick.checked = true;
     const steps = $$('.pstep', plan), ind = $$('.steps-ind i', plan);
     let cur = 0;
-    const show = i => { cur = i; steps.forEach((s, k) => s.hidden = k !== i); ind.forEach((d, k) => d.classList.toggle('on', k <= i)); $('#planErr').textContent = ''; };
+    const pst = $('[data-plan-step]', plan);
+    const show = i => { cur = i; steps.forEach((s, k) => s.hidden = k !== i); ind.forEach((d, k) => d.classList.toggle('on', k <= i)); $('#planErr').textContent = ''; if (pst) pst.textContent = i >= steps.length - 1 ? 'ANFRAGE FERTIG' : 'SCHRITT ' + (i + 1) + ' / ' + (steps.length - 1); };
     const val = () => {
       const a = $('input[name=anlass]:checked', plan);
       return { anlass: a ? a.value : '', ort: plan.ort.value.trim(), datum: plan.datum.value, umfang: plan.umfang.value, msg: plan.msg.value.trim(), name: plan.name.value.trim(), kontakt: plan.kontakt.value.trim() };
@@ -305,9 +359,10 @@
       if (spd) spd.textContent = Math.round(18 + Math.sin(p * Math.PI) * 58 + Math.min(40, Math.abs(vel) / 90));
       if (clk) { const s = Math.floor(p * secs); clk.textContent = '00:' + String(s).padStart(2, '0'); }
       if (volt) volt.textContent = (25.2 - p * 2.4).toFixed(1) + 'V';
-      callouts.forEach(c => {
-        const at = +c.dataset.at, len = +(c.dataset.len || .2), d = p - at;
-        const o = d < 0 ? Math.max(0, 1 + d * 12) : (c.dataset.hold && p > at ? 1 : Math.max(0, 1 - Math.max(0, d - len) * 10));
+      callouts.forEach((c, k) => {
+        const at = +c.dataset.at, nextIn = k < callouts.length - 1 ? +callouts[k + 1].dataset.at - 1 / 12 : Infinity;
+        const fin = Math.min(1, Math.max(0, 1 + (p - at) * 12)), fout = c.dataset.hold ? 1 : Math.min(1, Math.max(0, (nextIn - p) / .05));
+        const o = Math.min(fin, fout);
         c.style.opacity = o; c.style.transform = `translateY(${(1 - o) * 30}px)`; c.style.pointerEvents = o > .5 ? 'auto' : 'none';
       });
       chaps.forEach(ch => {
@@ -345,10 +400,17 @@
     gsap.ticker.lagSmoothing(0);
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const id = a.getAttribute('href'); if (id.length < 2 || !$(id)) return;
-      e.preventDefault(); lenis.scrollTo(id, { offset: -70 });
+      e.preventDefault(); const pb = $('.pillbar'); lenis.scrollTo(id, { offset: -((top ? top.offsetHeight : 70) + (pb ? pb.offsetHeight : 0) + 16) });
     }));
   }
 
+  $$('.steps').forEach(ol => {
+    const lis = $$('li', ol); ol.classList.add('path');
+    ScrollTrigger.create({ trigger: ol, start: 'top 85%', end: 'bottom 72%', onUpdate: st => {
+      const pos = st.progress * (lis.length - .001);
+      lis.forEach((li, i) => { li.classList.toggle('on', pos >= i); li.style.setProperty('--f', Math.min(1, Math.max(0, pos - i)).toFixed(3)); });
+    }, onLeave: () => lis.forEach(li => { li.classList.add('on'); li.style.setProperty('--f', 1); }) });
+  });
   flies.forEach(sec => ScrollTrigger.create({ trigger: sec, start: 'top top', end: 'bottom bottom', scrub: .3, onUpdate: s => sec.update(s.progress, s.getVelocity()) }));
 
   /* ticker speed follows scroll */

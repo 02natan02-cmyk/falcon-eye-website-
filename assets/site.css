@@ -644,3 +644,185 @@ button.kino-card:focus-visible{outline:3px solid var(--signal);outline-offset:4p
 .fcp-spin i{transition:opacity .6s}
 @media (max-width:900px){.fcp{margin-top:8px}}
 @media (prefers-reduced-motion:reduce){.fcp-spin i,.fcp-browser .shot img,.fcp.fc-ok .fcp-badge{animation:none}}
+
+/* ======================================================================
+   Review 16.10.2026 – Abschnitt für Abschnitt nachgeschärft
+   ====================================================================== */
+:root{--hdr:66px}
+/* Fly-through: Telemetrie unter den Header, nichts überdeckt die Kapitel */
+.fly .osd .tl,.fly .osd .tr{top:calc(var(--hdr) + 14px)}
+/* Seiten-Heros: Header oben und Headline links immer lesbar */
+.phero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0) 26%),linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,0) 62%)}
+@media (max-width:700px){.phero::before{background:linear-gradient(to bottom,rgba(0,0,0,.6),rgba(0,0,0,0) 30%)}}
+
+/* Reels-Handy: Bildunterschrift auf eigenem Verlauf */
+.phone .item::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,0));pointer-events:none}
+.phone .item .cap{z-index:1}
+
+/* Sim: Text je Gerät, Horizont auf dem Handy unter dem Text */
+.sim-copy .m{display:none}
+@media (hover:none),(max-width:700px){.sim-copy .m{display:inline}.sim-copy .d{display:none}}
+@media (max-width:700px){.sim-osd .hz,.sim-osd .cross{top:66%}}
+
+/* Weltweit: Reihe beginnt bündig mit dem Inhalt, Pfeile + Fortschritt am Desktop */
+.world .wrow{padding-inline:max(var(--gutter),calc((100% - var(--max)) / 2 + var(--gutter)));scroll-padding-inline:max(var(--gutter),calc((100% - var(--max)) / 2 + var(--gutter)))}
+.wctl{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.wnav{display:flex;gap:8px}
+.wnav button{all:unset;cursor:pointer;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(230,236,236,.45);font-size:20px;transition:background .2s,color .2s,box-shadow .2s,opacity .2s}
+.wnav button:hover,.wnav button:focus-visible{background:var(--signal);color:var(--signal-ink);box-shadow:none}
+.wnav button[disabled]{opacity:.3;pointer-events:none}
+.wprog{height:3px;background:rgba(230,236,236,.12);border-radius:2px;margin-top:22px;overflow:hidden}
+.wprog i{display:block;height:100%;width:20%;background:var(--signal);border-radius:2px;transition:width .2s}
+.world .wrow{scrollbar-width:none}.world .wrow::-webkit-scrollbar{display:none}
+@media (max-width:700px){.wnav,.wprog{display:none}}
+
+/* Mehr Kino: Laufzeit, Hover wie im Player */
+.kino-card .th{position:relative;display:block;border-radius:6px;overflow:hidden}
+.kino-card .th img{border-radius:0}
+.kino-card .dur{position:absolute;right:8px;bottom:8px;font:400 12px/1 var(--osd);color:#fff;background:rgba(0,0,0,.72);padding:5px 7px;border-radius:4px;letter-spacing:.04em}
+.kino-card .play{transition:transform .35s cubic-bezier(.2,.7,.2,1),background .25s}
+.kino-card:hover .play,.kino-card:focus-visible .play{transform:scale(1.18);background:var(--signal)}
+.kino-card:hover .play::after,.kino-card:focus-visible .play::after{border-left-color:var(--signal-ink)}
+.kino-card .th::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 0 var(--signal);transition:box-shadow .3s;border-radius:6px;pointer-events:none}
+.kino-card:hover .th::after{box-shadow:inset 0 0 0 3px var(--signal)}
+
+/* Ablauf als Flugroute: Schritte leuchten beim Scrollen nacheinander auf */
+.steps li::after{background:linear-gradient(90deg,var(--signal) 0 calc(var(--f,0) * 100%),transparent 0),repeating-linear-gradient(90deg,var(--film) 0 8px,transparent 8px 14px)}
+.steps.path li::before{color:var(--film);transition:color .35s,text-shadow .35s}
+.steps.path li h3,.steps.path li p{transition:opacity .4s}
+.steps.path li:not(.on) h3,.steps.path li:not(.on) p{opacity:.45}
+.steps.path li.on::before{color:var(--signal);text-shadow:0 0 22px rgba(255,208,0,.45)}
+@media (max-width:980px){
+  .steps{grid-template-columns:1fr;gap:0}
+  .steps li{padding:0 0 30px 66px;min-height:96px}
+  .steps li::before{font-size:44px;top:-4px}
+  .steps li::after{display:block;top:46px;bottom:4px;left:12px;right:auto;width:2px;height:auto;background:linear-gradient(180deg,var(--signal) 0 calc(var(--f,0) * 100%),transparent 0),repeating-linear-gradient(180deg,var(--film) 0 8px,transparent 8px 14px)}
+  .steps li:last-child{padding-bottom:0}
+}
+
+/* Sicherheit als Pre-Flight-Check: Häkchen setzen sich nacheinander */
+.safe{counter-reset:ck}
+.safe div{counter-increment:ck}
+.safe h3::before{content:"CHECK " counter(ck,decimal-leading-zero);display:block;font:400 12px/1 var(--osd);letter-spacing:.12em;color:var(--muted);margin-bottom:8px;transition:color .3s}
+.safe.pf-arm div::before{transform:rotate(-45deg) scale(0);opacity:0;transition:transform .45s cubic-bezier(.3,1.6,.5,1),opacity .2s;transition-delay:calc(var(--i,0) * 160ms + 200ms)}
+.safe.pf-arm.pf-go div::before{transform:rotate(-45deg) scale(1);opacity:1}
+.safe.pf-arm.pf-go h3::before{color:var(--ok);transition-delay:calc(var(--i,0) * 160ms + 300ms)}
+
+/* CTA-Band: Claim läuft riesig im Hintergrund, nichts bleibt leer */
+.band{position:relative}
+.band .wrap{position:relative;z-index:1}
+.band-mq{position:absolute;left:0;bottom:-.06em;display:flex;width:max-content;white-space:nowrap;pointer-events:none;animation:band-mq 60s linear infinite}
+.band-mq span{font:900 clamp(120px,19vw,300px)/.9 var(--display);text-transform:uppercase;color:transparent;-webkit-text-stroke:1.5px rgba(26,21,0,.1);padding-right:.3em}
+@keyframes band-mq{to{transform:translateX(-50%)}}
+@media (min-width:1100px){.band .wrap > div:first-child{flex:1 1 640px}.band .ctas{flex-direction:column;align-items:stretch;align-self:center}}
+
+/* Projekte/Leistungen: Zickzack, große Index-Nummer, Sticky-Leiste */
+.ctext{position:relative}
+.ctext::before{content:attr(data-no);position:absolute;right:0;top:-.42em;font:900 clamp(110px,13vw,200px)/1 var(--display);color:transparent;-webkit-text-stroke:1.5px rgba(230,236,236,.09);pointer-events:none;z-index:-1}
+.case{isolation:isolate}
+@media (min-width:861px){.case.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.case.flip > .media-wrap{order:2}}
+.case:nth-child(even) .media{order:0}
+.pillbar{position:sticky;top:calc(var(--hdr) - 1px);z-index:40;margin-inline:calc(var(--gutter) * -1);padding:10px var(--gutter);transition:background .3s,box-shadow .3s}
+.pillbar .filters{margin-top:0}
+.pillbar.stuck{background:rgba(22,27,33,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line)}
+.filters button small{font:400 11px/1 var(--osd);margin-left:8px;opacity:.6;vertical-align:1px}
+.filters.jump a[aria-current=true]{background:var(--signal);color:var(--signal-ink);box-shadow:none}
+.block > .wrap > .pillbar:first-child{margin-top:-10px}
+@media (max-width:860px){
+  .pillbar .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent);padding-right:30px}
+  .pillbar .filters::-webkit-scrollbar{display:none}
+  .pillbar .filters > *{flex:none}
+}
+
+/* Hangar: Spezifikationen lesbar, Kanalwechsel mit Bildrauschen */
+.process .hangar-view .spec span{background:var(--steel);box-shadow:inset 0 0 0 1px var(--line)}
+.zap{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;opacity:0;mix-blend-mode:screen;image-rendering:pixelated;transition:opacity .3s}
+.case[id]{scroll-margin-top:calc(var(--hdr) + 80px)}
+.zap.on{opacity:.9}
+@media (min-width:901px){.crewcol{align-items:start}.crewcol > div:first-child{position:sticky;top:calc(var(--hdr) + 40px)}}
+
+/* FAQ: weich aufklappen */
+.faq{interpolate-size:allow-keywords}
+.faq details::details-content{block-size:0;overflow:hidden;transition:block-size .45s cubic-bezier(.2,.7,.2,1),content-visibility .45s allow-discrete}
+.faq details[open]::details-content{block-size:auto}
+.faq summary:hover{color:#fff}
+.faq summary:hover::after{transform:scale(1.2)}
+.faq details[open] summary:hover::after{transform:rotate(45deg) scale(1.2)}
+
+/* Kontakt: Planer als Bodenstation, Kacheln statt Mini-Chips */
+form.plan{background:linear-gradient(180deg,var(--plate),#1b2128);border:1px solid var(--line);border-radius:12px;padding:clamp(20px,3vw,34px);box-shadow:0 40px 80px -40px rgba(0,0,0,.7)}
+.plan-osd{display:flex;justify-content:space-between;gap:12px;font:400 12px/1 var(--osd);letter-spacing:.12em;color:var(--muted);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.plan-osd .rec{color:var(--wing)}
+.plan .chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;counter-reset:ch}
+.plan .chips label{counter-increment:ch;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 18px;border-radius:8px;background:var(--steel);box-shadow:inset 0 0 0 1.5px rgba(230,236,236,.14);transition:background .15s,color .15s,box-shadow .2s,transform .2s;margin:0}
+.plan .chips label::after{content:counter(ch,decimal-leading-zero);font:400 12px/1 var(--osd);opacity:.55}
+.plan .chips label:hover{box-shadow:inset 0 0 0 1.5px var(--signal);transform:translateY(-2px)}
+.plan .chips input:checked + label{background:var(--signal);color:var(--signal-ink)}
+.plan legend{margin-bottom:14px}
+@media (max-width:380px){.plan .chips{grid-template-columns:1fr}}
+.panel a{text-decoration:none;border-bottom:1px solid rgba(230,236,236,.3)}
+.panel a:hover{border-color:var(--signal)}
+.gebiet{align-items:center}
+.panel.addr{margin-top:34px;max-width:420px}
+/* Radar Einsatzgebiet */
+.radar{position:relative;aspect-ratio:1;width:100%;max-width:560px;justify-self:center;border-radius:50%;background:radial-gradient(circle,#18222b 0%,#10161c 70%);box-shadow:inset 0 0 0 1px rgba(255,208,0,.25),0 40px 90px -40px rgba(0,0,0,.8);overflow:hidden}
+.radar svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.radar .rg circle,.radar .rg line{fill:none;stroke:rgba(230,236,236,.13);stroke-width:.4}
+.radar .rk{font:400 4px var(--osd);fill:rgba(230,236,236,.35)}
+.radar .nesw{font:400 5px var(--osd);fill:var(--signal)}
+.radar text{font:400 5.6px var(--osd);fill:#e6ecec;letter-spacing:.02em}
+.radar .home text{font-size:5px;fill:var(--signal);letter-spacing:.12em}
+.radar .pt{fill:var(--signal)}
+.radar .pg{fill:none;stroke:var(--signal);stroke-width:.6;opacity:0;transform-box:fill-box;transform-origin:center}
+.radar .bl .pt{fill:#e6ecec;animation:rd-hit 4s linear infinite;animation-delay:var(--d)}
+.radar .bl .pg{animation:rd-ping 4s ease-out infinite;animation-delay:var(--d)}
+.radar .home .pg{animation:rd-ping 2s ease-out infinite}
+.radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,208,0,0) 0deg,rgba(255,208,0,0) 290deg,rgba(255,208,0,.08) 330deg,rgba(255,208,0,.32) 359.5deg,rgba(255,208,0,0) 360deg);animation:rd-spin 4s linear infinite}
+.rd-osd{position:absolute;font:400 11px/1 var(--osd);letter-spacing:.12em;color:var(--muted)}
+.rd-osd.tl{left:50%;bottom:9%;transform:translateX(-50%);white-space:nowrap}
+.rd-osd.br{left:50%;bottom:5%;transform:translateX(-50%);color:var(--signal);white-space:nowrap}
+@keyframes rd-spin{to{transform:rotate(360deg)}}
+@keyframes rd-ping{0%{opacity:.9;transform:scale(.3)}70%,100%{opacity:0;transform:scale(2.2)}}
+@keyframes rd-hit{0%{fill:var(--signal)}30%,100%{fill:#e6ecec}}
+@media (max-width:900px){.radar{max-width:440px;margin-top:8px}}
+
+/* Footer: Telefon/Mail klickbar, Handy zweispaltig */
+@media (max-width:520px){footer .grid{grid-template-columns:1fr 1fr;gap:28px 20px}footer .grid > div:first-child{grid-column:1 / -1}}
+
+@media (prefers-reduced-motion:reduce){
+  .band-mq,.radar .sweep,.radar .pg,.radar .pt{animation:none!important}
+  .safe.pf-arm div::before{transform:rotate(-45deg) scale(1);opacity:1;transition:none}
+  .faq details::details-content{transition:none}
+  .steps.path li:not(.on) h3,.steps.path li:not(.on) p{opacity:1}
+}
+.fly .callout h3,.fly .callout p{text-shadow:0 2px 18px rgba(0,0,0,.55)}
+#kino .clip video{transform:scale(1.07)}
+.process .panel{background:var(--steel);box-shadow:inset 0 0 0 1px var(--line)}
+@media (min-width:901px){.mission-grid form.plan{align-self:start}}
+/* Flight-Club-Hero: eingebranntes Vereinslogo oben links aus dem Bild schieben (kollidiert sonst mit dem Header-Logo) */
+@media (min-width:701px){.p-flight-club .phero video{scale:1.24;transform-origin:88% 80%}}
+/* Crew: Rufzeichen + Hover */
+.crew{counter-reset:cr}
+.crew li{counter-increment:cr;position:relative;transition:padding .35s cubic-bezier(.2,.7,.2,1)}
+.crew li::before{content:"CREW " counter(cr,decimal-leading-zero);position:absolute;left:0;top:6px;font:400 11px/1 var(--osd);letter-spacing:.14em;color:var(--signal)}
+.crew li::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--signal);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.crew li:hover::after{transform:scaleX(1)}
+.crew li{padding-top:26px}
+@media (hover:hover){.crew li:hover{padding-left:10px}}
+@media (max-width:520px){.plan .chips label{padding:14px 14px;font-size:15.5px}.plan .chips label::after{display:none}}
+@media (max-width:600px){.radar text{font-size:6.8px}.radar .home text{font-size:6px}.radar .rk{font-size:5px}}
+/* Start-Hero: Header oben und Text unten auch über hellem Filmmaterial lesbar */
+.eye .stage::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 48%,rgba(0,0,0,.62) 100%)}
+form.plan input[type=text],form.plan input[type=date],form.plan select,form.plan textarea{background:var(--steel);border-color:rgba(230,236,236,.16)}
+form.plan input:focus,form.plan textarea:focus,form.plan select:focus{border-color:var(--signal)}
+form.plan .sent{background:var(--steel)}
+.fees{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fees div{background:var(--plate);border-radius:8px;padding:16px 14px 14px;display:grid;gap:6px;align-content:start}
+.fees b{font:900 clamp(36px,3.4vw,46px)/.9 var(--display);color:var(--signal)}
+.fees span{color:var(--text-2);font-size:14px;line-height:1.3}
+.vf{align-items:center}
+.hangar-view video[src*="cine"]{transform:scale(1.07)}
+/* Leistungen-Sprungleiste: immer einzeilig, seitlich wischbar */
+.pillbar .filters.jump{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:40px}
+.pillbar .filters.jump::-webkit-scrollbar{display:none}
+.pillbar .filters.jump > *{flex:none}

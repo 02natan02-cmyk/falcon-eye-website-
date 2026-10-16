@@ -17,7 +17,7 @@
 <meta name="theme-color" content="#161b21">
 <link rel="icon" href="media/bird.png">
 <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=1791230775">
+<link rel="stylesheet" href="assets/site.css?v=1792114851">
 </head>
 <body class="p-kontakt">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -48,6 +48,7 @@
       </div>
     </div>
     <form class="plan" id="planner" novalidate>
+      <div class="plan-osd" aria-hidden="true"><span class="rec">MISSION PLANNER</span><span data-plan-step>SCHRITT 1 / 3</span></div>
       <div class="steps-ind" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <fieldset class="pstep"><legend>1. Worum geht's?</legend><div class="chips"><input type="radio" name="anlass" id="a-event" value="Event / Firmenfeier" data-key="event"><label for="a-event">Event / Firmenfeier</label><input type="radio" name="anlass" id="a-imagefilm" value="Imagefilm" data-key="imagefilm"><label for="a-imagefilm">Imagefilm</label><input type="radio" name="anlass" id="a-social" value="Social-Media-Clips" data-key="social"><label for="a-social">Social-Media-Clips</label><input type="radio" name="anlass" id="a-sport" value="Sport / Stadion" data-key="sport"><label for="a-sport">Sport / Stadion</label><input type="radio" name="anlass" id="a-hochzeit" value="Hochzeit" data-key="hochzeit"><label for="a-hochzeit">Hochzeit</label><input type="radio" name="anlass" id="a-immobilie" value="Immobilie / Gewerbe" data-key="immobilie"><label for="a-immobilie">Immobilie / Gewerbe</label><input type="radio" name="anlass" id="a-live" value="Live-Übertragung" data-key="live"><label for="a-live">Live-Übertragung</label><input type="radio" name="anlass" id="a-sonstiges" value="Etwas anderes" data-key="sonstiges"><label for="a-sonstiges">Etwas anderes</label></div></fieldset>
       <div class="pstep" hidden>
@@ -78,9 +79,14 @@
   </div>
 </section>
 <section class="block process" aria-labelledby="gebiet-h">
-  <div class="wrap two-col">
-    <div><h2 class="h2 reveal" id="gebiet-h">Wo wir fliegen</h2><p class="intro reveal">Von Saarbrücken aus im ganzen Saarland und der Region – Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen. Für besondere Projekte auch weiter weg.</p></div>
-    <div class="panel"><h3 class="h3">Falcon Eye</h3><p>Natan Wojtasczyk<br>Römerstr. 25<br>66125 Saarbrücken</p><p>Telefon 0151 56743442<br>info@falcon-eye.de</p></div>
+  <div class="wrap two-col gebiet">
+    <div><h2 class="h2 reveal" id="gebiet-h">Wo wir fliegen</h2><p class="intro reveal">Von Saarbrücken aus im ganzen Saarland und der Region – Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen. Für besondere Projekte auch weiter weg.</p>
+    <div class="panel addr"><h3 class="h3">Falcon Eye</h3><p>Natan Wojtasczyk<br>Römerstr. 25<br>66125 Saarbrücken</p><p><a href="tel:+4915156743442">Telefon 0151 56743442</a><br><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></p></div></div>
+    <div class="radar" aria-label="Einsatzgebiet rund um Saarbrücken: Saarlouis, Neunkirchen, Homburg, Trier, Kaiserslautern, Luxemburg und Lothringen" role="img">
+  <div class="sweep" aria-hidden="true"></div>
+  <svg viewBox="-100 -100 200 200" aria-hidden="true"><g class="rg"><circle r="28.7"/><text class="rk" x="29.9" y="-1.6">25 km</text><circle r="57.5"/><text class="rk" x="58.7" y="-1.6">50 km</text><circle r="86.2"/><text class="rk" x="87.5" y="-1.6">75 km</text><line x1="-96" y1="0" x2="96" y2="0"/><line x1="0" y1="-96" x2="0" y2="96"/></g><text class="nesw" x="0" y="-90" text-anchor="middle">N</text><g class="bl" style="--d:3.29s" transform="translate(-20.5 -10.0)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="-4" y="2.5" text-anchor="end">Saarlouis</text></g><g class="bl" style="--d:0.51s" transform="translate(15.3 -14.8)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="-4" y="-3" text-anchor="end">Neunkirchen</text></g><g class="bl" style="--d:0.75s" transform="translate(28.5 -11.7)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="4" y="2.5" text-anchor="start">Homburg</text></g><g class="bl" style="--d:3.73s" transform="translate(-30.1 -65.6)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="4" y="2.5" text-anchor="start">Trier</text></g><g class="bl" style="--d:0.75s" transform="translate(64.5 -26.7)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="0" y="-6" text-anchor="middle">Kaiserslautern</text></g><g class="bl" style="--d:3.37s" transform="translate(-72.5 -47.9)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="4" y="2.5" text-anchor="start">Luxemburg</text></g><g class="bl" style="--d:2.87s" transform="translate(-68.6 14.6)"><circle class="pg" r="5"/><circle class="pt" r="1.9"/><text x="4" y="2.5" text-anchor="start">Lothringen</text></g><g class="home"><circle class="pg" r="7"/><circle class="pt" r="3"/><text x="0" y="12" text-anchor="middle">SAARBRÜCKEN</text></g></svg>
+  <span class="rd-osd tl">RADAR · EINSATZGEBIET</span><span class="rd-osd br">BASIS 66125</span>
+</div>
   </div>
 </section>
 </main>
@@ -95,7 +101,7 @@
       <div><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"><p>FPV-Drohnenfilme aus Saarbrücken – für Firmen, Events, Sport und alle, die gesehen werden wollen.</p>
         <p><a class="btn sm" href="kontakt.html">Dreh anfragen</a></p></div>
       <div><h4>Seiten</h4><ul><li><a href="projekte.html">Projekte</a></li><li><a href="leistungen.html">Leistungen</a></li><li><a href="ueber-uns.html">Über uns &amp; Hangar</a></li><li><a href="flight-club.html">Partner: Flight Club Saar</a></li><li><a href="kontakt.html">Kontakt</a></li></ul></div>
-      <div><h4>Kontakt</h4><ul><li><a href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp</a></li><li>Telefon 0151 56743442</li><li>info@falcon-eye.de</li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
+      <div><h4>Kontakt</h4><ul><li><a href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+4915156743442">Telefon 0151 56743442</a></li><li><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
       <div><h4>Folgt uns</h4><ul><li><a href="https://www.instagram.com/falconeyesaar" target="_blank" rel="noopener">Instagram @falconeyesaar</a></li><li><a href="https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.facebook.com/profile.php?id=61559258413801" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">YouTube: Kinofilme</a></li><li><a href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a></li><li><a href="https://flightclub-saar.de/" target="_blank" rel="noopener">flightclub-saar.de</a></li></ul></div>
     </div>
     <div class="legalrow"><span>© <span data-year>2026</span> Falcon Eye, Natan Wojtasczyk</span><span><a href="impressum.html">Impressum</a> &nbsp; <a href="datenschutz.html">Datenschutz</a></span></div>
@@ -104,6 +110,6 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/site.js?v=1791230775"></script>
+<script src="assets/site.js?v=1792114851"></script>
 </body>
 </html>
