@@ -14,6 +14,21 @@
   const setHdr = () => top && document.documentElement.style.setProperty('--hdr', top.offsetHeight + 'px');
   setHdr(); addEventListener('resize', setHdr);
   const pillbars = $$('.pillbar');
+  /* Dock: Über Webdesign-Abschnitten (data-dock-web) wirbt es für die Website statt für den Dreh */
+  const webEls = $$('[data-dock-web]');
+  let dockWeb = false;
+  function dockMode(dock, web) {
+    if (web === dockWeb) return;
+    const a = dock.querySelector('.btn:not(.wa)'), w = dock.querySelector('.btn.wa');
+    if (!a) return;
+    if (!a.dataset.dHref) { a.dataset.dHref = a.getAttribute('href'); a.dataset.dTxt = a.textContent; if (w) w.dataset.dHref = w.getAttribute('href'); }
+    if (/webdesign|#entwurf/.test(a.dataset.dHref)) return; // wirbt schon für die Website
+    dockWeb = web;
+    a.setAttribute('href', web ? 'webdesign.html#entwurf' : a.dataset.dHref);
+    a.textContent = web ? 'Entwurf anfragen' : a.dataset.dTxt;
+    if (w) w.setAttribute('href', web ? 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent('Hallo Falcon Eye, ich hätte gern einen kostenlosen Website-Entwurf.') : w.dataset.dHref);
+    if (!reduce) { dock.classList.remove('swap'); void dock.offsetWidth; dock.classList.add('swap'); }
+  }
   function onScroll() {
     const y = scrollY;
     pillbars.forEach(b => b.classList.toggle('stuck', b.getBoundingClientRect().top <= (top ? top.offsetHeight : 0) + 1));
@@ -29,6 +44,7 @@
       if (form) { const r = form.getBoundingClientRect(); hide = r.top < innerHeight && r.bottom > 0; }
       if (!hide) for (const el of document.querySelectorAll('[data-nodock], .missions, .band, footer')) { const r = el.getBoundingClientRect(); if (r.top < innerHeight - 40 && r.bottom > innerHeight - 160) { hide = true; break; } }
       dock.classList.toggle('show', y > start && !hide && !document.body.classList.contains('menu-open'));
+      if (webEls.length) dockMode(dock, webEls.some(el => { const r = el.getBoundingClientRect(); return r.top < innerHeight * .7 && r.bottom > innerHeight * .3; }));
     }
   }
   /* header falcon: glides in once, banks gently while scrolling */
@@ -155,12 +171,12 @@
   /* ---------- lightbox ---------- */
   const lb = $('#lb');
   if (lb) {
-    const lv = $('video', lb), lt = $('.meta b', lb), lc = $('.meta a', lb);
+    const lv = $('video', lb), lt = $('.meta b', lb), lc = $('.meta a', lb), lcTxt = lc && lc.textContent, lcHref = lc && lc.getAttribute('href');
     const close = () => { lb.hidden = true; lv.pause(); lv.removeAttribute('src'); lv.load(); document.body.style.overflow = ''; };
     $$('[data-lb]').forEach(b => b.addEventListener('click', e => {
       e.preventDefault();
       lv.src = b.dataset.lb; lt.textContent = b.dataset.title || ''; lb.classList.toggle('tall', b.dataset.tall === '1'); lv.muted = false;
-      if (lc && b.dataset.anlass) lc.href = 'kontakt.html#' + b.dataset.anlass;
+      if (lc) { lc.textContent = b.dataset.cta || lcTxt; lc.href = b.dataset.ctaHref || (b.dataset.anlass ? 'kontakt.html#' + b.dataset.anlass : lcHref); }
       lb.hidden = false; document.body.style.overflow = 'hidden'; lv.play().catch(() => {}); $('.x', lb).focus();
     }));
     $('.x', lb).addEventListener('click', close);

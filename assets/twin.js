@@ -10,7 +10,7 @@
   const U = f => `url("${new URL(f, location.href).href}")`;
 
   /* ---------- Fokus: welches Auge ist vorn ---------- */
-  let focus = null, lastDown = -1e4;
+  let focus = null, lastDown = -1e4, used = false, imp = [];
   addEventListener('pointerdown', () => { lastDown = performance.now(); }, true);
   function setFocus(f, user) {
     if (f === focus) return; focus = f;
@@ -18,17 +18,33 @@
     $$('[data-tw-pick]').forEach(b => b.setAttribute('aria-pressed', b.dataset.twPick === (f || 'l')));
     if (f && user) blink(sides[f].querySelector('.tw-eye'));
   }
+  // Erste echte Berührung: Impuls stoppen, Hinweis-Punkt ausblenden
+  const markUsed = () => { if (used) return; used = true; split.classList.add('tw-used'); imp.forEach(clearTimeout); imp = []; };
   if (mobile()) setFocus('l');
   addEventListener('resize', () => { if (mobile() && !focus) setFocus('l'); });
   ['l', 'r'].forEach(k => {
     const sd = sides[k];
-    sd.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !mobile()) setFocus(k, true); });
-    sd.addEventListener('focusin', () => { if (performance.now() - lastDown > 600) setFocus(k); });
+    sd.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !mobile()) { markUsed(); setFocus(k, true); } });
+    sd.addEventListener('focusin', () => { if (performance.now() - lastDown > 600) { markUsed(); setFocus(k); } });
     // Handy: erstes Antippen wählt das Auge, zweites öffnet die Seite
-    $('.tw-eye', sd).addEventListener('click', e => { if (mobile() && focus !== k) { e.preventDefault(); setFocus(k, true); } });
+    $('.tw-eye', sd).addEventListener('click', e => { if (mobile() && focus !== k) { e.preventDefault(); markUsed(); setFocus(k, true); } });
   });
   split.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !mobile()) setFocus(null); });
-  $$('[data-tw-pick]').forEach(b => b.addEventListener('click', () => setFocus(b.dataset.twPick, true)));
+  $$('[data-tw-pick]').forEach(b => b.addEventListener('click', () => { markUsed(); setFocus(b.dataset.twPick, true); }));
+
+  /* ---------- Impuls: beim ersten Sichtkontakt wechseln die Augen einmal von selbst ----------
+     Handy: Webdesign → zurück zu Drohne (der Punkt am anderen Etikett zeigt: antippen).
+     Desktop: links groß, rechts groß, dann beide gleich – wie ein kurzer Blick nach links und rechts. */
+  if (!reduce && 'IntersectionObserver' in window) {
+    const firstEye = eyes[0];
+    const io = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting || used) return; io.disconnect();
+      const at = (ms, fn) => imp.push(setTimeout(() => { if (!used) fn(); }, ms));
+      if (mobile()) { at(1500, () => setFocus('r', true)); at(4300, () => setFocus('l', true)); }
+      else { at(700, () => setFocus('l', true)); at(2100, () => setFocus('r', true)); at(3500, () => setFocus(null)); }
+    }, { threshold: .8 });
+    firstEye && io.observe(firstEye);
+  }
 
   /* ---------- Nickhaut (Falken blinzeln seitlich) ---------- */
   function blink(eye) { if (reduce || !eye) return; eye.classList.remove('blink'); void eye.offsetWidth; eye.classList.add('blink'); }
@@ -100,5 +116,28 @@
   }, { rootMargin: '250px 0px' }).observe(split);
   else { vis = true; startVid(); }
 
-  /* Mitmach-Demo: siehe assets/livedemo.js */
+  /* ---------- Mitmach-Demo (Logik: assets/livedemo.js) – Handy-Feinschliff ---------- */
+  const inp = document.getElementById('tw-in');
+  if (inp && innerWidth <= 560) inp.placeholder = 'z. B. Hintergrund dunkelblau';
+  // Ideen-Leiste: auf dem Handy eine Wischleiste. Impuls: rutscht beim ersten Sichtkontakt kurz an und zurück.
+  const chips = document.querySelector('[data-ld-chips]'), swipe = document.querySelector('.ld-swipe');
+  if (chips) {
+    let touched = false, auto = false;
+    const mark = () => { if (touched) return; touched = true; swipe && swipe.classList.add('off'); };
+    chips.addEventListener('pointerdown', mark, { passive: true });
+    chips.addEventListener('wheel', mark, { passive: true });
+    chips.addEventListener('scroll', () => { if (!auto && chips.scrollLeft > 6) mark(); }, { passive: true });
+    if (!reduce && 'IntersectionObserver' in window) {
+      const io2 = new IntersectionObserver(([en]) => {
+        if (!en.isIntersecting) return; io2.disconnect();
+        if (chips.scrollWidth <= chips.clientWidth + 8) return;
+        setTimeout(() => {
+          if (touched) return; auto = true;
+          chips.scrollTo({ left: Math.min(150, chips.scrollWidth - chips.clientWidth), behavior: 'smooth' });
+          setTimeout(() => { if (!touched) chips.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => { auto = false; }, 800); }, 1150);
+        }, 700);
+      }, { threshold: .9 });
+      io2.observe(chips);
+    }
+  }
 })();

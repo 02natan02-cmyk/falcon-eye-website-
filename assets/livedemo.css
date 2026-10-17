@@ -20,7 +20,7 @@
 
 /* Bildschirm im Browserfenster */
 .ld-screen{position:relative;aspect-ratio:16/10;overflow:hidden;container-type:inline-size;background:#f6f8fb}
-@media (max-width:560px){.ld-screen{aspect-ratio:4/3.9}}
+@media (max-width:560px){.ld-screen{aspect-ratio:4/3.35}}
 
 /* Mini-Seite */
 .mp{--mp-bg:#f3f6fb;--mp-ink:#13233f;--mp-acc:#1f4fd6;--mp-em:#1f4fd6;--mp-on:#fff;--mp-acc2:#ffd000;--mp-card:#fff;--mp-line:rgba(19,35,63,.12);--mp-hf:"Archivo",system-ui,sans-serif;--mp-hw:800;--mp-hs:1;--mp-r:999px;--mp-bs:1;--mp-spin:1.6s;--mp-play:running;--mp-ls:0;--mp-tt:none;--mp-ls2:1;

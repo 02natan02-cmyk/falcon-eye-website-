@@ -2,6 +2,7 @@
    1) Aus fallenden Einsen und Nullen setzt sich der Falke zusammen (Form aus media/bird.png).
    2) Der Falke wird zur Drohne – die Rotoren drehen sich.
    3) Die Drohne fliegt über die Kacheln: jede, die sie überfliegt, startet ihren echten Mitschnitt.
+   4) Danach kommt der Falke auf die Bühne zurück: Matrix-Code fließt durch ihn, ab und zu wird er wieder zur Drohne (nur solange sichtbar).
    Danach laufen alle Kacheln gleichzeitig (nur solange sichtbar). Reduzierte Bewegung: Standbilder, Abspielen bei Berührung. */
 (() => {
   const sec = document.querySelector('[data-sr]'); if (!sec) return;
@@ -70,14 +71,16 @@
   const dronePos = (dr, d, spin) => { if (d[2] < 0) return [d[0], d[1]]; const r = dr.rot[d[2]], a = d[3] + spin * (d[2] % 2 ? -1 : 1); return [r[0] + Math.cos(a) * 22, r[1] + Math.sin(a) * 7]; };
 
   /* ---------- Start, sobald die Bühne gut im Bild ist ---------- */
+  let birdImg = null, phase = 'none'; // none → intro → fly → idle
   const start = () => {
     if (introStarted || introDone) return; introStarted = true; introT0 = Date.now(); setTimeout(forceDone, 14000);
     const img = new Image(); img.decoding = 'async';
-    img.onload = () => run(img);
+    img.onload = () => { birdImg = img; phase = 'intro'; run(img); };
     img.onerror = () => { introDone = true; tiles.forEach(t => vis.get(t) && playTile(t)); };
     img.src = sec.dataset.bird || 'media/bird.png';
   };
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '0px 0px -38% 0px', threshold: .6 }).observe(stage);
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && phase === 'none' && introDone) idleStart(); }, { threshold: .3 }).observe(stage);
 
   function run(img) {
     const ctx = cv.getContext('2d');
@@ -115,8 +118,77 @@
     requestAnimationFrame(frame);
   }
 
+  /* ---------- Rückkehr: Der Falke kommt auf die Bühne zurück, Matrix-Code fließt durch ihn ----------
+     Spalten aus 0/1 fallen durch die Bühne. Wo eine Spalte durch den Falken läuft, leuchten seine Zeichen auf (Kopf weiß, Spur gelb).
+     Alle ~10 s wird der Falke zur Drohne (Rotoren drehen) und wieder zum Falken. Läuft nur, solange die Bühne sichtbar ist. */
+  function idleStart() {
+    if (phase !== 'none' || !cv) return;
+    if (!birdImg) { const im = new Image(); im.decoding = 'async'; im.onload = () => { birdImg = im; idleStart(); }; im.src = sec.dataset.bird || 'media/bird.png'; return; }
+    phase = 'idle'; matrix(birdImg);
+  }
+  function matrix(img) {
+    const ctx = cv.getContext('2d'), dr = droneShape();
+    const FORM = 1700, FAL = 5600, TD = 1100, DR = 2700, TF = 1400, CYC = FAL + TD + DR + TF;
+    const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, cl = k => k < 0 ? 0 : k > 1 ? 1 : k;
+    let W = 0, H = 0, P = [], cols = [], B = null, cw = 10, sc = 1, t0 = 0, last = 0, raf = 0, on = false, fc = 0;
+    const build = () => {
+      const r = stage.getBoundingClientRect(); W = r.width; H = r.height; if (!W || !H) return false;
+      cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      const bw = Math.min(W * (mob() ? .92 : .7), 760, H * .86 * img.naturalWidth / img.naturalHeight);
+      const sm = sampleImg(img, bw, mob() ? 620 : 1400);
+      B = glyphs(Math.max(6, Math.min(11, sm.st * 1.3))); cw = Math.max(7, B.z * .78); sc = Math.min(mob() ? 1.05 : 1.45, H / 92);
+      P = sm.pts.map(b => ({ bx: W / 2 + b[0], by: H / 2 + b[1], film: b[2], ch: Math.random() < .5 ? 0 : 1, y0: -12 - Math.random() * H * 1.3, dl: Math.random() * 650, d: null, x: 0, y: 0 }));
+      const ord = P.map((_, i) => i); for (let i = ord.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0;[ord[i], ord[j]] = [ord[j], ord[i]]; }
+      ord.slice(0, dr.P.length).forEach((pi, k) => { P[pi].d = dr.P[k]; });
+      cols = Array.from({ length: Math.ceil(W / cw) + 1 }, () => ({ y: Math.random() * H * 2.4 - H * 1.2, v: 42 + Math.random() * 120, len: H * (.4 + Math.random() * .8) }));
+      t0 = 0; last = 0; return true;
+    };
+    const head = (x, y) => { const c = cols[Math.max(0, Math.min(cols.length - 1, x / cw | 0))], dist = c.y - y; return dist > -3 && dist < c.len ? [1 - Math.max(0, dist) / c.len, dist] : [0, 1e9]; };
+    const draw = (g, x, y, a) => { if (a <= .02) return; ctx.globalAlpha = a > 1 ? 1 : a; ctx.drawImage(g, x - B.z / 2, y - B.z / 2, B.z, B.z); };
+    const frame = now => {
+      raf = 0; if (!on) return;
+      if (!t0) { t0 = now; last = now; }
+      const dt = Math.min(80, now - last) / 1000; last = now; fc++;
+      const t = now - t0; ctx.clearRect(0, 0, W, H);
+      /* Spalten bewegen + leiser Hintergrund-Regen */
+      const step = cw * 1.15;
+      for (let c = 0; c < cols.length; c++) {
+        const col = cols[c]; col.y += col.v * dt;
+        if (col.y - col.len > H + 16) { col.y = -Math.random() * H * .9; col.v = 42 + Math.random() * 120; col.len = H * (.4 + Math.random() * .8); }
+        const x = c * cw + cw / 2, n = col.len / step | 0;
+        for (let k = 0; k <= n; k++) { const y = col.y - k * step; if (y < -8 || y > H + 8) continue; const ch = (c * 7 + k * 3 + (fc >> 3)) & 1; draw(k ? B['d' + ch] : B['w' + ch], x, y, k ? .3 * (1 - k / (n + 1)) : .5); }
+      }
+      /* Falke / Drohne */
+      const tc = t < FORM ? -1 : (t - FORM) % CYC, spin = now / 55, bob = Math.sin(now / 180) * 2;
+      for (const p of P) {
+        let x = p.bx, y = p.by, vis = 1;
+        if (tc < 0) { const k = ease(cl((t - p.dl) / (FORM - 650))); y = p.y0 + (p.by - p.y0) * k; vis = .15 + .85 * k; }
+        else if (tc >= FAL) {
+          const dPos = () => { const [ox, oy] = dronePos(dr, p.d, spin); return [W / 2 + ox * sc, H / 2 + oy * sc + bob]; };
+          if (tc < FAL + TD) { const k = ease((tc - FAL) / TD); if (p.d) { const [tx, ty] = dPos(); x = p.bx + (tx - p.bx) * k; y = p.by + (ty - p.by) * k; } else { y = p.by + k * k * H * .95; vis = 1 - k; } }
+          else if (tc < FAL + TD + DR) { if (p.d) [x, y] = dPos(); else vis = 0; }
+          else { const k = ease((tc - FAL - TD - DR) / TF); if (p.d) { const [tx, ty] = dPos(); x = tx + (p.bx - tx) * k; y = ty + (p.by - ty) * k; } else { y = p.by - (1 - k) * H * .95; vis = k; } }
+        }
+        if (vis <= .02) continue;
+        const [inten, dist] = head(x, y);
+        if (inten > .7 && Math.random() < .22) p.ch ^= 1; else if (Math.random() < .006) p.ch ^= 1;
+        const base = p.film && !p.d ? .24 : .4, a = (base + (1 - base) * inten) * vis;
+        const g = dist < 9 ? B['w' + p.ch] : (p.film && inten < .45 ? B['d' + p.ch] : B[p.ch]);
+        draw(g, x, y, a);
+      }
+      ctx.globalAlpha = 1;
+      if (on && !document.hidden) raf = requestAnimationFrame(frame);
+    };
+    const go = v => { on = v; if (on && !raf && !document.hidden) raf = requestAnimationFrame(frame); }; // nach Pause: dt ist auf 80 ms begrenzt
+    if (!build()) { phase = 'none'; return; }
+    new IntersectionObserver(([e]) => go(e.isIntersecting), { rootMargin: '60px 0px' }).observe(stage);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && on && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
+    let rw = W, rT = 0; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { const w = stage.getBoundingClientRect().width; if (Math.abs(w - rw) > 40) { rw = w; build(); } }, 250); });
+  }
+
   /* ---------- Flug: die Drohne startet jede Kachel, die sie überfliegt ---------- */
   function fly(x0, y0, dr, sc, parts) {
+    phase = 'fly';
     const ov = document.createElement('canvas'); ov.setAttribute('aria-hidden', 'true'); ov.className = 'sr-fly';
     document.body.appendChild(ov); const ctx = ov.getContext('2d');
     let VW = 0, VH = 0; const rs = () => { VW = innerWidth; VH = innerHeight; ov.width = Math.round(VW * DPR); ov.height = Math.round(VH * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0); }; rs(); addEventListener('resize', rs);
@@ -168,7 +240,7 @@
       }
       ctx.globalAlpha = 1;
       if (!done || sparks.length || trail.length) requestAnimationFrame(step);
-      else { removeEventListener('resize', rs); ov.remove(); }
+      else { removeEventListener('resize', rs); ov.remove(); phase = 'none'; idleStart(); }
     };
     requestAnimationFrame(step);
     setTimeout(finish, 13500); // Sicherheitsnetz: spätestens dann laufen alle sichtbaren Kacheln

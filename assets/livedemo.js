@@ -181,7 +181,7 @@
       stp(3, 'LIVE ✓', 'live', '100%'); live.classList.remove('busy'); live.classList.add('done');
       setTimeout(() => { badge.classList.add('on'); setTimeout(() => badge.classList.remove('on'), 2200); }, RM ? 0 : 520);
       msg.className = 'ld-msg' + (unknown ? ' no' : '');
-      msg.innerHTML = unknown ? `Als <b>Hinweis-Band</b> eingebaut. Probier auch Farbe, Schrift, Überschrift, Dunkelmodus oder „Maschine schneller“.` : `Live geändert: <b>${said.map(esc).join(' · ')}</b>`;
+      msg.innerHTML = unknown ? `Als <b>Hinweis-Band</b> eingebaut. Probiert auch Farbe, Schrift, Überschrift, Dunkelmodus oder „Maschine schneller“.` : `Live geändert: <b>${said.map(esc).join(' · ')}</b>`;
       busy = false; inp.disabled = false; if (sub) sub.disabled = false; if (!fromChip) inp.value = '';
     });
   }
