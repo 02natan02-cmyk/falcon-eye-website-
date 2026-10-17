@@ -1,6 +1,7 @@
-/* Falcon Eye – Mitmach-Demo „Probier's aus“
+/* Falcon Eye – Mitmach-Demo „Probiert's aus“ (Startseite, Abschnitt „Rechtes Auge“ #eure-seite)
    Was man eintippt (oder antippt), verändert die Mini-Seite wirklich: Farbe, Schrift, Überschrift, Dunkelmodus,
-   Trommel, Button, Öffnungszeiten, Seifenblasen. Zeitraffer: Eingang → In Arbeit (Code) → Geprüft → Live.
+   Trommel, Button, Öffnungszeiten, Seifenblasen – und „Mit Drohnenflug“: Die Startseite wird zum echten FPV-Durchflug
+   (Verkaufsidee: Drohnenfilm und Website aus einer Hand). Zeitraffer: Eingang → In Arbeit (Code) → Geprüft → Live.
    Es wird nichts verschickt. */
 (() => {
   const root = document.querySelector('[data-ld]'); if (!root) return;
@@ -9,10 +10,13 @@
   const mp = $('[data-mp]'), form = $('[data-tw-form]'), inp = $('#tw-in'), sub = $('[data-tw-form] button[type="submit"]'), live = $('[data-tw-live]');
   const st = $('[data-tw-st]'), prog = $('[data-tw-prog]'), steps = $$('[data-tw-steps] li'), msg = $('[data-ld-msg]'), code = $('[data-mp-code]'), badge = $('[data-mp-badge]'), wipe = $('[data-mp-wipe]'), fx = $('[data-mp-fx]'), chips = $('[data-ld-chips]');
   const H = $('[data-mp-h]'), drum = $('[data-mp-drum]'), rpmEl = $('[data-mp-rpm]'), disp = $('[data-mp-disp]');
+  const flyV = $('[data-mp-fly]'), kickEl = $('[data-mp-kick]'), flyChip = chips && chips.querySelector('.ld-fly');
+  const ad = root.closest('.tw-ad'), wa = ad && ad.querySelector('.tw-cta2 .wa'), waBase = wa && wa.getAttribute('href');
   if (!mp || !form) return;
 
   /* ---------- Zustand ---------- */
-  const DEF = { acc: '#1f4fd6', bg: null, font: 'modern', dark: false, h: 'Alles dreht sich um Ihre Wäsche.', btn: 'Wäschezettel ausfüllen', big: 1, round: true, spin: 2, open: 'Heute bis 18 Uhr', ribbon: '', bubbles: 6, name: 'Weidenhof', size: 1, logo: 1 };
+  const DEF = { acc: '#1f4fd6', bg: null, font: 'modern', dark: false, h: 'Alles dreht sich um Ihre Wäsche.', btn: 'Wäschezettel ausfüllen', big: 1, round: true, spin: 2, open: 'Heute bis 18 Uhr', ribbon: '', bubbles: 6, name: 'Weidenhof', size: 1, logo: 1, fly: false, kick: 'Wäscherei · Heißmangel · seit 1969' };
+  const FLY_H = 'Erst durchfliegen, dann vorbeikommen.', FLY_KICK = 'Echter FPV-Durchflug';
   let S = { ...DEF };
   const FONTS = {
     modern: { f: '"Archivo",system-ui,sans-serif', w: 800, s: 1, n: 'modern', css: '"Archivo", sans-serif' },
@@ -55,7 +59,25 @@
     rpmEl.textContent = S.spin ? RPM[S.spin] + ' U/min' : 'Pause'; disp.textContent = S.spin ? (RPM[S.spin] / 1000).toFixed(1) + 'k' : '‖';
     const rb = $('[data-mp-el="ribbon"]'); rb.classList.toggle('on', !!S.ribbon); $('[data-mp-ribbon]').textContent = S.ribbon;
     bubbles(S.bubbles);
+    // Drohnenflug: Video hinter der Startseite, Maschine tritt zur Seite; WhatsApp-Anfrage nimmt den Wunsch mit
+    mp.classList.toggle('fly', !!S.fly); if (kickEl) kickEl.textContent = S.fly ? FLY_KICK : DEF.kick;
+    flyChip && flyChip.classList.toggle('used', !!S.fly);
+    if (wa && waBase) wa.setAttribute('href', S.fly ? waBase.split('?')[0] + '?text=' + encodeURIComponent('Hallo Falcon Eye, ich hätte auch gern so eine Website – gern mit Drohnenflug durch unseren Betrieb.') : waBase);
+    flyPlay();
   }
+  /* Video nur laden, wenn der Drohnenflug gewählt ist; nur abspielen, solange die Demo sichtbar ist */
+  let flyVis = false;
+  function flyPlay() {
+    if (!flyV) return;
+    if (!S.fly) { try { flyV.pause(); } catch (e) { } return; }
+    if (!flyV.getAttribute('poster')) flyV.setAttribute('poster', flyV.dataset.poster);
+    if (RM) return; // reduzierte Bewegung: nur das Standbild
+    if (!flyV.getAttribute('src')) { flyV.src = flyV.dataset.src; flyV.preload = 'auto'; }
+    if (flyVis && !document.hidden) { const p = flyV.play(); p && p.catch(() => { }); } else { try { flyV.pause(); } catch (e) { } }
+  }
+  if (flyV && 'IntersectionObserver' in window) new IntersectionObserver(([en]) => { flyVis = en.isIntersecting; flyPlay(); }, { rootMargin: '120px 0px' }).observe(mp);
+  else flyVis = true;
+  document.addEventListener('visibilitychange', () => flyPlay());
   let bubN = -1;
   function bubbles(n) {
     if (n === bubN) return; bubN = n; fx.innerHTML = '';
@@ -102,6 +124,10 @@
     if (fnt) { ch.font = fnt; said.push('Schrift ' + FONTS[fnt].n); codeL.push(`<span class="k">font-family</span>: <span class="v">${FONTS[fnt].css}</span>;`); }
     if (has(/(schrift|text|überschrift)[a-zäöü ]{0,12}(größer|grösser|groesser|riesig)|(größer|grösser|groesser)e? (schrift|überschrift|texte?)/)) { ch.size = Math.min(1.3, (S.size || 1) + .14); said.push('Schrift größer'); codeL.push(`<span class="k">font-size</span>: <span class="v">${Math.round(ch.size * 100)}%</span>;`); }
     else if (has(/(schrift|text|überschrift)[a-zäöü ]{0,12}kleiner|kleinere? (schrift|überschrift|texte?)/)) { ch.size = Math.max(.8, (S.size || 1) - .12); said.push('Schrift kleiner'); codeL.push(`<span class="k">font-size</span>: <span class="v">${Math.round(ch.size * 100)}%</span>;`); }
+    // Drohnenflug als Startseite (echter FPV-Durchflug statt Bild) – oder wieder ohne
+    const noFly = has(/ohne (drohne|drohnenflug|flug|video|durchflug)|kein(e|en)? (drohne|drohnenflug|flug|video|durchflug)|(drohne|drohnenflug|flug|video|durchflug) (aus|weg|raus)/);
+    if (noFly) { ch.fly = false; said.push('ohne Drohnenflug'); codeL.push('<span class="k">hero</span>: <span class="v">bild</span>'); }
+    else if (has(/drohne|durchflug|fpv|reinflieg|einflieg|flug durch|mit flug|luftaufnahme|video/)) { ch.fly = true; said.push('Startseite mit Drohnenflug'); codeL.push('<span class="k">hero</span>: <span class="v">FPV-Durchflug</span>', '<span class="k">video</span>: "<span class="v">durchflug.mp4</span>" <span class="c">/* echte Aufnahme */</span>'); }
     // Trommel / Maschine
     if (has(/masch|trommel|dreh|schleuder|wasch|schleud|rotier|spin/)) {
       let sp = S.spin;
@@ -109,8 +135,14 @@
       else if (has(/schneller|turbo|vollgas|schleuder|schnell|rasant|gas/)) sp = Math.min(4, Math.max(sp, 1) + 1 + (has(/turbo|vollgas|schleuder/) ? 1 : 0));
       else if (has(/langsam|ruhig|gemütlich|sanft|schonend/)) sp = Math.max(1, sp - 1);
       else if (!sp) sp = 2; else sp = Math.max(sp, 2);
-      if (sp !== S.spin || has(/dreh/)) { ch.spin = Math.min(4, sp); said.push(sp ? `Trommel ${RPM[ch.spin]} U/min` : 'Trommel steht'); codeL.push(`<span class="k">.trommel</span> { speed: <span class="v">${sp ? RPM[ch.spin] + ' U/min' : 'pause'}</span> }`); }
+      if (sp !== S.spin || has(/dreh/)) {
+        ch.spin = Math.min(4, sp); said.push(sp ? `Trommel ${RPM[ch.spin]} U/min` : 'Trommel steht'); codeL.push(`<span class="k">.trommel</span> { speed: <span class="v">${sp ? RPM[ch.spin] + ' U/min' : 'pause'}</span> }`);
+        if (S.fly && ch.fly == null) ch.fly = false; // die Maschine soll man sehen: Drohnenflug macht Platz
+      }
     }
+    // Überschrift passend zum Drohnenflug (nur solange die eigene Überschrift noch nicht geändert wurde)
+    if (ch.fly === true && !ch.h && S.h === DEF.h) ch.h = FLY_H;
+    if (ch.fly === false && !ch.h && S.h === FLY_H) ch.h = DEF.h;
     // Button
     if (has(/button|knopf|schaltfläche|cta/)) {
       if (has(/größer|grösser|groesser|groß|gross|riesig|auffällig/)) { ch.big = Math.min(1.45, (S.big || 1) + .2); said.push('Button größer'); }
@@ -146,7 +178,7 @@
     const changed = [];
     const swap = () => {
       if (ch.acc) S.acc = ch.acc; if (ch.bgReset) S.bg = null; if (ch.bg) S.bg = ch.bg; if (ch.dark != null) S.dark = ch.dark;
-      ['btn', 'big', 'round', 'spin', 'open', 'ribbon', 'bubbles', 'name', 'size', 'logo'].forEach(k => { if (ch[k] != null) S[k] = ch[k]; });
+      ['btn', 'big', 'round', 'spin', 'open', 'ribbon', 'bubbles', 'name', 'size', 'logo', 'fly'].forEach(k => { if (ch[k] != null) S[k] = ch[k]; });
       const fontCh = ch.font && ch.font !== S.font; if (ch.font) S.font = ch.font;
       paint();
       if (colorish) changed.push('nav', 'btn', 'machine', 'logo'); if (ch.btn || ch.big != null || ch.round != null) changed.push('btn'); if (ch.open) changed.push('open', 'ribbon'); if (ch.ribbon) changed.push('ribbon'); if (ch.spin != null) changed.push('machine'); if (ch.name || ch.logo) changed.push('logo', 'name');
@@ -164,9 +196,11 @@
       };
     } else swap();
   }
+  let queued = null, curText = ''; // Wunsch, der während eines laufenden Zeitraffers kam – läuft danach (außer es ist derselbe)
   function run(text, fromChip) {
-    text = (text || '').trim(); if (!text || busy) return;
-    busy = true; timers.forEach(clearTimeout); timers = []; inp.disabled = true; if (sub) sub.disabled = true;
+    text = (text || '').trim(); if (!text) return;
+    if (busy) { if (text !== curText) queued = [text, fromChip]; return; }
+    busy = true; curText = text; timers.forEach(clearTimeout); timers = []; inp.disabled = true; if (sub) sub.disabled = true;
     const { ch, said, codeL } = parse(text), unknown = !said.length;
     if (unknown) { ch.ribbon = text.slice(0, 80); codeL.push(`<span class="k">banner</span>: "<span class="v">${esc(text.slice(0, 40))}</span>"`); }
     const now = new Date(), hh = String(now.getHours()).padStart(2, '0'), mm = String(now.getMinutes()).padStart(2, '0'), nr = 1000 + Math.floor(Math.random() * 8999);
@@ -181,23 +215,37 @@
       stp(3, 'LIVE ✓', 'live', '100%'); live.classList.remove('busy'); live.classList.add('done');
       setTimeout(() => { badge.classList.add('on'); setTimeout(() => badge.classList.remove('on'), 2200); }, RM ? 0 : 520);
       msg.className = 'ld-msg' + (unknown ? ' no' : '');
-      msg.innerHTML = unknown ? `Als <b>Hinweis-Band</b> eingebaut. Probiert auch Farbe, Schrift, Überschrift, Dunkelmodus oder „Maschine schneller“.` : `Live geändert: <b>${said.map(esc).join(' · ')}</b>`;
-      busy = false; inp.disabled = false; if (sub) sub.disabled = false; if (!fromChip) inp.value = '';
+      msg.innerHTML = unknown ? `Als <b>Hinweis-Band</b> eingebaut. Probiert auch Farbe, Schrift, Überschrift, Dunkelmodus, „Mit Drohnenflug“ oder „Maschine schneller“.` : `Live geändert: <b>${said.map(esc).join(' · ')}</b>` + (ch.fly === true ? '. In echt fliegen wir dafür einmal durch euren Betrieb.' : '');
+      busy = false; curText = ''; inp.disabled = false; if (sub) sub.disabled = false; if (!fromChip) inp.value = '';
+      if (queued) { const q = queued; queued = null; timers.push(setTimeout(() => { inp.value = q[0]; run(q[0], q[1]); }, RM ? 0 : 900)); }
     });
   }
   form.addEventListener('submit', e => { e.preventDefault(); stopAuto(); run(inp.value || inp.placeholder.replace(/^z\. B\.\s*/, '')); });
-  chips && chips.addEventListener('click', e => { const b = e.target.closest('[data-ld-try]'); if (!b) return; stopAuto(); if (busy) return; b.classList.add('used'); inp.value = b.dataset.ldTry; run(b.dataset.ldTry, true); });
-  const rs = $('[data-ld-reset]'); rs && rs.addEventListener('click', () => { if (busy) return; stopAuto(); const ch = { ...DEF, bgReset: true, h: DEF.h }; S.h = DEF.h; apply(ch); bubN = -1; $$('.used', chips).forEach(b => b.classList.remove('used')); msg.className = 'ld-msg'; msg.innerHTML = 'Zurückgesetzt – alles wieder wie am Anfang.'; stp(-1, 'bereit', '', '0'); live.classList.remove('done'); });
+  chips && chips.addEventListener('click', e => { const b = e.target.closest('[data-ld-try]'); if (!b) return; stopAuto(); b.classList.add('used'); if (!busy) inp.value = b.dataset.ldTry; run(b.dataset.ldTry, true); });
+  // Knöpfe außerhalb der Demo (z. B. „Unser Extra“): Demo ins Bild holen, dann den Wunsch abspielen
+  document.querySelectorAll('[data-ld-run]').forEach(b => b.addEventListener('click', () => {
+    stopAuto(); b.classList.add('used');
+    const go = () => { if (!busy) inp.value = b.dataset.ldRun; run(b.dataset.ldRun, true); };
+    const r = live.getBoundingClientRect(), hdr = (document.querySelector('.top') || {}).offsetHeight || 70;
+    if (r.top < hdr || r.top > innerHeight * .55) {
+      const y = Math.max(0, r.top + scrollY - Math.max(hdr + 12, (innerHeight - r.height) / 2));
+      if (window.FE && window.FE.lenis) window.FE.lenis.scrollTo(y, { duration: 1.1 }); else scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' });
+      setTimeout(go, RM ? 0 : 700);
+    } else go();
+  }));
+  const rs = $('[data-ld-reset]'); rs && rs.addEventListener('click', () => { if (busy) return; stopAuto(); queued = null; const ch = { ...DEF, bgReset: true, h: DEF.h }; S.h = DEF.h; apply(ch); bubN = -1; $$('.used', chips).forEach(b => b.classList.remove('used')); msg.className = 'ld-msg'; msg.innerHTML = 'Zurückgesetzt – alles wieder wie am Anfang.'; stp(-1, 'bereit', '', '0'); live.classList.remove('done'); });
 
-  /* ---------- Erster Sichtkontakt: Seite baut sich auf, dann tippt sich ein Beispiel von selbst ---------- */
+  /* ---------- Erster Sichtkontakt: Seite baut sich auf, dann tippt sich die Verkaufsidee von selbst ein:
+     „Startseite mit Drohnenflug“ – die Mini-Seite startet mit einem echten FPV-Durchflug. ---------- */
   paint(); H.innerHTML = headHTML(S.h);
   let autoT = [], userActed = false; const stopAuto = () => { userActed = true; autoT.forEach(clearTimeout); autoT = []; };
   ['pointerdown', 'keydown', 'focusin'].forEach(ev => root.addEventListener(ev, e => { if (e.isTrusted) stopAuto(); }, { passive: true }));
   if (!RM) mp.classList.add('build');
   const start = () => {
     mp.classList.add('built');
+    if (flyV && !flyV.getAttribute('poster')) flyV.setAttribute('poster', flyV.dataset.poster); // Standbild schon mal laden
     if (RM || userActed) return;
-    const demo = 'Farbe Dunkelblau und Schrift eleganter';
+    const demo = 'Startseite mit Drohnenflug';
     autoT.push(setTimeout(() => {
       if (userActed) return; let i = 0;
       const tp = () => { if (userActed) return; inp.value = demo.slice(0, ++i); if (i < demo.length) autoT.push(setTimeout(tp, 55)); else autoT.push(setTimeout(() => { if (!userActed) { run(demo, true); autoT.push(setTimeout(() => chips && chips.classList.add('pulse'), 4200)); } }, 450)); };
@@ -205,4 +253,28 @@
     }, 1400));
   };
   if ('IntersectionObserver' in window) { const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); start(); } }, { threshold: .45 }); io.observe(live); } else start();
+
+  /* ---------- Handy-Feinschliff (vorher in twin.js) ---------- */
+  if (inp && innerWidth <= 560) inp.placeholder = 'z. B. Hintergrund dunkelblau';
+  // Ideen-Leiste: auf dem Handy eine Wischleiste. Impuls: rutscht beim ersten Sichtkontakt kurz an und zurück.
+  const swipe = root.querySelector('.ld-swipe');
+  if (chips) {
+    let touched = false, auto = false;
+    const mark = () => { if (touched) return; touched = true; swipe && swipe.classList.add('off'); };
+    chips.addEventListener('pointerdown', mark, { passive: true });
+    chips.addEventListener('wheel', mark, { passive: true });
+    chips.addEventListener('scroll', () => { if (!auto && chips.scrollLeft > 6) mark(); }, { passive: true });
+    if (!RM && 'IntersectionObserver' in window) {
+      const io2 = new IntersectionObserver(([en]) => {
+        if (!en.isIntersecting) return; io2.disconnect();
+        if (chips.scrollWidth <= chips.clientWidth + 8) return;
+        setTimeout(() => {
+          if (touched) return; auto = true;
+          chips.scrollTo({ left: Math.min(150, chips.scrollWidth - chips.clientWidth), behavior: 'smooth' });
+          setTimeout(() => { if (!touched) chips.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => { auto = false; }, 800); }, 1150);
+        }, 700);
+      }, { threshold: .9 });
+      io2.observe(chips);
+    }
+  }
 })();

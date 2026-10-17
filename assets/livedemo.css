@@ -90,6 +90,27 @@
 .mp [data-mp-b="1"]{--b:1}.mp [data-mp-b="2"]{--b:2}.mp [data-mp-b="3"]{--b:3}.mp [data-mp-b="4"]{--b:4}.mp [data-mp-b="5"]{--b:5}
 .tw-live.busy .ld-screen .mp-hero,.tw-live.busy .ld-screen .mp-nav{filter:saturate(.7)}
 
+/* Verkaufsidee „Drohnenflug + Website aus einer Hand“: die Startseite der Mini-Seite wird zum echten FPV-Durchflug */
+.ld-chips .ld-fly{display:inline-flex;align-items:center;gap:6px;color:var(--signal);background:rgba(255,208,0,.08);box-shadow:inset 0 0 0 1px rgba(255,208,0,.55)}
+.ld-chips .ld-fly svg{flex:none}
+.ld-chips .ld-fly:hover{background:rgba(255,208,0,.16)}
+.mp-fly{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;background:#0b0e13;opacity:0;transform:scale(1.14);transition:opacity .8s ease,transform 1.8s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.mp-hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(7,10,15,.84) 0%,rgba(7,10,15,.5) 54%,rgba(7,10,15,.06) 100%),linear-gradient(to top,rgba(7,10,15,.55),transparent 46%);opacity:0;transition:opacity .8s ease}
+.mp-osd{position:absolute;right:3.2cqw;top:2cqw;display:flex;align-items:center;gap:.8cqw;font:1.35cqw "Share Tech Mono",monospace;letter-spacing:.12em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);opacity:0;transition:opacity .6s;pointer-events:none}
+.mp-osd i{width:1cqw;height:1cqw;border-radius:50%;background:#ff3b30;animation:mpBlink 1s steps(1) infinite}
+.mp-hero{transition:grid-template-columns .8s cubic-bezier(.2,.8,.2,1)}
+.mp.fly .mp-hero{grid-template-columns:1.7fr .3fr}
+.mp.fly .mp-fly{opacity:1;transform:none}
+.mp.fly .mp-hero::before{opacity:1}
+.mp.fly .mp-osd{opacity:.95}
+.mp.fly .mp-hero{color:#f4f7fb}
+.mp.fly .mp-kick{color:#ffd000}
+.mp.fly .mp-h em{color:color-mix(in srgb,var(--mp-acc) 38%,#fff)}
+.mp.fly .mp-p{opacity:.92}
+.mp.fly .mp-btn2{box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.mp.fly .mp-fx{z-index:2}
+.mp.built.fly .mp-hero .mp-machine,.mp.fly .mp-hero .mp-machine{opacity:0;transform:translateX(5cqw) scale(.86);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+
 @container (max-width:460px){
   .mp{font-size:2.6cqw}
   .mp-nav{padding:3cqw 4cqw;gap:2cqw}
@@ -108,5 +129,6 @@
   .mp-rpm{font-size:2.4cqw;bottom:-3cqw}
   .mp-code{font-size:2.8cqw;width:84cqw;padding:2.6cqw 3cqw;border-radius:2.4cqw}
   .mp-badge{font-size:2.8cqw;top:16cqw;padding:1.4cqw 2.6cqw}
+  .mp-osd{font-size:2.3cqw;top:3cqw;right:4cqw;gap:1.4cqw}.mp-osd i{width:1.8cqw;height:1.8cqw}
 }
-@media (prefers-reduced-motion:reduce){.mp-drum,.mp-fx i,.mp-suds circle{animation:none}.mp *{transition:none!important}}
+@media (prefers-reduced-motion:reduce){.mp-drum,.mp-fx i,.mp-suds circle,.mp-osd i{animation:none}.mp *{transition:none!important}}

@@ -1,6 +1,6 @@
 /* Falcon Eye – „Zwei Augen“: links Drohne & FPV (echte Flüge), rechts Webdesign (echte Seiten).
    Beide Augen schauen dem Mauszeiger nach, das Auge unter dem Zeiger wird größer, ab und zu zieht die Nickhaut drüber.
-   Darunter: Werbung + Mitmach-Demo (assets/livedemo.js). */
+   Seit 17.10. kurz gehalten: Werbung + Mitmach-Demo stehen weiter unten im eigenen Abschnitt „Rechtes Auge“ (#eure-seite, assets/livedemo.js). */
 (() => {
   const sec = document.querySelector('.twin'); if (!sec) return;
   const $ = (s, r = sec) => r.querySelector(s), $$ = (s, r = sec) => [...r.querySelectorAll(s)];
@@ -115,29 +115,4 @@
     if (vis) { measure(); startVid(); startSites(); blinkLoop(); } else { stopVid(); clearTimeout(blinkT); }
   }, { rootMargin: '250px 0px' }).observe(split);
   else { vis = true; startVid(); }
-
-  /* ---------- Mitmach-Demo (Logik: assets/livedemo.js) – Handy-Feinschliff ---------- */
-  const inp = document.getElementById('tw-in');
-  if (inp && innerWidth <= 560) inp.placeholder = 'z. B. Hintergrund dunkelblau';
-  // Ideen-Leiste: auf dem Handy eine Wischleiste. Impuls: rutscht beim ersten Sichtkontakt kurz an und zurück.
-  const chips = document.querySelector('[data-ld-chips]'), swipe = document.querySelector('.ld-swipe');
-  if (chips) {
-    let touched = false, auto = false;
-    const mark = () => { if (touched) return; touched = true; swipe && swipe.classList.add('off'); };
-    chips.addEventListener('pointerdown', mark, { passive: true });
-    chips.addEventListener('wheel', mark, { passive: true });
-    chips.addEventListener('scroll', () => { if (!auto && chips.scrollLeft > 6) mark(); }, { passive: true });
-    if (!reduce && 'IntersectionObserver' in window) {
-      const io2 = new IntersectionObserver(([en]) => {
-        if (!en.isIntersecting) return; io2.disconnect();
-        if (chips.scrollWidth <= chips.clientWidth + 8) return;
-        setTimeout(() => {
-          if (touched) return; auto = true;
-          chips.scrollTo({ left: Math.min(150, chips.scrollWidth - chips.clientWidth), behavior: 'smooth' });
-          setTimeout(() => { if (!touched) chips.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => { auto = false; }, 800); }, 1150);
-        }, 700);
-      }, { threshold: .9 });
-      io2.observe(chips);
-    }
-  }
 })();
