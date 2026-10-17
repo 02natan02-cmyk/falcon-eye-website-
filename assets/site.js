@@ -392,6 +392,24 @@
   /* ---------- footer year ---------- */
   $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 
+  /* ---------- Direktlinks (#abschnitt): nach dem Aufbau genau am Ziel landen ----------
+     Ohne das überfährt der Selbstflug der Startseite (home.js) den Sprung des Browsers. */
+  const hashEl = (() => { try { const id = decodeURIComponent(location.hash.slice(1)); return /^[A-Za-z][\w-]*$/.test(id) ? document.getElementById(id) : null; } catch (e) { return null; } })();
+  window.FE.hashTarget = hashEl;
+  if (hashEl) {
+    let touched = false;
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, () => { touched = true; }, { once: true, passive: true }));
+    const land = () => {
+      if (touched) return;
+      const pb = $('.pillbar');
+      const y = Math.max(0, hashEl.getBoundingClientRect().top + scrollY - ((top ? top.offsetHeight : 70) + (pb ? pb.offsetHeight : 0) + 16));
+      if (window.FE.lenis) window.FE.lenis.scrollTo(y, { immediate: true, force: true }); else scrollTo(0, y);
+    };
+    const passes = () => [0, 400, 1200, 2500].forEach(t => setTimeout(land, t));
+    if (document.readyState === 'complete') passes(); else addEventListener('load', passes, { once: true });
+    if (hasGsap) ScrollTrigger.addEventListener('refresh', () => setTimeout(land, 30));
+  }
+
   if (!hasGsap || reduce) {
     flies.forEach(f => { f.style.height = 'auto'; $$('.callout', f).forEach(c => { c.style.opacity = 1; c.style.position = 'relative'; }); });
     $$('[data-count]').forEach(el => el.textContent = el.dataset.count + (el.dataset.suffix || ''));

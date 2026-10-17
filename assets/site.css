@@ -60,6 +60,9 @@ h1,h2,h3{text-wrap:balance}
 .top nav a:not(.btn){text-decoration:none;font-weight:500;font-size:15px;opacity:.82}
 .top nav a:not(.btn):hover,.top nav a[aria-current=page]{opacity:1}
 .top nav a[aria-current=page]{box-shadow:0 2px 0 var(--signal)}
+.top nav a{white-space:nowrap}
+@media (max-width:1200px){.top nav{gap:16px}}
+@media (max-width:1060px){.top nav{gap:12px}.top nav a:not(.btn){font-size:14px}}
 .burger{display:none;background:none;border:0;color:var(--wing);width:44px;height:44px;cursor:pointer;padding:0;position:relative;z-index:2}
 .burger i{position:absolute;left:10px;right:10px;height:2px;background:currentColor;transition:transform .3s,opacity .3s}
 .burger i:nth-child(1){top:15px}.burger i:nth-child(2){top:21px}.burger i:nth-child(3){top:27px}

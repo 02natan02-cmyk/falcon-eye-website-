@@ -207,7 +207,7 @@
   /* auto-flight into the eye: starts by itself, slowly; any touch / wheel / key hands control to the visitor */
   let autoOn = false;
   function autoFly() {
-    if (autoOn || scrollY > 8) return;
+    if (autoOn || scrollY > 8 || window.FE.hashTarget) return; /* Direktlink auf einen Abschnitt: nicht ins Auge fliegen */
     autoOn = true;
     const end = heroSec.offsetHeight - innerHeight, dur = innerWidth < 700 ? 6500 : 8000, t0 = performance.now(), y0 = scrollY;
     const stop = () => { autoOn = false; ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => removeEventListener(ev, stop)); };
