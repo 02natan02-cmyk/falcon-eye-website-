@@ -508,9 +508,9 @@ function init() {
   /* ---------------- Referenz-Galerie ---------------- */
   // [Datei, Name, Index der Referenz-Karte unten, Gerät: d = Laptop, m = Handy]
   const REFS = [
-    ['kleber', 'Wäscherei Kleber', 2, 'd'], ['verena', 'Praxis Verena Paul', 7, 'm'], ['pellegrin', 'Pellegrin Küchen', 4, 'd'],
-    ['zh', 'Z&H Aufbereitung', 6, 'm'], ['holding', 'Natan Holding', 0, 'd'], ['gartentraum', 'Der Garten-Traum', 3, 'm'],
-    ['erbelding', 'Küchenstudio Erbelding', 5, 'd'], ['kowollik', 'Karosserie Kowollik', 8, 'm'], ['natan', 'Natan Küchenmontage', 9, 'm']
+    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 2, 'd'], ['verena', 'Praxis Verena Paul', 7, 'm'], ['pellegrin', 'Pellegrin Küchen', 4, 'd'],
+    ['falcon', 'Falcon Eye', 6, 'm'], ['holding', 'Natan Holding', 0, 'd'], ['gartentraum', 'Der Garten-Traum', 3, 'm'],
+    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 5, 'd'], ['natan', 'Natan Küchenmontage', 8, 'm']
   ];
   // Plätze im Endbild (Bildschirmkoordinaten des Fußpunkts); daraus werden Bodenpositionen berechnet
   const SLOTS_D = [[.655, .43], [.765, .44], [.87, .43], [.585, .285], [.665, .28], [.75, .285], [.83, .28], [.915, .285], [.925, .67]];
@@ -808,7 +808,7 @@ function init() {
       : p < .56 ? 'BAUSTEINE ' + String(placed).padStart(2, '0') + ' / ' + (nD + nM)
       : p < .68 ? 'CODE · ' + Math.round(seg(p, .56, .675) * 100) + ' %'
       : p < .8 ? 'LIVE · FALCON-EYE.DE/ENTWURF/HUDALLA'
-      : 'REFERENZEN · ' + Math.max(1, Math.round(seg(p, .81, .92) * 10)) + ' / 10';
+      : 'REFERENZEN · ' + Math.max(1, Math.round(seg(p, .81, .92) * (REFS.length + 1))) + ' / ' + (REFS.length + 1);
     if (teleEl && tele !== lastTele) { teleEl.textContent = tele; lastTele = tele; }
     hero.style.setProperty('--p', p.toFixed(4));
     hero.classList.toggle('is-start', p < .02);
