@@ -1,6 +1,6 @@
 /* Falcon Eye – „Zwei Augen“: links Drohne & FPV (echte Flüge), rechts Webdesign (echte Seiten).
    Beide Augen schauen dem Mauszeiger nach, das Auge unter dem Zeiger wird größer, ab und zu zieht die Nickhaut drüber.
-   Darunter: Werbung + Mitmach-Demo „Änderung senden → live“ (Zeitraffer, verschickt nichts). */
+   Darunter: Werbung + Mitmach-Demo (assets/livedemo.js). */
 (() => {
   const sec = document.querySelector('.twin'); if (!sec) return;
   const $ = (s, r = sec) => r.querySelector(s), $$ = (s, r = sec) => [...r.querySelectorAll(s)];
@@ -100,19 +100,5 @@
   }, { rootMargin: '250px 0px' }).observe(split);
   else { vis = true; startVid(); }
 
-  /* ---------- Mitmach-Demo: Änderung senden → live (Zeitraffer) ---------- */
-  const form = $('[data-tw-form]'), inp = $('#tw-in'), live = $('[data-tw-live]'), st = $('[data-tw-st]'), prog = $('[data-tw-prog]'), steps = $$('[data-tw-steps] li'), ban = $('[data-tw-banner] span');
-  let run = [];
-  form.addEventListener('submit', e => {
-    e.preventDefault(); run.forEach(clearTimeout); run = [];
-    const txt = (inp.value || '').trim() || inp.placeholder.replace(/^z\. B\.\s*/, '');
-    const now = new Date(), hh = String(now.getHours()).padStart(2, '0'), mm = String(now.getMinutes()).padStart(2, '0'), nr = 1000 + Math.floor(Math.random() * 8999);
-    live.classList.remove('done'); live.classList.add('busy'); steps.forEach(s => s.classList.remove('on')); prog.style.width = '0';
-    const at = (ms, fn) => run.push(setTimeout(fn, reduce ? 0 : ms));
-    const stp = (i, label, cls, w) => { steps.slice(0, i + 1).forEach(s => s.classList.add('on')); st.textContent = label; st.className = cls; prog.style.width = w; };
-    at(0, () => stp(0, `Ticket #${nr} · ${hh}:${mm}`, 'work', '18%'));
-    at(900, () => stp(1, 'in Arbeit …', 'work', '55%'));
-    at(2000, () => stp(2, 'geprüft ✓', 'work', '82%'));
-    at(2900, () => { ban.textContent = txt; stp(3, 'LIVE ✓', 'live', '100%'); live.classList.remove('busy'); live.classList.add('done'); });
-  });
+  /* Mitmach-Demo: siehe assets/livedemo.js */
 })();
