@@ -2,54 +2,326 @@
 <html lang="de">
 <head>
 <script>(function(p){if(p.indexOf("/entwurf/")===0)location.replace("https://entwurf.falcon-eye.de"+p.slice(8)+location.search+location.hash)})(location.pathname)</script>
+<script>if(/defaultsite|^\/(home|start|index\.php)/i.test(location.pathname))location.replace("/")</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Seite nicht gefunden – Falcon Eye</title>
-<meta name="description" content="Impressum von Falcon Eye, Natan Wojtasczyk, Saarbrücken.">
-<meta property="og:title" content="Impressum – Falcon Eye">
-<meta property="og:description" content="Impressum von Falcon Eye, Natan Wojtasczyk, Saarbrücken.">
-<meta property="og:image" content="media/og.jpg">
-<meta name="theme-color" content="#161b21">
-<link rel="icon" href="/media/bird.png">
-<link rel="preload" href="/fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">
-<script>if(/defaultsite|^\/(home|start|index\.php)/i.test(location.pathname))location.replace("/")</script></head>
-<body class="p-legal">
-<a class="skip" href="#main">Zum Inhalt springen</a>
-<header class="top">
-  <a class="brand" href="/./" aria-label="Falcon Eye – zur Startseite"><span class="bird"><img src="/media/bird.png" alt="" width="934" height="207"></span><img class="word" src="/media/wordmark.png" alt="Falcon Eye" width="956" height="175"></a>
-  <nav aria-label="Hauptmenü"><a href="/projekte.html">Projekte</a><a href="/leistungen.html">Leistungen</a><a href="/webdesign.html">Webdesign</a><a href="/ueber-uns.html">Über uns</a><a href="/flight-club.html">Flight Club</a><a href="/kontakt.html">Kontakt</a><a class="btn sm" href="/kontakt.html">Dreh anfragen</a></nav>
-  <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mmenu"><i></i><i></i><i></i></button>
-</header>
-<div class="mmenu" id="mmenu" aria-hidden="true">
-  <a href="/./">Start</a><a href="/projekte.html">Projekte</a><a href="/leistungen.html">Leistungen</a><a href="/webdesign.html">Webdesign</a><a href="/ueber-uns.html">Über uns</a><a href="/flight-club.html">Flight Club</a><a href="/kontakt.html">Kontakt</a>
-  <div class="row"><a class="btn" href="/kontakt.html">Dreh anfragen</a><a class="btn wa" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp</a></div>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e1216">
+<title>Signal verloren – Falcon Eye</title>
+<link rel="icon" href="/fe-404/bird.png">
+<link rel="preload" href="/fe-404/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fe-404/share-tech-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Big Shoulders Display";font-weight:900;font-display:swap;src:url(/fe-404/big-shoulders-display-latin-900-normal.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-weight:400;font-display:swap;src:url(/fe-404/archivo-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Archivo";font-weight:700;font-display:swap;src:url(/fe-404/archivo-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Share Tech Mono";font-weight:400;font-display:swap;src:url(/fe-404/share-tech-mono-latin-400-normal.woff2) format("woff2")}
+:root{--bg:#0e1216;--steel:#161b21;--plate:#1f262e;--plate2:#28313b;--wing:#e6ecec;--text2:#c4ccd1;--muted:#8f9aa2;--y:#ffd000;--yink:#1a1500;--rec:#ff3b30;--ok:#3ddc84;--osd:"Share Tech Mono",ui-monospace,monospace;--head:"Big Shoulders Display",Impact,sans-serif;--body:"Archivo",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+body{margin:0;min-height:100vh;color:var(--wing);font:400 17px/1.55 var(--body);background:radial-gradient(1200px 700px at 50% -10%,#1d252e 0%,var(--bg) 60%) fixed;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.noise{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:.075;mix-blend-mode:screen;image-rendering:pixelated;z-index:1}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:2;background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);opacity:.5}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+/* ---------- OSD (wie in der FPV-Brille) ---------- */
+.osd{position:fixed;inset:0;pointer-events:none;z-index:5;font:400 13px/1.2 var(--osd);color:rgba(230,236,236,.78);letter-spacing:.06em;text-shadow:0 1px 2px #000}
+.osd>div{position:absolute;display:flex;gap:14px;align-items:center}
+.osd .tl{top:max(14px,env(safe-area-inset-top));left:16px}.osd .tr{top:max(14px,env(safe-area-inset-top));right:16px}
+.osd .bl{bottom:max(14px,env(safe-area-inset-bottom));left:16px}.osd .br{bottom:max(14px,env(safe-area-inset-bottom));right:16px}
+.rec{display:inline-flex;align-items:center;gap:6px;color:#fff}.rec i{width:9px;height:9px;border-radius:50%;background:var(--rec);box-shadow:0 0 8px var(--rec);animation:blink 1.1s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+.bars{display:inline-flex;gap:2px;align-items:flex-end;height:13px}.bars b{width:4px;background:rgba(230,236,236,.25);border-radius:1px;transition:background .25s}
+.bars b:nth-child(1){height:30%}.bars b:nth-child(2){height:55%}.bars b:nth-child(3){height:78%}.bars b:nth-child(4){height:100%}
+.bars b.on{background:var(--y)}.osd .sig.lost{color:var(--rec)}.osd .sig.ok{color:var(--ok)}
+.bat{display:inline-flex;align-items:center;gap:5px}.bat em{font-style:normal;display:inline-block;width:22px;height:10px;border:1.5px solid currentColor;border-radius:2px;position:relative;padding:1px}.bat em::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:currentColor}.bat em s{display:block;height:100%;width:62%;background:var(--y)}
+@media (max-width:640px){.osd{font-size:11px}.osd .hide-m,.osd .bl,.osd .br{display:none}}
+/* ---------- Kopf ---------- */
+header{position:relative;z-index:6;display:flex;justify-content:center;padding:52px 16px 0}
+header a{display:inline-flex;align-items:center;gap:12px;text-decoration:none}
+header img.b{height:30px;width:auto}header img.w{height:22px;width:auto}
+/* ---------- Bühne ---------- */
+.stage{position:relative;z-index:3;height:min(40vh,380px);min-height:250px;margin-top:6px;touch-action:pan-y}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage .hint{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font:400 12px var(--osd);letter-spacing:.12em;color:var(--y);opacity:0;transition:opacity .6s;white-space:nowrap;pointer-events:none}
+.stage .hint.on{opacity:.9;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% + 6px))}}
+.cross{position:absolute;left:50%;top:50%;width:46px;height:46px;transform:translate(-50%,-50%);pointer-events:none;opacity:.35}
+.cross::before,.cross::after{content:"";position:absolute;background:var(--wing)}.cross::before{left:50%;top:0;bottom:0;width:1px}.cross::after{top:50%;left:0;right:0;height:1px}
+/* ---------- Text ---------- */
+main{position:relative;z-index:6;max-width:1100px;margin:0 auto;padding:0 16px 120px}
+.lead{text-align:center;max-width:760px;margin:0 auto}
+.kick{font:400 13px var(--osd);letter-spacing:.2em;color:var(--y);margin:0 0 8px}
+@media (max-width:640px){.kick{font-size:11px;letter-spacing:.08em}}
+h1{font:900 clamp(46px,9vw,104px)/.9 var(--head);text-transform:uppercase;margin:0;letter-spacing:.01em}
+h1 em{font-style:normal;color:var(--y)}
+.lead p{color:var(--text2);margin:16px auto 0;font-size:clamp(16px,2.1vw,19px)}
+.addr{display:inline-flex;max-width:100%;gap:8px;align-items:center;margin-top:14px;padding:7px 12px;border:1px solid rgba(230,236,236,.14);border-radius:999px;font:400 13px var(--osd);color:var(--muted);background:rgba(0,0,0,.25)}
+.addr b{color:var(--wing);font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60vw}
+/* Treffer-Vorschlag */
+.found{display:none;margin:26px auto 0;max-width:640px;border:1px solid rgba(255,208,0,.45);background:linear-gradient(180deg,rgba(255,208,0,.12),rgba(255,208,0,.04));border-radius:18px;padding:18px 20px;text-align:left;box-shadow:0 0 0 1px rgba(255,208,0,.06),0 20px 60px rgba(0,0,0,.35);animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.found.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.found small{font:400 12px var(--osd);letter-spacing:.16em;color:var(--y)}
+.found b{display:block;font:900 30px/1.05 var(--head);text-transform:uppercase;margin:4px 0 2px}
+.found .u{font:400 13px var(--osd);color:var(--muted)}
+.found .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;font:700 15px var(--body);text-decoration:none;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.btn.y{background:var(--y);color:var(--yink);box-shadow:0 8px 24px rgba(255,208,0,.25)}.btn.y:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,208,0,.35)}
+.btn.g{background:rgba(230,236,236,.08);color:var(--wing);border:1px solid rgba(230,236,236,.16)}.btn.g:hover{background:rgba(230,236,236,.14)}
+.btn svg{width:18px;height:18px}
+.count{font:400 13px var(--osd);color:var(--text2)}
+.prog{height:3px;border-radius:3px;background:rgba(255,208,0,.15);margin-top:12px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--y)}
+/* ---------- Wohin? ---------- */
+h2{font:900 clamp(32px,5vw,52px)/1 var(--head);text-transform:uppercase;text-align:center;margin:72px 0 6px}
+.sub{text-align:center;color:var(--muted);margin:0 0 26px}
+.ways{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:980px){.ways{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.ways{grid-template-columns:1fr}}
+.way{position:relative;display:flex;flex-direction:column;gap:6px;min-height:190px;padding:20px;border-radius:18px;text-decoration:none;background:linear-gradient(180deg,var(--plate),var(--steel));border:1px solid rgba(230,236,236,.08);overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s,opacity .5s}
+.js .way:not(.in){opacity:0;transform:translateY(18px)}
+.way:hover,.way:focus-visible{transform:translateY(-5px);border-color:rgba(255,208,0,.55);box-shadow:0 22px 50px rgba(0,0,0,.45)}
+.way .ic{width:58px;height:58px;margin-bottom:6px}
+.way b{font:900 25px/1.02 var(--head);text-transform:uppercase}
+.way span{color:var(--text2);font-size:15px}
+.way .go{margin-top:auto;font:400 12px var(--osd);letter-spacing:.14em;color:var(--y)}
+.way.main{background:linear-gradient(160deg,#3a3000,#1c1a10 55%,var(--steel));border-color:rgba(255,208,0,.35)}
+/* Icons */
+.radar{border-radius:50%;border:1.5px solid rgba(255,208,0,.6);position:relative;background:radial-gradient(circle,rgba(255,208,0,.15) 0 2px,transparent 3px),repeating-radial-gradient(circle,transparent 0 9px,rgba(255,208,0,.18) 9px 10px)}
+.radar::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,208,0,.55),transparent 22%);animation:spin 2.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.win{border:1.5px solid rgba(230,236,236,.6);border-radius:7px;position:relative;overflow:hidden}
+.win::before{content:"";position:absolute;left:0;right:0;top:0;height:11px;border-bottom:1.5px solid rgba(230,236,236,.6);background:radial-gradient(circle at 7px 5px,var(--rec) 0 2px,transparent 2.5px),radial-gradient(circle at 15px 5px,var(--y) 0 2px,transparent 2.5px)}
+.win i{position:absolute;left:8px;right:8px;height:6px;border-radius:2px;background:var(--y);transform-origin:left;animation:build 2.8s ease-in-out infinite}
+.win i:nth-child(1){top:18px}.win i:nth-child(2){top:29px;right:20px;background:rgba(230,236,236,.7);animation-delay:.25s}.win i:nth-child(3){top:40px;right:28px;background:rgba(230,236,236,.45);animation-delay:.5s}
+@keyframes build{0%{transform:scaleX(0)}35%,80%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.plane{position:relative}.plane svg{width:100%;height:100%;animation:fly 2.6s ease-in-out infinite}
+@keyframes fly{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(6px,-6px) rotate(-6deg)}}
+.dr{position:relative}.dr svg{width:100%;height:100%;animation:hover 2.2s ease-in-out infinite}.dr .rt{transform-box:fill-box;transform-origin:center;animation:rot .25s linear infinite}
+@keyframes hover{50%{transform:translateY(-5px)}}@keyframes rot{to{transform:scaleX(-1)}}
+/* Kontakt */
+.contact{margin:56px auto 0;max-width:880px;text-align:center;padding:26px 18px;border-radius:22px;border:1px dashed rgba(230,236,236,.18);background:rgba(0,0,0,.18)}
+.contact p{margin:0 0 16px;color:var(--text2)}
+.contact .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn.wa{background:#1fae5b;color:#fff}.btn.wa:hover{transform:translateY(-2px)}
+footer{position:relative;z-index:6;text-align:center;color:var(--muted);font-size:13px;padding:0 16px 70px}
+footer img{height:16px;width:auto;opacity:.7;vertical-align:-3px;margin-right:6px}
+/* Drohnen-Zeiger */
+.cur{position:fixed;left:0;top:0;width:54px;height:54px;margin:-27px 0 0 -27px;z-index:7;pointer-events:none;opacity:0;transition:opacity .3s;will-change:transform;transform:translate(-300px,-300px)}
+.cur.on{opacity:1}
+.cur svg{width:100%;height:100%;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+.cur .rt{transform-box:fill-box;transform-origin:center;animation:rot .12s linear infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.way{opacity:1;transform:none}.cur{display:none}}
+</style>
+</head>
+<body>
+<canvas class="noise" width="160" height="96" aria-hidden="true"></canvas>
+<div class="scan" aria-hidden="true"></div><div class="vig" aria-hidden="true"></div>
+
+<div class="osd" aria-hidden="true">
+  <div class="tl"><span class="rec"><i></i>REC</span><span class="hide-m">CH 404</span><span class="sig lost" data-sig><span class="bars"><b></b><b></b><b></b><b></b></span> <span data-sigtxt>KEIN SIGNAL</span></span></div>
+  <div class="tr"><span class="hide-m">SAT <span data-sat>0</span></span><span class="bat"><em><s></s></em>16.4V</span></div>
+  <div class="bl"><span>ALT <span data-alt>040.4</span>m</span><span class="hide-m">DIST ---</span></div>
+  <div class="br"><span data-clock>00:00:00</span></div>
 </div>
-<div class="dock" aria-label="Schnell buchen">
-  <a class="btn" href="/kontakt.html">Dreh anfragen</a>
-  <a class="btn wa" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp</a>
-</div>
-<main id="main" class="legal"><div class="wrap"><h1>Notlandung</h1><p>Diese Seite gibt es nicht (mehr). Zurück zur <a href="/">Startseite</a> oder direkt einen <a href="/kontakt.html">Dreh anfragen</a>.</p></div></main>
-<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Video">
-  <button class="x">Schließen</button>
-  <div><video controls playsinline loop></video>
-  <div class="meta"><b></b><a class="btn" href="/kontakt.html">Ähnlichen Dreh anfragen</a></div></div>
-</div>
-<footer>
-  <div class="wrap">
-    <div class="grid">
-      <div><img src="/media/logo.png" alt="Falcon Eye" width="2000" height="249"><p>FPV-Drohnenfilme und Websites aus Saarbrücken – für Firmen, Events, Sport und alle, die gesehen werden wollen.</p>
-        <p><a class="btn sm" href="/kontakt.html">Dreh anfragen</a></p></div>
-      <div><h4>Seiten</h4><ul><li><a href="/projekte.html">Projekte</a></li><li><a href="/leistungen.html">Leistungen</a></li><li><a href="/webdesign.html">Webdesign &amp; Webentwicklung</a></li><li><a href="/ueber-uns.html">Über uns &amp; Hangar</a></li><li><a href="/flight-club.html">Partner: Flight Club Saar</a></li><li><a href="/kontakt.html">Kontakt</a></li></ul></div>
-      <div><h4>Kontakt</h4><ul><li><a href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+4915156743442">Telefon 0151 56743442</a></li><li><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
-      <div><h4>Folgt uns</h4><ul><li><a href="https://www.instagram.com/falconeyesaar" target="_blank" rel="noopener">Instagram @falconeyesaar</a></li><li><a href="https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.facebook.com/profile.php?id=61559258413801" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">YouTube: Kinofilme</a></li><li><a href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a></li><li><a href="https://flightclub-saar.de/" target="_blank" rel="noopener">flightclub-saar.de</a></li></ul></div>
+
+<header><a href="/" aria-label="Falcon Eye – zur Startseite"><img class="b" src="/fe-404/bird.png" alt="" width="934" height="207"><img class="w" src="/fe-404/wordmark.png" alt="Falcon Eye" width="956" height="175"></a></header>
+
+<div class="stage" aria-hidden="true"><canvas></canvas><div class="cross"></div><div class="hint" data-hint>← MIT DER MAUS DURCHFLIEGEN →</div></div>
+
+<main>
+  <section class="lead">
+    <p class="kick">FEHLER 404 · FUNKVERBINDUNG ABGERISSEN</p>
+    <h1>Signal <em>verloren.</em></h1>
+    <p>Hier hat unsere Drohne nichts gefunden. Vielleicht ist die Seite umgezogen – oder im Link steckt ein kleiner Tippfehler. Kein Problem: Wir bringen Sie sicher ans Ziel.</p>
+    <div class="addr">Gesucht: <b data-addr></b></div>
+    <div class="found" data-found role="status" aria-live="polite">
+      <small>SIGNAL GEFUNDEN · MEINTEN SIE</small>
+      <b data-ftitle></b><div class="u" data-furl></div>
+      <div class="row"><a class="btn y" data-fgo href="#">Jetzt hinfliegen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><button class="btn g" type="button" data-fstay>Hierbleiben</button><span class="count" data-fcount></span></div>
+      <div class="prog"><i data-fprog></i></div>
     </div>
-    <div class="legalrow"><span>© <span data-year>2026</span> Falcon Eye, Natan Wojtasczyk</span><span><a href="/impressum.html">Impressum</a> &nbsp; <a href="/datenschutz.html">Datenschutz</a></span></div>
-  </div>
-</footer>
-<script src="/js/gsap.min.js"></script>
-<script src="/js/ScrollTrigger.min.js"></script>
-<script src="/js/lenis.min.js"></script>
-<script src="/assets/site.js"></script>
+  </section>
+
+  <h2>Wo wollten Sie hin?</h2>
+  <p class="sub">Vier sichere Landeplätze. Einfach antippen.</p>
+  <nav class="ways" aria-label="Wohin möchten Sie?">
+    <a class="way main" href="/projekte.html"><div class="ic dr"><svg viewBox="0 0 64 64" fill="none" stroke="#e6ecec" stroke-width="2.2" stroke-linecap="round"><path d="M22 30h20v8H22zM22 32 10 22M42 32l12-10M22 36 10 46M42 36l12 10"/><ellipse class="rt" cx="10" cy="20" rx="9" ry="2.4" stroke="#ffd000"/><ellipse class="rt" cx="54" cy="20" rx="9" ry="2.4" stroke="#ffd000"/><ellipse class="rt" cx="10" cy="48" rx="9" ry="2.4" stroke="#ffd000"/><ellipse class="rt" cx="54" cy="48" rx="9" ry="2.4" stroke="#ffd000"/><circle cx="32" cy="42" r="2.4" fill="#ff3b30" stroke="none"/></svg></div><b>Drohnenfilme</b><span>FPV-Flüge, Imagefilme und Events – unsere Projekte aus aller Welt.</span><span class="go">PROJEKTE ANSEHEN →</span></a>
+    <a class="way" href="/webdesign.html#referenzen"><div class="ic radar"></div><b>Webdesign</b><span>Websites, die man nicht wegscrollt – alle Referenzen auf einen Blick.</span><span class="go">ZU DEN REFERENZEN →</span></a>
+    <a class="way" href="/kontakt.html"><div class="ic plane"><svg viewBox="0 0 64 64" fill="none" stroke="#ffd000" stroke-width="2.4" stroke-linejoin="round"><path d="M6 30 58 8 46 56 30 38 6 30Z"/><path d="M30 38 58 8M30 38v16l8-9"/></svg></div><b>Dreh anfragen</b><span>Event, Firma, Immobilie oder Imagefilm – wir melden uns schnell.</span><span class="go">ANFRAGEN →</span></a>
+    <a class="way" href="/"><div class="ic win"><i></i><i></i><i></i></div><b>Startseite</b><span>Zurück zum Anfang – Falcon Eye im Überblick.</span><span class="go">ZUR STARTSEITE →</span></a>
+  </nav>
+
+  <section class="contact">
+    <p>Sie suchen etwas Bestimmtes? Schreiben Sie uns kurz – wir schicken Ihnen den richtigen Link.</p>
+    <div class="row">
+      <a class="btn wa" data-wa href="https://wa.me/4915156743442" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp</a>
+      <a class="btn g" href="tel:+4915156743442"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>Anrufen</a>
+      <a class="btn g" href="mailto:info@falcon-eye.de"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>E-Mail</a>
+      <a class="btn g" data-report href="mailto:info@falcon-eye.de"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1M4 4l16 16"/></svg>Defekten Link melden</a>
+    </div>
+  </section>
+</main>
+<footer><img src="/fe-404/bird.png" alt="" width="934" height="207">Falcon Eye · FPV-Drohnenfilme &amp; Webdesign aus dem Saarland</footer>
+
+<div class="cur" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="#e6ecec" stroke-width="2.4" stroke-linecap="round"><path d="M24 29h16v8H24zM24 31 12 21M40 31l12-10M24 35 12 45M40 35l12 10"/><ellipse class="rt" cx="12" cy="20" rx="10" ry="2.6" stroke="#ffd000"/><ellipse class="rt" cx="52" cy="20" rx="10" ry="2.6" stroke="#ffd000"/><ellipse class="rt" cx="12" cy="46" rx="10" ry="2.6" stroke="#ffd000"/><ellipse class="rt" cx="52" cy="46" rx="10" ry="2.6" stroke="#ffd000"/><circle cx="32" cy="40" r="2.2" fill="#ff3b30" stroke="none"/></svg></div>
+
+<script>
+/* Falcon Eye · 404 „Signal verloren“ (falcon-eye.de) · Prototyp vom Hauptchat, 17.10.2026 – Einbau durch den Falcon-Eye-Chat
+   – Aus fallenden 0/1 setzt sich der Falke zusammen und wird zur 404; mit Maus/Finger fliegt man hindurch.
+   – Erkennt Tippfehler im Link und schlägt die richtige Seite vor (bei sicherem Treffer: Countdown).
+   Neue Entwurfs-Seiten in SEITEN eintragen. Nicht öffentliche Kunden (PRIVAT) werden nur vorgeschlagen,
+   wenn der Ordnername exakt stimmt – so verrät die Seite keine Namen. */
+(() => {
+  document.documentElement.classList.add('js');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s);
+  const ORIG = 'https://falcon-eye.de';
+  const SEITEN = {
+    '': 'Falcon Eye · Startseite', 'projekte.html': 'Projekte · Drohnenfilme', 'leistungen.html': 'Leistungen', 'webdesign.html': 'Webdesign',
+    'ueber-uns.html': 'Über uns', 'kontakt.html': 'Kontakt · Dreh anfragen', 'flight-club.html': 'Flight Club Saar',
+    'impressum.html': 'Impressum', 'datenschutz.html': 'Datenschutz'
+  };
+  const PRIVAT = {};
+  const UNTER = [];
+
+  /* ---------- Adresse anzeigen, Kontakt-Links mit der Adresse füllen ---------- */
+  const path = decodeURIComponent(location.pathname), here = location.host + path;
+  $('[data-addr]').textContent = here;
+  const wa = $('[data-wa]'); wa.href = 'https://wa.me/4915156743442?text=' + encodeURIComponent('Hallo Falcon Eye, ich wollte auf ' + location.href + ' und bin auf der Fehlerseite gelandet.');
+  $('[data-report]').href = 'mailto:info@falcon-eye.de?subject=' + encodeURIComponent('Defekter Link: ' + here) + '&body=' + encodeURIComponent('Hallo Falcon Eye,\n\ndieser Link funktioniert nicht:\n' + location.href + (document.referrer ? '\n\nGekommen von: ' + document.referrer : '') + '\n\nViele Grüße');
+
+  /* ---------- Tippfehler erkennen ---------- */
+  const norm = s => s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/index\.html?$/, '').replace(/\.html?$/, '').replace(/[^a-z0-9/]+/g, '-').replace(/^\/+|\/+$/g, '');
+  function lev(a, b) { const m = a.length, n = b.length; if (!m) return n; if (!n) return m; let p = Array.from({ length: n + 1 }, (_, j) => j); for (let i = 1; i <= m; i++) { const c = [i]; for (let j = 1; j <= n; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = c; } return p[n]; }
+  const sim = (a, b) => 1 - lev(a, b) / Math.max(a.length, b.length, 1);
+  function treffer() {
+    const q = norm(path); if (!q) return null;
+    const seg0 = q.split('/')[0];
+    const kand = Object.entries(SEITEN).map(([u, t]) => ({ u, t, s: sim(q, norm(u)) }));
+    Object.entries(PRIVAT).forEach(([u, t]) => { if (norm(u).split('/')[0] === seg0) kand.push({ u, t: 'Entwurf · ' + t, s: sim(q, norm(u)) + .05 }); });
+    // Impressum / Datenschutz in einem bekannten Ordner
+    const base = Object.keys(SEITEN).concat(Object.keys(PRIVAT)).filter(u => u.endsWith('/'));
+    base.forEach(b => UNTER.forEach(f => { const u = b + f; if (norm(b).split('/')[0] === seg0) kand.push({ u, t: (SEITEN[b] || 'Entwurf') + ' · ' + (f[0] === 'i' ? 'Impressum' : 'Datenschutz'), s: sim(q, norm(u)) }); }));
+    kand.sort((a, b) => b.s - a.s);
+    const best = kand[0]; if (!best || best.s < .5) return null;
+    if (('/' + best.u) === path || ('/' + best.u).replace(/\/$/, '/index.html') === path) return null; // exakt diese Adresse fehlt – dann gibt es sie wirklich nicht mehr
+    return best;
+  }
+  const hit = treffer();
+  if (hit) {
+    const box = $('[data-found]'), url = ORIG + '/' + hit.u.replace(/^\//, '') + location.hash;
+    $('[data-ftitle]').textContent = hit.t; $('[data-furl]').textContent = url.replace(/^https:\/\//, '');
+    const go = $('[data-fgo]'); go.href = url;
+    setTimeout(() => box.classList.add('on'), RM ? 0 : 1400);
+    if (hit.s >= .8 && !RM) {               // sicherer Treffer: Countdown, abbrechbar
+      let n = 6, stop = false; const cnt = $('[data-fcount]'), bar = $('[data-fprog]');
+      $('[data-fstay]').onclick = () => { stop = true; cnt.textContent = 'Alles klar – Sie bleiben hier.'; bar.style.width = '0'; };
+      setTimeout(() => { if (stop) return; bar.style.transition = `width ${n}s linear`; requestAnimationFrame(() => bar.style.width = '100%');
+        const tick = () => { if (stop) return; if (n <= 0) { window.__warp && window.__warp(); setTimeout(() => location.href = url, 420); return; } cnt.textContent = `Wir fliegen Sie in ${n} s hin …`; n--; setTimeout(tick, 1000); }; tick(); }, 1600);
+    } else $('[data-fstay]').style.display = 'none';
+  }
+
+  /* ---------- OSD: Uhr, Satelliten, Signal ---------- */
+  const t0 = Date.now(), clk = $('[data-clock]'), sat = $('[data-sat]'), alt = $('[data-alt]'), sig = $('[data-sig]'), sigt = $('[data-sigtxt]'), bars = [...document.querySelectorAll('.bars b')];
+  let level = 0;
+  const setSig = l => { level = l; bars.forEach((b, i) => b.classList.toggle('on', i < l)); sig.className = 'sig ' + (l >= 3 ? 'ok' : l ? '' : 'lost'); sigt.textContent = l >= 3 ? 'SIGNAL OK' : l ? 'SUCHE …' : 'KEIN SIGNAL'; };
+  setInterval(() => { const s = (Date.now() - t0) / 1000 | 0; clk.textContent = [s / 3600 | 0, (s / 60 | 0) % 60, s % 60].map(v => String(v).padStart(2, '0')).join(':'); sat.textContent = Math.min(14, s * 2); alt.textContent = (40.4 + Math.sin(s / 3) * .6).toFixed(1).padStart(5, '0'); }, 1000);
+  setSig(0);
+  setTimeout(() => setSig(1), 1800); setTimeout(() => setSig(hit ? 3 : 2), 3600);
+  addEventListener('scroll', () => { if (scrollY > innerHeight * .35 && level < 4) setSig(4); }, { passive: true });
+
+  /* ---------- Karten erscheinen ---------- */
+  const io = new IntersectionObserver(es => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 90); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('.way').forEach(w => io.observe(w));
+  setTimeout(() => document.querySelectorAll('.way').forEach(w => w.classList.add('in')), 2500); // Sicherheitsnetz
+
+  /* ---------- Bildrauschen ---------- */
+  const nz = $('.noise'), ng = nz.getContext('2d'), nd = ng.createImageData(nz.width, nz.height);
+  let nf = 0; const noise = () => { if (!document.hidden && nf++ % 2 === 0) { const d = nd.data; for (let i = 0; i < d.length; i += 4) { const v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } ng.putImageData(nd, 0, 0); } if (!RM) requestAnimationFrame(noise); };
+  noise();
+
+  /* ---------- Bühne: 0/1-Teilchen → Falke → 404 ---------- */
+  const stage = $('.stage'), cv = stage.querySelector('canvas'), g = cv.getContext('2d'), hint = $('[data-hint]');
+  const DPR = Math.min(2, devicePixelRatio || 1);
+  let W = 0, H = 0, P = [], A = [], B = [], mode = 'rain', tStart = 0, drone = { x: -999, y: -999, on: false };
+  const mob = () => innerWidth < 700, FS = () => mob() ? 9 : 11;
+  let G = null;
+  function glyphs(fs) { const z = Math.ceil(fs * 1.7), mk = (ch, col, blur) => { const c = document.createElement('canvas'); c.width = c.height = Math.ceil(z * DPR); const x = c.getContext('2d'); x.scale(DPR, DPR); x.font = `400 ${fs}px "Share Tech Mono",ui-monospace,monospace`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = col; x.shadowBlur = blur; x.fillStyle = col; x.fillText(ch, z / 2, z / 2); return c; };
+    return { z, y0: mk('0', '#ffd000', fs * .6), y1: mk('1', '#ffd000', fs * .6), w0: mk('0', '#fff7cf', fs), w1: mk('1', '#fff7cf', fs), d0: mk('0', 'rgba(230,236,236,.38)', 0), d1: mk('1', 'rgba(230,236,236,.38)', 0) }; }
+  function sample(drawFn, w, h, want) {
+    const c = document.createElement('canvas'); c.width = Math.max(1, w | 0); c.height = Math.max(1, h | 0); const x = c.getContext('2d', { willReadFrequently: true }); drawFn(x, c.width, c.height);
+    const d = x.getImageData(0, 0, c.width, c.height).data; let filled = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 110) filled++;
+    const st = Math.max(3, Math.sqrt(filled / want)), out = [];
+    for (let y = st / 2; y < c.height; y += st) for (let xx = st / 2; xx < c.width; xx += st) { const i = ((y | 0) * c.width + (xx | 0)) * 4; if (d[i + 3] > 110) out.push([xx - c.width / 2, y - c.height / 2, d[i] < 140 ? 1 : 0]); }
+    return out;
+  }
+  function layout(img) {
+    const r = stage.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W * DPR; cv.height = H * DPR; g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    G = glyphs(FS());
+    const want = mob() ? 650 : 1250;
+    const bw = Math.min(W * (mob() ? .92 : .62), 760), bh = bw * img.naturalHeight / img.naturalWidth;
+    A = sample((x, w, h) => x.drawImage(img, 0, 0, w, h), bw, bh, want);
+    const fh = Math.min(H * .86, W * (mob() ? .46 : .3));
+    B = sample((x, w, h) => { x.font = `900 ${h * 1.05}px "Big Shoulders Display",Impact,sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#fff'; x.fillText('404', w / 2, h * .54); }, fh * 1.6, fh, want);
+    const n = Math.max(A.length, B.length);
+    while (P.length < n) P.push({ x: Math.random() * W, y: -Math.random() * H * 1.2, vx: 0, vy: 2 + Math.random() * 3, ch: Math.random() < .5 ? 0 : 1, a: 0, b: 0, k: 0 });
+    P.length = n;
+    P.forEach((p, i) => { p.a = A[i % A.length]; p.b = B[i % B.length]; p.k = i; });
+  }
+  let birdImg = new Image(); birdImg.src = '/fe-404/bird.png';
+  const startStage = () => { layout(birdImg); tStart = performance.now(); if (RM) { mode = 'hold404'; P.forEach(p => { p.x = W / 2 + p.b[0]; p.y = H / 2 + p.b[1]; }); draw(); return; } requestAnimationFrame(loop); };
+  Promise.all([new Promise(r => birdImg.complete ? r() : (birdImg.onload = r, birdImg.onerror = r)), document.fonts ? document.fonts.load('900 40px "Big Shoulders Display"').catch(() => { }) : 0, document.fonts ? document.fonts.load('400 12px "Share Tech Mono"').catch(() => { }) : 0]).then(startStage);
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (Math.abs(stage.getBoundingClientRect().width - W) > 40) layout(birdImg); }, 200); });
+
+  // Steuerung: Maus/Finger lenkt eine Drohne durch die Ziffern; vorher fliegt sie einmal selbst (Impuls)
+  const cur = $('.cur'); let mx = -999, my = -999, cx = -999, cy = -999, user = false, auto = null;
+  const toStage = (x, y) => { const r = stage.getBoundingClientRect(); return [x - r.left, y - r.top]; };
+  addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; mx = e.clientX; my = e.clientY; cur.classList.add('on'); user = true; hint.classList.remove('on'); });
+  stage.addEventListener('touchmove', e => { const t = e.touches[0]; mx = t.clientX; my = t.clientY; user = true; cur.classList.add('on'); hint.classList.remove('on'); }, { passive: true });
+  stage.addEventListener('touchend', () => { setTimeout(() => { cur.classList.remove('on'); mx = my = cx = cy = -999; }, 350); });
+  window.__warp = () => { mode = 'warp'; };
+
+  function loop(now) {
+    const t = (now - tStart) / 1000;
+    if (mode === 'rain' && t > .7) mode = 'bird';
+    if (mode === 'bird' && t > 3.2) mode = '404';
+    // Impuls: nach dem Aufbau fliegt die Drohne einmal selbst quer durch die 404
+    if (mode === '404' && !user && auto === null && t > 4.6) auto = now;
+    if (auto !== null && !user) { const u = (now - auto) / 2600; if (u <= 1) { const r = stage.getBoundingClientRect(); drone.x = -40 + (W + 80) * u; drone.y = H * (.5 + Math.sin(u * Math.PI * 2) * .18); cur.classList.add('on'); cur.style.transform = `translate(${r.left + drone.x}px,${r.top + drone.y}px) rotate(${Math.cos(u * Math.PI * 2) * 12}deg)`; } else { auto = -1; drone.x = -999; cur.classList.remove('on'); hint.textContent = matchMedia('(hover:none)').matches ? '← MIT DEM FINGER DURCHFLIEGEN →' : '← MIT DER MAUS DURCHFLIEGEN →'; hint.classList.add('on'); } }
+    if (user) { cx += (mx - cx) * .22; cy += (my - cy) * .22; if (cx < -900) { cx = mx; cy = my; } cur.style.transform = `translate(${cx}px,${cy}px) rotate(${Math.max(-18, Math.min(18, (mx - cx) * .6))}deg)`; [drone.x, drone.y] = toStage(cx, cy); }
+    step(t); draw();
+    requestAnimationFrame(loop);
+  }
+  function step(t) {
+    const cxs = W / 2, cys = H / 2, R = mob() ? 70 : 95, R2 = R * R;
+    for (const p of P) {
+      if (mode === 'rain') { p.vy += .25; p.y += p.vy; p.x += p.vx; if (p.y > H + 20) { p.y = -10; p.vy = 2; } continue; }
+      if (mode === 'warp') { p.vx += (p.x - cxs) * .02; p.vy += (p.y - cys) * .02; p.x += p.vx; p.y += p.vy; continue; }
+      const tg = mode === 'bird' ? p.a : p.b, tx = cxs + tg[0], ty = cys + tg[1];
+      const ramp = mode === 'bird' ? Math.min(1, (t - .7) / 1.2) : 1;
+      p.vx += (tx - p.x) * .045 * ramp; p.vy += (ty - p.y) * .045 * ramp;
+      const dx = p.x - drone.x, dy = p.y - drone.y, d2 = dx * dx + dy * dy;
+      if (d2 < R2 && d2 > .01) { const f = (1 - d2 / R2) * 5.2 / Math.sqrt(d2); p.vx += dx * f; p.vy += dy * f; p.hot = 1; }
+      p.vx *= .82; p.vy *= .82; p.x += p.vx; p.y += p.vy;
+      if (p.hot) p.hot *= .94;
+      if (Math.random() < .002) p.ch ^= 1;
+    }
+  }
+  function draw() {
+    g.clearRect(0, 0, W, H); const z = G.z / 2, flick = performance.now() / 1000;
+    for (const p of P) {
+      const tg = mode === 'bird' || mode === 'rain' ? p.a : p.b;
+      let s;
+      if (mode === 'rain') s = p.ch ? G.d1 : G.d0;
+      else if (p.hot > .2 || (Math.sin(flick * 3 + p.k) > .985)) s = p.ch ? G.w1 : G.w0;
+      else if (tg && tg[2] && mode === 'bird') s = p.ch ? G.d1 : G.d0;
+      else s = p.ch ? G.y1 : G.y0;
+      g.drawImage(s, p.x - z, p.y - z, G.z, G.z);
+    }
+  }
+})();
+</script>
 </body>
 </html>
