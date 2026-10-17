@@ -24,7 +24,9 @@
 .sr-t video{opacity:0;transition:opacity .5s,transform .8s cubic-bezier(.2,.8,.2,1)}
 .sr-t.on video{opacity:1}
 .sr-t:not(.on) img.sr-po{filter:saturate(.55) brightness(.6)}
-.sr-t::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,12,15,0) 45%,rgba(10,12,15,.88) 100%);pointer-events:none}
+.sr-t::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,12,15,0) 38%,rgba(10,12,15,.55) 62%,rgba(10,12,15,.93) 100%);pointer-events:none}
+.sr-t:not(.big) .sr-cap span{max-height:0;overflow:hidden;opacity:0;transition:max-height .35s ease,opacity .3s}
+@media (hover:hover){.sr-t:not(.big):hover .sr-cap span{max-height:3.2em;opacity:1}}
 .sr-t .sr-cap{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;display:grid;gap:3px}
 .sr-t .sr-cap small{font:11px var(--osd);letter-spacing:.1em;text-transform:uppercase;color:var(--signal)}
 .sr-t .sr-cap b{font:900 clamp(20px,2vw,28px)/1 var(--display);text-transform:uppercase}
