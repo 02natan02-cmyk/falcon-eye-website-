@@ -20,13 +20,16 @@
     if (p && p.then) p.then(ok).catch(() => { }); else ok();
   }
   const stopTile = t => { const v = t.querySelector('video'); if (v && !v.paused) try { v.pause(); } catch (e) { } count(); };
-  let introDone = RM, introStarted = false;
+  let introDone = RM, introStarted = false, introT0 = 0;
+  // Sicherheitsnetz: läuft das Intro nicht durch (Energiesparmodus, Hintergrund-Tab, langsames Gerät), starten die Videos trotzdem
+  const forceDone = () => { if (introDone) return; introDone = true; tiles.forEach(t => { if (vis.get(t)) playTile(t); }); };
   const io = new IntersectionObserver(es => es.forEach(e => {
     const t = e.target; vis.set(t, e.isIntersecting);
     if (e.isIntersecting) {
       t.classList.add('in');
       // Wer von unten direkt hineinspringt (Anker, Zurück-Taste), bekommt die Videos ohne Intro
       if (!introStarted && stage && stage.getBoundingClientRect().bottom < 0) introDone = true;
+      if (introStarted && !introDone && Date.now() - introT0 > 14000) introDone = true;
       if (!RM && (introDone || t.dataset.started)) playTile(t);
     } else stopTile(t);
   }), { rootMargin: '80px 0px', threshold: .2 });
@@ -68,7 +71,7 @@
 
   /* ---------- Start, sobald die Bühne gut im Bild ist ---------- */
   const start = () => {
-    if (introStarted || introDone) return; introStarted = true;
+    if (introStarted || introDone) return; introStarted = true; introT0 = Date.now(); setTimeout(forceDone, 14000);
     const img = new Image(); img.decoding = 'async';
     img.onload = () => run(img);
     img.onerror = () => { introDone = true; tiles.forEach(t => vis.get(t) && playTile(t)); };
@@ -123,7 +126,7 @@
     const center = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
     const pick = () => { let best = null, bd = 1e9; for (const t of tiles) { if (t.dataset.started || !inView(t)) continue; const [cx, cy] = center(t), d = Math.hypot(cx - x, cy - y); if (d < bd) { bd = d; best = t; } } return best; };
     const burst = (bx, by, n = 22) => { for (let k = 0; k < n; k++) { const a = Math.random() * 6.28, v = 110 + Math.random() * 260; sparks.push({ x: bx, y: by, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 110, a: 1, ch: Math.random() < .5 ? 0 : 1 }); } };
-    const finish = () => { if (introDone) return; introDone = true; tiles.forEach(t => { if (vis.get(t)) playTile(t); }); };
+    const finish = forceDone;
     const step = now => {
       if (!last) { last = now; tStart = now; }
       const dt = Math.min(100, now - last) / 1000; last = now; const el = now - tStart;
