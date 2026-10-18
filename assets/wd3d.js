@@ -507,21 +507,23 @@ function init() {
 
   /* ---------------- Referenz-Galerie ---------------- */
   // [Datei, Name, Index der Referenz-Karte unten, Gerät: d = Laptop, m = Handy]
+  // Seit 18.10.: Pflege24-7 und Opieka24-7 stehen als Karten 1 und 2 direkt nach Natan Holding, alle späteren Indizes +2
   const REFS = [
-    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 2, 'd'], ['verena', 'Praxis Verena Paul', 9, 'm'], ['pellegrin', 'Pellegrin Küchen', 4, 'd'],
-    ['falcon', 'Falcon Eye', 8, 'm'], ['holding', 'Natan Holding', 0, 'd'], ['gartentraum', 'Der Garten-Traum', 3, 'm'],
-    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 5, 'd'], ['natan', 'Natan Küchenmontage', 10, 'm'],
-    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 6, 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 7, 'm']
+    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 4, 'd'], ['verena', 'Praxis Verena Paul', 11, 'm'], ['pellegrin', 'Pellegrin Küchen', 6, 'd'],
+    ['falcon', 'Falcon Eye', 10, 'm'], ['holding', 'Natan Holding', 0, 'd'], ['gartentraum', 'Der Garten-Traum', 5, 'm'],
+    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 7, 'd'], ['natan', 'Natan Küchenmontage', 12, 'm'],
+    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 8, 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 9, 'm'],
+    ['pflege247', 'Pflege24-7', 1, 'm'], ['opieka247', 'Opieka24-7', 2, 'm']
   ];
   // Plätze im Endbild (Bildschirmkoordinaten des Fußpunkts); daraus werden Bodenpositionen berechnet
-  const SLOTS_D = [[.655, .43], [.765, .44], [.87, .43], [.585, .285], [.665, .28], [.75, .285], [.83, .28], [.915, .285], [.925, .67], [.94, .45]];
-  const SLOTS_M = [[.23, .425], [.53, .435], [.81, .425], [.15, .315], [.38, .31], [.6, .32], [.82, .31], [.2, .228], [.5, .228], [.8, .228]];
+  const SLOTS_D = [[.655, .43], [.765, .44], [.87, .43], [.585, .285], [.665, .28], [.75, .285], [.83, .28], [.915, .285], [.925, .67], [.94, .45], [.555, .43], [.845, .675]];
+  const SLOTS_M = [[.23, .425], [.53, .435], [.81, .425], [.15, .315], [.38, .31], [.6, .32], [.82, .31], [.2, .228], [.5, .228], [.8, .228], [.1, .63], [.9, .63]];
   const tagsEl = hero.querySelector('.wd3-tags');
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   const lineup = [];
   const pickables = [];
   const mainTag = document.createElement('span'); mainTag.textContent = 'Hausmeisterservice Hudalla'; tagsEl && tagsEl.appendChild(mainTag);
-  const mainItem = { g: L.g, el: mainTag, ref: 1, home: V(), anchor: V(0, 2.75, -1.6), main: true };
+  const mainItem = { g: L.g, el: mainTag, ref: 3, home: V(), anchor: V(0, 2.75, -1.6), main: true };
   [L.scr, P.scr, fillD, fillM].forEach(m => { m.userData.item = mainItem; pickables.push(m); });
   let lineupBuilt = false;
   function buildLineup() {
