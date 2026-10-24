@@ -66,7 +66,7 @@
     ['loadstart', 'waiting'].forEach(ev => video.addEventListener(ev, () => wait(true)));
     ['playing', 'pause', 'canplay', 'error', 'ended'].forEach(ev => video.addEventListener(ev, () => wait(false)));
     video.addEventListener('error', () => { errEl.hidden = false; });
-    video.addEventListener('play', () => { endV.hidden = true; endV.classList.remove('in'); });
+    video.addEventListener('play', () => { endV.hidden = true; endV.classList.remove('in'); video.controls = true; });
     video.addEventListener('loadedmetadata', () => {
       if (forced) return;
       forced = true; // Untertitel an, weil viele ohne Ton schauen
@@ -76,6 +76,7 @@
     video.addEventListener('ended', showEnd);
     dlg.querySelector('[data-ef-again]').addEventListener('click', () => {
       endV.hidden = true;
+      video.controls = true;
       try { video.currentTime = 0; } catch (e) { }
       play();
       video.focus({ preventScroll: true });
@@ -121,6 +122,7 @@
     load();
     try { if (video.ended || (video.duration && video.currentTime >= video.duration - .3)) video.currentTime = 0; } catch (er) { }
     endV.hidden = true;
+    video.controls = true;
     dlg.showModal();
     lock(true);
     play(); // direkt im Klick: Ton erlaubt
@@ -176,7 +178,7 @@
   // Fokus bleibt im Player
   function trap(e) {
     if (e.key !== 'Tab') return;
-    const f = [video, ...endV.querySelectorAll('button'), xBtn].filter(el => el.offsetParent !== null);
+    const f = [video, ...endV.querySelectorAll('button'), xBtn].filter(el => el.offsetParent !== null && (el !== video || video.controls));
     if (!f.length) return;
     const a = document.activeElement, first = f[0], last = f[f.length - 1];
     if (!dlg.contains(a)) { e.preventDefault(); first.focus(); }
@@ -188,13 +190,15 @@
   function showEnd() {
     try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) { }
     try { if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) video.webkitExitFullscreen(); } catch (e) { }
+    // Die eigene Ende-Ansicht ersetzt die Bedienleiste des Players: ohne sie kann der Player den Fokus
+    // am Filmende nicht zurückholen. „Nochmal ansehen“ (oder Abspielen) schaltet sie wieder ein.
+    video.controls = false;
     endV.hidden = false;
     endV.classList.remove('in'); void endV.offsetWidth; endV.classList.add('in');
-    // Fokus auf „Kostenlosen Entwurf anfragen“ – kurz danach noch einmal, weil die Bedienleiste des Players
-    // den Fokus am Filmende manchmal zurück aufs Video holt
     const b = endV.querySelector('[data-ef-cta]');
-    const f = () => { if (b && opened && !endV.hidden && document.activeElement !== b) b.focus({ preventScroll: true }); };
-    f(); setTimeout(f, 120);
+    const f = () => { if (b && opened && !endV.hidden && (document.activeElement === video || document.activeElement === document.body || document.activeElement === dlg)) b.focus({ preventScroll: true }); };
+    if (b && opened) b.focus({ preventScroll: true });
+    setTimeout(f, 150); setTimeout(f, 600);
   }
   function toForm() {
     const tgt = document.getElementById('entwurf');
