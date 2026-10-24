@@ -1,0 +1,191 @@
+/* Falcon Eye – Webdesign: „Kurz gefragt.“ – jede Antwort zeigt beim Aufklappen eine kleine Bewegung.
+   Die Szenen sind SVG (Endzustand steht im Markup, GSAP baut sie beim Öffnen von vorn auf). Alles lokal. */
+.wdm-fq .fq-list{gap:10px}
+.wdm-q{position:relative;border-radius:18px;background:rgba(31,38,46,.6);border:1px solid var(--line);overflow:hidden;transition:background .3s,border-color .3s,box-shadow .5s}
+.wdm-q:hover{border-color:rgba(255,208,0,.28)}
+.wdm-q[open]{background:rgba(31,38,46,.95);border-color:rgba(255,208,0,.42);box-shadow:0 36px 70px -48px rgba(255,208,0,.4)}
+.wdm-q summary{list-style:none;display:grid;grid-template-columns:44px minmax(0,1fr) 34px;gap:14px;align-items:center;padding:14px 20px 14px 14px;cursor:pointer;font:700 clamp(17px,1.4vw,20px)/1.3 var(--body);color:var(--wing);-webkit-tap-highlight-color:transparent}
+.wdm-q summary::-webkit-details-marker{display:none}
+.wdm-q summary:hover{color:#fff}
+.wdm-q summary:focus-visible{outline:3px solid var(--signal);outline-offset:-3px;border-radius:18px}
+.wdm-qi{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:rgba(255,208,0,.08);border:1px solid rgba(255,208,0,.3);color:var(--signal);transition:background .3s,color .3s,transform .4s cubic-bezier(.3,1.5,.5,1)}
+.wdm-qi svg{width:23px;height:23px}
+.wdm-q summary:hover .wdm-qi{transform:rotate(-6deg) scale(1.06)}
+.wdm-q[open] .wdm-qi{background:var(--signal);color:var(--signal-ink);border-color:var(--signal)}
+.wdm-qt{display:block;min-width:0}
+.wdm-qt small{display:block;margin-bottom:4px;font:400 11px/1 var(--osd);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.wdm-q[open] .wdm-qt small{color:var(--signal)}
+.wdm-pm{position:relative;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(230,236,236,.3);transition:background .3s,border-color .3s,transform .4s}
+.wdm-pm::before,.wdm-pm::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:2px;margin:-1px 0 0 -7px;border-radius:2px;background:var(--wing);transition:transform .4s,background .3s}
+.wdm-pm::after{transform:rotate(90deg)}
+.wdm-q[open] .wdm-pm{background:var(--signal);border-color:var(--signal);transform:rotate(180deg)}
+.wdm-q[open] .wdm-pm::before,.wdm-q[open] .wdm-pm::after{background:var(--signal-ink)}
+.wdm-q[open] .wdm-pm::after{transform:rotate(0)}
+/* Anstoß: nach dem Selbstöffnen pulsieren die übrigen Plus-Knöpfe, bis jemand tippt */
+.wdm-list.is-hint .wdm-q:not([open]) .wdm-pm{animation:wdm-pm 1.9s ease-out infinite}
+.wdm-list.is-hint .wdm-q:not([open]):nth-child(3) .wdm-pm{animation-delay:.25s}
+.wdm-list.is-hint .wdm-q:not([open]):nth-child(4) .wdm-pm{animation-delay:.5s}
+@keyframes wdm-pm{0%{box-shadow:0 0 0 0 rgba(255,208,0,.55)}70%,100%{box-shadow:0 0 0 12px rgba(255,208,0,0)}}
+.wdm-tip{position:absolute;right:64px;top:50%;margin-top:-13px;padding:7px 11px 6px;border-radius:8px;background:var(--signal);color:var(--signal-ink);font:400 11px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateX(10px);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,1.4,.4,1)}
+.wdm-tip::after{content:"";position:absolute;right:-5px;top:50%;margin-top:-5px;border:5px solid transparent;border-left-color:var(--signal);border-right:0}
+.wdm-list.is-hint .wdm-q:not([open]) .wdm-tip{opacity:1;transform:none;animation:wdm-tip 1.6s ease-in-out infinite}
+@keyframes wdm-tip{50%{transform:translateX(-5px)}}
+
+/* Antwort */
+.wdm-a{overflow:hidden}
+.wdm-ai{padding:2px 20px 22px}
+.wdm-ai>p{margin:16px 0 0;max-width:40em;color:var(--text-2);font-size:17px;line-height:1.6}
+.wdm-ai a{color:var(--signal)}
+
+/* Szene */
+.wdm-vw{position:relative;border-radius:14px;overflow:hidden;background:#0c1116;border:1px solid rgba(255,208,0,.24)}
+.wdm-vw::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 16px),repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 16px)}
+.wdm-viz{position:relative;aspect-ratio:32/14}
+.wdm-viz svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.wdm-vf{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 8px 5px 12px;border-top:1px solid rgba(255,255,255,.07);background:rgba(8,11,15,.6)}
+.wdm-vl{font:400 11px/1.2 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.wdm-rp{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(230,236,236,.22);background:none;color:var(--wing);font:600 13px/1 var(--body);cursor:pointer;transition:border-color .2s,color .2s,background .2s;-webkit-tap-highlight-color:transparent}
+.wdm-rp svg{width:14px;height:14px;transition:transform .5s}
+.wdm-rp:hover{border-color:var(--signal);color:var(--signal)}
+.wdm-rp:hover svg{transform:rotate(-200deg)}
+.wdm-rp:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+
+/* gemeinsame Zeichenstile (Farben je Klasse, keine ids) */
+.wdm-viz{--vy:#ffd000;--vw:#e6ecec;--vd:#7b8791;--vg:#2fbf61;--vr:#ff3b30}
+.wdm-viz text{font-family:var(--osd);font-size:8.5px;letter-spacing:.05em;fill:var(--vd)}
+.wdm-viz .y{fill:var(--vy)}.wdm-viz .r{fill:var(--vr)}.wdm-viz .g{fill:var(--vg)}
+.wdm-viz .v-cap{font-size:8.5px}
+.v-fr{fill:rgba(255,255,255,.03);stroke:rgba(230,236,236,.46);stroke-width:1.2}
+.v-b1{fill:rgba(230,236,236,.36)}.v-b2{fill:rgba(255,208,0,.2)}.v-b3{fill:rgba(230,236,236,.2)}.v-b4{fill:var(--vy)}
+.v-dot{fill:rgba(230,236,236,.4)}
+.v-live circle{fill:var(--vr);animation:wdm-blink 1.2s steps(2) infinite}
+.v-live text{fill:var(--vr);font-size:8.5px}
+@keyframes wdm-blink{50%{opacity:.25}}
+
+/* 1 – sieben Tage */
+.v-cnt{font:700 21px var(--display);fill:var(--vy);letter-spacing:.05em}
+.v-sb{fill:rgba(255,255,255,.04);stroke:rgba(230,236,236,.3);stroke-width:1}
+.v-sg{fill:var(--vy)}
+.v-sl{font-size:8px;fill:var(--vd)}
+.v-chip rect{fill:rgba(47,191,97,.1);stroke:rgba(47,191,97,.6);stroke-width:1}
+.v-chip text{fill:var(--vw);font-size:8.5px}
+
+/* 2 – Unikat und Preisschild */
+.v-str{stroke:rgba(230,236,236,.5);stroke-width:1.2}
+.v-tb{fill:rgba(255,208,0,.12);stroke:var(--vy);stroke-width:1.6;stroke-linejoin:round}
+.v-hole{fill:#0c1116;stroke:var(--vy);stroke-width:1.2}
+.v-q{font:700 30px var(--display);fill:var(--vy)}
+.v-big{font:700 14px var(--display);letter-spacing:.04em}
+.v-front{opacity:0}
+
+/* 3 – Teile andocken */
+.v-pill{fill:rgba(255,208,0,.1);stroke:var(--vy);stroke-width:1.3}
+.v-pt{fill:var(--vw);font-size:9.5px;letter-spacing:.04em}
+.v-ic{fill:none;stroke:var(--vy);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.v-ic .f{fill:var(--vy);stroke:none}
+.v-cn{stroke:var(--vy);stroke-width:1.6;stroke-dasharray:2 2.4}
+.v-gear{fill:none;stroke:var(--vd);stroke-width:1.2;stroke-linecap:round;animation:wdm-spin 6s linear infinite}
+@keyframes wdm-spin{to{transform:rotate(360deg)}}
+.v-gear{transform-box:fill-box;transform-origin:center}
+
+/* 4 – Sprachnachricht */
+.v-bb{fill:rgba(255,208,0,.1);stroke:var(--vy);stroke-width:1.3}
+.v-play{fill:var(--vy)}.v-tri{fill:#0c1116}
+.v-wv{fill:var(--vy)}
+.v-dur{font-size:8.5px}
+.v-ar{fill:none;stroke:var(--vd);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.v-pk{fill:var(--vy);opacity:0}
+.v-hl{fill:var(--vy)}
+.v-nb rect{fill:rgba(47,191,97,.14);stroke:var(--vg);stroke-width:1}
+.v-nb text{fill:var(--vg);font-size:8px}
+.v-ring{fill:none;stroke:rgba(230,236,236,.25);stroke-width:2.6}
+.v-prog{fill:none;stroke:var(--vy);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:94.25;stroke-dashoffset:0;transform:rotate(-90deg);transform-box:fill-box;transform-origin:center}
+.v-btn{fill:rgba(230,236,236,.5)}
+.v-min{font:700 13px var(--display);letter-spacing:.05em}
+
+/* 5 – 0 € */
+.v-disp .v-fr{stroke:rgba(255,208,0,.55);fill:rgba(255,208,0,.05)}
+.v-tk{fill:none;stroke:var(--vy);stroke-width:2;stroke-linecap:round}
+.v-num{font:700 50px var(--display);fill:var(--vw);letter-spacing:.02em}
+.v-num.is-roll{filter:blur(2.6px);opacity:.6;fill:var(--vy)}
+.v-stamp rect{fill:#0c1116;stroke:var(--vy);stroke-width:2}
+.v-stamp text{font:700 11.5px var(--display);fill:var(--vy);letter-spacing:.14em}
+.v-steps .s1{fill:var(--vy)}
+.v-steps{font-size:9.5px}
+
+/* 6 – Suchstrahl */
+.v-src rect{fill:rgba(230,236,236,.06);stroke:rgba(230,236,236,.45);stroke-width:1}
+.v-src text{fill:var(--vw);font-size:9px}
+.v-glow{fill:rgba(255,208,0,.12);stroke:var(--vy);stroke-width:1.4;filter:drop-shadow(0 0 6px rgba(255,208,0,.55))}
+.v-cb .v-fr{stroke:var(--vy);stroke-width:1.6}
+.v-h1{fill:var(--vy)}
+.v-faq{fill:none;stroke:rgba(255,208,0,.7);stroke-width:1}
+.v-sch{font-size:9px;fill:var(--vy)}
+.v-scan{stroke:var(--vy);stroke-width:1.6;opacity:0;filter:drop-shadow(0 0 4px rgba(255,208,0,.9))}
+.v-ck circle{fill:rgba(47,191,97,.16);stroke:var(--vg);stroke-width:1}
+.v-ck path{fill:none;stroke:var(--vg);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.v-ck text{font-size:7.5px;fill:var(--vw)}
+
+/* 7 – Schild */
+.v-old .v-fr{stroke:rgba(230,236,236,.3)}
+.v-fold{fill:none;stroke:rgba(230,236,236,.3);stroke-width:1.2}
+.v-code{font-size:9px;fill:var(--vd)}
+.v-no circle{fill:rgba(255,59,48,.1);stroke:var(--vr);stroke-width:4}
+.v-no path{fill:none;stroke:var(--vr);stroke-width:4;stroke-linecap:round}
+.v-url{fill:rgba(230,236,236,.1)}
+.v-ut{font-size:7.5px;fill:var(--vw)}
+.v-ok circle{fill:rgba(47,191,97,.18);stroke:var(--vg);stroke-width:1}
+.v-ok path{fill:none;stroke:var(--vg);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.v-sc{fill:var(--vy);opacity:0;filter:drop-shadow(0 0 5px rgba(255,208,0,.9))}
+.v-shb{fill:rgba(255,208,0,.16);stroke:var(--vy);stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 0 7px rgba(255,208,0,.45))}
+.v-shc{fill:none;stroke:var(--vy);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 8 – Drohne */
+.v-gr{stroke:rgba(230,236,236,.3);stroke-width:1}
+.v-sky rect{fill:rgba(230,236,236,.07)}
+.v-gate{fill:none;stroke:var(--vy);stroke-width:3.4;opacity:.9}
+.v-gate.g1{stroke-width:2.2;opacity:.55}.v-gate.g2{stroke-width:2.8;opacity:.75}
+.v-trail{fill:none;stroke:rgba(255,208,0,.55);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:3 4}
+.v-arm{stroke:var(--vw);stroke-width:1.8;stroke-linecap:round}
+.v-bd{fill:var(--vw)}
+.v-cam{fill:var(--vr)}
+.v-pr{fill:rgba(255,208,0,.55);transform-box:fill-box;transform-origin:center;animation:wdm-prop .09s linear infinite alternate}
+@keyframes wdm-prop{to{transform:scaleX(.4)}}
+.v-bob{animation:wdm-bob 1.8s ease-in-out infinite alternate}
+@keyframes wdm-bob{to{transform:translateY(-2.5px) rotate(2deg)}}
+.v-hud text{font-size:9px;fill:var(--vw);letter-spacing:.12em}
+.v-hud circle{fill:var(--vr);animation:wdm-blink 1s steps(2) infinite}
+.v-hud .y{fill:var(--vy)}
+
+/* 9 – Plätze */
+.v-kc{fill:rgba(255,208,0,.08);stroke:rgba(255,208,0,.5);stroke-width:1.2}
+.v-ki{fill:none;stroke:var(--vy);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.v-seat{fill:var(--vy);stroke:rgba(255,208,0,.4);stroke-width:1}
+.v-seat.is-taken{fill:#2a323a;stroke:rgba(230,236,236,.3)}
+.v-sc2{font-size:9.5px;fill:var(--vy)}
+
+/* Bühne außerhalb des Bildes ruhen lassen */
+.wdm-off .wdm-viz *,.wdm-off .wdm-pm,.wdm-off .wdm-tip{animation-play-state:paused!important}
+
+@media (max-width:980px){
+  .wdm-q summary{grid-template-columns:40px minmax(0,1fr) 32px;gap:12px;padding:12px 14px 12px 12px}
+  .wdm-qi{width:40px;height:40px;border-radius:12px}
+  .wdm-qi svg{width:21px;height:21px}
+}
+@media (max-width:520px){
+  .wdm-ai{padding:2px 14px 18px}
+  .wdm-ai>p{font-size:16.5px}
+  .wdm-tip{right:56px}
+  .wdm-vl{font-size:10px;letter-spacing:.1em}
+}
+/* schmale Handys: der Hinweis sitzt in der Zeile „Frage 02“ statt über dem Fragetext */
+@media (max-width:600px){
+  .wdm-tip{display:none}
+  .wdm-list.is-hint .wdm-q[data-k="preis"]:not([open]) .wdm-qt small::after{content:"· Antippen";display:inline-block;margin-left:8px;padding:3px 7px 2px;border-radius:6px;background:var(--signal);color:var(--signal-ink);letter-spacing:.12em;animation:wdm-tipm 1.6s ease-in-out infinite}
+  @keyframes wdm-tipm{50%{transform:translateX(4px)}}
+}
+@media (prefers-reduced-motion:reduce){
+  .wdm-q,.wdm-qi,.wdm-pm,.wdm-pm::before,.wdm-pm::after,.wdm-tip,.wdm-rp,.wdm-rp svg{transition:none!important}
+  .wdm-list.is-hint .wdm-q .wdm-pm,.wdm-list.is-hint .wdm-q .wdm-tip,.wdm-viz *,.wdm-qt small::after{animation:none!important}
+  .wdm-tip{display:none}
+}
