@@ -297,9 +297,10 @@
 @media (max-width:760px){
   .wdki-ctl{margin-top:16px;gap:28px}
   .wdki-name .btn{padding-inline:14px}
-  .wdki-ai{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--gutter));padding:2px var(--gutter);-webkit-mask:linear-gradient(90deg,transparent,#000 var(--gutter),#000 calc(100% - var(--gutter)),transparent);mask:linear-gradient(90deg,transparent,#000 var(--gutter),#000 calc(100% - var(--gutter)),transparent)}
-  .wdki-ai::-webkit-scrollbar{display:none}
-  .wdki-ai button{flex:none}
+  /* Handy: alle fünf KI-Namen sichtbar – die Chips brechen um (zwei Zeilen), statt seitlich zu scrollen; die Beschriftung steht darüber wie beim Firmennamen */
+  .wdki-ai{flex-wrap:wrap;gap:8px 6px}
+  .wdki-ai-l{flex-basis:100%;margin:0 0 2px}
+  .wdki-ai button{flex:none;padding:11px 13px}
   .wdki-hint{font-size:11px}
 }
 
@@ -402,7 +403,7 @@
 .wdki-cta.in .wdki-cta-radar b{animation:wdki-drop .8s cubic-bezier(.3,1.6,.5,1) .2s both}
 @keyframes wdki-drop{from{transform:translate(-50%,-260%);opacity:0}}
 .wdki-cta:not(.vis) *{animation-play-state:paused!important}
-@media (max-width:640px){.wdki-cta-radar{right:-110px;top:-120px;transform:none;width:300px;opacity:.6}.wdki-cta-radar b{width:40px}.wdki-cta-row .btn{flex:1 1 auto}}
+@media (max-width:640px){.wdki-cta-radar{right:-120px;top:-94px;transform:none;width:300px;opacity:.6}.wdki-cta-radar b{width:34px}.wdki-cta-row .btn{flex:1 1 auto}} /* Pin ganz in der Karte, rechts oben neben der ersten Titelzeile */
 
 /* ---------- Ruhige Bewegung: fertige Endzustände ---------- */
 @media (prefers-reduced-motion:reduce){

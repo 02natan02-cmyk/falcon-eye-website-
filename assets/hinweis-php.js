@@ -57,6 +57,9 @@
   .php-alarm .pa-go{width:100%}
 }
 @media (max-width:380px){.pa-nums li{padding:12px 6px 10px}.php-alarm .pa-l{font-size:10px;letter-spacing:.06em}}
+/* Handy: der Hinweis rückt an die Schlussszene des Helds heran. Unter der letzten Bildunterschrift ist die Bühne leer
+   (Platz für die Leiste unten); solange die Szene steht, liegt diese Kante hinter der Leiste. */
+@media (prefers-reduced-motion:no-preference) and (max-width:900px),(prefers-reduced-motion:no-preference) and (max-height:620px){.wd3-on .wd3+.php-alarm{margin-top:-64px}}
 @media (prefers-reduced-motion:reduce){.pa-card::after,.pa-dot{animation:none}.pa-x:hover{transform:none}}
 `;
   const st = document.createElement('style');
@@ -74,7 +77,7 @@
     <button class="pa-x" type="button" aria-label="Hinweis zur PHP-Lücke schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="pa-body">
     <div>
-      <h2 class="pa-h" id="pa-h">Behörden, Kliniken, sogar Wikipedia gingen vom Netz. <em>Unsere neuen Seiten liefen einfach weiter.</em></h2>
+      <h2 class="pa-h" id="pa-h">Behörden, Kliniken, sogar Wikipedia nahmen Seiten vom Netz. <em>Unsere neuen Seiten liefen einfach weiter.</em></h2>
       <p class="pa-p">Sie kommen ganz ohne PHP aus – keine Datenbank, keine Plugins, nichts, wo diese Lücke ansetzen kann.</p>
       <p class="pa-s">PHP ist über 30 Jahre alt. <b>Unsere Technik ist von heute.</b></p>
     </div>

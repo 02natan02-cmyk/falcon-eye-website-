@@ -90,6 +90,16 @@
     `<div class="flr-hint" aria-hidden="true">${svgHand}Probieren Sie’s: Stick nach rechts</div></div>`;
   ctl.hidden = false;
   const stick = ctl.querySelector('.flr-stick'), knob = stick.querySelector('.kn'), hint = ctl.querySelector('.flr-hint'), apBtn = ctl.querySelector('[data-ap]'), apT = ctl.querySelector('[data-ap-t]');
+  // Der Pfeil des Hinweises zeigt auf den Stick: daneben nach links, unter dem Stick (umgebrochene Leiste) nach oben
+  const aimHint = () => {
+    if (!hint || hint.classList.contains('gone')) return;
+    const st = stick.getBoundingClientRect(), h = hint.getBoundingClientRect();
+    if (!st.width || !h.width) return;
+    const under = h.top > st.bottom - 4;
+    ctl.classList.toggle('flr-under', under);
+    if (under) hint.style.setProperty('--ax', Math.round(Math.max(18, Math.min(h.width - 18, st.left + st.width / 2 - h.left))) + 'px');
+  };
+  aimHint(); addEventListener('resize', aimHint); addEventListener('load', aimHint);
 
   // Filmstreifen
   const stripBox = sec.querySelector('[data-flr-strip]');
@@ -206,6 +216,7 @@
   /* ---------- Wechsel ---------- */
   function go(j, dir, how) {
     j = ((j % N) + N) % N;
+    if (how === 'manual') usedStick(); // jede eigene Navigation (Pfeile, Stick, Filmstreifen, Wischen, Filter) blendet den Impuls-Hinweis aus
     if (j === cur && how !== 'force') return;
     if (busy) { queued = [j, dir, how]; if (tl) tl.timeScale(2.6); return; }
     busy = true;
@@ -305,6 +316,7 @@
 
   function arrive() {
     const r = rigs[front];
+    aimHint();
     if (G && !reduce) {
       G.fromTo(r.el, { z: -700, autoAlpha: 0, rotationY: -24, rotationZ: -8, xPercent: 18 }, { z: 0, autoAlpha: 1, rotationY: 0, rotationZ: 0, xPercent: 0, duration: 1.3, ease: 'power3.out' });
       G.fromTo(horizon, { rotation: 6 }, { rotation: 0, duration: 1.4, ease: 'power3.out' });
@@ -338,7 +350,7 @@
     if (G && !reduce) G.to(kp, { x: 0, y: 0, duration: .8, ease: 'elastic.out(1,.42)', onUpdate: () => setKnob(kp.x, kp.y) });
     else setKnob(0, 0);
   }
-  function usedStick() { if (stickUsed) return; stickUsed = true; hint.classList.add('gone'); }
+  function usedStick() { if (stickUsed) return; stickUsed = true; hint.classList.add('gone'); hint.parentNode.classList.add('hint-gone'); }
   stick.addEventListener('pointerdown', e => {
     e.preventDefault(); dragging = true; armed = true; usedStick();
     if (G) G.killTweensOf(kp);

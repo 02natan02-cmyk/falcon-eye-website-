@@ -107,7 +107,8 @@
   const toast = (() => {
     let el = null, t = 0;
     return msg => {
-      if (!el) { el = document.createElement('div'); el.className = 'wbf-toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+      // sitzt an der Unterkante des Tickets (nicht unten im Bild, wo am Handy der Countdown steht)
+      if (!el) { el = document.createElement('div'); el.className = 'wbf-toast'; el.setAttribute('role', 'status'); (tk && tk.parentNode || document.body).appendChild(el); }
       el.textContent = msg; el.classList.add('on'); clearTimeout(t); t = setTimeout(() => el.classList.remove('on'), 2200);
     };
   })();
@@ -175,6 +176,21 @@
       ctx.globalAlpha = 1; ctx.fillStyle = '#1d232a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = '700 15px Archivo, system-ui, sans-serif'; ctx.fillText('HIER FREIRUBBELN', W / 2, H / 2 - 9);
       ctx.font = '400 12px "Share Tech Mono", ui-monospace, monospace'; ctx.fillText('Ihr Black-Friday-Code', W / 2, H / 2 + 12);
+      // unberührte Folie merken: nach dem Selbst-Impuls zieht sie sich daraus wieder zu
+      clean = document.createElement('canvas'); clean.width = foil.width; clean.height = foil.height; clean.getContext('2d').drawImage(foil, 0, 0);
+    };
+    let clean = null;
+    const heal = () => {
+      if (opened || drawing || !clean) return;
+      let n = 0;
+      const f = () => {
+        if (opened || drawing) return;
+        n++;
+        ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = n < 14 ? .2 : 1;
+        ctx.drawImage(clean, 0, 0); ctx.restore();
+        if (n < 14) requestAnimationFrame(f); else dirty = 0;
+      };
+      requestAnimationFrame(f);
     };
     const cleared = () => {
       try {
@@ -210,7 +226,7 @@
       let k = 0; [lx, ly] = [pts[0][0] * W, pts[0][1] * H];
       const step = () => {
         if (opened || drawing) return;
-        if (++k >= pts.length) return;
+        if (++k >= pts.length) { setTimeout(heal, 650); return; } // Impuls zeigt das Rubbeln – dann wieder zu, aufdecken dürfen die Besucher selbst
         const tx = pts[k][0] * W, ty = pts[k][1] * H, sx = lx, sy = ly; let f = 0;
         const anim = () => { if (opened || drawing) return; f += .12; scratch(sx + (tx - sx) * Math.min(1, f), sy + (ty - sy) * Math.min(1, f)); if (f < 1) requestAnimationFrame(anim); else setTimeout(step, 40); };
         requestAnimationFrame(anim);

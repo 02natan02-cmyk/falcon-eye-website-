@@ -12,7 +12,15 @@
 
   /* ---------- Kacheln: Video nur laden und abspielen, wenn sichtbar ---------- */
   const vis = new Map();
-  const count = () => { if (cnt) cnt.textContent = tiles.filter(t => t.classList.contains('on') && vis.get(t)).length; };
+  // Zähler „· 3 laufen gerade“: bei 0 ausgeblendet (dann steht nur „Echte Mitschnitte“), bei 1 „läuft“
+  const live = cnt && cnt.closest('.sr-live'), verb = live && live.querySelector('[data-sr-verb]');
+  const count = () => {
+    if (!cnt) return;
+    const n = tiles.filter(t => t.classList.contains('on') && vis.get(t)).length;
+    cnt.textContent = n;
+    if (live) live.classList.toggle('sr-zero', !n);
+    if (verb) verb.textContent = n === 1 ? 'läuft' : 'laufen';
+  };
   function playTile(t) {
     const v = t.querySelector('video'); if (!v) return;
     if (!v.getAttribute('src')) { v.src = v.dataset.src; }
@@ -199,6 +207,18 @@
     const pick = () => { let best = null, bd = 1e9; for (const t of tiles) { if (t.dataset.started || !inView(t)) continue; const [cx, cy] = center(t), d = Math.hypot(cx - x, cy - y); if (d < bd) { bd = d; best = t; } } return best; };
     const burst = (bx, by, n = 22) => { for (let k = 0; k < n; k++) { const a = Math.random() * 6.28, v = 110 + Math.random() * 260; sparks.push({ x: bx, y: by, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 110, a: 1, ch: Math.random() < .5 ? 0 : 1 }); } };
     const finish = forceDone;
+    // Texte bleiben lesbar: Drohne, Spur und Funken fliegen unter der Schrift durch (Textzeilen werden auf der Flug-Ebene ausgespart)
+    const txt = [...sec.querySelectorAll('.sr-head .kicker, .sr-head h2, .sr-sub, .sr-live, .sr-cap > *, .sr-cta small, .sr-cta b, .sr-cta p, .sr-cta .sr-arrow')];
+    const rng = document.createRange();
+    const spare = () => {
+      for (const el of txt) {
+        const b = el.getBoundingClientRect();
+        if (!b.height || b.bottom < 0 || b.top > VH) continue;
+        if (el.classList.contains('sr-arrow')) { ctx.clearRect(b.left - 3, b.top - 3, b.width + 6, b.height + 6); continue; }
+        rng.selectNodeContents(el);
+        for (const r of rng.getClientRects()) if (r.width && r.height) ctx.clearRect(r.left - 3, r.top - 2, r.width + 6, r.height + 4);
+      }
+    };
     const step = now => {
       if (!last) { last = now; tStart = now; }
       const dt = Math.min(100, now - last) / 1000; last = now; const el = now - tStart;
@@ -239,6 +259,7 @@
         for (const p of parts) { const [ox, oy] = dronePos(dr, p.d, spin), rx = ox * ca - oy * sa, ry = ox * sa + oy * ca; ctx.drawImage(G[p.ch], x + rx * s - gsz / 2, y + ry * s + bob - gsz / 2, gsz, gsz); }
       }
       ctx.globalAlpha = 1;
+      spare();
       if (!done || sparks.length || trail.length) requestAnimationFrame(step);
       else { removeEventListener('resize', rs); ov.remove(); phase = 'none'; idleStart(); }
     };

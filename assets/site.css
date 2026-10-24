@@ -79,13 +79,16 @@ h1,h2,h3{text-wrap:balance}
 @media (max-width:420px){.top nav .btn{display:none}}
 
 /* ---------- sticky booking bar ---------- */
-.dock{position:fixed;z-index:50;right:var(--gutter);bottom:calc(20px + var(--safe-bottom));display:flex;gap:10px;transform:translateY(140%);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.dock.show{transform:none}
+.dock{position:fixed;z-index:50;right:var(--gutter);bottom:calc(20px + var(--safe-bottom));display:flex;gap:10px;transform:translateY(140%);visibility:hidden;transition:transform .5s cubic-bezier(.2,.8,.2,1),visibility 0s linear .5s}
+.dock.show{transform:none;visibility:visible;transition:transform .5s cubic-bezier(.2,.8,.2,1),visibility 0s}
 .dock .btn{box-shadow:0 12px 30px -8px rgba(0,0,0,.6)}
+/* Was per Tastatur den Fokus bekommt, scrollt der Browser über das Dock (Dock 50 px + 20 px Abstand + Luft) */
+html{scroll-padding-bottom:calc(96px + var(--safe-bottom))}
 @media (max-width:700px){
   .dock{left:0;right:0;bottom:0;padding:10px 12px calc(10px + var(--safe-bottom));gap:8px;background:rgba(22,27,33,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
   .dock .btn{flex:1;padding:14px 10px;box-shadow:none}
   body.has-dock{padding-bottom:76px}
+  html{scroll-padding-bottom:calc(88px + var(--safe-bottom))}
 }
 
 /* ---------- OSD bits ---------- */

@@ -4,7 +4,7 @@
    03 Bausteine  – echte Ausschnitte einer Kundenseite fliegen ein und rasten mit Funken ein
    04 Code       – eigener Code tippt sich, der Laser-Scan füllt die Seite
    05 Live       – Licht an, die Seite ist online
-   06 Referenzen – Kamera zieht zurück, zehn echte Kundenseiten stehen nebeneinander */
+   06 Referenzen – Kamera zieht zurück, die Referenzen stehen als Geräte nebeneinander (13 Geräte; die Flugroute darunter zeigt alle 14) */
 import * as THREE from 'three';
 import { RoomEnvironment } from '../js/addons/RoomEnvironment.js';
 import { RoundedBoxGeometry } from '../js/addons/RoundedBoxGeometry.js';
@@ -506,16 +506,19 @@ function init() {
   dim(onPhone(-PSW / 2, PSH / 2 + .16), onPhone(PSW / 2, PSH / 2 + .16), 'Handy', 390, .085, .125, .27, .3);
 
   /* ---------------- Referenz-Galerie ---------------- */
-  // [Datei, Name, Index der Referenz-Karte unten, Gerät: d = Laptop, m = Handy]
-  // Seit 24.10. (Natans Reihenfolge): Wäscherei, Hudalla, Garten-Traum, Pellegrin, K&S, Natan Küchenmontage, Hellwig,
-  // Eichenhof, Verena, Falcon Eye, Pflege24-7, Opieka24-7, Natan Holding (Kartenindex 0–12)
+  // [Datei, Name, id der Referenz-Karte unten (#referenzen .wd-ref), Gerät: d = Laptop, m = Handy]
+  // Die Karte wird über ihre id gefunden, nicht über eine feste Nummer: so bleibt der Klick richtig, wenn Natan die Reihenfolge ändert.
+  // Im 3D-Bild stehen 13 Geräte (Hudalla in der Mitte + diese 12); der Flight Club Saar hat kein 3D-Gerät, ist aber Wegpunkt in der Flugroute.
   const REFS = [
-    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 0, 'd'], ['verena', 'Praxis Verena Paul', 8, 'm'], ['pellegrin', 'Pellegrin Küchen', 3, 'd'],
-    ['falcon', 'Falcon Eye', 9, 'm'], ['holding', 'Natan Holding', 12, 'd'], ['gartentraum', 'Der Garten-Traum', 2, 'm'],
-    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 7, 'd'], ['natan', 'Natan Küchenmontage', 5, 'm'],
-    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 4, 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 6, 'm'],
-    ['pflege247', 'Pflege24-7', 10, 'm'], ['opieka247', 'Opieka24-7', 11, 'm']
+    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 'wp-waescherei', 'd'], ['verena', 'Praxis Verena Paul', 'wp-verena', 'm'], ['pellegrin', 'Pellegrin Küchen', 'wp-pellegrin', 'd'],
+    ['falcon', 'Falcon Eye', 'wp-falcon', 'm'], ['holding', 'Natan Holding', 'wp-holding', 'd'], ['gartentraum', 'Der Garten-Traum', 'wp-gartentraum', 'm'],
+    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 'wp-kueche', 'd'], ['natan', 'Natan Küchenmontage', 'wp-natan', 'm'],
+    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 'wp-fahrzeug', 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 'wp-karosserie', 'm'],
+    ['pflege247', 'Pflege24-7', 'wp-pflege247', 'm'], ['opieka247', 'Opieka24-7', 'wp-opieka247', 'm']
   ];
+  // Gesamtzahl der Referenzen aus derselben Quelle wie der Rest der Seite (Karten in #referenzen, derzeit 14 Wegpunkte)
+  const refCards = () => [...document.querySelectorAll('#referenzen .wd-ref')];
+  const REF_TOTAL = refCards().length || 14;
   // Plätze im Endbild (Bildschirmkoordinaten des Fußpunkts); daraus werden Bodenpositionen berechnet
   const SLOTS_D = [[.655, .43], [.765, .44], [.87, .43], [.585, .285], [.665, .28], [.75, .285], [.83, .28], [.915, .285], [.925, .67], [.94, .45], [.555, .43], [.845, .675]];
   const SLOTS_M = [[.23, .425], [.53, .435], [.81, .425], [.15, .315], [.38, .31], [.6, .32], [.82, .31], [.2, .228], [.5, .228], [.8, .228], [.1, .63], [.9, .63]];
@@ -524,7 +527,7 @@ function init() {
   const lineup = [];
   const pickables = [];
   const mainTag = document.createElement('span'); mainTag.textContent = 'Hausmeisterservice Hudalla'; tagsEl && tagsEl.appendChild(mainTag);
-  const mainItem = { g: L.g, el: mainTag, ref: 1, home: V(), anchor: V(0, 2.75, -1.6), main: true };
+  const mainItem = { g: L.g, el: mainTag, ref: 'wp-hudalla', home: V(), anchor: V(0, 2.75, -1.6), main: true };
   [L.scr, P.scr, fillD, fillM].forEach(m => { m.userData.item = mainItem; pickables.push(m); });
   let lineupBuilt = false;
   function buildLineup() {
@@ -812,7 +815,7 @@ function init() {
       : p < .56 ? 'BAUSTEINE ' + String(placed).padStart(2, '0') + ' / ' + (nD + nM)
       : p < .68 ? 'CODE · ' + Math.round(seg(p, .56, .675) * 100) + ' %'
       : p < .8 ? 'LIVE · FALCON-EYE.DE/ENTWURF/HUDALLA'
-      : 'REFERENZEN · ' + Math.max(1, Math.round(seg(p, .81, .92) * (REFS.length + 1))) + ' / ' + (REFS.length + 1);
+      : 'REFERENZEN · ' + REF_TOTAL; // Gesamtzahl ohne Bruch: 13 Geräte im Bild, 14 Referenzen auf der Seite
     if (teleEl && tele !== lastTele) { teleEl.textContent = tele; lastTele = tele; }
     hero.style.setProperty('--p', p.toFixed(4));
     hero.classList.toggle('is-start', p < .02);
@@ -893,8 +896,9 @@ function init() {
   canvas.addEventListener('click', e => {
     if (downAt && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 8) return;
     const it = pick(e); if (!it) return;
-    if (window.flugroute && window.flugroute.flyTo) { window.flugroute.flyTo(it.ref); return; } // Flugroute: hinscrollen und genau diesen Wegpunkt anfliegen
-    const li = document.querySelectorAll('.wd-ref')[it.ref]; if (!li) return;
+    const idx = refCards().findIndex(li => li.id === it.ref); if (idx < 0) return;
+    if (window.flugroute && window.flugroute.flyTo) { window.flugroute.flyTo(idx); return; } // Flugroute: hinscrollen und genau diesen Wegpunkt anfliegen
+    const li = refCards()[idx]; if (!li) return;
     const top = document.querySelector('.top'), off = (top ? top.offsetHeight : 70) + 24;
     let y = 0; for (let el = li; el; el = el.offsetParent) y += el.offsetTop; // ohne Einblend-Transform
     if (window.FE && window.FE.lenis) window.FE.lenis.scrollTo(y - off);
