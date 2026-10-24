@@ -624,11 +624,13 @@ var CHAP = ['Willkommen','Versprechen','Referenzen','Was alles geht','Und jetzt 
 var TARGET = 'https://falcon-eye.de/webdesign';
 var SHARE_URL = 'https://falcon-eye.de/praesentation/';
 var BF_ENDE = Date.UTC(2026, 10, 27, 22, 59, 59);   // 27.11.2026, 23:59:59 Uhr deutscher Zeit
+var BF_START = Date.UTC(2026, 9, 26, 23, 0, 0);     // 27.10.2026, 00:00 Uhr deutscher Zeit (vorher: „ab 27.10.“)
 var CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg>';
 
 var app=document.getElementById('app'), $=function(id){return document.getElementById(id)};
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if(Date.now() > BF_ENDE) $('bf').hidden = true;
+else if(Date.now() < BF_START){ var bfb = $('bf').querySelector('b'); if(bfb) bfb.textContent = 'Black Friday ab 27.10.:'; }
 
 /* ---------- Laden: Ton zuerst (und gleich entpacken), dann die Clips der ersten Szenen, der Rest im Hintergrund ---------- */
 var AUDIO = ['audio/stimme_a.mp3','audio/musik_inst.mp3','audio/musik_gesang.mp3','audio/stimme_m.mp3','audio/stimme_b.mp3'];
