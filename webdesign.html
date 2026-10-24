@@ -384,38 +384,71 @@
   </div>
 </section>
 
-<section class="wd-try" id="ausprobieren" aria-labelledby="wd-t-h">
+<section class="wd-try wdm-try" id="ausprobieren" aria-labelledby="wd-t-h">
+  <link rel="stylesheet" href="assets/wd-mitmachen-szenen.css?v=1">
+  <link rel="stylesheet" href="assets/wd-mitmachen-try.css?v=1">
   <div class="wrap">
     <p class="wd-kick">Zum Ausprobieren</p>
     <h2 id="wd-t-h">Und Ihre? <em>In zehn Sekunden.</em></h2>
     <p class="lede">Name rein, Branche und Stimmung antippen – das Handy zeigt sofort eine erste Idee. Den echten Entwurf bauen wir dann mit Ihren Fotos und Ihrer Geschichte.</p>
-    <div class="wt">
-      <div class="wt-ctl">
-        <div class="wt-fs"><label class="wt-f"><span>Name Ihres Betriebs</span><input type="text" maxlength="34" placeholder="z. B. Café Sonne" data-wt-name autocomplete="organization"></label>
-        <label class="wt-f"><span>Ort</span><input type="text" maxlength="26" placeholder="z. B. Saarlouis" data-wt-ort autocomplete="address-level2"></label></div>
-        <div class="wt-g"><span id="wt-bl">Branche</span><div class="wt-chips" role="radiogroup" aria-labelledby="wt-bl" data-wt-b>
-          <button type="button" role="radio" aria-checked="true" data-v="handwerk">Handwerk</button><button type="button" role="radio" aria-checked="false" data-v="auto">Auto &amp; Werkstatt</button><button type="button" role="radio" aria-checked="false" data-v="kueche">Küche &amp; Wohnen</button><button type="button" role="radio" aria-checked="false" data-v="praxis">Praxis &amp; Wohlfühlen</button><button type="button" role="radio" aria-checked="false" data-v="laden">Laden &amp; Service</button><button type="button" role="radio" aria-checked="false" data-v="gastro">Gastro &amp; Café</button>
-        </div></div>
-        <div class="wt-g"><span id="wt-ml">Stimmung</span><div class="wt-chips" role="radiogroup" aria-labelledby="wt-ml" data-wt-m>
-          <button type="button" role="radio" aria-checked="true" data-v="warm">Warm &amp; bodenständig</button><button type="button" role="radio" aria-checked="false" data-v="edel">Edel &amp; ruhig</button><button type="button" role="radio" aria-checked="false" data-v="frech">Laut &amp; frech</button>
-        </div></div>
-        <div class="wt-act"><button type="button" class="btn ghost sm" data-wt-dice><span aria-hidden="true">🎲</span> Überraschen</button><a class="wt-real" data-wt-real href="https://entwurf.falcon-eye.de/hudalla/">So sieht das echt aus: <b>Hausmeisterservice Hudalla</b> →</a></div>
-      </div>
-      <div class="wt-stage">
-        <div class="wt-phone" data-wt-phone data-b="handwerk" data-m="warm" aria-live="polite">
-          <div class="wt-notch" aria-hidden="true"></div>
-          <div class="wt-scr"><div class="wt-roll">
-            <div class="wt-top"><span class="wt-mono" data-wt-mono>I</span><span class="wt-nm" data-wt-nm>Ihr Betrieb</span><span class="wt-burg" aria-hidden="true"><i></i><i></i></span></div>
-            <div class="wt-hero"><div class="wt-motif" data-wt-motif aria-hidden="true"></div><p class="wt-loc" data-wt-loc>Saarland</p><p class="wt-h" data-wt-h>Ehrliche Arbeit. Gleich um die Ecke.</p><span class="wt-btn">Jetzt anfragen</span></div>
-            <div class="wt-card"><p class="wt-ck">Mitmach-Idee</p><p class="wt-ct" data-wt-idea>Vorher/Nachher zum Ziehen</p><div class="wt-mini" data-wt-mini aria-hidden="true"></div></div>
-            <div class="wt-card wt-rv"><p class="wt-stars" aria-hidden="true">★★★★★</p><p class="wt-ct">„Ihre Kundinnen und Kunden sagen es selbst.“</p><p class="wt-ck">Echte Google-Bewertungen</p></div>
-            <div class="wt-card wt-end"><p class="wt-ct">Anruf · WhatsApp · Route</p><span class="wt-btn">Mit einem Tipp erreichbar</span></div>
+    <div class="wdm-t" data-wdm-t>
+      <div class="wdm-t-left">
+        <div class="wdm-t-ctl">
+          <div class="wdm-fs">
+            <label class="wdm-f"><span>Name Ihres Betriebs</span><span class="wdm-inp"><input id="wdm-name" name="betrieb" type="text" maxlength="34" placeholder="z. B. Café Sonne" data-wdm-name autocomplete="organization" enterkeyhint="next"><i class="wdm-caret" aria-hidden="true"></i><em class="wdm-now" aria-hidden="true">Jetzt Sie</em></span></label>
+            <label class="wdm-f"><span>Ort</span><span class="wdm-inp"><input id="wdm-ort" name="ort" type="text" maxlength="26" placeholder="z. B. Saarlouis" data-wdm-ort autocomplete="address-level2" enterkeyhint="done"><i class="wdm-caret" aria-hidden="true"></i></span></label>
+          </div>
+          <div class="wdm-g"><span id="wdm-bl">Branche</span><div class="wdm-chips" role="radiogroup" aria-labelledby="wdm-bl" data-wdm-b>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="handwerk">Handwerk</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="auto">Auto &amp; Werkstatt</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="kueche">Küche &amp; Wohnen</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="praxis">Praxis &amp; Wohlfühlen</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="laden">Laden &amp; Service</button><button type="button" role="radio" aria-checked="true" tabindex="0" data-v="gastro">Gastro &amp; Café</button>
           </div></div>
+          <div class="wdm-g"><span id="wdm-ml">Stimmung</span><div class="wdm-chips" role="radiogroup" aria-labelledby="wdm-ml" data-wdm-m>
+            <button type="button" role="radio" aria-checked="true" tabindex="0" data-v="warm">Warm &amp; bodenständig</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="edel">Edel &amp; ruhig</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="frech">Laut &amp; frech</button>
+          </div></div>
+          <div class="wdm-act"><button type="button" class="btn ghost sm" data-wdm-dice><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.6" cy="8.6" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.4" cy="8.6" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="8.6" cy="15.4" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.4" cy="15.4" r="1.2" fill="currentColor" stroke="none"/></svg> Überraschen</button><a class="wdm-real" data-wdm-real href="#referenzen" hidden>So sieht das echt aus: <b>Beispiel</b> →</a></div>
         </div>
-        <div class="wt-send"><a class="btn" data-wt-wa href="https://wa.me/4915156743442" target="_blank" rel="noopener">Genau so – Entwurf anfragen</a><a class="btn ghost" data-wt-mail href="mailto:info@falcon-eye.de">Per E-Mail</a></div>
+        <div class="wdm-t-send"><a class="btn" data-wdm-wa href="https://wa.me/4915156743442" target="_blank" rel="noopener">Genau so – Entwurf anfragen</a><a class="btn ghost" data-wdm-mail href="mailto:info@falcon-eye.de">Per E-Mail</a></div>
       </div>
+      <div class="wdm-t-stage">
+        <div class="wdm-phone wdm-th has-name has-ort has-body" data-wdm-phone data-b="gastro" data-m="warm">
+          <div class="wdm-bezel" aria-hidden="true">
+            <div class="wdm-scr" data-wdm-scr>
+              <div class="wdm-status"><span>9:41</span><i class="wdm-notch"></i><span class="wdm-sig"><b></b><b></b><b></b><u></u></span></div>
+              <div class="wdm-url"><svg viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="1.5" y="6" width="9" height="7" rx="1.6"/><path d="M3.6 6V4.2a2.4 2.4 0 0 1 4.8 0V6"/></svg><span data-wdm-url>cafe-sonne.de</span></div>
+              <div class="wdm-pg" data-wdm-pg>
+                <div class="wdm-roll" data-wdm-roll>
+                  <div class="wdm-top"><span class="wdm-mono" data-wdm-mono>C</span><span class="wdm-nmw"><span class="wdm-nm" data-wdm-nm>Café Sonne</span><span class="wdm-ort" data-wdm-ortl>Saarlouis</span></span><span class="wdm-burg"><i></i><i></i></span></div>
+                  <div class="wdm-body">
+                    <div class="wdm-hero">
+                      <div class="wdm-img" data-wdm-img><div class="wdm-sc" data-sc="gastro"></div><span class="wdm-sticker" data-wdm-sticker>Saarlouis</span></div>
+                      <h3 class="wdm-h" data-wdm-h>Wie bei Oma. Nur mit Reservierung.</h3>
+                      <span class="wdm-cta">Jetzt anfragen</span>
+                    </div>
+                    <div class="wdm-card wdm-idea"><p class="wdm-ck">Mitmach-Idee</p><p class="wdm-ct" data-wdm-idea>Speisekarte zum Umblättern</p><div class="wdm-mini" data-wdm-mini data-k="menu"><b></b><i></i></div></div>
+                    <div class="wdm-card wdm-rv"><p class="wdm-stars">★★★★★</p><p class="wdm-ct">„Ihre Kundinnen und Kunden sagen es selbst.“</p><p class="wdm-ck">Echte Google-Bewertungen</p></div>
+                    <div class="wdm-card wdm-end"><p class="wdm-ct">Anruf · WhatsApp · Route</p><p class="wdm-route" data-wdm-route>Route nach Saarlouis</p><span class="wdm-cta">Mit einem Tipp erreichbar</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="wdm-sk wdm-sk-top"><i class="c"></i><span><i class="l1"></i><i class="l2"></i></span><i class="b"></i></div>
+              <div class="wdm-sk wdm-sk-body"><i class="img"></i><i class="t1"></i><i class="t2"></i><i class="bt"></i><i class="cd"></i><i class="cd"></i></div>
+              <i class="wdm-glare"></i>
+            </div>
+          </div>
+          <button type="button" class="wdm-tap" data-wdm-tap><span>Tippen: nächste Idee</span></button>
+        </div>
+        <ul class="wdm-tel" aria-hidden="true" data-wdm-tel>
+          <li data-t="bild"><small>Bild</small><b>Café</b></li>
+          <li data-t="farbe"><small>Farbe</small><b><i></i><span>#F0A31A</span></b></li>
+          <li data-t="schrift"><small>Schrift</small><b>Handschrift</b></li>
+        </ul>
+        <p class="wdm-fine">Beispiel-Darstellung. <button type="button" class="wdm-again" data-wdm-again><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>Noch mal ansehen</button></p>
+        <p class="lp-sr" role="status" aria-live="polite" data-wdm-live></p>
+      </div>
+      <span class="wdm-hand" data-wdm-hand aria-hidden="true"><svg viewBox="0 0 60 78"><path d="M20.5 3C24 3 27 5.8 27 9.5V31c1.4-1.2 3.4-1.8 5.4-1.4 2 .4 3.6 1.6 4.6 3.4 1.4-1.2 3.4-1.6 5.4-1 2 .6 3.4 2 4.2 3.8 1.6-1 3.6-1 5.4 0 2.4 1.4 3.4 4 3.4 6.6V54c0 10-6 18-15.4 20H29c-6 0-10-3-13.4-7.6L5.4 51.6c-1.6-2.4-.8-5.4 1.6-6.8 2.4-1.4 5.4-.6 7 1.6V9.5C14 5.8 17 3 20.5 3Z"/><path class="ln" d="M27 31v8M37 33v8M46.6 36v7"/></svg><i class="wdm-ring"></i></span>
     </div>
   </div>
+  <script src="assets/wd-mitmachen-szenen.js?v=1" defer></script>
+  <script src="assets/wd-mitmachen-try.js?v=1" defer></script>
 </section>
 
 <section class="sr" id="showreel" data-sr data-dock-web data-bird="media/bird.png" aria-labelledby="sr-h">

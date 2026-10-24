@@ -1,0 +1,97 @@
+/* Falcon Eye – Webdesign: gemeinsame Farben, Schriften und Szenen für „Ausprobieren“ und „Flugplan“.
+   Alles lokal. Farbvariablen sind registriert, damit Farbwechsel sichtbar überblenden. */
+@font-face{font-family:"Playfair Display";font-weight:700;font-style:normal;font-display:swap;src:url(../fonts/playfair-display-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Playfair Display";font-weight:700;font-style:italic;font-display:swap;src:url(../fonts/playfair-display-latin-700-italic.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-weight:700;font-style:normal;font-display:swap;src:url(../fonts/caveat-latin-700-normal.woff2) format("woff2")}
+
+@property --wdm-bg{syntax:"<color>";inherits:true;initial-value:#f6efe4}
+@property --wdm-ink{syntax:"<color>";inherits:true;initial-value:#2a2118}
+@property --wdm-ac{syntax:"<color>";inherits:true;initial-value:#f0a31a}
+@property --wdm-ac2{syntax:"<color>";inherits:true;initial-value:#2a1a00}
+@property --wdm-sb{syntax:"<color>";inherits:true;initial-value:#fdf1de}
+@property --wdm-sm{syntax:"<color>";inherits:true;initial-value:#f4e2c8}
+@property --wdm-sd{syntax:"<color>";inherits:true;initial-value:#8a6a3a}
+@property --wdm-sa{syntax:"<color>";inherits:true;initial-value:#f0a31a}
+@property --wdm-sk{syntax:"<color>";inherits:true;initial-value:#2d241b}
+@property --wdm-sl{syntax:"<color>";inherits:true;initial-value:#fffaf0}
+@property --wdm-rn{syntax:"<number>";inherits:true;initial-value:5}
+
+/* ---------- Farben je Branche (Warm / Edel / Frech) ---------- */
+.wdm-th[data-b="handwerk"]{--a-w:#e8622c;--a-e:#e8935f;--a-f:#ee6a2e;--a-l:#ffd9b0;--a-t:#fff}
+.wdm-th[data-b="auto"]{--a-w:#d0202e;--a-e:#e0525b;--a-f:#e83a3a;--a-l:#ffe3e0;--a-t:#fff}
+.wdm-th[data-b="kueche"]{--a-w:#b9663a;--a-e:#d79a6e;--a-f:#e48a4a;--a-l:#ffe2c6;--a-t:#fff}
+.wdm-th[data-b="praxis"]{--a-w:#3f8f7a;--a-e:#7fc4ad;--a-f:#46bf9d;--a-l:#e2fff3;--a-t:#fff}
+.wdm-th[data-b="laden"]{--a-w:#2f6fd6;--a-e:#78a6f0;--a-f:#3d86f2;--a-l:#dfeaff;--a-t:#fff}
+.wdm-th[data-b="gastro"]{--a-w:#f0a31a;--a-e:#f2c15b;--a-f:#ffb627;--a-l:#fff1c9;--a-t:#2a1a00}
+.wdm-th[data-b="verein"]{--a-w:#2e9b5a;--a-e:#7bd3a1;--a-f:#33c06f;--a-l:#e2ffec;--a-t:#fff}
+.wdm-th[data-b="anders"]{--a-w:#ffd000;--a-e:#ffd96b;--a-f:#ffd000;--a-l:#fff3b0;--a-t:#1a1500}
+
+.wdm-th[data-m="warm"]{--wdm-bg:#f6efe4;--wdm-ink:#2a2118;--wdm-ac:var(--a-w);--wdm-ac2:var(--a-t);--wdm-rn:5;
+  --wdm-sb:color-mix(in srgb,var(--a-w) 13%,#fff6e6);--wdm-sm:color-mix(in srgb,var(--a-w) 30%,#f4e2c8);--wdm-sd:color-mix(in srgb,var(--a-w) 56%,#3a2a1c);
+  --wdm-sa:var(--a-w);--wdm-sk:#2d241b;--wdm-sl:#fffaf0;--wdm-dot:rgba(70,45,20,.22)}
+.wdm-th[data-m="edel"]{--wdm-bg:#12161b;--wdm-ink:#f1ece2;--wdm-ac:var(--a-e);--wdm-ac2:#12161b;--wdm-rn:1.2;
+  --wdm-sb:#1c232b;--wdm-sm:#2a3541;--wdm-sd:#0d1217;--wdm-sa:var(--a-e);--wdm-sk:#d8d0c0;--wdm-sl:#fff3d6;--wdm-dot:rgba(255,255,255,.09)}
+.wdm-th[data-m="frech"]{--wdm-bg:var(--a-f);--wdm-ink:#111;--wdm-ac:#111;--wdm-ac2:var(--a-l);--wdm-rn:0;
+  --wdm-sb:color-mix(in srgb,#fff 24%,var(--a-f));--wdm-sm:var(--a-l);--wdm-sd:#111;--wdm-sa:#111;--wdm-sk:#111;--wdm-sl:#fff;--wdm-dot:rgba(0,0,0,.26)}
+
+/* ---------- Szene ---------- */
+.wdm-sc{position:relative;overflow:hidden;isolation:isolate;background:var(--wdm-sb);aspect-ratio:300/190}
+.wdm-sc svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.wdm-sc::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(120% 95% at 50% 42%,transparent 56%,rgba(0,0,0,.26)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:auto,140px 140px;opacity:.24;mix-blend-mode:multiply}
+.wdm-sc[data-sc="handwerk"]{background:radial-gradient(circle,var(--wdm-dot) 1.5px,transparent 1.9px) 0 0/13px 13px,var(--wdm-sb)}
+.wdm-sc[data-sc="kueche"]{background:repeating-linear-gradient(0deg,var(--wdm-dot) 0 1px,transparent 1px 15px),repeating-linear-gradient(90deg,var(--wdm-dot) 0 1px,transparent 1px 15px),var(--wdm-sb)}
+.wdm-sc[data-sc="gastro"]{background:repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 14px,transparent 14px 28px),var(--wdm-sb)}
+.wdm-sc[data-sc="auto"]{background:linear-gradient(180deg,var(--wdm-sm),var(--wdm-sb) 72%)}
+.wdm-sc[data-sc="praxis"],.wdm-sc[data-sc="anders"]{background:linear-gradient(180deg,var(--wdm-sb),var(--wdm-sm))}
+.wdm-sc[data-sc="laden"]{background:repeating-linear-gradient(0deg,var(--wdm-dot) 0 1px,transparent 1px 12px),var(--wdm-sb)}
+.wdm-sc[data-sc="verein"]{background:linear-gradient(180deg,var(--wdm-sm),var(--wdm-sb))}
+.wdm-sc .sb{fill:var(--wdm-sb)}.wdm-sc .sm{fill:var(--wdm-sm)}.wdm-sc .sd{fill:var(--wdm-sd)}.wdm-sc .sa{fill:var(--wdm-sa)}.wdm-sc .sk{fill:var(--wdm-sk)}.wdm-sc .sl{fill:var(--wdm-sl)}
+.wdm-sc .ta{stroke:var(--wdm-sa)}.wdm-sc .tk{stroke:var(--wdm-sk)}.wdm-sc .tl{stroke:var(--wdm-sl)}.wdm-sc .tm{stroke:var(--wdm-sm)}.wdm-sc .td{stroke:var(--wdm-sd)}
+
+/* ---------- Bewegung in den Szenen ---------- */
+.wdm-spin{animation:wdm-spin 10s linear infinite}
+.wdm-spinr{animation:wdm-spin 7s linear infinite reverse}
+@keyframes wdm-spin{to{transform:rotate(360deg)}}
+.wdm-bob{animation:wdm-bob 2.8s ease-in-out infinite alternate}
+@keyframes wdm-bob{to{transform:translateY(-8px) rotate(2deg)}}
+.wdm-steam{animation:wdm-steam 2.8s ease-in infinite;opacity:0;transform-box:fill-box}
+@keyframes wdm-steam{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-14px)}}
+.wdm-twk{animation:wdm-twk 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes wdm-twk{50%{opacity:.25;transform:scale(.6)}}
+.wdm-breathe{animation:wdm-br 7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.wdm-breathe2{animation:wdm-br2 7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes wdm-br{50%{transform:scale(1.1)}}
+@keyframes wdm-br2{50%{transform:scale(.88)}}
+.wdm-swing{animation:wdm-sw 3.2s ease-in-out infinite alternate}
+@keyframes wdm-sw{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.wdm-sway{animation:wdm-sway 4s ease-in-out infinite alternate}
+@keyframes wdm-sway{from{transform:rotate(-4deg)}to{transform:rotate(5deg)}}
+.wdm-float{animation:wdm-float 8s ease-in-out infinite;transform-box:fill-box}
+@keyframes wdm-float{0%{transform:translate(0,0);opacity:.8}50%{transform:translate(18px,-10px) rotate(30deg)}100%{transform:translate(36px,6px) rotate(70deg);opacity:0}}
+.wdm-rays{animation:wdm-rays 3.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes wdm-rays{to{transform:scale(1.14);opacity:.45}}
+.wdm-dash{animation:wdm-dash .9s linear infinite}
+@keyframes wdm-dash{to{transform:translateX(-46px)}}
+.wdm-drive{animation:wdm-drive 2.2s ease-in-out infinite alternate}
+@keyframes wdm-drive{from{transform:translate(-4px,0)}to{transform:translate(5px,-2px)}}
+.wdm-speed{animation:wdm-speed 1.1s linear infinite}
+@keyframes wdm-speed{from{transform:translateX(18px);opacity:0}30%{opacity:.6}to{transform:translateX(-14px);opacity:0}}
+.wdm-door{animation:wdm-door 6s ease-in-out infinite}
+@keyframes wdm-door{0%,18%{transform:scaleX(1)}34%,64%{transform:scaleX(.18) skewY(-5deg)}82%,100%{transform:scaleX(1)}}
+.wdm-awning{animation:wdm-awn 5s ease-in-out infinite alternate;transform-origin:150px 40px}
+@keyframes wdm-awn{to{transform:skewX(-.9deg)}}
+.wdm-bunt{animation:wdm-bunt 3s ease-in-out infinite alternate;transform-origin:150px 20px}
+@keyframes wdm-bunt{from{transform:skewX(-1.8deg)}to{transform:skewX(1.8deg)}}
+.wdm-ball{animation:wdm-ball 1.3s cubic-bezier(.3,0,.7,1) infinite alternate;transform-box:fill-box}
+@keyframes wdm-ball{to{transform:translateY(-16px) rotate(90deg)}}
+.wdm-shine{animation:wdm-shine 4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes wdm-shine{to{transform:scale(1.03)}}
+.wdm-prop{animation:wdm-prop .12s linear infinite}
+@keyframes wdm-prop{50%{opacity:.35}}
+.wdm-off .wdm-sc *{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){
+  .wdm-sc *{animation:none!important}
+  .wdm-sc .wdm-steam{opacity:.7}
+}
