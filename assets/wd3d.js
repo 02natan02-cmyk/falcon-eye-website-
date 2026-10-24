@@ -893,6 +893,7 @@ function init() {
   canvas.addEventListener('click', e => {
     if (downAt && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 8) return;
     const it = pick(e); if (!it) return;
+    if (window.flugroute && window.flugroute.flyTo) { window.flugroute.flyTo(it.ref); return; } // Flugroute: hinscrollen und genau diesen Wegpunkt anfliegen
     const li = document.querySelectorAll('.wd-ref')[it.ref]; if (!li) return;
     const top = document.querySelector('.top'), off = (top ? top.offsetHeight : 70) + 24;
     let y = 0; for (let el = li; el; el = el.offsetParent) y += el.offsetTop; // ohne Einblend-Transform
