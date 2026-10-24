@@ -457,6 +457,12 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .live .ctl{opacity:1;pointer-events:auto}
 .fin .ctl{opacity:0!important;pointer-events:none!important}
 #pause{left:8px}#skip{right:8px}
+/* Touch: unsichtbar vergrößerte Tippflächen (mindestens 44 px hoch), die Optik bleibt gleich */
+@media (pointer:coarse){
+  .ctl::before{content:"";position:absolute;inset:-14px -8px -4px}
+  .again{position:relative}
+  .again::before{content:"";position:absolute;inset:-11px -12px}
+}
 
 /* Vorhang + Start */
 .cur{position:absolute;top:0;bottom:0;width:51%;z-index:30;background:

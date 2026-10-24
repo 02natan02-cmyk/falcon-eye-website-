@@ -106,15 +106,10 @@
     sec.classList.toggle('is-done', n === notes.length);
   }
 
-  /* Hinweis „Zettel antippen“ am nächsten Zettel */
+  /* Hinweis „Zettel antippen“ steht unter dem Brett (Zählerzeile) und verdeckt keinen Zettel; weg, wenn alle online sind */
   function placeHint() {
     if (!hint || !hint.classList.contains('on')) return;
-    var t = notes.filter(function (x) { return !x.classList.contains('is-gone'); })[0];
-    if (!t) { hint.classList.remove('on'); return; }
-    var bw = board.clientWidth, hw = hint.offsetWidth || 150;
-    var cx = t.offsetLeft + t.offsetWidth / 2, top = t.offsetTop + t.offsetHeight * 0.58;
-    cx = Math.max(hw / 2 + 6, Math.min(bw - hw / 2 - 6, cx));
-    hint.style.left = cx + 'px'; hint.style.top = top + 'px';
+    if (!notes.some(function (x) { return !x.classList.contains('is-gone'); })) hint.classList.remove('on');
   }
   function showHint() { if (touched || !hint) return; hint.classList.add('on'); placeHint(); }
   function hideHint() { if (hint) hint.classList.remove('on'); }

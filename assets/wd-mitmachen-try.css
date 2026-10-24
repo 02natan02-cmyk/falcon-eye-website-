@@ -243,9 +243,9 @@ a.wdm-real:hover{border-color:var(--signal)}
 }
 @media (max-width:560px){
   .wdm-t-head .wdm-more{display:none}
-  .wdm-chips{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(var(--gutter) * -1);padding:2px var(--gutter);scrollbar-width:none;scroll-snap-type:x proximity}
-  .wdm-chips::-webkit-scrollbar{display:none}
-  .wdm-chips button{flex:none;scroll-snap-align:center}
+  /* Chips brechen um statt seitlich zu scrollen: alle Branchen und Stimmungen sind zu sehen, die Geisterhand bleibt ganz im Bild */
+  .wdm-chips{gap:7px}
+  .wdm-chips button{font-size:14px;padding:10px 13px}
   .wdm-t-send .btn{flex:1 1 100%}
   .wdm-fs{grid-template-columns:1.25fr 1fr;gap:10px}
 }

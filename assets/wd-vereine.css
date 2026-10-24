@@ -145,11 +145,12 @@
   font:900 clamp(34px,4.4vw,62px)/1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,72,60,.92);
   transform:translate(-50%,-50%) rotate(-11deg) scale(1.6);opacity:0;mix-blend-mode:screen;text-shadow:0 0 1px rgba(255,72,60,.6)}
 .vr.is-done .vr-stamp{opacity:1;transform:translate(-50%,-50%) rotate(-11deg) scale(1);transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .15s}
-.vr-hint{position:absolute;z-index:5;left:0;top:0;margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px 8px 9px;border-radius:999px;white-space:nowrap;pointer-events:none;
+/* Hinweis unter dem Brett (in der Zählerzeile): verdeckt keinen Zettel; behält seinen Platz, damit nichts springt */
+.vr-hint{position:relative;z-index:5;margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px 8px 9px;border-radius:999px;white-space:nowrap;pointer-events:none;
   background:var(--signal);color:var(--signal-ink);font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 24px -8px rgba(0,0,0,.7);
-  opacity:0;transform:translate(-50%,8px);transition:opacity .3s,transform .4s var(--vr-ease)}
+  opacity:0;transform:translateY(8px);transition:opacity .3s,transform .4s var(--vr-ease)}
 .vr-hint svg{width:20px;height:20px;flex:none;animation:vrTap 1.4s ease-in-out infinite}
-.vr-hint.on{opacity:1;transform:translate(-50%,0)}
+.vr-hint.on{opacity:1;transform:none}
 .vr-hint .t-mouse{display:none}
 @media (hover:hover) and (pointer:fine){.vr-hint .t-mouse{display:inline}.vr-hint .t-touch{display:none}}
 @keyframes vrTap{0%,100%{transform:translateY(0)}45%{transform:translateY(-4px)}60%{transform:translateY(1px) scale(.92)}}
