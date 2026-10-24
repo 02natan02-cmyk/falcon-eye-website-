@@ -190,8 +190,11 @@
     try { if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) video.webkitExitFullscreen(); } catch (e) { }
     endV.hidden = false;
     endV.classList.remove('in'); void endV.offsetWidth; endV.classList.add('in');
+    // Fokus auf „Kostenlosen Entwurf anfragen“ – kurz danach noch einmal, weil die Bedienleiste des Players
+    // den Fokus am Filmende manchmal zurück aufs Video holt
     const b = endV.querySelector('[data-ef-cta]');
-    if (b && opened) b.focus({ preventScroll: true });
+    const f = () => { if (b && opened && !endV.hidden && document.activeElement !== b) b.focus({ preventScroll: true }); };
+    f(); setTimeout(f, 120);
   }
   function toForm() {
     const tgt = document.getElementById('entwurf');

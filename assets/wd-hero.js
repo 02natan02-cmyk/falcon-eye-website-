@@ -8,7 +8,6 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = () => matchMedia('(max-width: 900px)').matches;
   const G = window.gsap;
-  const onLoad = fn => { if (document.readyState === 'complete') fn(); else addEventListener('load', fn, { once: true }); };
 
   /* ---------- Handy: echter FPV-Flug als Hintergrund (klein, stumm, erst nach dem Laden) ---------- */
   const vid = $('.wdh-vid');
@@ -22,10 +21,15 @@
       vid.src = vid.dataset.src;
       if (vis && !document.hidden) play();
     };
-    onLoad(() => setTimeout(start, 250));
+    // Bis der Flug läuft, driftet das Standbild per CSS (Bewegung ab dem ersten Bild). Das Video lädt nach dem Seitenaufbau,
+    // damit es den Seitenstart nicht bremst – spätestens nach 3,5 Sekunden, falls die Seite länger lädt.
+    let kick = 0;
+    const go = () => { clearTimeout(kick); setTimeout(start, 150); };
+    if (document.readyState === 'complete') go(); else { addEventListener('load', go, { once: true }); kick = setTimeout(start, 3500); }
     addEventListener('resize', () => { if (mobile()) start(); }, { passive: true });
     if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => {
       vis = en.isIntersecting;
+      hero.classList.toggle('wdh-paused', !vis);
       if (vis && !document.hidden) play(); else { try { vid.pause(); } catch (e) { } }
     }, { threshold: 0 }).observe(vid.parentElement);
     document.addEventListener('visibilitychange', () => { if (document.hidden) { try { vid.pause(); } catch (e) { } } else if (vis) play(); });
@@ -90,7 +94,8 @@
       .to(k1, { autoAlpha: 1, duration: .3 }, 'zurueck+=2.4')
       .add(() => ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(ev => removeEventListener(ev, abort, true)));
   }
-  onLoad(() => setTimeout(gag, 2600));
+  // kurz nachdem die Überschrift steht (nicht erst nach dem kompletten Laden der Seite)
+  setTimeout(gag, 3300);
 
   /* ---------- Präsentation starten: Vorhang zu, dann zur Präsentation ---------- */
   const pres = $('[data-wdh-pres]');
