@@ -38,6 +38,7 @@
   const holo = $('.wk-holo', ui), holoT = $('[data-wk-holo-t]', ui), cards = $$('.wk-card', ui), oks = $$('.wk-ok', ui), cities = $$('.wk-city circle', ui);
   const sweep = $('.wk-sweep', ui), pin = $('.wk-pin', ui), rings = $$('.wk-ring', ui), pinLab = $('[data-wk-pinlab]', ui), found = $('.wk-found', ui), mapBox = $('.wk-map', ui), mapSvg = $('.wk-map svg', ui);
   const cursor = $('.wk-cursor', ui), clickR = $('.wk-click', ui), fly = $('.wk-fly', ui), flash = $('.wdki-flash', stage);
+  const burst = $('.wk-burst', ui), sparks = burst ? $$('i', burst) : [];
   const tcEl = $('[data-wdki-tc]'), subEl = $('[data-wdki-sub]'), chapBtns = $$('[data-wdki-chap] button'), ppBtn = $('[data-wdki-pp]'), endCard = $('[data-wdki-end]');
   const nameIn = $('#wdki-name'), goBtn = $('[data-wdki-go]'), hint = $('[data-wdki-hint]'), aiBtns = $$('.wdki-ai button'), freeBtn = $('[data-wdki-free]');
 
@@ -197,7 +198,7 @@
     if (!lay) return;
     if (tl) tl.kill();
     applyAI();
-    G.set([rig, cursor, clickR, fly, qWrap, aWrap, home, holo, inBox, send, endCard, flash, pin, pinLab, found, sweep, head, ...cards, ...oks, ...rings], { clearProps: 'all' });
+    G.set([rig, cursor, clickR, fly, qWrap, aWrap, home, holo, inBox, send, endCard, flash, pin, pinLab, found, sweep, head, burst, ...sparks, ...cards, ...oks, ...rings], { clearProps: 'all' });
     G.set([ui, room], { clearProps: 'opacity,visibility' });
     const kbd = $('.wk-kbd', kb); if (kbd) G.set(kbd, { clearProps: 'all' });
     // Ruhestand messen (fertige Antwort, Karte, Tastatur)
@@ -278,7 +279,15 @@
     });
     tl.to(sweep, { keyframes: [{ autoAlpha: 1, duration: .15 }, { x: 640, duration: 1.05, ease: 'none' }, { autoAlpha: 0, duration: .15 }] }, T.think + .05)
       .to(cities, { keyframes: [{ attr: { r: 13 }, fill: '#ffd000', duration: .2 }, { attr: { r: 7 }, fill: '#7d8790', duration: .35 }], stagger: .09 }, T.think + .1);
-    // 5 Antwort: Chip hebt aus dem Bildschirm ab und landet als Nadel auf der Karte
+    // 5 Antwort: Chip hebt aus dem Bildschirm ab (Funken) und landet als Nadel auf der Karte
+    if (burst) {
+      tl.set(burst, { x: chipR.x + chipR.w / 2, y: chipR.y + chipR.h / 2 }, 0);
+      sparks.forEach((sp, i) => {
+        const a = (i / sparks.length) * Math.PI * 2 + (i % 2 ? .3 : 0), d = 70 + (i % 3) * 34;
+        tl.fromTo(sp, { x: 0, y: 0, autoAlpha: 1, scale: 1, rotation: a * 57 }, { x: Math.cos(a) * d, y: Math.sin(a) * d * .75 - 18, autoAlpha: 0, scale: .3, duration: .7 + (i % 3) * .12, ease: 'power3.out', immediateRender: false }, T.lift + .04);
+      });
+      tl.set(sparks, { autoAlpha: 0 }, 0);
+    }
     tl.to(fly, { autoAlpha: 1, duration: .01 }, T.lift)
       .to(fly, { scale: 1.4, z: 160, rotationX: -16, y: chipR.y - 30, duration: .5, ease: 'power3.out' }, T.lift)
       .to(fly, { x: tgt.x, duration: .62, ease: 'power1.inOut' }, T.lift + .5)
@@ -343,10 +352,18 @@
     stage.classList.toggle('is-screen', t >= T.handoff && t < T.pull + .3);
   }
 
+  let ghosted = false;
+  function ghostName() {
+    // Geisterhand tippt einmal den Beispielnamen in den Platzhalter
+    if (ghosted || touched || !nameIn || nameIn.value) return; ghosted = true;
+    const full = nameIn.placeholder; let i = 0;
+    nameIn.placeholder = '';
+    const iv = setInterval(() => { if (touched || nameIn.value) { clearInterval(iv); nameIn.placeholder = full; return; } nameIn.placeholder = full.slice(0, ++i); if (i >= full.length) clearInterval(iv); }, 70);
+  }
   function done() {
     started = true;
     stage.classList.add('is-end');
-    if (!touched && hint) hint.classList.add('on');
+    if (!touched && hint) { hint.classList.add('on'); ghostName(); }
     if (freeBtn && !touched) { freeBtn.classList.remove('pulse'); void freeBtn.offsetWidth; freeBtn.classList.add('pulse'); }
     syncPP();
   }
@@ -586,7 +603,10 @@
       b.addEventListener('click', () => sel(+b.dataset.l, true));
       if (finePointer) b.addEventListener('mouseenter', () => sel(+b.dataset.l, true));
     });
-    ls.forEach(l => l.addEventListener('click', () => sel(+l.dataset.l, true)));
+    ls.forEach(l => {
+      l.addEventListener('click', () => sel(+l.dataset.l, true));
+      if (finePointer) l.addEventListener('mouseenter', () => sel(+l.dataset.l, true));
+    });
     sel(0, false);
     const codeTxt = () => `{ "@type": "LocalBusiness",\n  "name": "${you()}",\n  "areaServed": "Saarland" }`;
     if (code) code.innerHTML = hl(codeTxt());

@@ -9,7 +9,10 @@
 
 /* ---------- Bühne ---------- */
 .wdki-film{position:relative;margin-top:clamp(18px,2.6vw,40px)}
-.wdki-stage{--sw:min(calc(100vw - 2 * var(--gutter)),calc(var(--max) - 2 * var(--gutter)),calc((100svh - 200px) * 16 / 9));position:relative;width:var(--sw);aspect-ratio:16/9;margin:0 auto;border-radius:26px;overflow:hidden;background:#0a0d12;isolation:isolate;box-shadow:0 70px 140px -60px rgba(0,0,0,.95),0 0 0 1px rgba(230,236,236,.1);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;contain:layout paint}
+.wdki-stage{--sw:min(calc(100vw - 2 * var(--gutter)),calc(var(--max) - 2 * var(--gutter)),max(calc((100svh - 200px) * 16 / 9),640px));position:relative;width:var(--sw);aspect-ratio:16/9;margin:0 auto;border-radius:26px;overflow:hidden;background:#0a0d12;isolation:isolate;box-shadow:0 70px 140px -60px rgba(0,0,0,.95),0 0 0 1px rgba(230,236,236,.1);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;contain:layout paint}
+@media (min-width:761px) and (max-width:1180px) and (orientation:portrait){
+  .wdki-stage{--sw:min(calc(100vw - 2 * var(--gutter)),calc((100svh - 230px) * 10 / 9));aspect-ratio:10/9}
+}
 @media (max-width:760px){
   .wdki-stage{--sw:100vw;width:100%;aspect-ratio:auto;height:min(150vw,calc(100svh - 150px));min-height:480px;border-radius:0;box-shadow:0 0 0 1px rgba(230,236,236,.08)}
 }
@@ -124,6 +127,10 @@
 .wk-ring{fill:none;stroke:#ffd000;stroke-width:4;opacity:0}
 .wk-pinlab{position:absolute;left:0;top:0;transform-origin:0 100%;padding:5px 11px;border-radius:9px;background:#ffd000;color:#1a1500;font:700 17px/1.1 var(--body);white-space:nowrap;box-shadow:0 10px 26px -8px rgba(255,208,0,.7);max-width:240px;overflow:hidden;text-overflow:ellipsis}
 .wk-found{position:relative;margin:0;font:900 38px/.95 var(--display);text-transform:uppercase;color:#ffd000;text-shadow:0 0 30px rgba(255,208,0,.35)}
+.wk-burst{position:absolute;left:0;top:0;z-index:8;width:0;height:0;pointer-events:none}
+.wk-burst i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#ffd000;box-shadow:0 0 14px 3px rgba(255,208,0,.8);opacity:0}
+.wk-burst i:nth-child(3n){width:6px;height:6px;left:-3px;top:-3px;background:#fff3b0}
+.wk-burst i:nth-child(4n){border-radius:2px;width:14px;height:4px;left:-7px;top:-2px}
 .wk-cursor{position:absolute;left:0;top:0;z-index:6;width:36px;height:36px;pointer-events:none;opacity:0;visibility:hidden;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
 .wk-cursor svg{width:100%;height:100%}
 .wk-click{position:absolute;left:-14px;top:-14px;width:34px;height:34px;border-radius:50%;border:3px solid #ffd000;opacity:0}
@@ -254,7 +261,8 @@
 
 /* ---------- Bedienleiste unter der Bühne ---------- */
 .wdki-ctl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 34px;align-items:end;margin-top:20px}
-@media (min-width:761px){.wdki-ctl{width:min(calc(100vw - 2 * var(--gutter)),calc(var(--max) - 2 * var(--gutter)),calc((100svh - 200px) * 16 / 9));padding-inline:0}}
+@media (min-width:761px){.wdki-ctl{width:min(calc(100vw - 2 * var(--gutter)),calc(var(--max) - 2 * var(--gutter)),max(calc((100svh - 200px) * 16 / 9),640px));padding-inline:0}}
+@media (min-width:761px) and (max-width:1180px) and (orientation:portrait){.wdki-ctl{width:min(calc(100vw - 2 * var(--gutter)),calc((100svh - 230px) * 10 / 9))}}
 .wdki-name{position:relative;min-width:0;max-width:560px}
 .wdki-name label{display:block;margin:0 0 8px;font:400 12px/1 var(--osd);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .wdki-name-row{display:flex;gap:10px}
