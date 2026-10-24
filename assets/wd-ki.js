@@ -1,6 +1,8 @@
 /* Falcon Eye – Webdesign-Landingpage, Abschnitt „KI-Sichtbarkeit“ (#ki)
-   1) Erklär-Szene: Abend am Laptop → Kamerafahrt in den Bildschirm → KI-Reiter → Tastatur tippt die Frage →
-      KI liest Quellen (Saarland-Karte) → Antwort nennt „Ihre Firma“ → Chip hebt ab, Nadel landet → Rückfahrt + Aufruf.
+   1) Erklär-Szene: KI-Foto Schulter-Ansicht (grüne Bildschirmfläche, echter Bildschirm per matrix3d eingepasst) →
+      Kamerafahrt in den Bildschirm → KI-Reiter → Schnitt auf die Hände (Text erscheint im Foto-Bildschirm) →
+      Tastatur in Nahaufnahme (Tasten senken sich) → KI liest Quellen (Saarland-Karte) → Antwort nennt „Ihre Firma“ →
+      Chip hebt ab, Nadel landet → Rückfahrt in die Schulter-Ansicht + Aufruf.
    2) Röntgenblick „Was wir dafür tun“ (fünf Ebenen, fahren beim Scrollen auseinander und wieder zusammen).
    3) Gelber Aufruf mit Radar.
    Startet erst in der Nähe (IntersectionObserver), läuft nur sichtbar, ruhige Endzustände bei prefers-reduced-motion.
@@ -31,7 +33,8 @@
   /* ---------- Elemente ---------- */
   const stage = $('[data-wdki-stage]'), room = $('[data-wdki-room]'), ui = $('[data-wdki-ui]'), mini = $('[data-wdki-mini]');
   if (!stage || !room || !ui) return;
-  const layers = $$('.wdki-l', room), svgs = $$('.wdki-svg', room), head = $('.wk-head', room);
+  const layers = $$('.wdki-l', room), img = $('[data-wdki-img]', room), glow = $('[data-wdki-glow]', room);
+  const hands = $('[data-wdki-hands]'), hin = $('[data-wdki-hin]'), himg = $('[data-wdki-himg]'), hstrip = $('[data-wdki-hstrip]'), hfield = $('[data-wh-field]');
   const rig = $('.wk-rig', ui), kb = $('[data-wk-kb]', ui), tabs = $$('.wk-tab', ui), urlEl = $('[data-wk-url]', ui);
   const home = $('.wk-home', ui), qWrap = $('.wk-q', ui), qEl = $('[data-wk-q]', ui), aWrap = $('.wk-a', ui), aEl = $('[data-wk-a]', ui);
   const inBox = $('.wk-in', ui), field = $('[data-wk-field]', ui), send = $('.wk-send', ui);
@@ -88,23 +91,42 @@
     return 'matrix3d(' + m.map(v => +v.toFixed(8)).join(',') + ')';
   }
 
-  /* ---------- Maße: Raum-Ausschnitt, Bildschirm-Viereck, Leinwand ---------- */
-  const VB = { w: 1600, h: 900 }, QUAD = [[632, 316], [1058, 328], [1068, 592], [622, 604]];
+  /* ---------- Maße: Foto-Ausschnitt, Bildschirm-Viereck (grüne Fläche), Leinwand ---------- */
+  // Viereck der grünen Fläche in Pixeln der WebP-Bilder (TL, TR, BR, BL), fx/fy = Bildmitte des Ausschnitts
+  const PH = {
+    land: { w: 1376, h: 768, q: [[337.8, 358.8], [648.1, 337.4], [693.7, 557.0], [386.0, 623.6]], fx: 650, fy: 420 },
+    port: { w: 768, h: 1376, q: [[50.5, 745.6], [314.1, 700.7], [373.1, 908.8], [114.4, 989.6]], fx: 330, fy: 770 }
+  };
+  const HD = {
+    land: { w: 1600, h: 893, q: [[138.0, -3.9], [778.6, -4.0], [851.2, 272.5], [332.0, 531.9]], fx: 760, fy: 430, sw: 640, sh: 330 },
+    port: { w: 720, h: 1080, q: [[-4.9, -5.0], [322.6, -5.1], [410.5, 329.9], [-4.7, 536.9]], fx: 360, fy: 540, sw: 300, sh: 430 }
+  };
+  const portQ = matchMedia('(max-width:760px)');
+  function cover(W, H, d, extra) {
+    const k = Math.max(W / d.w, H / d.h) * (extra || 1);
+    const ox = clamp(W / 2 - d.fx * k, W - d.w * k, 0), oy = clamp(H / 2 - d.fy * k, H - d.h * k, 0);
+    return { k, ox, oy, P: ([x, y]) => [x * k + ox, y * k + oy] };
+  }
+  function place(el, d, c) {
+    if (!el) return;
+    el.style.width = (d.w * c.k).toFixed(1) + 'px'; el.style.height = (d.h * c.k).toFixed(1) + 'px';
+    el.style.transform = `translate(${c.ox.toFixed(1)}px,${c.oy.toFixed(1)}px)`;
+  }
   function layout() {
     const r = stage.getBoundingClientRect(), W = r.width, H = r.height;
     if (!W || !H) return false;
-    const A = W / H;
-    let vbw, vbh, vbx, vby;
-    if (A >= VB.w / VB.h) { vbw = VB.w; vbh = VB.w / A; vbx = 0; vby = clamp(470 - vbh / 2, 0, VB.h - vbh); }
-    else { vbh = VB.h; vbw = VB.h * A; vby = 0; vbx = clamp((A < 1 ? 806 : 842) - vbw / 2, 0, VB.w - vbw); }
-    const vb = [vbx, vby, vbw, vbh].map(v => +v.toFixed(2)).join(' ');
-    svgs.forEach(s => s.setAttribute('viewBox', vb));
-    const k = W / vbw, P = ([x, y]) => [(x - vbx) * k, (y - vby) * k];
-    const quad = QUAD.map(P);
+    const A = W / H, port = portQ.matches;
+    const ph = port ? PH.port : PH.land, c = cover(W, H, ph, 1.02);
+    place(img, ph, c);
+    const quad = ph.q.map(c.P);
     if (mini) mini.style.transform = homo(640, 400, quad);
+    const hd = port ? HD.port : HD.land, ch = cover(W, H, hd, 1);
+    place(himg, hd, ch);
+    if (hstrip) { hstrip.classList.toggle('is-port', port); hstrip.style.transform = homo(hd.sw, hd.sh, hd.q.map(ch.P)); }
     const xs = quad.map(p => p[0]), ys = quad.map(p => p[1]);
     const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
     const F = [(x0 + x1) / 2, (y0 + y1) / 2];
+    if (glow) { const gw = (x1 - x0) * 3; glow.style.left = F[0].toFixed(1) + 'px'; glow.style.top = (F[1] + (y1 - y0) * .35).toFixed(1) + 'px'; glow.style.width = gw.toFixed(1) + 'px'; glow.style.height = (gw * .85).toFixed(1) + 'px'; }
     // Bildschirm-Blick mit dunklem Display-Rand: oben/unten Platz für das OSD
     const ins = A >= 1.25 ? { t: 64, r: 34, b: 56, l: 34 } : { t: 62, r: 8, b: 44, l: 8 };
     const IW = W - ins.l - ins.r, IH = H - ins.t - ins.b, IA = IW / IH;
@@ -128,10 +150,10 @@
     const { F, C, zoom } = lay, e = cam.p;
     layers.forEach(L => {
       const dk = +L.dataset.d || 1;
-      const s = (1 + (zoom - 1) * e * Math.pow(dk, 1.2)) * (1 + .04 * cam.d * dk);
+      const s = (1 + (zoom - 1) * e * Math.pow(dk, 1.2)) * (1 + .07 * cam.d * dk);
       const par = (1 - e) * dk;
-      const tx = (C[0] - F[0]) * e + ((cam.d - .5) * 16 + cam.mx * 12) * par;
-      const ty = (C[1] - F[1]) * e + (cam.my * 8 - cam.d * 4) * par;
+      const tx = (C[0] - F[0]) * e + ((.5 - cam.d) * 26 - cam.mx * 12) * par;
+      const ty = (C[1] - F[1]) * e + (-cam.my * 8 - cam.d * 6) * par;
       L.style.transform = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0) translate(${F[0].toFixed(2)}px,${F[1].toFixed(2)}px) scale(${s.toFixed(5)}) translate(${(-F[0]).toFixed(2)}px,${(-F[1]).toFixed(2)}px)`;
     });
   }
@@ -158,6 +180,7 @@
   function renderField(n, caret) {
     const s = free ? freeTxt : q.slice(0, n);
     field.innerHTML = esc(s) + (caret ? '<span class="wk-caret"></span>' : '');
+    if (hfield && !free) hfield.innerHTML = field.innerHTML;
     field.classList.toggle('is-ph', !s && caret);
     inBox.classList.toggle('is-ready', !!s);
     inBox.classList.toggle('is-on', !!caret);
@@ -193,12 +216,29 @@
     return { x: (px - uiR.left) / us, y: (py - uiR.top) / us, lx: (px - mapR.left) / us, ly: (py - mapR.top) / us, s: s / us };
   }
 
+  /* ---------- Eigener Takt: höchstens 70 ms pro Bild, damit bei Rucklern keine Szene übersprungen wird
+     (site.js schaltet die Ruckel-Glättung von GSAP für Lenis ab) ---------- */
+  function step(time, dms) {
+    if (!tl || !tl._run) { G.ticker.remove(step); return; }
+    const d = tl.duration(), nt = Math.min(d, tl.time() + Math.min(dms, 70) / 1000);
+    tl.time(nt);
+    if (nt >= d) { tl._run = false; G.ticker.remove(step); done(); }
+  }
+  function clock(t) {
+    const pauseAt = t.pause.bind(t);
+    t._run = false;
+    t.play = () => { if (t.progress() >= 1) return t; t._run = true; G.ticker.remove(step); G.ticker.add(step); return t; };
+    t.pause = (at, sup) => { t._run = false; G.ticker.remove(step); if (at !== undefined) pauseAt(at, sup); return t; };
+    t.paused = () => !t._run;
+    return t;
+  }
+
   /* ---------- Zeitleiste der Szene ---------- */
   function build() {
     if (!lay) return;
-    if (tl) tl.kill();
+    if (tl) { tl.pause(); tl.kill(); }
     applyAI();
-    G.set([rig, cursor, clickR, fly, qWrap, aWrap, home, holo, inBox, send, endCard, flash, pin, pinLab, found, sweep, head, burst, ...sparks, ...cards, ...oks, ...rings], { clearProps: 'all' });
+    G.set([rig, cursor, clickR, fly, qWrap, aWrap, home, holo, inBox, send, endCard, flash, pin, pinLab, found, sweep, burst, hands, hin, ...sparks, ...cards, ...oks, ...rings].filter(Boolean), { clearProps: 'all' });
     G.set([ui, room], { clearProps: 'opacity,visibility' });
     const kbd = $('.wk-kbd', kb); if (kbd) G.set(kbd, { clearProps: 'all' });
     // Ruhestand messen (fertige Antwort, Karte, Tastatur)
@@ -218,15 +258,16 @@
     typeDur = clamp(q.length * .05, 1.2, 3.6);
     ansDur = clamp(N * .07, 1.1, 2.2);
     T = { room: 0, push: 1.35 };
-    T.handoff = T.push + .82; T.browser = T.push + 1.15; T.click = T.browser + .85; T.type = T.click + .4;
-    T.typeStart = T.type + .5; T.send = T.typeStart + typeDur + .15; T.think = T.send + .5; T.answer = T.think + 1.35;
-    T.lift = T.answer + ansDur + .1; T.pull = T.lift + 1.75; T.end = T.pull + 1.25;
+    T.handoff = T.push + .82; T.browser = T.push + 1.1; T.click = T.browser + .8; T.type = T.click + .35;
+    T.hands = T.type; T.typeStart = T.type + .3; T.handsOut = T.typeStart + Math.max(1, typeDur * .46);
+    T.send = T.typeStart + typeDur + .15; T.think = T.send + .6; T.answer = T.think + 1.3;
+    T.lift = T.answer + ansDur + .1; T.pull = T.lift + 1.7; T.end = T.pull + 1.2;
     last.n = -1; last.an = null; last.sub = null; last.mini = null; last.tab = null; last.sec = -1; last.holo = null; last.found = null; last.end = null;
 
     const chat = [qWrap, aWrap, inBox];
-    tl = G.timeline({ paused: true, onUpdate: tick, onComplete: done, defaults: { ease: 'power2.out' } });
+    tl = clock(G.timeline({ paused: true, onUpdate: tick, defaults: { ease: 'power2.out' } }));
     // Anfangszustand
-    tl.set(room, { autoAlpha: 1, '--wk-scr': '#8fb4ff', '--wk-rim': '#bcd3ff' }, 0)
+    tl.set(room, { autoAlpha: 1, '--wk-scr': '#8fb4ff' }, 0)
       .set(ui, { autoAlpha: 0 }, 0)
       .set(home, { autoAlpha: 1 }, 0)
       .set(chat, { autoAlpha: 0 }, 0)
@@ -243,10 +284,10 @@
       .set(rig, { y: 0, scale: 1, transformOrigin: `50% ${lay.uh / 2}px` }, 0)
       .set(endCard, { autoAlpha: 0, y: 26 }, 0)
       .set(flash, { opacity: 0 }, 0)
-      .set(head, { rotation: 0, svgOrigin: '600 720' }, 0)
       .set(sweep, { autoAlpha: 0, x: 0 }, 0);
+    if (hands) tl.set(hands, { autoAlpha: 0 }, 0).set(hin, { scale: 1.03, x: 0, y: 0 }, 0);
     if (kbd) tl.set(kbd, { rotationX: lay.wide ? 50 : 40, y: 30 }, 0);
-    // 1 Abend: langsame Kamerafahrt, Dampf, Drohne vor dem Fenster
+    // 1 Schulter-Ansicht: langsame Kamerafahrt (Maus-Parallaxe am Desktop)
     tl.fromTo(cam, { p: 0, d: 0 }, { d: 1, duration: T.push + .5, ease: 'sine.inOut', onUpdate: applyCam }, 0);
     // 2 Schub in den Bildschirm
     tl.to(cam, { p: 1, duration: 1.15, ease: 'power3.inOut', onUpdate: applyCam }, T.push)
@@ -262,16 +303,22 @@
       .to(clickR, { keyframes: [{ autoAlpha: .95, scale: .3, duration: 0 }, { autoAlpha: 0, scale: 1.9, duration: .45 }] }, T.click)
       .to(home, { autoAlpha: 0, duration: .3 }, T.click + .05)
       .to(inBox, { autoAlpha: 1, duration: .3 }, T.click + .1)
-      .to(holo, { autoAlpha: 1, duration: .45 }, T.click + .15)
       .to(cursor, { autoAlpha: 0, x: '+=40', y: '+=70', duration: .45, ease: 'power1.in' }, T.click + .25);
-    // 3 Kamera neigt sich zur Tastatur, Tasten leuchten beim Tippen
-    tl.to(rig, { y: -Math.round(kbR.h), duration: .6, ease: 'power3.inOut' }, T.type);
-    if (kbd) tl.to(kbd, { rotationX: lay.wide ? 24 : 18, y: 0, duration: .75, ease: 'power2.out' }, T.type);
+    // 3 Schnitt auf die Hände (Text erscheint im Bildschirm), dann Tastatur in Nahaufnahme, Tasten senken sich
+    if (hands) {
+      tl.to(hands, { autoAlpha: 1, duration: .1, ease: 'none' }, T.hands)
+        .fromTo(hin, { scale: 1.03, x: 0, y: 0 }, { scale: 1.12, x: -lay.W * .025, y: -lay.H * .012, duration: T.handsOut - T.hands + .2, ease: 'none', immediateRender: false }, T.hands)
+        .to(hands, { autoAlpha: 0, duration: .08, ease: 'none' }, T.handsOut);
+    }
+    tl.to(rig, { y: -Math.round(kbR.h), duration: .5, ease: 'power3.inOut' }, T.type);
+    if (kbd) tl.set(kbd, { rotationX: lay.wide ? 40 : 32, y: 14 }, T.handsOut - .02)
+      .to(kbd, { rotationX: lay.wide ? 24 : 18, y: 0, duration: .8, ease: 'power2.out' }, T.handsOut);
     tl.to(send, { keyframes: [{ scale: 1.28, duration: .1 }, { scale: 1, duration: .25 }] }, T.send)
       .to(rig, { y: 0, duration: .55, ease: 'power3.inOut' }, T.send + .12)
       .fromTo(qWrap, { autoAlpha: 0, y: 34, scale: .94 }, { autoAlpha: 1, y: 0, scale: 1, duration: .5, ease: 'back.out(1.6)', immediateRender: false }, T.send + .22);
-    // 4 KI liest Quellen: Karten fliegen aus der Tiefe, Karte wird abgetastet
-    tl.to(aWrap, { autoAlpha: 1, duration: .25 }, T.think - .1);
+    // 4 KI liest Quellen: Quellen-Feld fährt herein, Karten fliegen aus der Tiefe, Karte wird abgetastet
+    tl.to(aWrap, { autoAlpha: 1, duration: .25 }, T.think - .1)
+      .fromTo(holo, { autoAlpha: 0, x: lay.wide ? 60 : 0, y: lay.wide ? 0 : 24 }, { autoAlpha: 1, x: 0, y: 0, duration: .45, ease: 'power3.out', immediateRender: false }, T.think - .12);
     cards.forEach((c, i) => {
       const t0 = T.think + .05 + i * .24;
       tl.to(c, { autoAlpha: 1, z: 0, rotationY: 0, duration: .42, ease: 'power3.out' }, t0)
@@ -297,14 +344,13 @@
       .fromTo(pinLab, { autoAlpha: 1, scale: 1 }, { keyframes: [{ scale: 1.18, duration: .14 }, { scale: 1, duration: .3, ease: 'back.out(2.4)' }], immediateRender: false }, T.lift + 1.1)
       .fromTo(rings, { autoAlpha: .95, scale: .4, transformOrigin: '50% 50%' }, { autoAlpha: 0, scale: 3.4, duration: 1.1, stagger: .28, ease: 'power2.out', immediateRender: false }, T.lift + 1.12)
       .to(found, { autoAlpha: 1, y: 0, duration: .45 }, T.lift + 1.2)
-      .to(room, { '--wk-scr': '#ffd36b', '--wk-rim': '#ffe29a', duration: .5 }, T.lift + 1.2);
+      .to(room, { '--wk-scr': '#ffd36b', duration: .5 }, T.lift + 1.2);
     // 6 Rückfahrt zur Schulter-Ansicht, Aufruf
     tl.to(room, { autoAlpha: 1, duration: .01 }, T.pull - .02)
       .to(rig, { scale: 1.12, duration: .5, ease: 'power2.in' }, T.pull)
       .to(ui, { autoAlpha: 0, duration: .32 }, T.pull + .14)
       .to(flash, { keyframes: [{ opacity: .35, duration: .12 }, { opacity: 0, duration: .4 }] }, T.pull + .12)
       .to(cam, { p: 0, duration: 1.25, ease: 'power3.inOut', onUpdate: applyCam }, T.pull)
-      .to(head, { rotation: -3, svgOrigin: '600 720', duration: 1, ease: 'power2.inOut' }, T.pull + .6)
       .to(endCard, { autoAlpha: 1, y: 0, duration: .55 }, T.end - .3)
       .set({}, {}, T.end + .4);
     chapT = [[0, T.push], [T.push, T.type], [T.type, T.think], [T.think, T.answer], [T.answer, T.pull], [T.pull, T.end + .4]];
@@ -350,6 +396,7 @@
     if (en !== last.end) { last.end = en; stage.classList.toggle('is-end', en); }
     stage.classList.toggle('is-cam', (t > T.push - .1 && t < T.handoff + .5) || (t > T.pull - .1 && t < T.end));
     stage.classList.toggle('is-screen', t >= T.handoff && t < T.pull + .3);
+    stage.classList.toggle('is-hands', t >= T.hands && t < T.handsOut);
   }
 
   let ghosted = false;
@@ -395,7 +442,8 @@
     if (reduce || !tl) return;
     untouched();
     free = true; freeTxt = ''; shift = false; stage.classList.remove('is-shift');
-    seeking = true; tl.pause(T.typeStart + .26); seeking = false; tick();
+    // Kamera steht vor der Tastatur (nach dem Hände-Schnitt)
+    seeking = true; tl.pause(Math.max(T.typeStart + .26, Math.min(T.handsOut + .9, T.send - .05))); seeking = false; tick();
     renderField(0, true);
     stage.classList.add('is-free'); stage.classList.remove('is-end');
     syncPP();
@@ -458,8 +506,17 @@
   }
 
   /* ---------- Start ---------- */
+  // Fotos laden, sobald die Bühne in die Nähe kommt; der Film startet erst, wenn die Schulter-Ansicht da ist
+  function photosReady() {
+    const ims = [img, himg].filter(Boolean);
+    ims.forEach(i => { i.loading = 'eager'; });
+    const dec = ims.map(i => (i.decode ? i.decode() : Promise.resolve()).catch(() => {}));
+    return Promise.race([Promise.all(dec), new Promise(r => setTimeout(r, 2200))]);
+  }
+  let photoP = null;
   function init() {
     if (ready) return; ready = true;
+    photoP = photosReady();
     buildKb();
     if (!layout()) { ready = false; return; }
     applyAI(); syncNames();
@@ -480,7 +537,7 @@
         vis = e.isIntersecting && r > .12;
         if (!ready) init();
         if (!tl) { idle(); return; }
-        if (r >= .5 && !started && !userPaused && !free) { started = true; play(0); }
+        if (r >= .5 && !started && !userPaused && !free) { started = true; (photoP || Promise.resolve()).then(() => { if (vis && !userPaused && !free && tl.progress() === 0) play(0); else if (!vis) started = false; }); }
         else if (r < .12 && !tl.paused()) { tl.pause(); autoPaused = true; }
         else if (r >= .4 && autoPaused && !userPaused && !free) { autoPaused = false; tl.play(); }
         syncPP();
@@ -573,7 +630,7 @@
 
   if (G) setupFilm(); else { init(); }
   // Nur für die Prüfung (Adresse mit ?wdkitest): Zeitleiste von außen spulen
-  if (/[?&]wdkitest\b/.test(location.search)) window.__wdki = { seek: t => { init(); if (tl) { seeking = true; tl.pause(t); seeking = false; tick(); applyCam(); } }, T: () => T, free: () => enterFree(), key: k => freeKey(k), state: () => ({ t: tl && tl.time(), free, q, nm, ai }) };
+  if (/[?&]wdkitest\b/.test(location.search)) window.__wdki = { seek: t => { init(); if (tl) { seeking = true; tl.pause(t); seeking = false; tick(); applyCam(); } }, T: () => T, play: at => { init(); if (tl) play(at); }, free: () => enterFree(), key: k => freeKey(k), state: () => ({ t: tl && tl.time(), free, q, nm, ai }) };
 
   /* =====================================================================
      Röntgenblick: fünf Ebenen einer Website
