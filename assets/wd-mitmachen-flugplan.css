@@ -1,0 +1,149 @@
+/* Falcon Eye – Webdesign: Anfrage als „Flugplan“.
+   Während der Eingabe baut sich die Vorschaukarte „Ihre Seite entsteht“ auf (Firmenname = Logo, Branche = Farbe und Bild),
+   der Flugplan rechts zeigt den Fortschritt. Nach dem Absenden hebt die Drohne mit dem Umschlag ab.
+   Nur Anzeige: Das Formular selbst (Felder, Namen, Versand) bleibt unverändert. Szenen und Farben: wd-mitmachen-szenen.css. */
+.wdm-fp{position:relative;display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,1fr);gap:16px;align-items:start;padding:4px 0 18px;border-bottom:1px solid var(--line);
+  transition:--wdm-bg .6s,--wdm-ink .6s,--wdm-ac .6s,--wdm-ac2 .6s,--wdm-sb .6s,--wdm-sm .6s,--wdm-sd .6s,--wdm-sa .6s,--wdm-sk .6s,--wdm-sl .6s}
+.wdm-fp-l{position:relative;min-width:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ---------- Vorschaukarte ---------- */
+.wdm-fp-card{--u:2.6px;position:relative;overflow:hidden;border-radius:12px;background:var(--wdm-bg);color:var(--wdm-ink);font-family:var(--body);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 26px 50px -24px rgba(0,0,0,.9),0 0 46px -18px rgba(255,208,0,.28);
+  transform:perspective(900px) rotateY(var(--ry,-5deg)) rotateX(var(--rx,2deg));transform-origin:50% 60%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+@supports (width:1cqw){.wdm-fp-card{container-type:inline-size;--u:1cqw}}
+.wdm-fp-l:hover .wdm-fp-card{--ry:0deg;--rx:0deg}
+.wdm-fp-bar{display:flex;align-items:center;gap:calc(var(--u)*1.6);height:calc(var(--u)*9);padding:0 calc(var(--u)*3.4);background:color-mix(in srgb,var(--wdm-ink) 8%,var(--wdm-bg))}
+.wdm-fp-bar i{width:calc(var(--u)*2.2);height:calc(var(--u)*2.2);border-radius:50%;background:color-mix(in srgb,var(--wdm-ink) 26%,transparent);flex:none}
+.wdm-fp-bar span{flex:1;min-width:0;margin-left:calc(var(--u)*1.6);padding:calc(var(--u)*1.1) calc(var(--u)*2.4);border-radius:calc(var(--u)*3);background:var(--wdm-bg);font:500 calc(var(--u)*3.5)/1 var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.75}
+.wdm-fp-top{display:flex;align-items:center;gap:calc(var(--u)*2.6);padding:calc(var(--u)*3) calc(var(--u)*4)}
+.wdm-fp-mono{width:calc(var(--u)*8.4);height:calc(var(--u)*8.4);flex:none;display:grid;place-items:center;border-radius:calc(var(--u)*2.2);background:var(--wdm-ac);color:var(--wdm-ac2);font:700 calc(var(--u)*4.6)/1 "Playfair Display",Georgia,serif}
+.wdm-fp-nm{flex:1;min-width:0;font:700 calc(var(--u)*5.2)/1.1 "Playfair Display",Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wdm-fp:not(.has-firma) .wdm-fp-nm{opacity:.45}
+.wdm-fp-burg{display:grid;gap:calc(var(--u)*1.1);flex:none}
+.wdm-fp-burg i{width:calc(var(--u)*5);height:calc(var(--u)*.7);border-radius:2px;background:currentColor;opacity:.8}
+.wdm-fp-img{position:relative;aspect-ratio:300/158;margin:0 calc(var(--u)*4);border-radius:calc(var(--u)*2.6);overflow:hidden;isolation:isolate;
+  background:linear-gradient(110deg,color-mix(in srgb,var(--wdm-ink) 7%,var(--wdm-bg)) 25%,color-mix(in srgb,var(--wdm-ink) 13%,var(--wdm-bg)) 50%,color-mix(in srgb,var(--wdm-ink) 7%,var(--wdm-bg)) 75%)}
+.wdm-fp-img .wdm-sc{position:absolute;inset:0;aspect-ratio:auto;z-index:0}
+.wdm-fp-img::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(12,14,18,.82),rgba(12,14,18,.18) 58%,transparent 80%);opacity:0;transition:opacity .5s}
+.wdm-fp.has-branche .wdm-fp-img::after{opacity:1}
+.wdm-fp-ph{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font:400 calc(var(--u)*3.2)/1 var(--osd);letter-spacing:.18em;text-transform:uppercase;opacity:.45;white-space:nowrap}
+.wdm-fp.has-branche .wdm-fp-ph{opacity:0}
+.wdm-fp-h{position:absolute;left:calc(var(--u)*4);right:calc(var(--u)*4);bottom:calc(var(--u)*3.4);z-index:3;margin:0;font:700 calc(var(--u)*6.3)/1.06 "Playfair Display",Georgia,serif;color:var(--wdm-ink);opacity:.35;text-wrap:balance}
+.wdm-fp.has-branche .wdm-fp-h{color:#fff8ec;opacity:1;text-shadow:0 1px calc(var(--u)*2.4) rgba(0,0,0,.5)}
+.wdm-fp-h .w{display:inline-block}
+.wdm-fp-txt{position:relative;display:grid;gap:calc(var(--u)*1.6);padding:calc(var(--u)*3.4) calc(var(--u)*4) 0;min-height:calc(var(--u)*11.6)}
+.wdm-fp-msg{margin:0;font:500 calc(var(--u)*3.5)/1.35 var(--body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.wdm-fp-msg:empty{display:none}
+.wdm-fp-ln{display:block;height:calc(var(--u)*2.6);width:86%;border-radius:calc(var(--u)*2);background:color-mix(in srgb,var(--wdm-ink) 12%,transparent)}
+.wdm-fp-ln.s{width:58%}
+.wdm-fp.has-msg .wdm-fp-ln{display:none}
+.wdm-fp-cta{display:flex;gap:calc(var(--u)*2);padding:calc(var(--u)*3.2) calc(var(--u)*4) calc(var(--u)*4)}
+.wdm-fp-cta span{padding:calc(var(--u)*2) calc(var(--u)*3.4);border-radius:calc(var(--u)*6);font:700 calc(var(--u)*3.3)/1 var(--body);box-shadow:inset 0 0 0 calc(var(--u)*.45) color-mix(in srgb,var(--wdm-ink) 22%,transparent);color:color-mix(in srgb,var(--wdm-ink) 50%,transparent);transition:background .35s,color .35s,box-shadow .35s,transform .35s cubic-bezier(.2,1.5,.4,1)}
+.wdm-fp-cta span.on{background:var(--wdm-ac);color:var(--wdm-ac2);box-shadow:none;transform:scale(1.04)}
+/* Abtaststrahl bei jeder Änderung */
+.wdm-fp-scan{position:absolute;left:0;right:0;top:0;height:30%;z-index:6;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(255,208,0,.32) 70%,rgba(255,208,0,.95) 96%,transparent);opacity:0;transform:translateY(-100%)}
+.wdm-fp-card.is-scan .wdm-fp-scan{animation:wdm-fp-scan .75s cubic-bezier(.4,0,.2,1)}
+@keyframes wdm-fp-scan{0%{opacity:1;transform:translateY(-100%)}100%{opacity:.2;transform:translateY(340%)}}
+.wdm-fp-mono.pop,.wdm-fp-cta span.pop{animation:wdm-fp-pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes wdm-fp-pop{0%{transform:scale(.4) rotate(-14deg)}100%{transform:none}}
+/* Code-Aufkleber */
+.wdm-fp-code{position:absolute;right:-6px;top:calc(9px + 10%);z-index:7;max-width:78%;padding:6px 9px 5px;border-radius:7px;background:var(--signal);color:var(--signal-ink);font:400 11px/1 var(--osd);letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 10px 18px -8px rgba(0,0,0,.7);transform:rotate(7deg) scale(0);transition:transform .45s cubic-bezier(.2,1.5,.4,1)}
+.wdm-fp.has-code .wdm-fp-code{transform:rotate(7deg) scale(1)}
+.wdm-fp-cap{margin:10px 0 0;text-align:center;font:400 11px/1 var(--osd);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.wdm-fp-cap::before{content:"";display:inline-block;width:7px;height:7px;margin-right:8px;border-radius:50%;background:var(--signal);vertical-align:1px;animation:wdm-fp-blink 1.2s steps(2) infinite}
+@keyframes wdm-fp-blink{50%{opacity:.15}}
+
+/* ---------- Flugplan (Fortschritt) ---------- */
+.wdm-fp-hud{min-width:0;display:grid;gap:10px;align-content:start;padding:2px 0 0}
+.wdm-fp-k{margin:0;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.wdm-fp-k .rec{display:inline-flex;align-items:center;gap:7px;font:400 11px/1 var(--osd);letter-spacing:.16em;text-transform:uppercase;color:var(--wing)}
+.wdm-fp-k .rec::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rec);animation:wdm-fp-blink 1.2s steps(2) infinite}
+.wdm-fp-k b{font:900 clamp(22px,2.2vw,28px)/1 var(--display);color:var(--signal);font-variant-numeric:tabular-nums}
+.wdm-fp-rw{position:relative;--row:24px;--i:0}
+.wdm-fp-route{position:relative;list-style:none;margin:0;padding:0 0 0 26px;display:grid}
+.wdm-fp-route::before,.wdm-fp-route::after{content:"";position:absolute;left:8px;top:calc(var(--row)/2);width:2px;margin-left:-1px;border-radius:2px}
+.wdm-fp-route::before{height:calc(var(--row)*4);background:repeating-linear-gradient(to bottom,rgba(230,236,236,.28) 0 3px,transparent 3px 7px)}
+.wdm-fp-route::after{height:calc(var(--row)*4);background:var(--signal);transform-origin:50% 0;transform:scaleY(calc(max(var(--i) - 1,0)/4));transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.wdm-fp-route li{position:relative;height:var(--row);display:flex;align-items:center;font:400 11.5px/1 var(--osd);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transition:color .3s}
+.wdm-fp-route li i{position:absolute;left:-26px;top:50%;width:12px;height:12px;margin:-6px 0 0 2px;border-radius:50%;background:var(--steel);border:2px solid rgba(230,236,236,.38);box-sizing:border-box;z-index:1;transition:background .3s,border-color .3s,transform .4s cubic-bezier(.2,1.6,.4,1)}
+.wdm-fp-route li.on{color:var(--wing)}
+.wdm-fp-route li.on i{background:var(--signal);border-color:var(--signal);transform:scale(1.15)}
+.wdm-fp-route li.on::after{content:"✓";margin-left:7px;color:var(--signal);letter-spacing:0}
+/* kleine Drohne fliegt den Fortschritt ab */
+.wdm-fp-mk{position:absolute;left:-3px;top:0;width:22px;height:22px;z-index:2;fill:var(--steel);stroke:var(--signal);stroke-width:1.6;stroke-linecap:round;overflow:visible;
+  transform:translateY(calc(var(--row)*var(--im,1) - var(--row) - 11px + var(--row)/2));transition:transform .55s cubic-bezier(.3,1.3,.5,1),opacity .3s;filter:drop-shadow(0 0 6px rgba(255,208,0,.5))}
+.wdm-fp-rw.is-zero .wdm-fp-mk{opacity:.55}
+.wdm-fp-mk ellipse{fill:rgba(255,208,0,.25);stroke-width:1.2}
+.wdm-fp-st{margin:0;font:400 11px/1.35 var(--osd);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);min-height:2.7em}
+.wdm-fp.is-go .wdm-fp-st{color:var(--signal)}
+.wdm-fp.is-sending .wdm-fp-st{color:var(--wing)}
+.wdm-fp.is-sending .wdm-fp-mk ellipse,.wdm-fp.is-demo .wdm-fp-mk ellipse{animation:wdm-fp-spin .1s linear infinite alternate}
+
+/* Startknopf glüht, sobald alles Nötige da ist */
+.af.wdm-go button[type=submit]:not(:disabled){box-shadow:0 0 0 0 rgba(26,21,0,.0),0 14px 30px -12px rgba(255,208,0,.65);animation:wdm-fp-glow 2.2s ease-in-out 2}
+@keyframes wdm-fp-glow{50%{box-shadow:0 0 0 6px rgba(255,208,0,.22),0 14px 30px -12px rgba(255,208,0,.65)}}
+
+/* ---------- Hinweis (Selbst-Impuls) ---------- */
+.wdm-fp-hint{position:absolute;left:0;right:0;bottom:-6px;width:max-content;max-width:calc(100% + 8px);z-index:8;margin:0 auto;padding:7px 12px 6px;border-radius:999px;background:var(--signal);color:var(--signal-ink);font:700 12.5px/1 var(--body);white-space:nowrap;box-shadow:0 10px 22px -8px rgba(0,0,0,.65);pointer-events:none;opacity:0;transform:translateY(6px) scale(.9);transition:opacity .35s,transform .45s cubic-bezier(.2,1.5,.4,1)}
+.wdm-fp-hint::after{content:"";position:absolute;left:50%;margin-left:-6px;bottom:-5px;border:6px solid transparent;border-top-color:var(--signal);border-bottom:0}
+.wdm-fp.is-hint .wdm-fp-hint{opacity:1;transform:none;animation:wdm-fp-bob 1.6s ease-in-out .5s infinite}
+.wdm-fp-cap{transition:opacity .3s}
+.wdm-fp.is-hint .wdm-fp-cap{opacity:0}
+@keyframes wdm-fp-bob{50%{transform:translateY(3px)}}
+
+/* ---------- Abflug ---------- */
+.wdm-fp-fly{position:absolute;inset:0 0 18px;z-index:9;pointer-events:none;opacity:0;visibility:hidden}
+.wdm-fp.is-fly .wdm-fp-fly{opacity:1;visibility:visible}
+.wdm-fp-fly svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+.f-trail{fill:none;stroke:var(--signal);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:2 7;opacity:0}
+.f-eb{fill:#f6efe4;stroke:#1a1500;stroke-width:2}
+.f-ev{fill:none;stroke:#1a1500;stroke-width:2;stroke-linejoin:round}
+.f-flap{fill:var(--signal);stroke:#1a1500;stroke-width:2;stroke-linejoin:round}
+.f-teth{stroke:var(--signal);stroke-width:1.6;stroke-dasharray:3 3}
+.f-arm{stroke:#e6ecec;stroke-width:3;stroke-linecap:round}
+.f-pr{fill:rgba(255,208,0,.35);stroke:var(--signal);stroke-width:1.2}
+.f-bd{fill:#0b0e12;stroke:var(--signal);stroke-width:2}
+.f-cam{fill:var(--signal)}
+.f-led{fill:var(--rec)}
+.wdm-fp.is-fly:not(.is-flown) .f-pr{animation:wdm-fp-spin .08s linear infinite alternate;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes wdm-fp-spin{to{transform:scaleX(.35)}}
+.wdm-fp-ok{position:absolute;left:0;right:0;bottom:8%;margin:0;display:grid;justify-items:center;gap:6px;text-align:center;opacity:0}
+.wdm-fp-ok b{font:900 clamp(24px,7.2vw,44px)/.9 var(--display);text-transform:uppercase;color:var(--signal);letter-spacing:.01em}
+.wdm-fp-ok b span{display:inline-block}
+.wdm-fp-ok small{font:400 11px/1 var(--osd);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+/* Endzustand nach dem Abflug (auch ohne Bewegung) */
+.wdm-fp.is-flown .wdm-fp-card,.wdm-fp.is-flown .wdm-fp-code,.wdm-fp.is-flown .wdm-fp-cap{visibility:hidden}
+.wdm-fp.is-flown .f-pkg{visibility:hidden}
+.wdm-fp.is-flown .f-trail{opacity:.85;stroke-dashoffset:0}
+.wdm-fp.is-flown .wdm-fp-ok{opacity:1}
+.wdm-fp.is-flown .wdm-fp-l{cursor:default}
+
+/* außerhalb des Bildes ruhen */
+.wdm-off .wdm-fp *,.wdm-off .wdm-fp *::before,.wdm-off .wdm-fp *::after{animation-play-state:paused!important}
+
+/* ---------- breite Formulare: größere Vorschau ---------- */
+@media (min-width:981px){.wdm-fp{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}}
+@media (max-width:1180px) and (min-width:981px),(max-width:520px){.wdm-fp-hint span{display:none}}
+
+/* ---------- schmale Bildschirme ---------- */
+@media (max-width:520px){
+  .wdm-fp{grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);gap:12px}
+  .wdm-fp-rw{--row:22px}
+  .wdm-fp-route{padding-left:22px}
+  .wdm-fp-route li{font-size:10.5px;letter-spacing:.08em}
+  .wdm-fp-route li i{left:-22px;margin-left:1px}
+  .wdm-fp-route::before,.wdm-fp-route::after{left:7px}
+  .wdm-fp-mk{left:-4px;width:20px;height:20px;transform:translateY(calc(var(--row)*var(--im,1) - var(--row) - 10px + var(--row)/2))}
+  .wdm-fp-st{font-size:10px;letter-spacing:.08em}
+  .wdm-fp-k .rec{font-size:10px;letter-spacing:.1em}
+  .wdm-fp-cap{font-size:10px;letter-spacing:.12em}
+  .wdm-fp-hint{font-size:12px;padding:7px 11px 6px}
+}
+@media (max-width:370px){
+  .wdm-fp-route li{font-size:10px;letter-spacing:.05em}
+  .wdm-fp-route li.on::after{margin-left:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  .wdm-fp,.wdm-fp *,.wdm-fp *::before,.wdm-fp *::after{animation:none!important;transition:none!important}
+  .wdm-fp-card{transform:none}
+}

@@ -178,8 +178,14 @@
   .wdm-tip{right:56px}
   .wdm-vl{font-size:10px;letter-spacing:.1em}
 }
+/* schmale Handys: der Hinweis sitzt in der Zeile „Frage 02“ statt über dem Fragetext */
+@media (max-width:600px){
+  .wdm-tip{display:none}
+  .wdm-list.is-hint .wdm-q[data-k="preis"]:not([open]) .wdm-qt small::after{content:"· Antippen";display:inline-block;margin-left:8px;padding:3px 7px 2px;border-radius:6px;background:var(--signal);color:var(--signal-ink);letter-spacing:.12em;animation:wdm-tipm 1.6s ease-in-out infinite}
+  @keyframes wdm-tipm{50%{transform:translateX(4px)}}
+}
 @media (prefers-reduced-motion:reduce){
   .wdm-q,.wdm-qi,.wdm-pm,.wdm-pm::before,.wdm-pm::after,.wdm-tip,.wdm-rp,.wdm-rp svg{transition:none!important}
-  .wdm-list.is-hint .wdm-q .wdm-pm,.wdm-list.is-hint .wdm-q .wdm-tip,.wdm-viz *{animation:none!important}
+  .wdm-list.is-hint .wdm-q .wdm-pm,.wdm-list.is-hint .wdm-q .wdm-tip,.wdm-viz *,.wdm-qt small::after{animation:none!important}
   .wdm-tip{display:none}
 }
