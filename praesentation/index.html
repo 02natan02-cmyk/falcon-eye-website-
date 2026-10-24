@@ -438,8 +438,9 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .bf{display:flex;align-items:center;justify-content:center;gap:8px;padding:7px 10px;border-radius:10px;border:1px dashed rgba(255,208,0,.5);background:rgba(255,208,0,.07);font:12px/1.35 var(--osd);letter-spacing:.04em;color:var(--wing);text-align:center}
 .bf b{color:var(--signal);font-weight:400}
 .bf[hidden]{display:none}
-.go-on{display:flex;align-items:center;gap:10px;font:13px var(--osd);color:var(--muted);letter-spacing:.04em}
-.go-on .cd{flex:1;height:3px;border-radius:2px;background:rgba(230,236,236,.15);overflow:hidden}
+.go-on{display:flex;flex-wrap:wrap;align-items:center;gap:7px 10px;font:13px var(--osd);color:var(--muted);letter-spacing:.04em}
+.go-on #cdt{flex:1;min-width:0}
+.go-on .cd{order:3;flex:1 0 100%;height:3px;border-radius:2px;background:rgba(230,236,236,.15);overflow:hidden}
 .go-on .cd b{display:block;height:100%;width:100%;background:var(--signal);transform-origin:left}
 .go-on button{padding:8px 12px;border-radius:999px;border:1px solid rgba(230,236,236,.3);background:transparent;color:var(--wing);font:600 13px var(--body);cursor:pointer;white-space:nowrap}
 .again{justify-self:center;background:none;border:0;color:var(--muted);font:600 13px var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px}
@@ -447,7 +448,7 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .toast.on{opacity:1}
 
 /* Untertitel */
-.cap{position:absolute;left:18px;right:18px;bottom:calc(var(--sb) + 30px);z-index:10;min-height:56px;display:flex;align-items:flex-end;justify-content:center;text-align:center;font:600 17px/1.32 var(--body);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.9),0 0 2px #000;text-wrap:balance}
+.cap{position:absolute;left:18px;right:18px;bottom:calc(var(--sb) + 30px);z-index:10;min-height:56px;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;text-align:center;font:600 17px/1.32 var(--body);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.9),0 0 2px #000;text-wrap:balance}
 .cap p{margin:0}
 .cap span{display:inline-block;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .45s var(--ease)}
 .cap span.on{opacity:1;transform:none}
@@ -467,16 +468,19 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .val{position:absolute;left:0;right:0;top:0;height:calc(var(--st) + 11vh);z-index:31;background:repeating-linear-gradient(90deg,#0d1a2c 0,#16365a 22px,#0d1a2c 44px);box-shadow:0 12px 30px rgba(0,0,0,.6);border-bottom:5px solid var(--signal);transition:transform 1.8s cubic-bezier(.7,0,.2,1) 1s}
 .val::after{content:"";position:absolute;left:0;right:0;bottom:-24px;height:24px;background:radial-gradient(13px 17px at 13px 0,#0d1a2c 98%,transparent) 0 0/26px 24px repeat-x}
 .open .val{transform:translateY(-115%)}
-.start{position:absolute;inset:0;z-index:32;display:grid;place-content:center;justify-items:center;gap:16px;padding:0 24px;text-align:center;transition:opacity .6s}
+.start{position:absolute;inset:0;z-index:32;display:grid;place-content:center;justify-items:center;gap:16px;padding:0 24px;text-align:center;transition:opacity .6s;cursor:pointer;touch-action:manipulation}
 .open .start{opacity:0;pointer-events:none}
 .start .fe{width:min(46vw,190px);height:auto;opacity:.95}
 .start .kick{margin:4px 0 -4px;font:12px var(--osd);letter-spacing:.24em;text-transform:uppercase;color:var(--signal)}
 .start h1{margin:0;font:900 clamp(48px,15vw,86px)/.9 var(--disp);text-transform:uppercase;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.6);text-wrap:balance}
 .start h1 em{font-style:normal;color:var(--signal)}
-.go{display:inline-flex;align-items:center;gap:14px;margin-top:10px;padding:20px 32px;border-radius:999px;border:0;background:var(--signal);color:#000;font:800 20px var(--body);cursor:pointer;box-shadow:0 0 0 6px rgba(255,208,0,.16),0 18px 50px -10px rgba(255,208,0,.6);animation:gp 2.2s ease-in-out infinite;touch-action:manipulation}
-.go i{width:0;height:0;border-left:15px solid #000;border-top:9px solid transparent;border-bottom:9px solid transparent}
-.go[disabled]{background:#3a3a2a;color:#cfc8a8;animation:none;box-shadow:none;cursor:progress}
-.go[disabled] i{border-left-color:#cfc8a8}
+.go{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:14px;width:min(100%,340px);min-height:72px;margin-top:10px;padding:0 26px;border-radius:999px;border:0;background:var(--signal);color:#000;font:800 20px/1.1 var(--body);white-space:nowrap;cursor:pointer;box-shadow:0 0 0 6px rgba(255,208,0,.16),0 18px 50px -10px rgba(255,208,0,.6);animation:gp 2.2s ease-in-out infinite;touch-action:manipulation;transition:transform .15s}
+.go:active{transform:scale(.97)}
+.go i{flex:none;width:0;height:0;border-left:15px solid #000;border-top:9px solid transparent;border-bottom:9px solid transparent}
+.go .gl{position:absolute;left:0;bottom:0;height:5px;width:calc(var(--p,0) * 1%);background:rgba(0,0,0,.3);transition:width .35s,opacity .4s}
+.go.ready .gl{opacity:0}
+.go.wait i{border:0;width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(0,0,0,.25);border-top-color:#000;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes gp{50%{box-shadow:0 0 0 14px rgba(255,208,0,.05),0 18px 50px -10px rgba(255,208,0,.85)}}
 .start p{margin:0;font:14px/1.5 var(--osd);letter-spacing:.08em;color:#bfc6cc}
 .flash{position:absolute;inset:0;z-index:35;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -579,7 +583,7 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
         <button class="b" id="share" type="button" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0-12-4 4m4-4 4 4M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Präsentation teilen</button>
       </div>
       <p class="bf" id="bf"><span><b>Black Friday:</b> −45 % auf den Einmalpreis · Code <b>BlackFriday45</b> · bis 27.11.</span></p>
-      <div class="go-on" id="goon"><span id="cdt">Weiter zur Webdesign-Seite in 20 s</span><span class="cd"><b id="cdb"></b></span><button type="button" id="stay">Hier bleiben</button></div>
+      <div class="go-on" id="goon"><span id="cdt">Zur Webdesign-Seite in 20 s</span><span class="cd"><b id="cdb"></b></span><button type="button" id="stay">Hier bleiben</button></div>
       <button class="again" type="button" id="again">Nochmal abspielen</button>
     </div>
   </section>
@@ -592,23 +596,23 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 
  <div class="flash" id="flash"></div>
  <div class="cur l"></div><div class="cur r"></div><div class="val"></div>
- <div class="start" id="start">
+ <section class="start" id="start" aria-label="Präsentation starten">
    <img class="fe" src="media/wordmark.png" alt="Falcon Eye" width="640" height="117">
    <p class="kick">Präsentation · zum Mitmachen</p>
    <h1>Willkommen in der <em>Zukunft</em></h1>
-   <button class="go" id="go" type="button" disabled><i></i><span id="golab">Lädt …</span></button>
-   <p>Ton an · ca. 2 Minuten</p>
- </div>
+   <button class="go" id="go" type="button" aria-describedby="gohint"><i></i><span id="golab">Präsentation starten</span><b class="gl" aria-hidden="true"></b></button>
+   <p id="gohint">Ton an · ca. 2 Minuten</p>
+ </section>
 </div>
 
 <script>
 (function(){
 'use strict';
-var D = {"platzhalter": false, "A": {"dur": 64.37, "take": 2, "sub": {"willk": [0.56], "zuk": [1.68], "kost": [21.36], "sieben": [22.72], "pel": [28.08], "ex": [44.72, 45.92, 47.04, 48.4], "mk": [51.12, 52], "wir": [52.8], "nt": [54.6, 55.28, 56.36, 57, 58.56], "fe": [62.08, 62.8]}, "lines": [{"t": 0, "text": "Hallo. Willkommen in der Zukunft.", "cap": false}, {"t": 2.59, "text": "Ich bin der digitale Assistent von Falcon Eye. Und in zwei Minuten zeige ich Ihnen, was wir bauen.", "cap": true}, {"t": 8.83, "text": "Websites, die man nicht wegscrollt.", "cap": false}, {"t": 11.31, "text": "Animiert. Und auf dem Handy perfekt, so wie das hier.", "cap": false}, {"t": 15.79, "text": "Jede Seite ein Unikat. Keine Vorlage, kein Baukasten.", "cap": false}, {"t": 20.11, "text": "Der erste Entwurf ist kostenlos. Und in sieben Tagen sind Sie online.", "cap": false}, {"t": 24.67, "text": "Schauen Sie mal rein.", "cap": false}, {"t": 25.95, "text": "Ein Küchenstudio, mit eigenem Küchenplaner in 3D.", "cap": false}, {"t": 30.11, "text": "Eine Praxis.", "cap": false}, {"t": 31.39, "text": "Ein Hausmeisterservice.", "cap": false}, {"t": 33.15, "text": "Der Garten-Traum.", "cap": false}, {"t": 34.67, "text": "Pflege24-7.", "cap": false}, {"t": 36.83, "text": "Und Opieka24-7, auf Polnisch.", "cap": false}, {"t": 40.43, "text": "natan.saarland", "cap": false}, {"t": 42.35, "text": "Und für jede Branche ein Beispiel.", "cap": false}, {"t": 44.67, "text": "Küchenstudio. Karosserie. Fahrzeugpflege. Wäscherei.", "cap": false}, {"t": 49.47, "text": "Und jetzt Sie.", "cap": false}, {"t": 51.07, "text": "Sie kennen Ihren Betrieb. Wir bringen den Rest mit: Design, Programmierung, Texte, Drohnenfilme und die Betreuung danach.", "cap": true}, {"t": 59.87, "text": "Probieren Sie's aus: Schieben Sie Ihre Idee und Falcon Eye zusammen.", "cap": true}]}, "M": {"dur": 35.47, "take": 2, "sub": {"form": [4.36, 5.52], "plan": [11.72, 12.48], "live": [18.96], "mobile": [22.24], "code": [26.4, 27.68], "klick": [28.56, 29.92], "tage": [33.44, 34.72]}, "lines": [{"t": 0, "text": "Und das ist erst der Anfang.", "cap": true}, {"t": 1.95, "text": "Ein Küchenplaner in 3D: Form antippen, die Küche steht.", "cap": true}, {"t": 6.59, "text": "Per Foto direkt im eigenen Raum.", "cap": true}, {"t": 9.15, "text": "Und dazu sofort der Installationsplan für Elektriker und Installateur.", "cap": true}, {"t": 13.63, "text": "Die Geräte der Hersteller, Stück für Stück erklärt.", "cap": true}, {"t": 16.99, "text": "Ein Autohaus zeigt seine Fahrzeuge live auf der eigenen Seite, auf Wunsch direkt aus mobile.de.", "cap": true}, {"t": 23.71, "text": "Und alles in einem schlanken Code. Ohne Baukasten. Ohne Ballast.", "cap": true}, {"t": 28.51, "text": "Alles bewegt sich. Alles ist anklickbar.", "cap": false}, {"t": 31.47, "text": "Ihre Ideen: umgesetzt in Tagen. Nicht in Jahren.", "cap": false}]}, "B": {"dur": 25.73, "take": 2, "sub": {"nt": [4.52, 7.44], "web": [16.48, 18.04], "fe": [21.76], "fly": [22.88], "an": [24.64]}, "lines": [{"t": 0, "text": "Perfekt. Genau so.", "cap": true}, {"t": 2.27, "text": "Sie erzählen uns, was Sie ausmacht, wir bauen die Seite. Vom ersten Entwurf bis online.", "cap": true}, {"t": 8.27, "text": "Und Sie sehen Ihre neue Website, bevor Sie sich entscheiden.", "cap": true}, {"t": 11.63, "text": "Persönlich vorgestellt, mit einem Vorhang. Genau wie eben.", "cap": true}, {"t": 15.39, "text": "Ach, übrigens:", "cap": true}, {"t": 16.43, "text": "Das hier ist kein Video. Das ist eine Website.", "cap": false}, {"t": 19.39, "text": "Der erste Entwurf ist kostenlos.", "cap": false}, {"t": 21.71, "text": "Falcon Eye. Websites, die fliegen. Fragen Sie uns an.", "cap": false}]}, "chap": [11.83, 15.84, 24.8, 35.97, 37.33, 15.3], "sc": {"hudalla_jz": ["#eff6ef", "#111"], "hudalla_tab": ["#eff6ef", "#111"], "hudalla_desk": ["#eff6ef", "#111"], "gartentraum": ["#0b0600", "#fff"], "pellegrin": ["#564f4e", "#fff"], "planer": ["#f6efe7", "#111"], "verena": ["#454a50", "#fff"], "hudalla": ["#eff6ef", "#111"], "natan": ["#0f1012", "#fff"], "kuechenstudio": ["#1c1f25", "#fff"], "karosserie": ["#595959", "#fff"], "fahrzeugpflege": ["#373632", "#fff"], "waescherei": ["#f3f8fe", "#111"], "kp_3d": ["#f0f0e6", "#111"], "kp_raum": ["#f7f0e8", "#111"], "kp_plan": ["#f7f0e8", "#111"], "te_ofen": ["#160e0c", "#fff"], "zh_bestand": ["#060c0f", "#fff"], "pflege": ["#e3f4fa", "#111"], "opieka": ["#e3f4fa", "#111"], "mini": ["#33312d", "#fff"]}, "taps": {"kp_3d": [[0.45, 0.267, 0.547], [2.0, 0.267, 0.709], [3.4, 0.735, 0.95]], "kp_raum": [[0.15, 0.348, 5.819], [1.53, 0.148, 0.504], [2.57, 0.617, 0.504]], "kp_plan": [[0.3, 0, 0]], "te_ofen": [[0.53, 0.273, 0.671], [2.61, 0.778, 0.614]], "zh_bestand": [[0.7, 0.835, 0.299]]}};
+var D = {"A": {"dur": 64.37, "take": 2, "sub": {"willk": [0.56], "zuk": [1.68], "kost": [21.36], "sieben": [22.72], "pel": [28.08], "ex": [44.72, 45.92, 47.04, 48.4], "mk": [51.12, 52], "wir": [52.8], "nt": [54.6, 55.28, 56.36, 57, 58.56], "fe": [62.08, 62.8]}, "lines": [{"t": 0, "text": "Hallo. Willkommen in der Zukunft.", "cap": false}, {"t": 2.59, "text": "Ich bin der digitale Assistent von Falcon Eye. Und in zwei Minuten zeige ich Ihnen, was wir bauen.", "cap": true}, {"t": 8.83, "text": "Websites, die man nicht wegscrollt.", "cap": false}, {"t": 11.31, "text": "Animiert. Und auf dem Handy perfekt, so wie das hier.", "cap": false}, {"t": 15.79, "text": "Jede Seite ein Unikat. Keine Vorlage, kein Baukasten.", "cap": false}, {"t": 20.11, "text": "Der erste Entwurf ist kostenlos. Und in sieben Tagen sind Sie online.", "cap": false}, {"t": 24.67, "text": "Schauen Sie mal rein.", "cap": false}, {"t": 25.95, "text": "Ein Küchenstudio, mit eigenem Küchenplaner in 3D.", "cap": false}, {"t": 30.11, "text": "Eine Praxis.", "cap": false}, {"t": 31.39, "text": "Ein Hausmeisterservice.", "cap": false}, {"t": 33.15, "text": "Der Garten-Traum.", "cap": false}, {"t": 34.67, "text": "Pflege24-7.", "cap": false}, {"t": 36.83, "text": "Und Opieka24-7, auf Polnisch.", "cap": false}, {"t": 40.43, "text": "natan.saarland", "cap": false}, {"t": 42.35, "text": "Und für jede Branche ein Beispiel.", "cap": false}, {"t": 44.67, "text": "Küchenstudio. Karosserie. Fahrzeugpflege. Wäscherei.", "cap": false}, {"t": 49.47, "text": "Und jetzt Sie.", "cap": false}, {"t": 51.07, "text": "Sie kennen Ihren Betrieb. Wir bringen den Rest mit: Design, Programmierung, Texte, Drohnenfilme und die Betreuung danach.", "cap": true}, {"t": 59.87, "text": "Probieren Sie's aus: Schieben Sie Ihre Idee und Falcon Eye zusammen.", "cap": true}]}, "M": {"dur": 35.47, "take": 2, "sub": {"form": [4.36, 5.52], "plan": [11.72, 12.48], "live": [18.96], "mobile": [22.24], "code": [26.4, 27.68], "klick": [28.56, 29.92], "tage": [33.44, 34.72]}, "lines": [{"t": 0, "text": "Und das ist erst der Anfang.", "cap": true}, {"t": 1.95, "text": "Ein Küchenplaner in 3D: Form antippen, die Küche steht.", "cap": true}, {"t": 6.59, "text": "Per Foto direkt im eigenen Raum.", "cap": true}, {"t": 9.15, "text": "Und dazu sofort der Installationsplan für Elektriker und Installateur.", "cap": true}, {"t": 13.63, "text": "Die Geräte der Hersteller, Stück für Stück erklärt.", "cap": true}, {"t": 16.99, "text": "Ein Autohaus zeigt seine Fahrzeuge live auf der eigenen Seite, auf Wunsch direkt aus mobile.de.", "cap": true}, {"t": 23.71, "text": "Und alles in einem schlanken Code. Ohne Baukasten. Ohne Ballast.", "cap": true}, {"t": 28.51, "text": "Alles bewegt sich. Alles ist anklickbar.", "cap": false}, {"t": 31.47, "text": "Ihre Ideen: umgesetzt in Tagen. Nicht in Jahren.", "cap": false}]}, "B": {"dur": 25.73, "take": 2, "sub": {"nt": [4.52, 7.44], "web": [16.48, 18.04], "fe": [21.76], "fly": [22.88], "an": [24.64]}, "lines": [{"t": 0, "text": "Perfekt. Genau so.", "cap": true}, {"t": 2.27, "text": "Sie erzählen uns, was Sie ausmacht, wir bauen die Seite. Vom ersten Entwurf bis online.", "cap": true}, {"t": 8.27, "text": "Und Sie sehen Ihre neue Website, bevor Sie sich entscheiden.", "cap": true}, {"t": 11.63, "text": "Persönlich vorgestellt, mit einem Vorhang. Genau wie eben.", "cap": true}, {"t": 15.39, "text": "Ach, übrigens:", "cap": true}, {"t": 16.43, "text": "Das hier ist kein Video. Das ist eine Website.", "cap": false}, {"t": 19.39, "text": "Der erste Entwurf ist kostenlos.", "cap": false}, {"t": 21.71, "text": "Falcon Eye. Websites, die fliegen. Fragen Sie uns an.", "cap": false}]}, "chap": [11.83, 15.84, 24.8, 35.97, 37.33, 15.3], "sc": {"hm_jz": ["#edf7ef", "#111"], "hm_tab": ["#eef5ed", "#111"], "hm_desk": ["#eff6ef", "#111"], "gartentraum": ["#0b0600", "#fff"], "studio": ["#564f4e", "#fff"], "planer": ["#f4ede5", "#111"], "praxis": ["#484d51", "#fff"], "hm": ["#edf7ef", "#111"], "natan": ["#0f1012", "#fff"], "kuechenstudio": ["#1c1f25", "#fff"], "karosserie": ["#595959", "#fff"], "fahrzeugpflege": ["#373632", "#fff"], "waescherei": ["#f3f8fe", "#111"], "kp_3d": ["#f0f0e6", "#111"], "kp_raum": ["#f7f0e8", "#111"], "kp_plan": ["#f7f0e8", "#111"], "te_ofen": ["#160e0c", "#fff"], "autohaus": ["#060c0f", "#fff"], "pflege": ["#e3f4fa", "#111"], "opieka": ["#e3f4fa", "#111"], "mini": ["#33312d", "#fff"]}, "taps": {"kp_3d": [[0.45, 0.267, 0.547], [2.0, 0.267, 0.709], [3.4, 0.735, 0.95]], "kp_raum": [[0.15, 0.348, 5.819], [1.53, 0.148, 0.504], [2.57, 0.617, 0.504]], "kp_plan": [[0.3, 0, 0]], "te_ofen": [[0.53, 0.273, 0.671], [2.61, 0.778, 0.614]], "autohaus": [[0.7, 0.835, 0.299]]}};
 var REEL = [
- {n:'Ein Küchenstudio', o:'Küchenstudio · Name verwischt', v:'pellegrin', v2:'planer', c:['3D-Küchenplaner','Küche im eigenen Raum']},
- {n:'Eine Praxis', o:'Physiotherapie · Name verwischt', v:'verena', t0:0, c:['Lebensgeschichte in Kapiteln','Termin anfragen']},
- {n:'Ein Hausmeisterservice', o:'Hausmeisterservice · Name verwischt', v:'hudalla', c:['Jahreszeiten zum Antippen','Objekt-Check']},
+ {n:'Ein Küchenstudio', o:'Küchenstudio · Name verwischt', v:'studio', v2:'planer', c:['3D-Küchenplaner','Küche im eigenen Raum']},
+ {n:'Eine Praxis', o:'Physiotherapie · Name verwischt', v:'praxis', t0:0, c:['Lebensgeschichte in Kapiteln','Termin anfragen']},
+ {n:'Ein Hausmeisterservice', o:'Hausmeisterservice · Name verwischt', v:'hm', c:['Jahreszeiten zum Antippen','Objekt-Check']},
  {n:'Der Garten-Traum', o:'Garten & Ausstellung', v:'gartentraum', c:['Garten-Planer','Ausstellung zum Durchziehen']},
  {n:'Pflege24-7', o:'24-Stunden-Pflege', img:'pflege', url:'pflege24-7.de', c:['Kostenrechner','Legal mit A1']},
  {n:'Opieka24-7', o:'Pflegekräfte · auf Polnisch', img:'opieka', url:'opieka24-7.pl', c:['Komplett auf Polnisch','Tägliche Deutsch-Lektion']},
@@ -628,18 +632,21 @@ if(Date.now() > BF_ENDE) $('bf').hidden = true;
 
 /* ---------- Laden: Ton zuerst (und gleich entpacken), dann die Clips der ersten Szenen, der Rest im Hintergrund ---------- */
 var AUDIO = ['audio/stimme_a.mp3','audio/musik_inst.mp3','audio/musik_gesang.mp3','audio/stimme_m.mp3','audio/stimme_b.mp3'];
-var FIRST = ['hudalla_jz','hudalla_tab','hudalla_desk','gartentraum'];
+var FIRST = ['hm_jz','hm_tab','hm_desk','gartentraum'];
 var LATER = [];
 REEL.forEach(function(r){ if(r.v) LATER.push(r.v); if(r.v2) LATER.push(r.v2); });
 EX.forEach(function(e){ LATER.push(e.v); });
-['kp_3d','kp_raum','kp_plan','te_ofen','zh_bestand','hudalla'].forEach(function(n){ LATER.push(n); });
+['kp_3d','kp_raum','kp_plan','te_ofen','autohaus','hm'].forEach(function(n){ LATER.push(n); });
 LATER = LATER.filter(function(n,i){ return LATER.indexOf(n)===i && FIRST.indexOf(n)<0; });
 var NEED = AUDIO.concat(FIRST.map(function(n){ return 'clips/'+n+'.mp4'; }));
 var blobs={}, AC=null, BUF={}, RAW={}, need=NEED.length, needDone=0, audioLeft=AUDIO.length, audioWait=[];
 var OAC=null; try{ var OC=window.OfflineAudioContext||window.webkitOfflineAudioContext; if(OC) OAC=new OC(1, 44100, 44100); }catch(e){ OAC=null; }
 try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
-function setLoad(){ var p=Math.round(needDone/need*100); if($('go').disabled) $('golab').textContent = p<100 ? 'Lädt … '+p+' %' : 'Präsentation starten'; }
-function ready(){ var b=$('go'); if(!b.disabled) return; b.disabled=false; $('golab').textContent='Präsentation starten'; }
+/* Der Startknopf ist sofort tippbar und ändert seine Größe nie. Tippt jemand, bevor alles geladen ist,
+   wird der Ton im Tipp entsperrt und die Präsentation startet von selbst, sobald alles da ist. */
+var isReady=false, pending=false;
+function setLoad(){ $('go').style.setProperty('--p', Math.round(needDone/need*100)); }
+function ready(){ if(isReady) return; isReady=true; var b=$('go'); b.style.setProperty('--p', 100); b.classList.add('ready'); if(pending) begin(); }
 function audioDone(){ if(--audioLeft===0){ var w=audioWait; audioWait=[]; w.forEach(function(f){ f(); }); } }
 function whenAudio(f){ if(audioLeft<=0) f(); else audioWait.push(f); }
 function decodeEarly(f, ab){
@@ -656,7 +663,7 @@ var loadQ = LATER.map(function(n){ return 'clips/'+n+'.mp4'; });
 Promise.all(NEED.map(function(f){ return get(f, true); })).then(function(){
   (function next(){ var f=loadQ.shift(); if(f) get(f, false).then(next); })();
 });
-setTimeout(function(){ if($('go').disabled){ buildAll(); ready(); } }, 12000);
+setTimeout(function(){ if(!isReady){ buildAll(); ready(); } }, 12000);
 
 /* ---------- Geräte-Bausteine: echte Seiten in echten Rahmen ---------- */
 var cards=[], exTiles=[];
@@ -683,14 +690,14 @@ function holdV(sel){ document.querySelectorAll(sel).forEach(function(v){ try{ v.
 function recolor(ph, n){ if(!ph) return; var c=sc(n); ph.style.setProperty('--sc',c[0]); ph.style.setProperty('--sf',c[1]); }
 
 /* Versprechen: Handy, Tablet, Laptop, Ring aus acht echten Seiten, Bauplan */
-var FEED=['verena','natan','pellegrin','karosserie','kuechenstudio','waescherei','gartentraum','hudalla_jz'];
-var RING=['hudalla_jz','pellegrin','verena','gartentraum','fahrzeugpflege','natan','karosserie','waescherei'];
+var FEED=['praxis','natan','studio','karosserie','kuechenstudio','waescherei','gartentraum','hm_jz'];
+var RING=['hm_jz','studio','praxis','gartentraum','fahrzeugpflege','natan','karosserie','waescherei'];
 function buildPromise(){
   var h='';
-  h+='<div class="dev" id="ml"><div class="lap"><div class="lid"><div class="scrn">'+vw(vtag('hudalla_desk'))+'<i class="glr"></i></div></div><div class="deck"></div></div></div>';
-  h+='<div class="dev" id="mt"><div class="tab metal" style="--tw:150px"><div class="scrn">'+vw(vtag('hudalla_tab'))+'<i class="glr"></i></div></div></div>';
+  h+='<div class="dev" id="ml"><div class="lap"><div class="lid"><div class="scrn">'+vw(vtag('hm_desk'))+'<i class="glr"></i></div></div><div class="deck"></div></div></div>';
+  h+='<div class="dev" id="mt"><div class="tab metal" style="--tw:150px"><div class="scrn">'+vw(vtag('hm_tab'))+'<i class="glr"></i></div></div></div>';
   h+='<div class="dev" id="rw"><div class="ring">'+RING.map(function(n,i){ return '<div class="ri" style="--i:'+i+'">'+phone(84,n,vw(kimg(n)))+'<div class="pb metal"><img src="media/bird.png" alt=""></div></div>'; }).join('')+'</div></div>';
-  h+='<div class="dev" id="mp">'+phone(165,'hudalla_jz', vw(vtag('hudalla_jz',' id="mv1"')+'<div class="feed">'+FEED.map(function(n){ return kimg(n); }).join('')+'</div><img class="bp" src="media/bauplan.webp" alt="">'+vtag('gartentraum',' id="mv2"')+'<i class="scan"></i>'))+'<i class="ping"></i>'+THUMB+'</div>';
+  h+='<div class="dev" id="mp">'+phone(165,'hm_jz', vw(vtag('hm_jz',' id="mv1"')+'<div class="feed">'+FEED.map(function(n){ return kimg(n); }).join('')+'</div><img class="bp" src="media/bauplan.webp" alt="">'+vtag('gartentraum',' id="mv2"')+'<i class="scan"></i>'))+'<i class="ping"></i>'+THUMB+'</div>';
   h+='<div class="dev" id="mc">'+['iPhone','Android','Tablet','Laptop'].map(function(t,k){ return '<span class="chip" style="--d:'+(k*.14)+'s">'+CHECK+t+'</span>'; }).join('')+'</div>';
   h+='<div class="dev" id="mn"><p>Keine Vorlage. Kein Baukasten.</p><small>Eigene Geschichte · eigene Bildsprache</small></div>';
   h+='<div class="dev" id="mb"><div class="drow"><span>ENTWURF</span><span id="pct">0 %</span></div><div class="bar"><b id="pbar"></b></div></div>';
@@ -746,8 +753,8 @@ var FEATS=[null,
  {v:'kp_raum', t0:.55, sb:['#1b1916','#fff'], co:[['Per Foto',6,150],['Vorher · Nachher',204,334]]},
  {v:'kp_plan', co:[['Für Elektriker',0,178],['Für Installateur',212,262],['Als PDF',18,354]]},
  {v:'te_ofen', co:[['Gerät in 3D',4,122],['Stück für Stück',214,322]]},
- {v:'zh_bestand', co:[['Filter & Suche',196,384]]}];
-var FAN=['verena','gartentraum','pellegrin','natan'];
+ {v:'autohaus', co:[['Filter & Suche',196,384]]}];
+var FAN=['praxis','gartentraum','studio','natan'];
 var CODE=['<b>&lt;!doctype html&gt;</b>','<u>&lt;section</u> id="kuechenplaner"<u>&gt;</u>','  <u>&lt;canvas</u> data-3d<u>&gt;&lt;/canvas&gt;</u>','<u>&lt;section</u> id="fahrzeuge" data-live<u>&gt;</u>','<u>&lt;script&gt;</u> alles in einer Datei <u>&lt;/script&gt;</u>'];
 function buildFeat(){
   var h='';
@@ -1015,7 +1022,7 @@ function showContact(){ if(contactShown) return; contactShown=true; $('logo').cl
 var cdTimer=null, cdLeft=20, ended=false;
 function endAll(){ if(ended) return; ended=true; part=null; showCap(''); setTimeout(function(){ showContact(); startCountdown(); }, 900); }
 function startCountdown(){ cdLeft=20; var b=$('cdb'); b.style.transition='none'; b.style.transform='scaleX(1)'; b.offsetWidth; b.style.transition='transform 20s linear'; b.style.transform='scaleX(0)';
-  clearInterval(cdTimer); cdTimer=setInterval(function(){ if(paused) return; cdLeft--; $('cdt').textContent='Weiter zur Webdesign-Seite in '+cdLeft+' s'; if(cdLeft<=0){ clearInterval(cdTimer); if(AC){ to(gM,0,AC.currentTime,.35); } setTimeout(function(){ location.href=TARGET; }, 1100); } }, 1000); $('cdt').textContent='Weiter zur Webdesign-Seite in 20 s'; }
+  clearInterval(cdTimer); cdTimer=setInterval(function(){ if(paused) return; cdLeft--; $('cdt').textContent='Zur Webdesign-Seite in '+cdLeft+' s'; if(cdLeft<=0){ clearInterval(cdTimer); if(AC){ to(gM,0,AC.currentTime,.35); } setTimeout(function(){ location.href=TARGET; }, 1100); } }, 1000); $('cdt').textContent='Zur Webdesign-Seite in 20 s'; }
 function stopCountdown(){ if(cdTimer){ clearInterval(cdTimer); cdTimer=null; } $('goon').style.display='none'; }
 $('stay').addEventListener('click', function(){ stopCountdown(); if(AC) to(gI,.22,AC.currentTime,.6); });
 ['cta','wa','tel'].forEach(function(id){ $(id).addEventListener('click', function(){ stopCountdown(); }); });
@@ -1029,10 +1036,20 @@ function toast(t){ var e=$('toast'); e.textContent=t; e.classList.add('on'); set
 
 /* ---------- Start, Pause, Überspringen ---------- */
 function go(){
+  if(started) return;
+  if(!pending){
+    pending=true;
+    try{ var el=document.documentElement, rf=el.requestFullscreen||el.webkitRequestFullscreen; if(rf && innerWidth<760 && matchMedia('(pointer:coarse)').matches){ var fp=rf.call(el,{navigationUI:'hide'}); if(fp&&fp.catch) fp.catch(function(){}); } }catch(e){}
+    try{ navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){}); }catch(e){}
+    /* Ton im Tipp selbst entsperren (iOS): AudioContext anlegen, fortsetzen und einen stillen Puffer abspielen */
+    try{ AC = new (window.AudioContext||window.webkitAudioContext)(); var rp=AC.resume(); if(rp&&rp.catch) rp.catch(function(){}); graph();
+      var su=AC.createBufferSource(); su.buffer=AC.createBuffer(1,1,22050); su.connect(AC.destination); su.start(0); }catch(e){ AC=null; }
+  } else if(AC && AC.state!=='running'){ try{ var rp2=AC.resume(); if(rp2&&rp2.catch) rp2.catch(function(){}); }catch(e){} }
+  if(!isReady){ var b=$('go'); b.classList.add('wait'); $('golab').textContent='Startet gleich …'; return; }
+  begin();
+}
+function begin(){
   if(started) return; started=true;
-  try{ var el=document.documentElement, rf=el.requestFullscreen||el.webkitRequestFullscreen; if(rf && innerWidth<760){ var fp=rf.call(el,{navigationUI:'hide'}); if(fp&&fp.catch) fp.catch(function(){}); } }catch(e){}
-  try{ navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){}); }catch(e){}
-  try{ AC = new (window.AudioContext||window.webkitAudioContext)(); var rp=AC.resume(); if(rp&&rp.catch) rp.catch(function(){}); graph(); }catch(e){ AC=null; }
   buildAll();
   app.classList.add('open'); warp(16,2400); setTimeout(function(){ app.classList.add('live'); }, 1500);
   var tGo=performance.now();
@@ -1052,8 +1069,8 @@ function go(){
     }
   }); });
 }
-$('go').addEventListener('click', go);
-addEventListener('keydown', function(e){ if((e.code==='Space'||e.key==='Enter') && !started && !$('go').disabled && document.activeElement===document.body){ e.preventDefault(); go(); } });
+$('start').addEventListener('click', go);   /* ganze Startfläche, der Knopf liegt darin */
+addEventListener('keydown', function(e){ if((e.code==='Space'||e.key==='Enter') && !started && document.activeElement===document.body){ e.preventDefault(); go(); } });
 var pausedV=[];
 $('pause').addEventListener('click', function(){ paused=!paused; app.classList.toggle('paused', paused); $('pause').textContent= paused?'► Weiter':'❚❚ Pause'; $('pause').setAttribute('aria-pressed', paused?'true':'false'); if(AC){ paused?AC.suspend():AC.resume(); } if(paused){ pausedV=[].filter.call(document.querySelectorAll('video'), function(v){ return !v.paused; }); pausedV.forEach(function(v){ v.pause(); }); } else { pausedV.forEach(function(v){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }); pausedV=[]; } });
 $('skip').addEventListener('click', function(){ stopVoice(); resume=null; fTaps=null; stopV('video'); joined=true; clearTimeout(autoT); part=null; showCap(''); xray(false); chap(5); finale(); words($('fin-h'),'Erster Entwurf kostenlos.');
