@@ -21,6 +21,28 @@
 <link rel="stylesheet" href="assets/site.css?v=1792251390">
 <link rel="stylesheet" href="assets/livedemo.css?v=1792251390">
 <link rel="stylesheet" href="assets/showreel.css?v=1792248616">
+<style data-auge="web">
+/* Startseite, Zwei Augen: Filmstreifen läuft um das Webdesign-Auge, Aufruf zur Webdesign-Seite */
+.tw-r{overflow:hidden}
+.tw-eye-web{container-type:inline-size}
+.tw-film{position:absolute;inset:-16%;border-radius:50%;pointer-events:none;z-index:-1;animation:twFilm 80s linear infinite}
+.tw-film::before{content:"";position:absolute;inset:3.2%;border-radius:50%;border:clamp(16px,6cqw,30px) solid #0c0f13;box-shadow:0 0 0 1px rgba(255,208,0,.22),inset 0 0 0 1px rgba(255,208,0,.22)}
+.tw-film::after{content:"";position:absolute;inset:4.6%;border-radius:50%;border:2px dashed rgba(230,236,236,.32)}
+.tw-film i{position:absolute;left:50%;top:50%;width:15cqw;aspect-ratio:16/10;margin:-4.7cqw 0 0 -7.5cqw;border-radius:3px;overflow:hidden;transform:rotate(var(--a)) translateY(-61cqw);box-shadow:0 0 0 1.5px #0c0f13,0 6px 14px -4px rgba(0,0,0,.8);z-index:1}
+.tw-film img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
+@keyframes twFilm{to{transform:rotate(360deg)}}
+.tw-eye-web:hover .tw-film,.tw-eye-web:focus-visible .tw-film{animation-duration:26s}
+.tw-more{display:inline-flex;align-items:center;gap:10px;margin-top:clamp(18px,3cqw,30px);padding:12px 18px;border-radius:999px;background:var(--signal);color:var(--signal-ink);font:700 15px/1.25 var(--body);text-decoration:none;text-align:center;box-shadow:0 14px 30px -12px rgba(255,208,0,.55);transition:transform .25s,box-shadow .25s}
+.tw-more svg{width:18px;height:18px;flex:none;animation:twNudge 1.4s ease-in-out infinite}
+.tw-more:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(255,208,0,.7)}
+@keyframes twNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.tw-all{display:inline-flex;align-items:center;gap:10px;margin:2px 0 18px;padding:10px 14px;border-radius:14px;border:1px dashed rgba(255,208,0,.5);color:var(--wing);text-decoration:none;font:600 15px/1.35 var(--body);text-align:left;transition:background .2s,border-color .2s}
+.tw-all svg{width:18px;height:18px;flex:none;color:var(--signal)}
+.tw-all:hover{background:rgba(255,208,0,.08);border-color:var(--signal)}
+@media (max-width:700px){.tw-film{inset:-13%}.tw-film i{transform:rotate(var(--a)) translateY(-58cqw)}.tw-more{font-size:14px;padding:11px 15px}}
+@media (max-width:760px){.tw-split{grid-template-areas:"el er" "pl pr" "more more" "txt txt"}.tw-more{grid-area:more;justify-self:center;margin-top:2px}.tw-split[data-focus="l"] .tw-more{display:none}}
+@media (prefers-reduced-motion:reduce){.tw-film,.tw-more svg{animation:none}}
+</style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "@id": "https://falcon-eye.de/#business", "name": "Falcon Eye", "description": "FPV-Drohnenfilme und Webdesign aus dem Saarland: Imagefilme, Events, Sport, Social-Media-Clips – und animierte Websites mit eigener Webentwicklung.", "url": "https://falcon-eye.de/", "telephone": "+49 151 56743442", "email": "info@falcon-eye.de", "image": "https://falcon-eye.de/media/og.jpg", "logo": "https://falcon-eye.de/media/logo.png", "address": {"@type": "PostalAddress", "streetAddress": "Römerstr. 25", "postalCode": "66125", "addressLocality": "Saarbrücken", "addressRegion": "Saarland", "addressCountry": "DE"}, "areaServed": "Saarland", "founder": "Natan Wojtasczyk", "sameAs": ["https://www.instagram.com/falconeyesaar", "https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw", "https://www.facebook.com/profile.php?id=61559258413801"], "knowsAbout": ["FPV-Drohnenfilme", "Drohnenvideos", "Imagefilme", "Webdesign", "Webentwicklung"], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "FPV-Drohnenfilme", "url": "https://falcon-eye.de/leistungen.html"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Webdesign & Webentwicklung", "url": "https://falcon-eye.de/webdesign.html"}}]}</script>
 </head>
 <body class="p-index">
@@ -98,17 +120,19 @@
     <div class="tw-seam" aria-hidden="true"><img src="media/bird.png" alt="" width="934" height="207"><i></i><span>L&nbsp;◂ ▸&nbsp;R</span></div>
     <article class="tw-side tw-r" data-side="r" aria-labelledby="tw-r-h">
       <div class="tw-amb" aria-hidden="true"></div>
-      <a class="tw-eye" href="webdesign.html" aria-label="Webdesign ansehen">
-        <span class="tw-iris"><span class="tw-in"><img class="on" src="media/wd/pellegrin_d.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img alt="" width="1440" height="900" decoding="async"></span><span class="tw-sweep" aria-hidden="true"></span></span>
+      <a class="tw-eye tw-eye-web" href="webdesign.html" aria-label="Webdesign ansehen – sehen Sie, was möglich ist">
+        <span class="tw-film" aria-hidden="true"><i style="--a:0deg"><img src="media/wd3/bsp_waescherei_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:30deg"><img src="media/wd3/hudalla_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:60deg"><img src="media/wd3/gartentraum_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:90deg"><img src="media/wd3/pellegrin_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:120deg"><img src="media/wd3/bsp_fahrzeug_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:150deg"><img src="media/wd3/natan_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:180deg"><img src="media/wd3/bsp_karosserie_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:210deg"><img src="media/wd3/bsp_kueche_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:240deg"><img src="media/wd3/verena_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:270deg"><img src="media/wd3/falcon_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:300deg"><img src="media/wd3/pflege247_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i><i style="--a:330deg"><img src="media/wd3/holding_d.webp" alt="" width="512" height="320" loading="lazy" decoding="async"></i></span><span class="tw-iris"><span class="tw-in"><img class="on" src="media/wd/pellegrin_d.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"><img alt="" width="1440" height="900" decoding="async"></span><span class="tw-sweep" aria-hidden="true"></span></span>
         <span class="tw-nict" aria-hidden="true"></span><span class="tw-glint" aria-hidden="true"></span>
         <svg class="tw-ret" viewBox="-100 -100 200 200" aria-hidden="true"><g class="tw-ret-g"><circle r="34" fill="none" stroke="currentColor" stroke-width="1.6"/><circle r="3" fill="currentColor"/><path d="M-50 0h-14M50 0h14M0-50v-14M0 50v14" stroke="currentColor" stroke-width="2"/><g class="tw-spin"><path d="M-62 -18A64 64 0 0 1 -18 -62M62 18A64 64 0 0 1 18 62" fill="none" stroke="currentColor" stroke-width="2.4"/></g></g><circle r="97" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 6"/></svg>
       </a>
+      <a class="tw-more" href="webdesign.html">Klicken Sie hier und sehen Sie, was möglich ist <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <p class="tw-osd" aria-hidden="true"><span class="rec">WEB&nbsp;R</span><b data-tw-cap>Pellegrin Küchen</b><em data-tw-tag>Entwurf</em></p>
       <div class="tw-txt">
         <p class="tw-k">Rechtes Auge</p>
         <h3 id="tw-r-h">Webdesign</h3>
         <p>Websites, die man nicht wegscrollt: mit Geschichte, echten Bildern und Spielen zum Mitmachen. Animiert, auf dem Handy perfekt und für jeden Betrieb komplett eigen.</p>
         <ul class="tw-tags"><li>Animiert</li><li>Handy-perfekt</li><li>Eigener Code</li></ul>
+        <a class="tw-all" href="webdesign.html#rundum"><span>Wir übernehmen alles: Domain, Hosting, Wartung, Google &amp; KI</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <div class="tw-cta"><a class="btn" href="webdesign.html#entwurf">Kostenlosen Entwurf</a><a class="btn ghost" href="#eure-seite">Live ausprobieren &#8595;</a></div>
       </div>
     </article>
