@@ -74,7 +74,7 @@
     { st: 'Postfach und Formulare bereit', dock: [487, 402], from: [780, 330], via: [660, 250], out: [780, 180], ov: [620, 300] },
     { st: 'Server verbunden', dock: [556, 102], from: [780, -70], via: [730, 30], out: [780, 260], ov: [660, 150] },
     { st: 'Alles besorgt', dock: [236, 446], from: [-130, 430], via: [40, 330], out: [-130, 250], ov: [130, 300] },
-    { st: 'Update meist in 10 Min. live', dock: [320, 126], from: [780, 150], via: [560, 10], out: [-130, 80], ov: [170, 30] },
+    { st: 'Meist in 10 Minuten live', dock: [320, 126], from: [780, 150], via: [560, 10], out: [-130, 80], ov: [170, 30] },
     { st: 'Auffindbar: Google, Bing, KI', dock: [58, 132], from: [-130, -70], via: [-30, 40], out: [330, -110], ov: [140, 20] }
   ];
   const qb = (a, b, c, t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * b + t * t * c;

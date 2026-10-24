@@ -30,7 +30,7 @@
     svg.setAttribute('viewBox', `0 0 ${rr.width.toFixed(1)} ${rr.height.toFixed(1)}`);
     const pts = nodes.map(n => { const r = n.getBoundingClientRect(); return [r.left - rr.left + r.width / 2, r.top - rr.top + r.height / 2]; });
     vertical = pts[1][1] - pts[0][1] > 40;
-    const start = vertical ? [pts[0][0], Math.max(-10, pts[0][1] - 90)] : [Math.max(-30, pts[0][0] - 150), pts[0][1] + 30];
+    const start = vertical ? [pts[0][0], Math.max(-10, pts[0][1] - 90)] : [Math.max(-30, pts[0][0] - 150), pts[0][1] + 4];
     let d = `M${start[0].toFixed(1)},${start[1].toFixed(1)}`, prev = start;
     const parts = [];
     pts.forEach((p, i) => {
@@ -39,7 +39,7 @@
         const dy = p[1] - prev[1], sw = (i % 2 ? -1 : 1) * 16;
         c = ` C${(prev[0] + sw).toFixed(1)},${(prev[1] + dy * .4).toFixed(1)} ${(p[0] + sw).toFixed(1)},${(p[1] - dy * .4).toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
       } else {
-        const dx = p[0] - prev[0], lift = i % 2 ? 26 : -34;
+        const dx = p[0] - prev[0], lift = i % 2 ? 12 : -22; // flach halten: Drohne berührt weder Überschrift noch Kacheln
         c = ` C${(prev[0] + dx * .4).toFixed(1)},${(prev[1] + lift).toFixed(1)} ${(p[0] - dx * .4).toFixed(1)},${(p[1] + lift).toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
       }
       d += c; parts.push(d); prev = p;
@@ -68,6 +68,7 @@
   /* Ruhiger Modus: alles fertig, Drohne parkt an der letzten Station */
   if (!G || reduce) {
     sts.forEach(li => li.classList.add('on'));
+    $$('.wab-hit').forEach(h => { h.hidden = true; }); // nichts abzuspielen: keine toten Knöpfe
     const go = () => { build(); cur = 1; render(true); };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
     addEventListener('resize', go, { passive: true });
