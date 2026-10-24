@@ -1,0 +1,293 @@
+/* Falcon Eye – Webdesign-Landingpage, Abschnitt „Für Vereine“ (#vereine)
+   Idee: Das Schwarze Brett im Vereinsheim wird zur Website. Jeder Zettel fliegt ins Handy
+   und dort läuft der passende Teil der echten Website des Flight Club Saar.
+   Baut auf site.css auf (Farben, Schriften, .wrap, .btn). Eigene Klassen: .vr-… */
+@font-face{font-family:"Caveat";font-weight:700;font-style:normal;font-display:swap;src:url(../fonts/caveat-latin-700-normal.woff2) format("woff2")}
+
+.vr{
+  --vr-sig:#3fe0ff;        /* Signal-Cyan des Flight Club */
+  --vr-club:#1f497d;       /* Vereinsblau aus dem Logo */
+  --vr-club-hi:#2f6fd0;
+  --vr-ink:#1d2633;        /* Tinte auf Papier */
+  --vr-paper:#f3efe4;
+  --vr-ease:cubic-bezier(.16,1,.3,1);
+  position:relative;padding:clamp(72px,8vw,132px) 0 clamp(72px,8vw,120px);
+  background:
+    radial-gradient(55% 45% at 22% 66%,rgba(47,111,208,.16),transparent 72%),
+    radial-gradient(38% 40% at 84% 52%,rgba(255,208,0,.07),transparent 72%),
+    var(--steel);
+  overflow:hidden;overflow:clip;isolation:isolate
+}
+.vr::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(63,224,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(63,224,255,.05) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask:radial-gradient(60% 55% at 70% 55%,#000,transparent 75%);mask:radial-gradient(60% 55% at 70% 55%,#000,transparent 75%)}
+.vr-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- Kopf: Überschrift + ein Satz + Knöpfe ---------- */
+.vr-head{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(24px,4vw,72px);align-items:end}
+.p-webdesign .vr h2{font-size:clamp(42px,6vw,92px);margin:0}
+.vr-for{display:block;color:transparent;-webkit-text-stroke:1.5px var(--wing);paint-order:stroke fill;letter-spacing:.01em}
+@supports not (-webkit-text-stroke:1px #fff){.vr-for{color:var(--wing)}}
+.vr-lede{font-size:clamp(17px,1.35vw,20px);line-height:1.55;color:var(--text-2);margin:0 0 22px;max-width:34em}
+.vr-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.vr-ctas .btn svg{width:18px;height:18px}
+
+/* ---------- Bühne ---------- */
+.vr-stage{position:relative;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:clamp(28px,4.5vw,72px);align-items:center;margin-top:clamp(40px,5vw,72px)}
+
+/* ---------- Das Schwarze Brett ---------- */
+.vr-board-wrap{position:relative;perspective:1600px}
+.vr-board{position:relative;border-radius:16px;padding:58px clamp(16px,2vw,28px) clamp(22px,2.4vw,32px);
+  background:
+    radial-gradient(70% 60% at 50% -8%,rgba(255,214,150,.22),transparent 70%),
+    radial-gradient(circle at 30% 40%,rgba(255,222,176,.07) 0 1px,transparent 1.6px) 0 0/7px 7px,
+    radial-gradient(circle at 70% 70%,rgba(0,0,0,.26) 0 1px,transparent 1.7px) 0 0/9px 9px,
+    radial-gradient(circle at 50% 20%,rgba(255,200,140,.06) 0 1.4px,transparent 2.2px) 0 0/13px 13px,
+    radial-gradient(120% 100% at 50% 0%,#6a4d33 0%,#4b3524 52%,#2c2017 100%);
+  box-shadow:inset 0 0 0 9px #22180f,inset 0 0 0 10px rgba(255,236,200,.08),inset 0 26px 50px rgba(0,0,0,.38),0 50px 90px -36px rgba(0,0,0,.9);
+  transform:rotateY(6deg) rotateX(1.5deg);transform-origin:20% 50%}
+.vr-plate{position:absolute;top:18px;left:50%;transform:translateX(-50%);margin:0;padding:6px 14px 5px;border-radius:3px;white-space:nowrap;
+  font:400 12px/1 var(--osd);letter-spacing:.22em;text-transform:uppercase;color:#2a1d0c;
+  background:linear-gradient(180deg,#f0d47c,#b98f33 70%,#9c7424);box-shadow:0 2px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.vr-plate span{opacity:.62;margin-left:8px}
+.vr-notes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,1.6vw,22px) clamp(12px,1.4vw,18px)}
+
+/* Zettel = Knopf */
+.vr-note{all:unset;box-sizing:border-box;position:relative;display:block;aspect-ratio:5/6;cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:3px}
+.vr-note:focus-visible{outline:3px solid var(--signal);outline-offset:6px}
+.vr-paper{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:18px 12px 10px;border-radius:2px;overflow:hidden;
+  background:var(--vr-paper);color:var(--vr-ink);text-align:left;
+  box-shadow:0 1px 0 rgba(0,0,0,.12),0 16px 22px -12px rgba(0,0,0,.6),0 4px 8px -4px rgba(0,0,0,.35);
+  transform:rotate(var(--r,0deg));transition:transform .45s var(--vr-ease),box-shadow .45s var(--vr-ease);will-change:transform}
+.vr-pin{position:absolute;top:7px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;z-index:2;--pc:var(--vr-sig);
+  background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.85) 0 2px,var(--pc) 3.2px,color-mix(in srgb,var(--pc) 55%,#000) 100%);
+  box-shadow:0 3px 4px rgba(0,0,0,.45),1px 5px 6px -2px rgba(0,0,0,.35)}
+.vr-hand{font:700 clamp(15px,1.25vw,19px)/1.05 "Caveat","Segoe Print","Bradley Hand",cursive;color:var(--vr-ink);hyphens:manual}
+.vr-hand.big{font-size:clamp(19px,1.75vw,27px);line-height:.98}
+.vr-hand.sm{font-size:clamp(14px,1.05vw,16px);opacity:.82}
+.vr-print{font:700 clamp(10px,.85vw,12px)/1.15 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--vr-ink)}
+.vr-print.sm{font-weight:500;letter-spacing:.02em;text-transform:none;opacity:.7}
+
+/* Einzelne Zettel */
+.n-halle{--r:-3deg}
+.n-halle .vr-paper{background:
+  linear-gradient(transparent 40px,rgba(214,49,42,.55) 40px 41px,transparent 41px),
+  repeating-linear-gradient(transparent 0 19px,rgba(56,112,190,.2) 19px 20px) 0 22px/100% 100% no-repeat,#fbfaf5}
+.n-halle .vr-hand.big{color:#c22a22}
+.n-spots{--r:2.5deg}
+.n-spots .vr-paper{background:radial-gradient(120% 90% at 30% 20%,#e3cfa8,#cdb284);color:#3b2b17}
+.n-spots .vr-pin{--pc:var(--signal)}
+.vr-map{width:100%;height:auto;margin-top:auto;color:#3b2b17}
+.n-wissen{--r:-1.5deg}
+.n-wissen .vr-paper{background:linear-gradient(180deg,rgba(0,0,0,.06),transparent 18%),linear-gradient(135deg,#ffe86e 0 82%,#f2d34e 100%);padding-top:14px}
+.n-wissen .vr-pin{display:none}
+.n-markt{--r:3deg}
+.n-markt .vr-pin{--pc:var(--rec)}
+.n-markt .vr-paper{padding-bottom:0}
+.vr-tabs{display:flex;margin:auto -12px 0;width:calc(100% + 24px);height:34%;border-top:1.5px dashed rgba(29,38,51,.35)}
+.vr-tabs i{flex:1;display:flex;align-items:center;justify-content:center;border-left:1px dashed rgba(29,38,51,.28);font:400 8px/1 var(--osd);letter-spacing:.04em;color:rgba(29,38,51,.7);writing-mode:vertical-rl;transform:rotate(180deg);overflow:hidden;white-space:nowrap}
+.vr-tabs i:first-child{border-left:0}
+.vr-tabs i:nth-child(3){visibility:hidden}
+.n-mitglied{--r:-2deg}
+.n-mitglied .vr-pin{--pc:var(--vr-club-hi)}
+.vr-lines{display:grid;gap:9px;width:100%;margin-top:8px}
+.vr-lines i{display:block;height:1px;background:rgba(29,38,51,.45)}
+.vr-lines i::before{content:"";display:block;width:24%;height:6px;margin-top:-7px;border-radius:1px;background:rgba(29,38,51,.12)}
+.vr-hand.sig{margin-top:auto;font-size:clamp(17px,1.4vw,22px);color:var(--vr-club);transform:rotate(-6deg);opacity:.9}
+.n-satzung{--r:1.5deg}
+.n-satzung .vr-paper{overflow:visible;background:#fbfaf6;box-shadow:3px 3px 0 #e4dfd2,6px 6px 0 #d3cdbf,0 18px 26px -12px rgba(0,0,0,.65)}
+.n-satzung .vr-print:first-of-type{font:900 clamp(17px,1.5vw,23px)/1 var(--display);letter-spacing:.02em;color:var(--vr-club)}
+.vr-lines.par i{background:rgba(31,73,125,.35)}
+.vr-lines.par i::before{width:38%;background:rgba(31,73,125,.18)}
+.vr-staple{position:absolute;top:10px;left:8px;width:22px;height:4px;border-radius:2px;background:linear-gradient(#cfd5da,#7c868e);transform:rotate(-38deg);box-shadow:0 1px 1px rgba(0,0,0,.4)}
+.n-reels{--r:-3.5deg}
+.n-reels .vr-paper{background:#fdfdfb;padding:10px 10px 8px;align-items:center;gap:6px}
+.vr-tape{position:absolute;top:-6px;left:50%;width:46%;height:18px;margin-left:-23%;background:rgba(236,224,190,.72);transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.18);z-index:2}
+.vr-pola{display:block;width:100%;aspect-ratio:1;background:#222;overflow:hidden}
+.vr-pola img{width:100%;height:100%;object-fit:cover}
+.n-crew{--r:2deg}
+.n-crew .vr-paper{background:repeating-linear-gradient(45deg,#f1f3f4 0 6px,#e9ecee 6px 12px);align-items:center;justify-content:center;gap:8px}
+.n-crew .vr-pin{--pc:var(--signal)}
+.vr-badge{width:58%;height:auto;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35));transform:rotate(-8deg)}
+
+/* Zielerfassung: gelbe Ecken bei Hover, Fokus und beim Selbst-Impuls */
+.vr-note::after{content:"";position:absolute;inset:-9px;pointer-events:none;opacity:0;transform:scale(1.1);transition:opacity .25s,transform .35s var(--vr-ease);
+  --b:linear-gradient(var(--signal),var(--signal));
+  background:var(--b) 0 0/16px 2px,var(--b) 0 0/2px 16px,var(--b) 100% 0/16px 2px,var(--b) 100% 0/2px 16px,var(--b) 0 100%/16px 2px,var(--b) 0 100%/2px 16px,var(--b) 100% 100%/16px 2px,var(--b) 100% 100%/2px 16px;background-repeat:no-repeat}
+.vr-note::before{content:"Erfasst";position:absolute;left:-9px;top:-30px;z-index:3;padding:4px 7px 3px;border-radius:2px;background:var(--signal);color:var(--signal-ink);font:400 11px/1 var(--osd);letter-spacing:.16em;text-transform:uppercase;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .3s var(--vr-ease);pointer-events:none}
+.vr-note.is-lock::after{opacity:1;transform:none}
+.vr-note.is-lock::before{opacity:1;transform:none}
+.vr-note.is-lock .vr-paper{transform:rotate(0) translateY(-6px) scale(1.05);box-shadow:0 1px 0 rgba(0,0,0,.12),0 30px 34px -14px rgba(0,0,0,.7)}
+@media (hover:hover) and (pointer:fine){
+  .vr-note:hover::after{opacity:1;transform:none}
+  .vr-note:hover .vr-paper{transform:rotate(0) translateY(-7px) scale(1.05);box-shadow:0 1px 0 rgba(0,0,0,.12),0 32px 36px -16px rgba(0,0,0,.72)}
+  .vr-note:hover .vr-pin{animation:vrPin .5s var(--vr-ease)}
+}
+.vr-note:focus-visible::after{opacity:1;transform:none}
+.vr-note:active .vr-paper{transform:rotate(0) scale(.97);transition-duration:.12s}
+@keyframes vrPin{30%{transform:translateY(-3px) rotate(-12deg)}60%{transform:translateY(0) rotate(8deg)}}
+
+/* Abdruck, wenn der Zettel online ist */
+.vr-imprint{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:3px;
+  border:1.5px dashed rgba(255,232,196,.3);background:rgba(20,13,7,.22);transform:rotate(var(--r,0deg))}
+.vr-imprint i{width:5px;height:5px;border-radius:50%;background:#140c06;box-shadow:0 1px 0 rgba(255,255,255,.12);position:absolute;top:13px;left:50%;margin-left:-2.5px}
+.vr-imprint em{font:400 11px/1 var(--osd);font-style:normal;letter-spacing:.18em;text-transform:uppercase;color:var(--vr-sig);display:flex;align-items:center;gap:6px}
+.vr-imprint em::before{content:"";width:9px;height:5px;border:solid currentColor;border-width:0 0 2px 2px;transform:rotate(-45deg) translateY(-2px)}
+.vr-note.is-gone .vr-paper{visibility:hidden}
+.vr-note.is-gone .vr-imprint{display:flex}
+.vr-note.is-gone.is-active .vr-imprint{border-color:var(--signal);background:rgba(255,208,0,.08)}
+.vr-note.is-gone.is-active .vr-imprint em{color:var(--signal)}
+@media (hover:hover) and (pointer:fine){.vr-note.is-gone:hover .vr-imprint{border-color:rgba(255,208,0,.7)}}
+
+/* Stempel und Hinweis */
+.vr-stamp{position:absolute;left:50%;top:54%;z-index:4;margin:0;padding:8px 18px 6px;border:4px solid currentColor;border-radius:8px;white-space:nowrap;pointer-events:none;
+  font:900 clamp(34px,4.4vw,62px)/1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,72,60,.92);
+  transform:translate(-50%,-50%) rotate(-11deg) scale(1.6);opacity:0;mix-blend-mode:screen;text-shadow:0 0 1px rgba(255,72,60,.6)}
+.vr.is-done .vr-stamp{opacity:1;transform:translate(-50%,-50%) rotate(-11deg) scale(1);transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .15s}
+.vr-hint{position:absolute;z-index:5;left:0;top:0;margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px 8px 9px;border-radius:999px;white-space:nowrap;pointer-events:none;
+  background:var(--signal);color:var(--signal-ink);font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 24px -8px rgba(0,0,0,.7);
+  opacity:0;transform:translate(-50%,8px);transition:opacity .3s,transform .4s var(--vr-ease)}
+.vr-hint svg{width:20px;height:20px;flex:none;animation:vrTap 1.4s ease-in-out infinite}
+.vr-hint.on{opacity:1;transform:translate(-50%,0)}
+.vr-hint .t-mouse{display:none}
+@media (hover:hover) and (pointer:fine){.vr-hint .t-mouse{display:inline}.vr-hint .t-touch{display:none}}
+@keyframes vrTap{0%,100%{transform:translateY(0)}45%{transform:translateY(-4px)}60%{transform:translateY(1px) scale(.92)}}
+
+/* Zähler unter dem Brett */
+.vr-meter{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:22px;min-height:40px}
+.vr-count{margin:0;font:400 13px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--text-2)}
+.vr-count b{font-weight:400;color:var(--signal)}
+.vr-seg{list-style:none;display:flex;gap:5px;margin:0;padding:0}
+.vr-seg li{width:20px;height:4px;border-radius:2px;background:rgba(230,236,236,.16);transition:background .3s,box-shadow .3s}
+.vr-seg li.on{background:var(--signal);box-shadow:0 0 10px rgba(255,208,0,.5)}
+.vr-reset{all:unset;cursor:pointer;margin-left:auto;padding:10px 14px;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(230,236,236,.4);font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--wing);transition:box-shadow .2s,background .2s,color .2s}
+.vr-reset:hover,.vr-reset:focus-visible{background:var(--signal);color:var(--signal-ink);box-shadow:none}
+.vr-reset:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+
+/* ---------- Geräte: Laptop + Handy mit der echten Vereinsseite ---------- */
+.vr-devices{position:relative;display:grid;grid-template-columns:40% minmax(0,1fr);grid-template-rows:auto auto;column-gap:22px;padding:34px 14px 0}
+.vr-osd{position:absolute;inset:0 0 auto 0;height:calc(100% - 0px);pointer-events:none}
+.vr-osd .c{position:absolute;width:20px;height:20px;border:solid rgba(255,208,0,.55);border-width:0}
+.vr-osd .tl{top:0;left:0;border-top-width:2px;border-left-width:2px}
+.vr-osd .tr{top:0;right:0;border-top-width:2px;border-right-width:2px}
+.vr-osd .bl{bottom:0;left:0;border-bottom-width:2px;border-left-width:2px}
+.vr-osd .br{bottom:0;right:0;border-bottom-width:2px;border-right-width:2px}
+.vr-rec,.vr-url{position:absolute;top:8px;font:400 11px/1 var(--osd);letter-spacing:.18em;text-transform:uppercase}
+.vr-rec{left:28px;display:flex;align-items:center;gap:7px;color:var(--vr-sig)}
+.vr-rec i{width:8px;height:8px;border-radius:50%;background:var(--rec);animation:wdrec 1.2s steps(2) infinite}
+.vr-url{right:28px;color:var(--muted)}
+
+.vr-laptop{grid-column:1/-1;grid-row:1;margin-left:14%;position:relative;z-index:1}
+.vr-lscr{position:relative;display:block;aspect-ratio:16/10;border-radius:12px 12px 0 0;background:#040912;border:7px solid #12171d;border-bottom-width:9px;overflow:hidden;box-shadow:0 0 0 1px #2b333c,0 40px 70px -30px rgba(0,0,0,.85)}
+.vr-lbar{position:absolute;top:0;left:0;right:0;z-index:2;height:18px;display:flex;align-items:center;gap:4px;padding:0 8px;background:#0c121a;border-bottom:1px solid rgba(158,196,255,.12)}
+.vr-lbar i{width:6px;height:6px;border-radius:50%;background:rgba(230,236,236,.25)}
+.vr-lbar em{font:400 9px/1 var(--osd);font-style:normal;letter-spacing:.1em;color:var(--muted);margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vr-lscr video{position:absolute;left:0;right:0;bottom:0;top:18px;width:100%;height:calc(100% - 18px);object-fit:cover;object-position:top center;background:#040912}
+.vr-lbase{display:block;height:12px;margin:0 -7%;border-radius:2px 2px 12px 12px;background:linear-gradient(#3a434d,#1a2027 60%,#0e1216);box-shadow:0 18px 30px -14px rgba(0,0,0,.8)}
+.vr-lbase::before{content:"";display:block;width:18%;height:4px;margin:0 auto;border-radius:0 0 6px 6px;background:#0d1115}
+
+.vr-phone{grid-column:1;grid-row:1/3;align-self:end;justify-self:start;position:relative;z-index:3;display:block;width:100%;max-width:224px;aspect-ratio:390/844;margin-top:28%;
+  padding:7px;border-radius:32px;background:linear-gradient(145deg,#2a323b,#0b0f13 40%);text-decoration:none;
+  box-shadow:0 0 0 1.5px #3b444e,0 34px 60px -20px rgba(0,0,0,.9),0 0 0 0 rgba(63,224,255,0);transition:box-shadow .5s,transform .45s var(--vr-ease)}
+.vr-phone:focus-visible{outline:3px solid var(--signal);outline-offset:5px}
+@media (hover:hover) and (pointer:fine){.vr-phone:hover{transform:translateY(-6px) rotate(-1deg)}}
+.vr-phone.is-swap{box-shadow:0 0 0 1.5px var(--vr-sig),0 34px 60px -20px rgba(0,0,0,.9),0 0 46px 2px rgba(63,224,255,.35)}
+.vr-island{position:absolute;top:14px;left:50%;width:30%;height:13px;margin-left:-15%;border-radius:10px;background:#000;z-index:4}
+.vr-scr{position:relative;display:block;width:100%;height:100%;border-radius:26px;overflow:hidden;background:#040912;transform:translateZ(0)}
+.vr-clip{position:absolute;inset:0;display:block;opacity:0;transition:opacity .35s ease;background:#040912}
+.vr-clip.on{opacity:1;z-index:1}
+.vr-clip img,.vr-clip video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
+.vr-clip video{opacity:0;transition:opacity .3s}
+.vr-clip.playing video{opacity:1}
+.vr-clip.pdf{background:#3c4045}
+.vr-pdfbar{position:absolute;top:0;left:0;right:0;z-index:2;height:34px;padding:14px 10px 0;background:#26292d;font:400 8px/1 var(--osd);letter-spacing:.06em;color:#cfd5da;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vr-pdfpage{position:absolute;top:44px;left:9px;right:9px;display:block;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.vr-pdfpage img{position:static;height:auto}
+.vr.is-moving .vr-clip.pdf.on .vr-pdfpage{animation:vrPdf 9s ease-in-out infinite alternate}
+@keyframes vrPdf{0%,12%{transform:translateY(0)}100%{transform:translateY(-34%)}}
+.vr-scan{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,transparent 0 44%,rgba(255,208,0,.0) 44%,rgba(255,208,0,.6) 49.5%,rgba(255,255,255,.85) 50%,transparent 50.6%),
+             repeating-linear-gradient(180deg,rgba(63,224,255,.08) 0 2px,transparent 2px 4px)}
+.vr-phone.is-swap .vr-scan{animation:vrScan .7s cubic-bezier(.5,0,.3,1)}
+@keyframes vrScan{0%{opacity:1;transform:translateY(-55%)}85%{opacity:1}100%{opacity:0;transform:translateY(55%)}}
+
+.vr-cap{grid-column:2;grid-row:2;align-self:start;padding:22px 0 6px;min-height:150px}
+.vr-cap-k{display:flex;align-items:center;gap:8px;margin:0 0 10px;font:400 12px/1.2 var(--osd);letter-spacing:.16em;text-transform:uppercase;color:var(--vr-sig)}
+.vr-cap-k i{width:8px;height:8px;flex:none;border-radius:50%;background:var(--vr-sig);box-shadow:0 0 10px var(--vr-sig)}
+.vr-cap-t{margin:0 0 8px;font:900 clamp(26px,2.4vw,38px)/.95 var(--display);text-transform:uppercase;color:var(--wing);letter-spacing:.005em}
+.vr-cap-d{margin:0 0 14px;color:var(--text-2);font-size:15.5px;line-height:1.5;max-width:28em}
+.vr-cap-go{display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--body);color:var(--signal);text-decoration:none;padding:8px 0;border-bottom:1.5px solid rgba(255,208,0,.4);transition:border-color .2s,gap .2s}
+.vr-cap-go svg{width:15px;height:15px}
+.vr-cap-go:hover{border-color:var(--signal);gap:12px}
+.vr-cap.swap .vr-cap-t,.vr-cap.swap .vr-cap-d{animation:vrCap .5s var(--vr-ease)}
+@keyframes vrCap{from{opacity:0;transform:translateY(10px)}}
+
+/* Flug-Kopie eines Zettels */
+.vr-fly{position:absolute!important;z-index:40;margin:0;pointer-events:none;transform-origin:50% 50%;will-change:transform,opacity}
+
+/* ---------- Tablet und Handy ---------- */
+@media (max-width:1060px){
+  .vr-head{grid-template-columns:1fr;align-items:start}
+  .vr-stage{grid-template-columns:1fr}
+  .vr-board{transform:none}
+  .vr-devices{max-width:640px;width:100%;justify-self:center}
+}
+@media (max-width:760px){
+  .vr{padding:clamp(64px,16vw,92px) 0 72px}
+  .vr-head{gap:18px}
+  .vr-lede{margin-bottom:18px}
+  .vr-ctas .btn{flex:1 1 auto}
+  .vr-stage{gap:22px;margin-top:32px}
+  .vr-board{padding:44px 12px 14px;border-radius:12px;box-shadow:inset 0 0 0 7px #22180f,inset 0 0 0 8px rgba(255,236,200,.08),inset 0 20px 40px rgba(0,0,0,.38),0 36px 60px -30px rgba(0,0,0,.9)}
+  .vr-plate{top:14px;font-size:10px;padding:5px 10px 4px;letter-spacing:.16em}
+  .vr-notes{gap:12px 8px}
+  .vr-note{aspect-ratio:5/6}
+  .vr-paper{padding:15px 6px 6px;gap:2px}
+  .vr-pin{width:11px;height:11px;margin-left:-5.5px;top:5px}
+  .vr-hand.big{font-size:17px;line-height:.95}
+  .vr-hand{font-size:14px}
+  .vr-hand.sm,.vr-print.sm,.vr-tabs i{display:none}
+  .n-halle .vr-paper{background:linear-gradient(transparent 33px,rgba(214,49,42,.55) 33px 34px,transparent 34px),repeating-linear-gradient(transparent 0 15px,rgba(56,112,190,.2) 15px 16px) 0 18px/100% 100% no-repeat,#fbfaf5}
+  .n-halle .vr-hand[data-vr-date]{font-size:15px;margin-top:2px}
+  .vr-wd{display:none}
+  .vr-tabs{height:26%;margin:auto -6px 0;width:calc(100% + 12px)}
+  .vr-tabs i{display:block}
+  .vr-print{font-size:8.5px;letter-spacing:.04em}
+  .n-satzung .vr-print:first-of-type{font-size:16px}
+  .vr-lines{gap:7px;margin-top:6px}
+  .vr-hand.sig{font-size:14px}
+  .n-reels .vr-paper{padding:6px 6px 4px;gap:3px}
+  .n-reels .vr-hand{font-size:13px}
+  .n-crew .vr-hand{font-size:14px}
+  .vr-note::before{font-size:9px;top:-24px;left:-6px;padding:3px 5px 2px}
+  .vr-note::after{inset:-6px;--b:linear-gradient(var(--signal),var(--signal))}
+  .vr-imprint em{font-size:9px;letter-spacing:.1em}
+  .vr-stamp{font-size:34px;border-width:3px}
+  .vr-meter{margin-top:14px;gap:8px 12px}
+  .vr-count{font-size:11px;letter-spacing:.1em}
+  .vr-seg li{width:14px}
+  .vr-reset{margin-left:0}
+  .vr-devices{grid-template-columns:1fr;padding:30px 10px 0;max-width:420px}
+  .vr-laptop{display:none}
+  .vr-phone{grid-column:1;grid-row:1;justify-self:center;margin-top:0;width:min(56vw,216px)}
+  .vr-cap{grid-column:1;grid-row:2;text-align:center;min-height:0;padding-top:18px}
+  .vr-cap-k{justify-content:center}
+  .vr-cap-d{margin-inline:auto;font-size:15px}
+  .vr-rec{left:24px}.vr-url{right:24px}
+}
+@media (max-width:380px){
+  .vr-notes{gap:10px 6px}
+  .vr-hand.big{font-size:15.5px}
+  .vr-board{padding-inline:10px}
+  .vr-hint{font-size:11px;letter-spacing:.08em}
+}
+
+/* Ruhige Endzustände ohne Bewegung */
+@media (prefers-reduced-motion:reduce){
+  .vr-paper,.vr-phone,.vr-note::after,.vr-note::before,.vr-hint,.vr-seg li,.vr-clip,.vr-clip video{transition:none!important}
+  .vr-hint svg,.vr-rec i,.vr-note:hover .vr-pin{animation:none!important}
+  .vr-phone.is-swap .vr-scan,.vr-cap.swap .vr-cap-t,.vr-cap.swap .vr-cap-d,.vr-clip.pdf .vr-pdfpage{animation:none!important}
+  .vr-board{transform:none}
+  .vr.is-done .vr-stamp{transition:none}
+}
