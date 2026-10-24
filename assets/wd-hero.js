@@ -21,11 +21,10 @@
       vid.src = vid.dataset.src;
       if (vis && !document.hidden) play();
     };
-    // Bis der Flug läuft, driftet das Standbild per CSS (Bewegung ab dem ersten Bild). Das Video lädt nach dem Seitenaufbau,
-    // damit es den Seitenstart nicht bremst – spätestens nach 3,5 Sekunden, falls die Seite länger lädt.
-    let kick = 0;
-    const go = () => { clearTimeout(kick); setTimeout(start, 150); };
-    if (document.readyState === 'complete') go(); else { addEventListener('load', go, { once: true }); kick = setTimeout(start, 3500); }
+    // Bis der Flug läuft, driftet das Standbild per CSS (Bewegung ab dem ersten Bild). Das Video lädt erst nach dem
+    // Seitenaufbau: ein Video, das vorher startet, hält das load-Ereignis der ganzen Seite auf.
+    const go = () => setTimeout(start, 150);
+    if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
     addEventListener('resize', () => { if (mobile()) start(); }, { passive: true });
     if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => {
       vis = en.isIntersecting;
