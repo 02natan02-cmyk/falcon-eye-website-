@@ -507,13 +507,14 @@ function init() {
 
   /* ---------------- Referenz-Galerie ---------------- */
   // [Datei, Name, Index der Referenz-Karte unten, Gerät: d = Laptop, m = Handy]
-  // Seit 18.10.: Pflege24-7 und Opieka24-7 stehen als Karten 1 und 2 direkt nach Natan Holding, alle späteren Indizes +2
+  // Seit 24.10. (Natans Reihenfolge): Wäscherei, Hudalla, Garten-Traum, Pellegrin, K&S, Natan Küchenmontage, Hellwig,
+  // Eichenhof, Verena, Falcon Eye, Pflege24-7, Opieka24-7, Natan Holding (Kartenindex 0–12)
   const REFS = [
-    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 4, 'd'], ['verena', 'Praxis Verena Paul', 11, 'm'], ['pellegrin', 'Pellegrin Küchen', 6, 'd'],
-    ['falcon', 'Falcon Eye', 10, 'm'], ['holding', 'Natan Holding', 0, 'd'], ['gartentraum', 'Der Garten-Traum', 5, 'm'],
-    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 7, 'd'], ['natan', 'Natan Küchenmontage', 12, 'm'],
-    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 8, 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 9, 'm'],
-    ['pflege247', 'Pflege24-7', 1, 'm'], ['opieka247', 'Opieka24-7', 2, 'm']
+    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 0, 'd'], ['verena', 'Praxis Verena Paul', 8, 'm'], ['pellegrin', 'Pellegrin Küchen', 3, 'd'],
+    ['falcon', 'Falcon Eye', 9, 'm'], ['holding', 'Natan Holding', 12, 'd'], ['gartentraum', 'Der Garten-Traum', 2, 'm'],
+    ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 7, 'd'], ['natan', 'Natan Küchenmontage', 5, 'm'],
+    ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 4, 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 6, 'm'],
+    ['pflege247', 'Pflege24-7', 10, 'm'], ['opieka247', 'Opieka24-7', 11, 'm']
   ];
   // Plätze im Endbild (Bildschirmkoordinaten des Fußpunkts); daraus werden Bodenpositionen berechnet
   const SLOTS_D = [[.655, .43], [.765, .44], [.87, .43], [.585, .285], [.665, .28], [.75, .285], [.83, .28], [.915, .285], [.925, .67], [.94, .45], [.555, .43], [.845, .675]];
@@ -523,7 +524,7 @@ function init() {
   const lineup = [];
   const pickables = [];
   const mainTag = document.createElement('span'); mainTag.textContent = 'Hausmeisterservice Hudalla'; tagsEl && tagsEl.appendChild(mainTag);
-  const mainItem = { g: L.g, el: mainTag, ref: 3, home: V(), anchor: V(0, 2.75, -1.6), main: true };
+  const mainItem = { g: L.g, el: mainTag, ref: 1, home: V(), anchor: V(0, 2.75, -1.6), main: true };
   [L.scr, P.scr, fillD, fillM].forEach(m => { m.userData.item = mainItem; pickables.push(m); });
   let lineupBuilt = false;
   function buildLineup() {
