@@ -6,11 +6,11 @@ Kontakt: info@falcon-eye.de · Telefon und WhatsApp 0151 56743442 · Römerstr. 
 
 ## Webdesign
 
-- [Webdesign & Webentwicklung](https://falcon-eye.de/webdesign.html): Hauptseite für Websites mit Referenzen (13 Projekte), Angebot, Leistungen aus einer Hand, Sichtbarkeit bei Google und in KI-Antworten, häufigen Fragen und Anfrageformular.
-- [Alles aus einer Hand](https://falcon-eye.de/webdesign.html#rundum): Website (Unikat statt Vorlage), Domain finden, kaufen und verwalten, Einkäufe wie Postfächer, Hosting, E-Mail und Formulare, Wartung und Updates per WhatsApp-Sprachnachricht – einfache Änderungen sind in 10 Minuten live.
-- [Gefunden werden bei Google, Bing und in KI-Antworten](https://falcon-eye.de/webdesign.html#ki): echte Überschriften und Antworten auf die Fragen der Kunden, strukturierte Daten (Schema.org), Sitemap und llms.txt, Google Search Console und Bing Webmaster Tools, Pflege des Google-Unternehmensprofils. Einen festen Platz bei Google oder in einer KI-Antwort kann niemand garantieren.
-- [Häufige Fragen](https://falcon-eye.de/webdesign.html#fragen): Dauer, Preis, Domain und Hosting, spätere Änderungen, erster Entwurf, Google und KI, PHP-Sicherheit, Drohnenaufnahmen.
-- [Referenzen](https://falcon-eye.de/webdesign.html#referenzen): Handwerk und Service, Küchenstudios, Autobetriebe, Gesundheit und Pflege sowie eigene Projekte.
+- [Webdesign & Webentwicklung](https://falcon-eye.de/webdesign): Hauptseite für Websites mit Referenzen (13 Projekte), Angebot, Leistungen aus einer Hand, Sichtbarkeit bei Google und in KI-Antworten, häufigen Fragen und Anfrageformular.
+- [Alles aus einer Hand](https://falcon-eye.de/webdesign#rundum): Website (Unikat statt Vorlage), Domain finden, kaufen und verwalten, Einkäufe wie Postfächer, Hosting, E-Mail und Formulare, Wartung und Updates per WhatsApp-Sprachnachricht – einfache Änderungen sind in 10 Minuten live.
+- [Gefunden werden bei Google, Bing und in KI-Antworten](https://falcon-eye.de/webdesign#ki): echte Überschriften und Antworten auf die Fragen der Kunden, strukturierte Daten (Schema.org), Sitemap und llms.txt, Google Search Console und Bing Webmaster Tools, Pflege des Google-Unternehmensprofils. Einen festen Platz bei Google oder in einer KI-Antwort kann niemand garantieren.
+- [Häufige Fragen](https://falcon-eye.de/webdesign#fragen): Dauer, Preis, Domain und Hosting, spätere Änderungen, erster Entwurf, Google und KI, PHP-Sicherheit, Drohnenaufnahmen.
+- [Referenzen](https://falcon-eye.de/webdesign#referenzen): Handwerk und Service, Küchenstudios, Autobetriebe, Gesundheit und Pflege sowie eigene Projekte.
 
 ## Angebot
 

@@ -169,7 +169,7 @@
     const sh = $('[data-bf-share]', bf);
     if (sh && navigator.share) {
       sh.hidden = false;
-      sh.addEventListener('click', () => navigator.share({ title: 'Falcon Eye – Websites, die fliegen', text: 'Bis 27.11. mit dem Code BlackFriday45: 45 % auf den Einmalpreis einer neuen Website von Falcon Eye.', url: 'https://falcon-eye.de/webdesign.html#angebot' }).catch(() => { }));
+      sh.addEventListener('click', () => navigator.share({ title: 'Falcon Eye – Websites, die fliegen', text: 'Bis 27.11. mit dem Code BlackFriday45: 45 % auf den Einmalpreis einer neuen Website von Falcon Eye.', url: 'https://falcon-eye.de/webdesign#angebot' }).catch(() => { }));
     }
   }
   $$('[data-copy-code]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); copyCode(); }));
