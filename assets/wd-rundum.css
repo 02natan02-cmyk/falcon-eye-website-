@@ -1,0 +1,269 @@
+/* ===== Rundum – „Sie machen Ihr Geschäft. Wir den Rest.“ (Logik: assets/wd-rundum.js)
+   Eine gezeichnete Ladenfront; Falcon-Eye-Drohnen docken nacheinander sieben Pakete an.
+   Ohne JS und bei „Bewegung reduzieren“ steht der fertige Endzustand da. ===== */
+.wru{position:relative;background:radial-gradient(60% 50% at 78% 58%,rgba(255,208,0,.07),transparent 70%),linear-gradient(180deg,var(--steel),#141920 60%,var(--steel));overflow-x:clip}
+.wru-stage{padding:clamp(72px,9vw,130px) 0 clamp(64px,8vw,110px)}
+.wru-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.wru-copy{display:contents}
+.wru-copy>.wd-kick{order:1}
+.wru h2{order:2;margin-bottom:16px}
+.wru h2 em{display:block}
+.wru-lede{order:3;margin:0 0 26px;color:var(--text-2);font-size:clamp(16px,1.25vw,19px);line-height:1.5;max-width:34em}
+.wru-scene{order:4}
+.wru-chips{order:5;margin-top:22px}
+.wru-hint{order:6}
+.wru-info{order:7}
+.wru-cta{order:8}
+
+/* ---------- Chips ---------- */
+.wru-chips{display:flex;flex-wrap:wrap;gap:8px}
+.wru-chip{position:relative;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:7px 12px 7px 7px;border-radius:999px;border:1px solid var(--line);background:rgba(31,38,46,.72);color:var(--text-2);font:600 15px/1.1 var(--body);cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s,color .3s;-webkit-tap-highlight-color:transparent}
+.wru-ic{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:var(--plate-2);color:var(--wing);transition:background .3s,color .3s}
+.wru-ic svg{width:17px;height:17px}
+.wru-ck{position:relative;flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(230,236,236,.28);transition:background .3s,border-color .3s}
+.wru-ck::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid var(--signal-ink);border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.wru-chip.ok{color:var(--wing)}
+.wru-chip.ok .wru-ck{background:var(--signal);border-color:var(--signal)}
+.wru-chip.ok .wru-ck::after{transform:rotate(45deg) scale(1)}
+.wru-chip.ok .wru-ic{background:rgba(255,208,0,.16);color:var(--signal)}
+.wru-chip[aria-pressed="true"]{border-color:var(--signal);background:rgba(255,208,0,.1);color:#fff}
+.wru-chip:hover{border-color:rgba(255,208,0,.65);transform:translateY(-2px)}
+.wru-chip:active{transform:scale(.97)}
+.wru-chip.pop{animation:wru-pop .6s cubic-bezier(.16,1,.3,1)}
+@keyframes wru-pop{30%{transform:scale(1.05);box-shadow:0 0 0 6px rgba(255,208,0,.18)}}
+@media (max-width:640px){.wru-chip{min-height:40px;gap:7px;padding:5px 10px 5px 5px;font-size:14px}.wru-ic{width:27px;height:27px}.wru-ic svg{width:15px;height:15px}.wru-ck{width:16px;height:16px}.wru-ck::after{left:4px;top:1.5px}.wru-chips{gap:7px}}
+@media (max-width:380px){.wru-chip{gap:6px;padding:4px 9px 4px 4px;font-size:13px}.wru-ic{width:25px;height:25px}}
+.wru-js .wru-chip:not(.ok){color:var(--muted)}
+.wru-js .wru-chip:not(.ok)[aria-pressed="true"]{color:var(--wing)}
+
+.wru-hint{display:flex;align-items:center;gap:8px;margin:12px 0 0;font:400 12px/1.2 var(--osd);letter-spacing:.12em;text-transform:uppercase;color:var(--signal);transition:opacity .5s,transform .5s}
+.wru-hint svg{width:18px;height:18px;flex:none;animation:wru-tap 1.4s ease-in-out infinite}
+.wru-hint .d{display:none}
+@media (hover:hover) and (pointer:fine){.wru-hint .t{display:none}.wru-hint .d{display:inline}}
+@keyframes wru-tap{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.wru.is-touched .wru-hint,.wru.wait-hint .wru-hint{opacity:0;transform:translateY(-4px);pointer-events:none}
+.wru:not(.wru-js) .wru-hint{display:none}
+
+/* ---------- Details zum gewählten Paket (alle im selben Feld: keine Sprünge) ---------- */
+.wru-info{display:grid;margin-top:14px;padding:16px 18px;border-radius:16px;background:rgba(31,38,46,.6);border:1px solid var(--line)}
+.wru-inf{grid-area:1/1;visibility:hidden;opacity:0;transform:translateY(6px);transition:opacity .14s,transform .14s,visibility 0s .14s}
+.wru-inf.on{visibility:visible;opacity:1;transform:none;transition:opacity .35s .12s,transform .35s .12s,visibility 0s}
+.wru-inf h3{margin:0 0 4px;font:900 22px/1.05 var(--display);letter-spacing:.01em;text-transform:uppercase;color:var(--wing)}
+.wru-inf p{margin:0;color:var(--text-2);font-size:16px;line-height:1.45}
+.wru-inf ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;padding:0}
+.wru-inf li{padding:6px 10px;border-radius:999px;background:var(--plate-2);font:400 12.5px/1.2 var(--osd);color:var(--wing)}
+.wru-inf .wru-fine{margin-top:8px;font-size:13.5px;color:var(--muted)}
+.wru-inf a{display:inline-flex;align-items:center;gap:8px;margin-top:10px;color:var(--signal);font-weight:700;font-size:15px;text-decoration:none;border-bottom:2px solid rgba(255,208,0,.35);padding-bottom:2px;transition:gap .3s,border-color .3s}
+.wru-inf a:hover{gap:12px;border-color:var(--signal)}
+.wru-inf a svg{width:16px;height:16px}
+
+.wru-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-top:18px}
+.wru-cta .btn svg{width:18px;height:18px}
+.wru-ok{display:inline-flex;align-items:center;gap:8px;font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--signal);opacity:0;transform:translateX(-6px);transition:opacity .5s,transform .5s}
+.wru-ok svg{width:16px;height:16px}
+.wru.is-done .wru-ok,.wru:not(.wru-js) .wru-ok{opacity:1;transform:none}
+.wru.is-done .wru-cta .btn{animation:wru-cta 1.2s ease-out 1}
+@keyframes wru-cta{0%{box-shadow:0 0 0 0 rgba(255,208,0,.6)}100%{box-shadow:0 0 0 22px rgba(255,208,0,0)}}
+
+/* ---------- Szene ---------- */
+.wru-scene{position:relative;width:100%;aspect-ratio:640/600;border-radius:22px;overflow:hidden;isolation:isolate;contain:paint;
+  background:
+    radial-gradient(1px 1px at 12% 14%,rgba(230,236,236,.7),transparent 60%),radial-gradient(1px 1px at 27% 8%,rgba(230,236,236,.5),transparent 60%),radial-gradient(1.4px 1.4px at 44% 18%,rgba(230,236,236,.6),transparent 60%),radial-gradient(1px 1px at 63% 6%,rgba(230,236,236,.45),transparent 60%),radial-gradient(1.2px 1.2px at 81% 21%,rgba(230,236,236,.6),transparent 60%),radial-gradient(1px 1px at 92% 11%,rgba(230,236,236,.5),transparent 60%),radial-gradient(1px 1px at 6% 33%,rgba(230,236,236,.35),transparent 60%),
+    linear-gradient(rgba(255,208,0,.035) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,208,0,.035) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(180deg,#0a0e13 0%,#111820 48%,#18202a 100%);
+  box-shadow:0 50px 100px -50px rgba(0,0,0,.95),inset 0 0 0 1px rgba(230,236,236,.08)}
+.wru-world{position:absolute;left:0;top:0;width:640px;height:600px;transform-origin:0 0;transform:scale(var(--s,.56))}
+@media (min-width:430px){.wru-world{--s:.62}}
+@media (min-width:700px){.wru-world{--s:.9}}
+.wru-cam{position:absolute;inset:0;transform-origin:50% 62%}
+.wru-back,.wru-main,.wru-fly{position:absolute;top:0;overflow:visible}
+.wru-back{left:-40px}
+.wru-main,.wru-fly{left:0}
+.wru-fly{z-index:9;pointer-events:none}
+.wru-signbd{fill:#10151a;stroke:#3a4552;stroke-width:1.5;transition:fill .6s}
+.wru-signtx{font:700 16px var(--body);letter-spacing:.14em;fill:var(--wing);transition:fill .6s}
+.wru-signglow{opacity:0;transition:opacity .8s}
+.wru.is-done .wru-signbd,.wru:not(.wru-js) .wru-signbd{fill:var(--signal);stroke:var(--signal)}
+.wru.is-done .wru-signtx,.wru:not(.wru-js) .wru-signtx{fill:var(--signal-ink)}
+.wru.is-done .wru-signglow,.wru:not(.wru-js) .wru-signglow{opacity:.55}
+.wru-nw{transition:fill 1.2s}
+.wru.is-done .wru-nw,.wru:not(.wru-js) .wru-nw{fill:#6b5729}
+.wru-aura{opacity:.6;transition:opacity 1s}
+.wru.is-done .wru-aura{opacity:1}
+.wru-at{font:700 13px var(--body);fill:#1a1500}
+.wru-247{font:900 25px var(--display);fill:var(--signal);letter-spacing:.02em}
+.wru-led{animation:wru-blink 1.4s steps(2) infinite}.wru-led.l2{animation-duration:.9s}
+@keyframes wru-blink{50%{opacity:.2}}
+.wru-data{animation:wru-flow .9s linear infinite}
+@keyframes wru-flow{to{stroke-dashoffset:-14}}
+.wru-lane{animation:wru-lane 6s linear infinite}
+@keyframes wru-lane{to{stroke-dashoffset:-108}}
+.wru-arm{transform-box:fill-box;transform-origin:0 0;animation:wru-arm 1.7s ease-in-out infinite alternate}
+@keyframes wru-arm{from{transform:rotate(-7deg)}to{transform:rotate(9deg)}}
+.wru-owner{animation:wru-breathe 3.4s ease-in-out infinite alternate}
+@keyframes wru-breathe{to{transform:translateY(-1.5px)}}
+
+/* Kunden gehen ein und aus */
+.wru-p{opacity:0}
+.wru-p1{animation:wru-walk1 10s linear infinite}
+.wru-p2{animation:wru-walk2 10s linear infinite}
+.wru.is-done .wru-p3,.wru:not(.wru-js) .wru-p3{animation:wru-walk3 11s linear 1.5s infinite}
+@keyframes wru-walk1{0%{transform:translate(-30px,474px);opacity:0}4%{opacity:1}70%{transform:translate(384px,474px);opacity:1}76%,100%{transform:translate(388px,468px) scale(.9);opacity:0}}
+@keyframes wru-walk2{0%,44%{transform:translate(388px,468px) scale(.9);opacity:0}50%{transform:translate(392px,474px);opacity:1}100%{transform:translate(690px,474px);opacity:1}}
+@keyframes wru-walk3{0%{transform:translate(690px,474px);opacity:1}62%{transform:translate(394px,474px);opacity:1}68%,100%{transform:translate(390px,468px) scale(.9);opacity:0}}
+.wru-p3 .wru-pw{transform:scaleX(-1)}
+.wru-leg{transform-box:fill-box;transform-origin:50% 0;animation:wru-step .5s ease-in-out infinite alternate}
+.wru-leg.b{animation-delay:-.5s}
+@keyframes wru-step{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+.wru-js:not(.is-open) .wru-ppl{visibility:hidden}
+
+/* Bildschirm über dem Laden: klappt in 3D auf */
+.wru-scrwrap{position:absolute;left:196px;top:46px;width:248px;height:160px;perspective:760px;perspective-origin:50% 100%;z-index:2}
+.wru-scr{position:absolute;inset:0;padding:6px;border-radius:12px;background:#0b0e12;box-shadow:0 0 0 1px rgba(230,236,236,.1),0 0 46px rgba(255,208,0,.22),0 26px 50px -14px rgba(0,0,0,.85);transform-origin:50% 100%;backface-visibility:hidden}
+.wru-page{position:relative;height:100%;border-radius:7px;overflow:hidden;background:#f6f1e7;color:#24201b}
+.wru-bar{display:flex;align-items:center;gap:4px;height:15px;padding:0 6px;background:#e6dfd1}
+.wru-bar i{width:5px;height:5px;border-radius:50%;background:#c9bfae}
+.wru-bar span{margin-left:6px;padding:1px 8px;border-radius:6px;background:#f6f1e7;font:400 8px/1.2 var(--osd);color:#6b6256;letter-spacing:.04em}
+.wru-roll{padding:6px 9px 10px;animation:wru-roll 10s ease-in-out 1s infinite alternate}
+@keyframes wru-roll{0%,18%{transform:translateY(0)}82%,100%{transform:translateY(-78px)}}
+.wru-pg-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.wru-pg-nav b{font:900 12px/1 var(--display);letter-spacing:.06em;color:#24201b}
+.wru-pg-nav span{display:grid;gap:2px}.wru-pg-nav i{display:block;width:11px;height:2px;background:#24201b;border-radius:2px}
+.wru-pg-hero{position:relative;height:58px;border-radius:7px;overflow:hidden;background:linear-gradient(160deg,#2f6f73,#1f4a52 60%,#183a40)}
+.wru-pg-sun{position:absolute;right:16px;top:9px;width:16px;height:16px;border-radius:50%;background:#ffd27a;box-shadow:0 0 14px #ffd27a}
+.wru-pg-shop{position:absolute;left:12px;bottom:0;width:62px;height:34px;background:linear-gradient(#e85d2a 0 9px,#f3e9d6 9px);border-radius:3px 3px 0 0}
+.wru-pg-shop::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:16px;background:repeating-linear-gradient(90deg,#24201b 0 12px,transparent 12px 16px);opacity:.75}
+.wru-pg-open{position:absolute;right:8px;bottom:7px;padding:2px 6px;border-radius:9px;background:#fff;font:700 7.5px/1.2 var(--body);color:#1f7a45}
+.wru-pg-open::before{content:"";display:inline-block;width:5px;height:5px;margin-right:3px;border-radius:50%;background:#2fbf61;vertical-align:1px}
+.wru-pg-h{margin:7px 0 5px;font:900 19px/.95 var(--display);text-transform:uppercase;color:#24201b}
+.wru-pg-l{height:5px;margin:0 0 4px;border-radius:3px;background:#d8cfbf}
+.wru-pg-l.s{width:64%}
+.wru-pg-btn{display:inline-block;margin:4px 0 9px;padding:5px 10px;border-radius:9px;background:#e85d2a;font:700 8.5px/1 var(--body);color:#fff}
+.wru-pg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}
+.wru-pg-cards i{height:34px;border-radius:5px;background:#ebe3d4}
+.wru-pg-cards i:nth-child(2){background:#f3d9c4}
+.wru-upd{position:absolute;right:8px;top:24px;padding:3px 7px;border-radius:6px;background:var(--signal);font:900 10px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--signal-ink);box-shadow:0 4px 10px -2px rgba(0,0,0,.35)}
+
+/* Schild an der Tür: GESCHLOSSEN → GEÖFFNET */
+.wru-doorsign{position:absolute;left:362px;top:368px;width:52px;height:22px;perspective:300px;z-index:2}
+.wru-ds-in{position:absolute;inset:0;transform-style:preserve-3d}
+.wru:not(.wru-js) .wru-ds-in{transform:rotateY(180deg)}
+.wru-ds-in span{position:absolute;inset:0;display:grid;place-items:center;border-radius:4px;background:#f4efe6;font:700 7.5px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 3px 6px rgba(0,0,0,.4)}
+.wru-ds-in .f{color:#c0392b}
+.wru-ds-in .b{color:#1f7a45;transform:rotateY(180deg)}
+
+/* Straßenschild: ihre-firma.de */
+.wru-dsign{position:absolute;left:20px;top:290px;width:180px;height:42px;display:grid;place-items:center;border-radius:7px;background:var(--signal);box-shadow:inset 0 0 0 3px #1a1500,inset 0 0 0 5px var(--signal),0 12px 24px -8px rgba(0,0,0,.7);z-index:3;transform-origin:50% 0}
+.wru-dsign span{font:700 22px/1 var(--body);letter-spacing:-.01em;color:#1a1500;white-space:nowrap}
+.wru-dsign::before,.wru-dsign::after{content:"";position:absolute;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:#1a1500;opacity:.55}
+.wru-dsign::before{left:9px}.wru-dsign::after{right:9px}
+
+/* Briefkasten, Umschläge, Zähler */
+.wru-mbadge{position:absolute;left:503px;top:372px;width:21px;height:21px;display:grid;place-items:center;border-radius:50%;background:var(--rec);color:#fff;font:700 12px/1 var(--body);box-shadow:0 0 0 2px #10141a;z-index:4}
+.wru-env{position:absolute;left:473px;top:383px;width:28px;height:19px;border-radius:3px;background:#f4efe6;box-shadow:0 4px 10px rgba(0,0,0,.4);z-index:5;opacity:0;pointer-events:none}
+.wru-env::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom right,transparent 47%,#cfc6b6 48%,#cfc6b6 52%,transparent 53%),linear-gradient(to bottom left,transparent 47%,#cfc6b6 48%,#cfc6b6 52%,transparent 53%);background-size:100% 100%;clip-path:polygon(0 0,100% 0,50% 62%)}
+
+/* Sprachnachricht vom Inhaber */
+.wru-vm{position:absolute;left:206px;top:298px;width:172px;height:42px;display:flex;align-items:center;gap:8px;padding:0 12px 0 7px;border-radius:14px 14px 14px 4px;background:#0f5a46;box-shadow:0 12px 24px -8px rgba(0,0,0,.7);z-index:6;transform-origin:14px 100%;opacity:0}
+.wru:not(.wru-js) .wru-vm{display:none}
+.wru-vm .pl{flex:none;width:28px;height:28px;border-radius:50%;background:#e6ecec;position:relative}
+.wru-vm .pl::after{content:"";position:absolute;left:11px;top:8px;border-style:solid;border-width:6px 0 6px 9px;border-color:transparent transparent transparent #0f5a46}
+.wru-vm .wv{display:flex;align-items:center;gap:3px;flex:1;height:24px}
+.wru-vm .wv i{flex:1;height:30%;border-radius:2px;background:#bfe9da;animation:wru-wave .7s ease-in-out infinite alternate}
+.wru-vm .wv i:nth-child(3n){animation-delay:-.25s;height:70%}.wru-vm .wv i:nth-child(3n+1){animation-delay:-.5s;height:50%}.wru-vm .wv i:nth-child(4n){height:90%}
+@keyframes wru-wave{to{transform:scaleY(.45)}}
+.wru-vm .tm{font:400 12px/1 var(--osd);color:#bfe9da}
+
+/* Schraubenschlüssel über dem Bildschirm */
+.wru-wr{position:absolute;left:290px;top:96px;width:60px;height:60px;z-index:6;opacity:0}
+.wru:not(.wru-js) .wru-wr{display:none}
+.wru-wr svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 14px rgba(0,0,0,.6))}
+.wru-wr-ic{transform-box:fill-box;transform-origin:50% 50%}
+
+.wru-toast{position:absolute;left:180px;top:214px;width:280px;height:40px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;background:var(--signal);color:var(--signal-ink);font:700 19px/1 var(--body);box-shadow:0 14px 30px -10px rgba(0,0,0,.8);z-index:7;opacity:0;pointer-events:none}
+.wru:not(.wru-js) .wru-toast{display:none}
+.wru-toast svg{width:20px;height:20px}
+
+/* Fadenkreuz rastet auf dem Laden ein */
+.wru-ret{position:absolute;left:224px;top:250px;width:192px;height:56px;z-index:4;pointer-events:none}
+.wru-ret i{position:absolute;width:18px;height:18px;border:3px solid var(--signal);filter:drop-shadow(0 0 6px rgba(255,208,0,.6))}
+.wru-ret i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.wru-ret i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.wru-ret i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.wru-ret i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+
+.wru-donebadge{position:absolute;left:190px;top:478px;width:260px;height:46px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;background:var(--signal);color:var(--signal-ink);font:700 22px/1 var(--body);box-shadow:0 0 0 6px rgba(255,208,0,.16),0 18px 40px -12px rgba(0,0,0,.9);z-index:8}
+.wru-donebadge svg{width:24px;height:24px}
+.wru-js:not(.is-done) .wru-donebadge{opacity:0;visibility:hidden}
+
+/* Drohnen (werden per JS gebaut) */
+.wru-blade{transform-box:fill-box;transform-origin:50% 50%;animation:wru-blade .08s linear infinite alternate paused}
+.wru-dr.fly .wru-blade{animation-play-state:running}
+@keyframes wru-blade{from{transform:scaleX(1)}to{transform:scaleX(-1)}}
+.wru-dled{animation:wru-blink .6s steps(2) infinite}
+.wru-ring{fill:none;stroke:var(--signal);stroke-width:3}
+
+/* ---------- HUD über der Szene ---------- */
+.wru-hud{position:absolute;inset:0;pointer-events:none;z-index:10;font:400 11px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:rgba(230,236,236,.86)}
+.wru-hud .c{position:absolute;width:18px;height:18px;border:2px solid rgba(255,208,0,.75)}
+.wru-hud .tl{left:10px;top:10px;border-right:0;border-bottom:0}.wru-hud .tr{right:10px;top:10px;border-left:0;border-bottom:0}
+.wru-hud .bl{left:10px;bottom:10px;border-right:0;border-top:0}.wru-hud .br{right:10px;bottom:10px;border-left:0;border-top:0}
+.wru-hud p{position:absolute;margin:0;text-shadow:0 1px 6px rgba(0,0,0,.9)}
+.wru-h-tl{left:34px;top:16px;display:flex;gap:9px;align-items:center}
+.wru-rec{display:inline-flex;align-items:center;gap:6px}
+.wru-rec i{width:8px;height:8px;border-radius:50%;background:var(--rec);animation:wru-blink 1.2s steps(2) infinite}
+.wru-h-tl b,.wru-h-tr b{color:var(--signal);font-weight:400}
+.wru-h-tr{right:34px;top:16px}
+.wru-h-bl{left:34px;bottom:30px;right:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wru-h-bl span::before{content:"› ";color:var(--signal)}
+.wru-h-bl{transition:opacity .4s}
+.wru.is-done .wru-h-bl,.wru:not(.wru-js) .wru-h-bl{opacity:0}
+.wru-rail{position:absolute;left:34px;right:34px;bottom:17px;display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wru-rail i{height:4px;border-radius:2px;background:rgba(230,236,236,.16);transition:background .4s,box-shadow .4s}
+.wru-rail i.on,.wru:not(.wru-js) .wru-rail i{background:var(--signal);box-shadow:0 0 8px rgba(255,208,0,.55)}
+.wru-h-scroll{display:none;right:34px;bottom:30px;align-items:center;gap:8px;color:var(--signal)}
+.wru-wheel{position:relative;width:12px;height:18px;border:1.5px solid currentColor;border-radius:7px}
+.wru-wheel::after{content:"";position:absolute;left:50%;top:3px;width:2px;height:4px;margin-left:-1px;border-radius:1px;background:currentColor;animation:wru-wheel 1.4s ease-in-out infinite}
+@keyframes wru-wheel{to{transform:translateY(6px);opacity:0}}
+
+/* Szene außerhalb des Bildes: alles anhalten */
+.wru-js:not(.is-vis) .wru-scene *,.wru-js:not(.is-vis) .wru-scene *::before,.wru-js:not(.is-vis) .wru-scene *::after{animation-play-state:paused!important}
+
+/* ---------- Desktop: zwei Spalten ---------- */
+@media (min-width:1024px){
+  .wru-grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(32px,4vw,64px);align-items:center}
+  .wru-copy{display:flex;flex-direction:column;align-items:flex-start}
+  .wru-chips{margin-top:0}
+}
+/* Desktop mit Scroll-Kopplung: Bühne steht, die Drohnen liefern beim Scrollen */
+.wru.is-pin .wru-track{height:370vh}
+.wru.is-pin .wru-stage{position:sticky;top:0;height:100vh;padding:calc(var(--hdr,66px) + 14px) 0 64px;display:flex;align-items:center}
+.wru.is-pin .wru-grid{width:100%;height:100%}
+.wru.is-pin h2{font-size:clamp(40px,min(4.8vw,7.6vh),92px);margin-bottom:12px}
+.wru.is-pin .wru-lede{font-size:clamp(15px,min(1.2vw,2.1vh),18px);margin-bottom:18px}
+.wru.is-pin .wru-chips{gap:7px}
+.wru.is-pin .wru-chip{min-height:36px;font-size:14px;padding:4px 9px 4px 4px;gap:6px}
+.wru.is-pin .wru-ic{width:26px;height:26px}
+.wru.is-pin .wru-ic svg{width:14px;height:14px}
+.wru.is-pin .wru-ck{width:15px;height:15px}
+.wru.is-pin .wru-ck::after{left:4px;top:1.5px;width:3.5px;height:7px}
+.wru.is-pin .wru-hint{display:none}
+.wru.is-pin .wru-info{margin-top:10px;padding:11px 15px}
+.wru.is-pin .wru-inf p{font-size:14.5px}
+.wru.is-pin .wru-inf .wru-fine{margin-top:6px;font-size:12px;line-height:1.4}
+.wru.is-pin .wru-inf a{margin-top:8px}
+.wru.is-pin .wru-inf ul{margin-top:8px;gap:5px}
+.wru.is-pin .wru-inf li{padding:5px 9px;font-size:11.5px}
+.wru.is-pin .wru-cta{margin-top:14px}
+.wru.is-pin .wru-scene{max-height:calc(100vh - var(--hdr,66px) - 112px);align-self:center}
+@media (max-height:800px){.wru.is-pin .wd-kick{display:none}.wru.is-pin .wru-cta .btn{padding:13px 20px}}
+.wru.is-pin .wru-h-scroll{display:flex;transition:opacity .4s}
+.wru-h-scroll .b,.wru.scrolled .wru-h-scroll .a,.wru.scrolled .wru-wheel{display:none}
+.wru.scrolled .wru-h-scroll .b{display:inline}
+.wru.is-pin.is-touched .wru-h-scroll{opacity:0}
+.wru.is-pin .wru-h-bl{right:270px}
+
+/* ---------- Bewegung reduzieren: fertiger Endzustand ---------- */
+@media (prefers-reduced-motion:reduce){
+  .wru-scene *,.wru-scene *::before,.wru-scene *::after,.wru-hint svg,.wru-chip{animation:none!important;transition:none!important}
+  .wru-p1{opacity:1;transform:translate(150px,474px)}
+  .wru-p2{opacity:1;transform:translate(540px,474px)}
+}

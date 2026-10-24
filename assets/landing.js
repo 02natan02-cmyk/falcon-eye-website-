@@ -179,7 +179,7 @@
      RUNDUM – Umlaufbahn
      ===================================================================== */
   const ru = $('#rundum');
-  if (ru) {
+  if (ru && $('[data-ru-orbit]', ru)) { // neuer Abschnitt (assets/wd-rundum.js) hat keine Umlaufbahn mehr
     const orbit = $('[data-ru-orbit]', ru), lis = $$('.ru-item', ru);
     const core = lis.filter(li => !li.classList.contains('ki-br')), kiLi = lis.find(li => li.classList.contains('ki-br'));
     const shop = $('.ru-shop', orbit), meter = $('.ru-meter', orbit), tip = $('.ru-tip', orbit), doneB = $('.ru-done', orbit);
