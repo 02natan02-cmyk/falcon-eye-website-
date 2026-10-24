@@ -417,7 +417,8 @@
 
   /* ---------- Tastatur (Pfeiltasten, solange die Flugroute im Bild ist) ---------- */
   let secVis = false;
-  if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { secVis = en.intersectionRatio > .35; }, { threshold: [0, .35, .6] }).observe(cockpit);
+  // Bühne beobachten (auf dem Handy ist das Cockpit nur ein Rahmen ohne eigene Box)
+  if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { secVis = en.intersectionRatio > .35; }, { threshold: [0, .35, .6] }).observe(stage);
   document.addEventListener('keydown', e => {
     if (!secVis || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -453,6 +454,18 @@
       G.timeline({ delay: .6 }).to(reel, { scrollLeft: l + 150, duration: .7, ease: 'power2.inOut' }).to(reel, { scrollLeft: l, duration: .9, ease: 'power3.inOut' });
     }, { threshold: .6 });
     sio.observe(reel);
+  }
+
+  /* ---------- Handy: Filterzeile stupst einmal zur Seite, damit man sieht, dass sie weitergeht ---------- */
+  if ('IntersectionObserver' in window && G && !reduce) {
+    let modesTouched = false;
+    ['touchstart', 'wheel', 'pointerdown'].forEach(ev => modesBox.addEventListener(ev, () => { modesTouched = true; }, { passive: true, once: true }));
+    const mio = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting) return; mio.disconnect();
+      if (modesTouched || modesBox.scrollWidth <= modesBox.clientWidth + 4) return;
+      G.timeline({ delay: .5 }).to(modesBox, { scrollLeft: 90, duration: .6, ease: 'power2.inOut' }).to(modesBox, { scrollLeft: 0, duration: .8, ease: 'power3.inOut' });
+    }, { threshold: .9 });
+    mio.observe(modesBox);
   }
 
   /* ---------- Start ---------- */

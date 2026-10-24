@@ -213,70 +213,32 @@ html:not([data-bf="over"]) .bf-after{display:none!important}
   .flr-ap{padding:11px 13px}
   .flr-frame{width:116px}
 }
+/* Handy: zuerst die Bühne mit dem fliegenden Gerät, Überschrift knapp darüber, Filter kompakt darunter */
+@media (max-width:900px){
+  .flr.flr-on .wrap{display:flex;flex-direction:column}
+  .flr.flr-on .flr-head{order:1}
+  .flr.flr-on .flr-head .lede{display:none}
+  .flr.flr-on .flr-head .wd-kick{margin-bottom:12px}
+  .flr.flr-on .flr-head h2{font-size:clamp(34px,9.6vw,48px);margin-bottom:0}
+  .flr.flr-on .flr-cockpit{display:contents}
+  .flr.flr-on .flr-cockpit>.flr-stage{order:2;margin-top:18px}
+  .flr.flr-on .flr-modes{order:3;flex-wrap:nowrap;gap:6px;margin:14px calc(var(--gutter) * -1) 0;padding:2px var(--gutter);overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-mask:linear-gradient(90deg,transparent 0,#000 var(--gutter),#000 calc(100% - 40px),transparent);mask:linear-gradient(90deg,transparent 0,#000 var(--gutter),#000 calc(100% - 40px),transparent)}
+  .flr.flr-on .flr-modes::-webkit-scrollbar{display:none}
+  .flr.flr-on .flr-mode{flex:none;gap:6px;padding:8px 11px;font-size:13px}
+  .flr.flr-on .flr-mode small{font-size:10px}
+  .flr.flr-on .flr-mode .fm{display:none}
+  .flr.flr-on .flr-side{order:4;margin-top:16px}
+  .flr.flr-on .flr-strip{order:5}
+  .flr.flr-on .flr-sr{order:6}
+}
 @media (prefers-reduced-motion:reduce){
   .flr-floor i,.flr-pin,.flr-rig.on .flr-view img,.flr-swipe svg,.flr-hint svg{animation:none!important}
 }
 .flr-paused .flr-floor i,.flr-paused .flr-pin,.flr-paused .flr-rig.on .flr-view img{animation-play-state:paused}
 
-/* =====================================================================
-   ANGEBOT – Black Friday
-   ===================================================================== */
-.bf{position:relative;padding:clamp(70px,9vw,140px) 0;overflow:hidden;background:radial-gradient(60% 70% at 85% 30%,rgba(255,208,0,.13),transparent 70%),radial-gradient(50% 60% at 10% 90%,rgba(255,59,48,.08),transparent 70%),#12161b;isolation:isolate}
-.bf::before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,208,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,208,0,.05) 1px,transparent 1px);background-size:56px 56px;-webkit-mask:radial-gradient(70% 70% at 70% 40%,#000,transparent);mask:radial-gradient(70% 70% at 70% 40%,#000,transparent)}
-.bf-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(30px,5vw,80px);align-items:center}
-.bf-h{margin:0 0 6px!important;display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 22px}
-.bf-big{display:inline-flex;align-items:flex-start;font:900 clamp(120px,17vw,268px)/.8 var(--display);color:var(--signal);letter-spacing:-.01em;text-shadow:0 0 60px rgba(255,208,0,.25);font-variant-numeric:tabular-nums}
-.bf-big .mi{font-size:.62em;line-height:1.05;margin-right:.04em}
-.bf-big .pc{font-size:.46em;line-height:1.15;margin-left:.04em}
-.bf-sub{font:900 clamp(30px,3.4vw,52px)/.95 var(--display);text-transform:uppercase;color:var(--wing);padding-bottom:.35em}
-.bf .lede{color:var(--text-2);max-width:32em;margin:18px 0 26px}
-.bf .lede b{color:var(--signal);font-weight:700}
-.bf-ticket{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:16px;width:min(100%,460px);padding:18px 22px;border-radius:16px;border:0;background:linear-gradient(135deg,#ffd000,#ffe45c);color:var(--signal-ink);cursor:pointer;text-align:left;font:inherit;-webkit-mask:radial-gradient(circle at 0 50%,transparent 13px,#000 14px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 13px,#000 14px) right/51% 100% no-repeat;mask:radial-gradient(circle at 0 50%,transparent 13px,#000 14px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 13px,#000 14px) right/51% 100% no-repeat;box-shadow:0 30px 60px -30px rgba(255,208,0,.6);transition:transform .25s}
-.bf-ticket:hover{transform:translateY(-2px) rotate(-.4deg)}
-.bf-ticket .tk-l{display:grid;gap:4px;padding-right:16px;border-right:2px dashed rgba(26,21,0,.35);font:400 11px/1.1 var(--osd);letter-spacing:.14em;text-transform:uppercase}
-.bf-ticket .tk-l b{font:900 30px/1 var(--display);letter-spacing:0}
-.bf-ticket .tk-c{display:grid;gap:6px;min-width:0}
-.bf-ticket .tk-c small{font:400 11px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;opacity:.75}
-.bf-ticket .tk-code{font:400 clamp(24px,2.6vw,34px)/1 var(--osd);letter-spacing:.04em;white-space:nowrap}
-.bf-ticket .tk-copy{font:700 13px/1.2 var(--body);display:inline-flex;gap:6px;align-items:center}
-.bf-ticket canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:16px;touch-action:none;cursor:crosshair}
-.bf-ticket.is-open canvas{opacity:0;pointer-events:none;transition:opacity .6s}
-.bf-rub{display:flex;align-items:center;gap:10px;margin:12px 0 0;font:400 12px/1.3 var(--osd);letter-spacing:.12em;text-transform:uppercase;color:var(--text-2);transition:opacity .4s}
-.bf-rub svg{width:22px;height:22px;color:var(--signal);animation:flr-hand 1.5s ease-in-out infinite}
-.bf-rub.gone{opacity:0}
-.bf-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.bf-ctas .btn{white-space:normal;text-align:center;line-height:1.25}
-.bf-side{display:grid;gap:18px}
-.bf-panel{position:relative;padding:22px 22px 20px;border-radius:20px;background:linear-gradient(180deg,#1e252d,#171c22);border:1px solid var(--line);box-shadow:0 40px 80px -50px rgba(0,0,0,.9)}
-.bf-pk{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;font:400 12px/1 var(--osd);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.bf-pk b{font-weight:400;color:var(--signal)}
-.bf-clock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.bf-clock div{position:relative;display:grid;justify-items:center;gap:6px;padding:12px 4px 10px;border-radius:12px;background:#11151a;border:1px solid rgba(230,236,236,.08);overflow:hidden}
-.bf-clock div::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.6)}
-.bf-clock b{font:900 clamp(34px,3.4vw,50px)/1 var(--display);color:var(--wing);font-variant-numeric:tabular-nums}
-.bf-clock b.tick{animation:bf-tick .5s cubic-bezier(.2,.8,.2,1)}
-@keyframes bf-tick{0%{transform:translateY(-40%);opacity:.2}100%{transform:none;opacity:1}}
-.bf-clock small{font:400 11px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.bf-seats{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:5px}
-.bf-seats i{position:relative;display:block;aspect-ratio:.8;border-radius:5px 5px 3px 3px;border:1.5px solid rgba(255,208,0,.7);background:rgba(255,208,0,.08);transform-origin:50% 100%}
-.bf-seats i::after{content:"";position:absolute;left:18%;right:18%;bottom:16%;height:2px;border-radius:2px;background:rgba(255,208,0,.6)}
-.bf-seats i.taken{border-color:rgba(255,59,48,.8);background:rgba(255,59,48,.35)}
-.bf-seats i.taken::after{background:rgba(255,255,255,.6)}
-.bf-seats.pop i{animation:bf-seat .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i) * 45ms)}
-@keyframes bf-seat{0%{transform:scaleY(.2);opacity:0}100%{transform:none;opacity:1}}
-.bf-free{margin:12px 0 0;font:500 16px/1.4 var(--body);color:var(--text-2)}
-.bf-free b{font:900 26px/1 var(--display);color:var(--wing)}
-.bf-promise{list-style:none;margin:clamp(40px,5vw,70px) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.bf-promise li{position:relative;padding:22px 22px 22px 66px;border-radius:18px;background:rgba(31,38,46,.72);border:1px solid var(--line);overflow:hidden}
-.bf-promise li svg{position:absolute;left:20px;top:22px;width:30px;height:30px;color:var(--signal)}
-.bf-promise b{display:block;font:900 26px/1 var(--display);text-transform:uppercase;color:var(--wing);margin-bottom:8px}
-.bf-promise span{color:var(--text-2);font-size:16px;line-height:1.45}
-.bf-promise li::after{content:"";position:absolute;left:22px;right:22px;bottom:0;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--signal),rgba(255,208,0,0));transform:scaleX(0);transform-origin:0 50%;transition:transform .9s cubic-bezier(.2,.7,.1,1) calc(var(--i) * .15s)}
-.bf-promise.go li::after{transform:none}
+/* ANGEBOT (#angebot): eigene Datei assets/wd-bf.css. Hier bleibt nur die Kopier-Meldung von landing.js. */
 .bf-copied{position:fixed;left:50%;bottom:calc(96px + var(--safe-bottom));z-index:80;padding:12px 18px;border-radius:999px;background:var(--ok);color:#03210f;font:700 15px/1 var(--body);transform:translate(-50%,20px);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}
 .bf-copied.on{opacity:1;transform:translate(-50%,0)}
-@media (max-width:980px){.bf-grid{grid-template-columns:minmax(0,1fr)}.bf-promise{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:520px){.bf-ctas .btn{width:100%}.bf-seats{grid-template-columns:repeat(8,minmax(0,1fr))}.bf-ticket{padding:16px 18px;gap:12px}.bf-ticket .tk-l{padding-right:12px}.bf-ticket .tk-l b{font-size:24px}.bf-clock b{font-size:30px}}
 
 /* =====================================================================
    RUNDUM – alles aus einer Hand (Umlaufbahn)
