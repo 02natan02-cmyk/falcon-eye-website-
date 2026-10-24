@@ -393,25 +393,6 @@ html:not([data-bf="over"]) .bf-after{display:none!important}
 .dr-txt .row{display:flex;flex-wrap:wrap;gap:10px}
 @media (max-width:900px){.dr{grid-template-columns:minmax(0,1fr)}}
 
-/* =====================================================================
-   SO LÄUFT'S – Flugbahn über den Schritten
-   ===================================================================== */
-.wd-how{position:relative}
-.wd-path{position:relative;height:70px;margin:clamp(20px,3vw,36px) 0 -6px}
-.wd-path svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.wd-path .base{fill:none;stroke:rgba(230,236,236,.16);stroke-width:2;stroke-dasharray:3 7}
-.wd-path .done{fill:none;stroke:var(--signal);stroke-width:2.5;stroke-linecap:round}
-.wd-path .wp{fill:var(--plate);stroke:rgba(230,236,236,.3);stroke-width:2;transition:fill .4s,stroke .4s}
-.wd-path .wp.on{fill:var(--signal);stroke:var(--signal)}
-.wd-drone{position:absolute;left:0;top:0;width:54px;height:54px;margin:-27px 0 0 -27px;color:var(--wing);will-change:transform;filter:drop-shadow(0 8px 12px rgba(0,0,0,.6))}
-.wd-drone svg{width:100%;height:100%}
-.wd-drone .prop{transform-box:fill-box;transform-origin:50% 50%;animation:wd-prop .18s linear infinite}
-@keyframes wd-prop{to{transform:rotate(360deg)}}
-.wd-steps li{transition:opacity .5s,transform .5s}
-.wd-how.arm .wd-steps li{opacity:.35}
-.wd-how.arm .wd-steps li.on{opacity:1}
-@media (max-width:980px){.wd-path{display:none}.wd-how.arm .wd-steps li{opacity:1}}
-@media (prefers-reduced-motion:reduce){.wd-drone .prop{animation:none}}
 
 /* =====================================================================
    FRAGEN – FAQ

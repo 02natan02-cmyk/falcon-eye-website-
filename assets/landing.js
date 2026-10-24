@@ -201,49 +201,6 @@
   }
 
   /* =====================================================================
-     SO LÄUFT'S – Drohne fliegt über die Schritte
-     ===================================================================== */
-  const how = $('.wd-how');
-  if (how && !reduce) {
-    const box = $('.wd-path', how), steps = $$('.wd-steps li', how);
-    if (box && steps.length) {
-      const svg = $('svg', box), base = $('.base', svg), done = $('.done', svg), drone = $('.wd-drone', box);
-      let pts = [], len = 0, vis = false, raf = 0;
-      const build = () => {
-        const br = box.getBoundingClientRect(); if (!br.width) return;
-        svg.setAttribute('viewBox', `0 0 ${br.width} ${br.height}`);
-        pts = steps.map(li => { const r = li.getBoundingClientRect(); return [r.left - br.left + Math.min(40, r.width * .15), br.height * .62]; });
-        const first = [0, br.height * .62];
-        let d = `M${first[0]},${first[1]}`; let prev = first;
-        pts.forEach(([x, y], i) => { const mx = (prev[0] + x) / 2; d += ` C${mx},${prev[1] - (i % 2 ? 6 : 46)} ${mx},${y - (i % 2 ? 46 : 6)} ${x},${y}`; prev = [x, y]; });
-        d += ` C${prev[0] + 60},${prev[1] - 40} ${br.width - 40},${br.height * .2} ${br.width},${br.height * .3}`;
-        base.setAttribute('d', d); done.setAttribute('d', d);
-        len = done.getTotalLength(); done.style.strokeDasharray = len; done.style.strokeDashoffset = len;
-        $$('.wp', svg).forEach(c => c.remove());
-        pts.forEach(([x, y]) => { const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 7); c.setAttribute('class', 'wp'); svg.appendChild(c); });
-        upd();
-      };
-      const upd = () => {
-        raf = 0; if (!len) return;
-        const r = how.getBoundingClientRect(), vh = innerHeight;
-        const p = Math.max(0, Math.min(1, (vh * .78 - r.top) / (vh * .7)));
-        done.style.strokeDashoffset = len * (1 - p);
-        const pt = done.getPointAtLength(len * p), pt2 = done.getPointAtLength(Math.min(len, len * p + 2));
-        const ang = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
-        drone.style.transform = `translate(${pt.x}px,${pt.y}px) rotate(${Math.max(-25, Math.min(25, ang))}deg)`;
-        const wps = $$('.wp', svg);
-        pts.forEach(([x], i) => { const on = pt.x >= x - 4; steps[i].classList.toggle('on', on); if (wps[i]) wps[i].classList.toggle('on', on); });
-      };
-      how.classList.add('arm');
-      onView(how, v => { vis = v; }, { threshold: 0 });
-      addEventListener('scroll', () => { if (vis && !raf) raf = requestAnimationFrame(upd); }, { passive: true });
-      addEventListener('resize', build, { passive: true });
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build); else build();
-      setTimeout(build, 600);
-    }
-  }
-
-  /* =====================================================================
      FRAGEN – aufklappen mit Animation, erste öffnet sich von selbst
      ===================================================================== */
   const fq = $('#fragen');

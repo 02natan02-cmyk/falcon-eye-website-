@@ -212,9 +212,11 @@
   $$('[data-switch]').forEach(group => {
     const target = $(group.dataset.switch);
     const btns = $$('[data-src]', group);
+    /* Reiter (role=tab) merken sich die Wahl in aria-selected, normale Knöpfe in aria-pressed */
+    const st = x => x.getAttribute('role') === 'tab' ? 'aria-selected' : 'aria-pressed';
     btns.forEach(b => b.addEventListener('click', () => {
-      if (b.getAttribute('aria-selected') !== 'true') zap(target);
-      btns.forEach(x => x.setAttribute('aria-selected', x === b));
+      if (b.getAttribute(st(b)) !== 'true') zap(target);
+      btns.forEach(x => x.setAttribute(st(x), x === b));
       const v = $('video', target), ns = $('.nosig', target), op = $('.open', target);
       if (!b.dataset.src) { if (v) { v.pause(); v.hidden = true; } if (ns) ns.hidden = false; }
       else {
@@ -455,6 +457,17 @@
     }, onLeave: () => lis.forEach(li => { li.classList.add('on'); li.style.setProperty('--f', 1); }) });
   });
   flies.forEach(sec => ScrollTrigger.create({ trigger: sec, start: 'top top', end: 'bottom bottom', scrub: .3, onUpdate: s => sec.update(s.progress, s.getVelocity()) }));
+  /* Tastatur: Fokus in einer gerade unsichtbaren Einblendung (Knopf im Durchflug) -> dorthin scrollen, wo sie ganz zu sehen ist */
+  flies.forEach(sec => {
+    const cs = $$('.callout', sec);
+    cs.forEach((c, k) => c.addEventListener('focusin', () => {
+      if (parseFloat(c.style.opacity || '1') > .9) return;
+      const at = +c.dataset.at || 0, hi = c.dataset.hold || k === cs.length - 1 ? 1 : +cs[k + 1].dataset.at - 1 / 12 - .05;
+      const p = Math.min(1, at + Math.max(0, Math.min(.03, (hi - at) / 2)));
+      const y = sec.getBoundingClientRect().top + scrollY + (sec.offsetHeight - innerHeight) * p;
+      if (window.FE.lenis) window.FE.lenis.scrollTo(y, { immediate: true, force: true }); else scrollTo(0, y);
+    }));
+  });
 
   /* ticker speed follows scroll */
   $$('.ticker .row').forEach(row => {

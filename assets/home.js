@@ -235,6 +235,14 @@
     }
   });
 
+  /* Tastatur: Fokus auf die Knöpfe im Held, solange sie noch unsichtbar sind -> ans Ende des Anflugs scrollen */
+  $('.hero-copy').addEventListener('focusin', () => {
+    if (parseFloat(getComputedStyle($('.hero-copy')).opacity) > .9) return;
+    autoOn = false;
+    const y = heroSec.getBoundingClientRect().top + scrollY + (heroSec.offsetHeight - innerHeight) * .9;
+    if (window.FE.lenis) window.FE.lenis.scrollTo(y, { immediate: true, force: true }); else scrollTo(0, y);
+  });
+
   /* reels phone tilts in */
   gsap.from('.phone', { rotateY: -28, rotateX: 8, y: 80, opacity: 0, transformPerspective: 1200, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '.phone', start: 'top 85%', once: true } });
   /* compare: auto-sweep once to show it's draggable */
