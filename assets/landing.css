@@ -443,6 +443,7 @@ html:not([data-bf="over"]) .bf-after{display:none!important}
 .af-f label{font:400 11px/1.2 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .af-f input,.af-f select,.af-f textarea{width:100%;box-sizing:border-box;font:500 16px/1.4 var(--body);color:var(--wing);background:var(--plate);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
 .af-f textarea{resize:vertical;min-height:110px}
+.af-fpv{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--plate);cursor:pointer;font:400 14px/1.45 var(--body);color:var(--muted)}.af-fpv input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:#ffd000;cursor:pointer}.af-fpv b{display:block;color:var(--wing);font-weight:600;margin-bottom:2px}.af-fpv:has(input:checked){border-color:#ffd000}.af-fpv:focus-within{outline:2px solid #ffd000;outline-offset:2px}
 .af-f select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
 .af-f input:focus,.af-f select:focus,.af-f textarea:focus{border-color:var(--signal);box-shadow:0 0 0 3px rgba(255,208,0,.18)}
 .af-f input::placeholder,.af-f textarea::placeholder{color:#8b959d}

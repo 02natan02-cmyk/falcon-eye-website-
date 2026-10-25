@@ -18,6 +18,17 @@
 <link rel="icon" href="media/bird.png">
 <link rel="preload" href="fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css?v=1792900000">
+<style>
+.webeye .two-col{align-items:center}
+.we-shot{display:block;position:relative;border-radius:16px;overflow:hidden;background:#0b0d10;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 80px -30px rgba(0,0,0,.8);text-decoration:none;color:inherit;transform:perspective(1200px) rotateY(-6deg) rotateX(2deg);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.we-shot:hover,.we-shot:focus-visible{transform:none}
+.we-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:#15191e;font:12px var(--osd);color:var(--text-2)}
+.we-bar i{width:9px;height:9px;border-radius:50%;background:#3a4048}.we-bar i:first-child{background:var(--signal)}.we-bar span{margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.we-shot video{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.we-cap{display:block;padding:14px 16px;font-size:15px;line-height:1.45;color:var(--text-2)}.we-cap b{display:block;font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--signal);margin-bottom:6px}
+@media (max-width:860px){.we-shot{transform:none}}
+@media (prefers-reduced-motion:reduce){.we-shot{transition:none}}
+</style>
 </head>
 <body class="p-ueber-uns">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -47,7 +58,7 @@
       <p class="intro reveal">Angefangen hat alles mit einer Brille, einer Drohne und viel zu vielen Akkus. Heute fliegen wir für Möbelhäuser, Stadien, Filmproduktionen und Weinbars – und haben immer noch dasselbe Grinsen unter der Brille.</p>
       <p class="reveal">Unsere Copter bauen wir selbst: Rahmen, Motoren, Elektronik, Kamera. Wir kennen jede Schraube unserer Technik – und können sie genau auf euren Dreh abstimmen. Geflogen sind wir seit Jahren und schon in über 20 Ländern.</p>
       <ul class="crew">
-        <li class="reveal"><b>Natan Wojtasczyk</b><span>Gründer, FPV-Pilot, Kamera</span></li>
+        <li class="reveal"><b>Natan Wojtasczyk</b><span>Gründer, FPV-Pilot, Kamera, Websites</span></li>
         <li class="reveal"><b>Manuel Hoffstetter</b><span>Regie, zweite Kamera, Spotter, Schnitt</span></li>
       </ul>
       <div class="ctas" style="margin-top:28px"><a class="btn" href="kontakt.html">Mit uns drehen</a></div>
@@ -75,6 +86,24 @@
     </aside>
   </div>
 </section>
+<section class="block webeye" id="websites" aria-labelledby="we-h">
+  <div class="wrap two-col">
+    <div>
+      <p class="kicker reveal"><span class="rec">RECHTES AUGE</span> · WEBSITES</p>
+      <h2 class="h2 reveal" id="we-h">Das zweite Auge baut.</h2>
+      <p class="intro reveal">Natan hat sich mit elf Jahren selbst das Programmieren beigebracht. Danach kam erst mal anderes: Heute führt er Unternehmen in der Pflege, in der Videoproduktion und im Handwerk.</p>
+      <p class="reveal">Jede dieser Firmen brauchte eine Website – und niemand konnte liefern, was er sich vorgestellt hatte. Also hat er sie selbst gebaut. Die Seiten kamen so gut an, dass Falcon Eye sie jetzt auch für andere baut: bis Black Friday für 15 ausgewählte Kunden.</p>
+      <p class="reveal">Weil dieselben Leute filmen und bauen, passt beides zusammen: Der Drohnenflug durch euren Betrieb wird zur ersten Szene eurer Website.</p>
+      <div class="ctas reveal" style="margin-top:28px"><a class="btn" href="webdesign.html">Unsere Websites ansehen</a><a class="btn ghost" href="kontakt.html#beides">Film + Website anfragen</a></div>
+    </div>
+    <a class="we-shot reveal" href="webdesign.html">
+      <span class="we-bar"><i></i><i></i><i></i><span>falcon-eye.de/webdesign</span></span>
+      <video data-auto muted loop playsinline preload="none" poster="media/reel/website.jpg" src="media/reel/website.mp4" aria-hidden="true"></video>
+      <span class="we-cap"><b>Live gebaut</b> So entsteht eine Seite bei uns: Stück für Stück, mit echten Bildern.</span>
+    </a>
+  </div>
+</section>
+
 <section class="block amset" aria-labelledby="as-h">
   <div class="wrap">
     <p class="kicker">Hinter der Kamera</p>
@@ -116,7 +145,7 @@
 <section class="band" aria-label="Anfrage starten">
   <div class="band-mq" aria-hidden="true"><span>Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · </span><span>Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · </span></div>
   <div class="wrap">
-    <div><h2>Lust, mit uns zu fliegen?</h2><p>Erzählt uns von eurem Projekt – wir melden uns mit einer Flugidee.</p><div class="quick"><a href="kontakt.html#event">Event / Firmenfeier</a><a href="kontakt.html#imagefilm">Imagefilm</a><a href="kontakt.html#social">Social-Media-Clips</a><a href="kontakt.html#sport">Sport &amp; Stadion</a><a href="kontakt.html#hochzeit">Hochzeit</a><a href="kontakt.html#immobilie">Immobilie / Gewerbe</a></div></div>
+    <div><h2>Lust, mit uns zu fliegen?</h2><p>Erzählt uns von eurem Projekt – wir melden uns mit einer Flugidee.</p><div class="quick"><a href="kontakt.html#event">Event / Firmenfeier</a><a href="kontakt.html#imagefilm">Imagefilm</a><a href="kontakt.html#social">Social-Media-Clips</a><a href="kontakt.html#sport">Sport &amp; Stadion</a><a href="kontakt.html#hochzeit">Hochzeit</a><a href="kontakt.html#immobilie">Immobilie / Gewerbe</a><a href="webdesign.html#entwurf">Website</a><a href="kontakt.html#beides">Film + Website</a></div></div>
     <div class="ctas"><a class="btn dark" href="kontakt.html">Dreh anfragen</a><a class="btn ghost" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp schreiben</a></div>
   </div>
 </section>
@@ -142,6 +171,6 @@
 <script src="js/gsap.min.js"></script>
 <script src="js/ScrollTrigger.min.js"></script>
 <script src="js/lenis.min.js"></script>
-<script src="assets/site.js?v=1792900000"></script>
+<script src="assets/site.js?v=1792950000"></script>
 </body>
 </html>

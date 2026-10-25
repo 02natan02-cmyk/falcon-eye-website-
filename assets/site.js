@@ -300,14 +300,18 @@
       const a = $('input[name=anlass]:checked', plan);
       return { anlass: a ? a.value : '', ort: plan.ort.value.trim(), datum: plan.datum.value, umfang: plan.umfang.value, msg: plan.msg.value.trim(), name: plan.name.value.trim(), kontakt: plan.kontakt.value.trim() };
     };
-    const text = d => `Hallo Falcon Eye,\n\nwir möchten einen Dreh anfragen.\n\nAnlass: ${d.anlass}\nOrt: ${d.ort || '–'}\nDatum: ${d.datum || 'noch offen'}\nUmfang: ${d.umfang}\n\n${d.msg}\n\nName: ${d.name}\nKontakt: ${d.kontakt}`;
+    const both = d => d.anlass === 'Film + Website';
+    const text = d => `Hallo Falcon Eye,\n\nwir möchten ${both(d) ? 'einen Drohnenfilm und eine neue Website anfragen – beides aus einer Hand' : 'einen Dreh anfragen'}.\n\nAnlass: ${d.anlass}\nOrt: ${d.ort || '–'}\nDatum: ${d.datum || 'noch offen'}\nUmfang: ${d.umfang}\n\n${d.msg}\n\nName: ${d.name}\nKontakt: ${d.kontakt}`;
     $$('[data-next]', plan).forEach(b => b.addEventListener('click', () => {
       const d = val();
       if (cur === 0 && !d.anlass) { $('#planErr').textContent = 'Wählt aus, worum es geht.'; return; }
       show(cur + 1); steps[cur].querySelector('input,select,textarea')?.focus();
     }));
     $$('[data-back]', plan).forEach(b => b.addEventListener('click', () => show(cur - 1)));
-    $$('input[name=anlass]', plan).forEach(i => i.addEventListener('change', () => setTimeout(() => show(1), 180)));
+    const msgL = $('[data-msg-lbl]', plan), msgL0 = msgL ? msgL.textContent : '';
+    const fitBoth = () => { const b = both(val()); if (msgL) msgL.textContent = b ? 'Was soll man im Film sehen – und was soll die Website können?' : msgL0; if (b && plan.umfang.selectedIndex === 0) plan.umfang.value = 'Drohnenfilm und neue Website'; };
+    $$('input[name=anlass]', plan).forEach(i => i.addEventListener('change', () => { fitBoth(); setTimeout(() => show(1), 180); }));
+    if (pick) fitBoth();
     plan.addEventListener('submit', e => {
       e.preventDefault();
       const d = val();
@@ -315,7 +319,7 @@
       const t = text(d);
       $('#planText').textContent = t;
       $('#waSend').href = `https://wa.me/${PHONE}?text=${encodeURIComponent(t)}`;
-      $('#mailSend').href = `mailto:info@falcon-eye.de?subject=${encodeURIComponent('Drehanfrage: ' + d.anlass)}&body=${encodeURIComponent(t)}`;
+      $('#mailSend').href = `mailto:info@falcon-eye.de?subject=${encodeURIComponent((both(d) ? 'Anfrage Film + Website' : 'Drehanfrage: ' + d.anlass))}&body=${encodeURIComponent(t)}`;
       $('#planCopy').dataset.copy = t;
       const okS = $('.ok-sent', plan), okM = $('.ok-manual', plan);
       const done = sent => { okS.hidden = !sent; okM.hidden = sent; show(steps.length - 1); };
@@ -323,7 +327,7 @@
       const btn = $('button[type=submit]', plan), old = btn.textContent;
       btn.disabled = true; btn.textContent = 'Wird gesendet …';
       fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ access_key: FORM_KEY, subject: 'Drehanfrage über falcon-eye.de: ' + d.anlass, from_name: 'falcon-eye.de', name: d.name,
+        body: JSON.stringify({ access_key: FORM_KEY, subject: (both(d) ? 'Anfrage Film + Website über falcon-eye.de' : 'Drehanfrage über falcon-eye.de: ' + d.anlass), from_name: 'falcon-eye.de', name: d.name,
           replyto: d.kontakt.includes('@') ? d.kontakt : undefined, Anlass: d.anlass, Ort: d.ort || '–', Datum: d.datum || 'noch offen', Umfang: d.umfang, Nachricht: d.msg || '–', Kontakt: d.kontakt }) })
         .then(r => r.json()).then(j => done(!!j.success)).catch(() => done(false))
         .finally(() => { btn.disabled = false; btn.textContent = old; });
