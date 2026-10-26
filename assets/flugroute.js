@@ -30,7 +30,7 @@
       li, i,
       name: (li.querySelector('h3') || {}).textContent.trim(),
       d, m,
-      thumb: li.dataset.thumb || d.split('?')[0].replace('/wd/', '/wd3/'),
+      thumb: li.dataset.thumb || d.replace('/wd/', '/wd3/'),
       url: bar ? bar.textContent.trim() : '',
       go: li.querySelector('.wd-go'),
       kat: (li.dataset.kat || '').split(/\s+/).filter(Boolean),

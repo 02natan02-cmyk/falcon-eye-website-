@@ -510,7 +510,7 @@ function init() {
   // Die Karte wird über ihre id gefunden, nicht über eine feste Nummer: so bleibt der Klick richtig, wenn Natan die Reihenfolge ändert.
   // Im 3D-Bild stehen 13 Geräte (Hudalla in der Mitte + diese 12); der Flight Club Saar hat kein 3D-Gerät, ist aber Wegpunkt in der Flugroute.
   const REFS = [
-    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 'wp-waescherei', 'd'], ['verena', 'Praxis Verena Paul', 'wp-verena', 'm'], ['pellegrin', 'Pellegrin Küchen', 'wp-pellegrin', 'd'],
+    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 'wp-waescherei', 'd'], ['verena', 'Praxis (Name geändert)', 'wp-verena', 'm'], ['pellegrin', 'Küchenstudio (Name geändert)', 'wp-pellegrin', 'd'],
     ['falcon', 'Falcon Eye', 'wp-falcon', 'm'], ['holding', 'Natan Holding', 'wp-holding', 'd'], ['gartentraum', 'Der Garten-Traum', 'wp-gartentraum', 'm'],
     ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 'wp-kueche', 'd'], ['natan', 'Natan Küchenmontage', 'wp-natan', 'm'],
     ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 'wp-fahrzeug', 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 'wp-karosserie', 'm'],
@@ -535,8 +535,8 @@ function init() {
     REFS.forEach(([id, name, ref, kind], k) => {
       const g = new THREE.Group(); scene.add(g);
       const dev = kind === 'd'
-        ? makeLaptop(new THREE.MeshBasicMaterial({ map: tex('media/wd3/' + id + '_d.webp'), toneMapped: false }))
-        : makePhone(new THREE.MeshBasicMaterial({ map: tex('media/wd3/' + id + '_m.webp'), toneMapped: false }));
+        ? makeLaptop(new THREE.MeshBasicMaterial({ map: tex('media/wd3/' + id + '_d.webp?v=4'), toneMapped: false }))
+        : makePhone(new THREE.MeshBasicMaterial({ map: tex('media/wd3/' + id + '_m.webp?v=4'), toneMapped: false }));
       g.add(dev.g);
       const ring = new THREE.Mesh(new THREE.RingGeometry(.96, 1, 64), new THREE.MeshBasicMaterial({ color: '#ffd000', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, fog: false }));
       ring.rotation.x = -Math.PI / 2; scene.add(ring);

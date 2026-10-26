@@ -28,8 +28,8 @@
   var B = {
     handwerk: { n: 'Handwerk', h: { warm: 'Ehrliche Arbeit. Gleich um die Ecke.', edel: 'Präzision, die man sieht.', frech: 'Kaputt? Nicht mehr lange.' }, i: 'Vorher/Nachher zum Ziehen', k: 'slider', r: ['https://entwurf.falcon-eye.de/hudalla/', 'Hausmeisterservice (Name geändert)'] },
     auto: { n: 'Auto & Werkstatt', h: { warm: 'Ihr Auto ist bei uns in guten Händen.', edel: 'Glanz bis ins letzte Detail.', frech: 'Delle? Weg damit.' }, i: 'Kratzer wegwischen', k: 'wipe', r: ['https://entwurf.falcon-eye.de/beispiel/karosserie/', 'Beispiel: Karosserie Hellwig'] },
-    kueche: { n: 'Küche & Wohnen', h: { warm: 'Hier wird gekocht, gelacht, gelebt.', edel: 'Ihre Küche. Auf den Millimeter.', frech: 'Raus mit der alten Küche!' }, i: 'Küche in 3D zusammenstellen', k: 'blocks', r: ['https://entwurf.falcon-eye.de/pellegrin/', 'Küchenstudio (Name geändert)'] },
-    praxis: { n: 'Praxis & Wohlfühlen', h: { warm: 'Zeit für dich.', edel: 'Ankommen. Durchatmen.', frech: 'Endlich mal abschalten.' }, i: 'Atemübung zum Mitmachen', k: 'breath', r: ['https://entwurf.falcon-eye.de/verena-paul/', 'Praxis (Name geändert)'] },
+    kueche: { n: 'Küche & Wohnen', h: { warm: 'Hier wird gekocht, gelacht, gelebt.', edel: 'Ihre Küche. Auf den Millimeter.', frech: 'Raus mit der alten Küche!' }, i: 'Küche in 3D zusammenstellen', k: 'blocks', r: ['https://entwurf.falcon-eye.de/beispiel/kuechenstudio/', 'Küchenstudio (Beispiel)'] },
+    praxis: { n: 'Praxis & Wohlfühlen', h: { warm: 'Zeit für dich.', edel: 'Ankommen. Durchatmen.', frech: 'Endlich mal abschalten.' }, i: 'Atemübung zum Mitmachen', k: 'breath', r: ['', 'Praxis (Name geändert)'] },
     laden: { n: 'Laden & Service', h: { warm: 'Fragen Sie ruhig. Wir kennen uns aus.', edel: 'Ausgewählte Qualität.', frech: 'Reinkommen lohnt sich.' }, i: 'Schaufenster mit Live-Öffnungszeiten', k: 'sign', r: ['https://entwurf.falcon-eye.de/beispiel/waescherei/', 'Beispiel: Wäscherei Weidenhof'] },
     gastro: { n: 'Gastro & Café', h: { warm: 'Wie bei Oma. Nur mit Reservierung.', edel: 'Ein Abend, der bleibt.', frech: 'Hunger? Komm rein.' }, i: 'Speisekarte zum Umblättern', k: 'menu', r: null }
   };
@@ -111,8 +111,8 @@
     var txt = 'Hallo Falcon Eye, ich hätte gern einen kostenlosen Website-Entwurf.\nBetrieb: ' + (nm || '…') + '\nOrt: ' + (ort || '…') + '\nBranche: ' + d.n + '\nStimmung: ' + MN[st.m];
     wa.href = 'https://wa.me/4915156743442?text=' + enc(txt);
     mail.href = 'mailto:info@falcon-eye.de?subject=' + enc('Kostenloser Website-Entwurf' + (nm ? ' – ' + nm : '')) + '&body=' + enc(txt);
-    if (d.r) { real.href = d.r[0]; real.target = '_blank'; real.rel = 'noopener'; real.innerHTML = 'So sieht das echt aus: <b>' + esc(d.r[1]) + '</b> →'; }
-    else { real.removeAttribute('href'); real.removeAttribute('target'); real.removeAttribute('rel'); real.innerHTML = 'Gastro hatten wir noch nicht – <b>Ihre Seite wäre die erste.</b>'; }
+    if (d.r && d.r[0]) { real.href = d.r[0]; real.target = '_blank'; real.rel = 'noopener'; real.innerHTML = 'So sieht das echt aus: <b>' + esc(d.r[1]) + '</b> →'; }
+    else { real.removeAttribute('href'); real.removeAttribute('target'); real.removeAttribute('rel'); real.innerHTML = d.r ? 'Eine Praxis-Seite ist bei uns gerade im Entwurf – <b>Namen zeigen wir erst nach dem Auftrag.</b>' : 'Gastro hatten wir noch nicht – <b>Ihre Seite wäre die erste.</b>'; }
     real.hidden = false;
     if (st.built.body) { setTel('bild', Z.name[st.b] || d.n, flash); setTel('farbe', AC[st.b][MK.indexOf(st.m)], flash); setTel('schrift', FN[st.m], flash); }
     else { setTel('bild', '–'); setTel('farbe', '–'); setTel('schrift', '–'); }

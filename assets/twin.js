@@ -95,16 +95,16 @@
   function stopVid() { vids.forEach(v => { try { v.pause(); } catch (e) { } }); clearTimeout(vT); }
 
   /* ---------- Rechtes Auge: echte Seiten, Scan-Überblendung ---------- */
-  const SITES = [['pellegrin', 'Pellegrin Küchen', 'Entwurf'], ['holding', 'Natan Holding', 'Live'], ['gartentraum', 'Der Garten-Traum', 'Entwurf'], ['bsp_waescherei', 'Wäscherei', 'Beispiel'], ['verena', 'Praxis Verena Paul', 'Entwurf'], ['bsp_karosserie', 'Karosserie', 'Beispiel'], ['hudalla', 'Hausmeister Hudalla', 'Entwurf'], ['natan', 'natan.saarland', 'Live'], ['bsp_fahrzeug', 'Fahrzeugpflege', 'Beispiel'], ['falcon', 'falcon-eye.de', 'Live']];
+  const SITES = [['pellegrin', 'Küchenstudio (Name geändert)', 'Entwurf'], ['holding', 'Natan Holding', 'Live'], ['gartentraum', 'Der Garten-Traum', 'Live'], ['bsp_waescherei', 'Wäscherei', 'Beispiel'], ['verena', 'Praxis (Name geändert)', 'Entwurf'], ['bsp_karosserie', 'Karosserie', 'Beispiel'], ['hudalla', 'Hausmeister Hudalla', 'Entwurf'], ['natan', 'natan.saarland', 'Live'], ['bsp_fahrzeug', 'Fahrzeugpflege', 'Beispiel'], ['falcon', 'falcon-eye.de', 'Live']];
   const imgs = $$('.tw-r .tw-in img'), capR = $('.tw-r [data-tw-cap]'), tagR = $('.tw-r [data-tw-tag]'), sweep = $('.tw-r .tw-sweep'), ambR = $('.tw-r .tw-amb');
   let si = 0, ic = 0, sT = 0;
-  ambR.style.setProperty('--amb', U('media/wd/pellegrin_d.webp'));
+  ambR.style.setProperty('--amb', U('media/wd/pellegrin_d.webp?v=4'));
   const tagCls = () => { tagR.classList.toggle('live', tagR.textContent === 'Live'); }; tagCls();
   function nextSite() {
-    si = (si + 1) % SITES.length; const [f, n, t] = SITES[si], o = imgs[1 - ic], src = 'media/wd/' + f + '_d.webp';
+    si = (si + 1) % SITES.length; const [f, n, t] = SITES[si], o = imgs[1 - ic], src = 'media/wd/' + f + '_d.webp?v=4';
     const swap = () => { o.classList.add('on'); imgs[ic].classList.remove('on'); ic = 1 - ic; capR.textContent = n; tagR.textContent = t; tagCls(); ambR.style.setProperty('--amb', U(src)); sweep.classList.remove('go'); void sweep.offsetWidth; sweep.classList.add('go'); };
     if (o.getAttribute('src') === src && o.complete) swap(); else { o.onload = swap; o.src = src; }
-    const pre = new Image(); pre.src = 'media/wd/' + SITES[(si + 1) % SITES.length][0] + '_d.webp';
+    const pre = new Image(); pre.src = 'media/wd/' + SITES[(si + 1) % SITES.length][0] + '_d.webp?v=4';
   }
   const startSites = () => { if (reduce || sT) return; sT = setInterval(() => { if (vis && !document.hidden) nextSite(); }, 3000); };
 
