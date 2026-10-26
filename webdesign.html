@@ -29,8 +29,17 @@
 <script>if('noModule' in HTMLScriptElement.prototype)document.documentElement.classList.add('wd3-on')</script>
 <script type="importmap">{"imports":{"three":"./js/three.module.min.js"}}</script>
 <link rel="modulepreload" href="js/three.module.min.js">
+<link rel="stylesheet" href="assets/wd-intro.css?v=1">
+<script>(function(){try{var q=/[?&]intro\b/.test(location.search);if(q||(!sessionStorage.getItem('fe-intro')&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches))document.documentElement.classList.add('fi-on')}catch(e){}})()</script>
 </head>
 <body class="p-webdesign">
+<div class="fi" id="fe-intro" role="region" aria-label="Intro: Drohnenflug zur Website">
+  <div class="fi-stage"><video class="fi-v" muted playsinline preload="auto" poster="media/intro/flug_poster.jpg" aria-hidden="true"></video><div class="fi-shade"></div></div>
+  <div class="fi-hint" aria-hidden="true"><i></i><span>Scrollen</span></div>
+  <button class="fi-skip" type="button">Überspringen</button>
+  <span class="fi-ki">Szene mit KI erzeugt</span>
+  <div class="fi-bar" aria-hidden="true"><b></b></div>
+</div>
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="top">
   <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><span class="bird"><img src="media/bird.png" alt="" width="934" height="207"></span><img class="word" src="media/wordmark.png" alt="Falcon Eye" width="956" height="175"></a>
@@ -1390,5 +1399,6 @@
 <script src="assets/showreel.js?v=1792866000" defer></script>
 <script src="assets/landing.js?v=5" defer></script>
 <script src="assets/flugroute.js?v=4" defer></script>
+<script src="assets/wd-intro.js?v=1" defer></script>
 </body>
 </html>

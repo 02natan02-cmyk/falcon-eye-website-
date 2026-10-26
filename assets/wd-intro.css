@@ -1,0 +1,26 @@
+/* Intro „Absprung“ für /webdesign – Video läuft an, Scrollen steuert den Flug, endet auf dem echten Seitenanfang */
+.fi{display:none}
+html.fi-on,html.fi-on body{overflow:hidden!important;overscroll-behavior:none}
+html.fi-on .fi{display:block;position:fixed;inset:0;z-index:2147483000;background:#0f1317;touch-action:none;
+  transition:opacity .6s ease}
+.fi.fi-weg{opacity:0;pointer-events:none}
+.fi-stage{position:absolute;inset:0;overflow:hidden}
+.fi-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;background:#0f1317}
+.fi-stage.fi-wackel{animation:fiWackel 1.1s cubic-bezier(.3,.7,.3,1)}
+@keyframes fiWackel{0%{transform:translateY(0)}18%{transform:translateY(-26px)}36%{transform:translateY(0)}52%{transform:translateY(-12px)}68%,100%{transform:translateY(0)}}
+.fi-shade{position:absolute;inset:auto 0 0 0;height:34%;background:linear-gradient(transparent,rgba(8,10,12,.55));pointer-events:none;transition:opacity .5s}
+.fi-hint{position:absolute;left:50%;bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px));transform:translate(-50%,16px);opacity:0;
+  display:flex;flex-direction:column;align-items:center;gap:10px;color:#fff;pointer-events:none;
+  font:600 15px/1 "Share Tech Mono",ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.6);
+  transition:opacity .45s ease,transform .45s ease}
+.fi-hint.an{opacity:1;transform:translate(-50%,0)}
+.fi-hint i{width:28px;height:44px;border:2px solid #ffd000;border-radius:16px;position:relative;box-shadow:0 0 18px rgba(255,208,0,.45)}
+.fi-hint i:before{content:"";position:absolute;left:50%;top:8px;width:4px;height:9px;margin-left:-2px;border-radius:2px;background:#ffd000;animation:fiRad 1.4s ease-in-out infinite}
+@keyframes fiRad{0%{transform:translateY(0);opacity:1}70%{transform:translateY(14px);opacity:0}100%{transform:translateY(0);opacity:0}}
+.fi-skip{position:absolute;top:max(18px,env(safe-area-inset-top));right:18px;min-height:44px;padding:0 18px;border-radius:22px;border:1px solid rgba(255,255,255,.35);
+  background:rgba(10,12,14,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font:600 14px/1 Archivo,system-ui,sans-serif;letter-spacing:.02em;cursor:pointer}
+.fi-skip:hover,.fi-skip:focus-visible{border-color:#ffd000;color:#ffd000;outline:none}
+.fi-ki{position:absolute;left:18px;bottom:max(14px,env(safe-area-inset-bottom));color:rgba(255,255,255,.55);font:500 11px/1 Archivo,system-ui,sans-serif;letter-spacing:.04em;pointer-events:none}
+.fi-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08)}
+.fi-bar b{display:block;height:100%;width:0;background:#ffd000;box-shadow:0 0 12px #ffd000}
+@media (prefers-reduced-motion:reduce){html.fi-on .fi{display:none}html.fi-on,html.fi-on body{overflow:auto!important}}
