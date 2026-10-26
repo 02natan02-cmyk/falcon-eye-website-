@@ -27,7 +27,25 @@
     H.classList.remove('fi-on');
     setTimeout(aufraeumen, 380);
   }
-  function aufraeumen() { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} if (box.parentNode) box.remove(); }
+  function aufraeumen() { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} if (box.parentNode) box.remove(); beruhigen(); }
+  /* Weiches Scrollen (Lenis) darf während des Intros nichts mitzählen, sonst landet man nach dem Intro irgendwo unten */
+  var L = function () { return window.FE && window.FE.lenis; };
+  function lenisHalt() { try { var l = L(); if (l) { l.stop(); l.scrollTo(0, { immediate: true, force: true }); } } catch (e) {} }
+  var ruheBis = 0, letzteRad = 0, ruhig = false;
+  function beruhigen() {                            // Nachschwung von Mausrad/Trackpad abfangen, dann oben freigeben
+    ruheBis = performance.now() + 700; letzteRad = performance.now();
+    window.scrollTo(0, 0); lenisHalt();
+    (function warte() {
+      var n = performance.now();
+      if ((n > ruheBis && n - letzteRad > 350) || n > ruheBis + 2000) {
+        ruhig = true; window.scrollTo(0, 0);
+        try { var l = L(); if (l) { l.scrollTo(0, { immediate: true, force: true }); l.start(); } } catch (e) {}
+        return;
+      }
+      window.scrollTo(0, 0); requestAnimationFrame(warte);
+    })();
+  }
+  lenisHalt(); setTimeout(lenisHalt, 300);
 
   /* ---------- Laden: direkter Film, Fortschritt aus dem Puffer, mehrere Wege zum Start ---------- */
   function zeig(qq) { qq = Math.max(0, Math.min(1, qq)); lbar.style.transform = 'scaleX(' + qq + ')'; lnum.textContent = Math.round(qq * 100) + ' %'; }
@@ -107,12 +125,23 @@
     letzte = performance.now();
     if (d > 0) hint.classList.remove('an');
   }
-  addEventListener('wheel', function (e) { if (fertig) return; e.preventDefault(); eingabe((e.deltaMode ? e.deltaY * 40 : e.deltaY) / 2400); }, { passive: false });
+  function sperren(e) { e.preventDefault(); e.stopImmediatePropagation(); }
+  addEventListener('wheel', function (e) {
+    if (ruhig) return;
+    sperren(e); letzteRad = performance.now();
+    if (!fertig) eingabe((e.deltaMode ? e.deltaY * 40 : e.deltaY) / 2400);
+  }, { passive: false, capture: true });
   var ty = null;
-  addEventListener('touchstart', function (e) { if (!fertig) ty = e.touches[0].clientY; }, { passive: true });
-  addEventListener('touchmove', function (e) { if (fertig || ty === null) return; e.preventDefault(); var y = e.touches[0].clientY; eingabe((ty - y) / (innerHeight * 2)); ty = y; }, { passive: false });
+  addEventListener('touchstart', function (e) { if (ruhig) return; if (!fertig) ty = e.touches[0].clientY; e.stopImmediatePropagation(); }, { passive: true, capture: true });
+  addEventListener('touchmove', function (e) {
+    if (ruhig) return;
+    sperren(e); letzteRad = performance.now();
+    if (fertig || ty === null) return;
+    var y = e.touches[0].clientY; eingabe((ty - y) / (innerHeight * 2)); ty = y;
+  }, { passive: false, capture: true });
   addEventListener('keydown', function (e) {
-    if (fertig) return;
+    if (ruhig) return;
+    if (fertig) { if (['ArrowDown', 'PageDown', ' ', 'Spacebar', 'End'].indexOf(e.key) > -1) sperren(e); return; }
     if (e.key === 'Escape') { schnellEnde(); return; }
     if (['ArrowDown', 'PageDown', ' ', 'Spacebar', 'Enter'].indexOf(e.key) > -1) { e.preventDefault(); eingabe(0.1); }
     if (['ArrowUp', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); eingabe(-0.1); }
