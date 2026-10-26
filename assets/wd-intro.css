@@ -1,14 +1,29 @@
-/* Intro „Absprung“ für /webdesign – Video läuft an, Scrollen steuert den Flug, endet auf dem echten Seitenanfang */
+/* Intro „Absprung“ für /webdesign */
+html{scrollbar-gutter:stable}
 .fi{display:none}
 html.fi-on,html.fi-on body{overflow:hidden!important;overscroll-behavior:none}
-html.fi-on .fi{display:block;position:fixed;inset:0;z-index:2147483000;background:#0f1317;touch-action:none;
-  transition:opacity .6s ease}
-.fi.fi-weg{opacity:0;pointer-events:none}
-.fi-stage{position:absolute;inset:0;overflow:hidden}
-.fi-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;background:#0f1317}
+html.fi-on .fi{display:block}
+.fi{position:fixed;inset:0;z-index:2147483000;background:#0b0e12;touch-action:none}
+.fi.fi-tauchen{background:transparent}
+.fi-stage{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .5s ease}
+.fi-stage.an{opacity:1}
+.fi-tauchen .fi-stage{transition:none}
+.fi-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 50%;display:block;background:#0b0e12;transform-origin:50% 50%}
 .fi-stage.fi-wackel{animation:fiWackel 1.1s cubic-bezier(.3,.7,.3,1)}
-@keyframes fiWackel{0%{transform:translateY(0)}18%{transform:translateY(-26px)}36%{transform:translateY(0)}52%{transform:translateY(-12px)}68%,100%{transform:translateY(0)}}
-.fi-shade{position:absolute;inset:auto 0 0 0;height:34%;background:linear-gradient(transparent,rgba(8,10,12,.55));pointer-events:none;transition:opacity .5s}
+@keyframes fiWackel{0%{translate:0 0}18%{translate:0 -26px}36%{translate:0 0}52%{translate:0 -12px}68%,100%{translate:0 0}}
+.fi-shade{position:absolute;inset:auto 0 0 0;height:34%;background:linear-gradient(transparent,rgba(8,10,12,.55));pointer-events:none}
+.fi-tauchen .fi-shade,.fi-tauchen .fi-hint,.fi-tauchen .fi-skip,.fi-tauchen .fi-ki,.fi-tauchen .fi-bar{opacity:0;transition:opacity .25s}
+
+/* Ladebild: Falke, Fortschritt, nichts lädt sichtbar halb */
+.fi-load{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:18px;transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.fi-load.weg{opacity:0;transform:scale(1.08);pointer-events:none}
+.fi-load img{width:min(220px,48vw);height:auto;filter:drop-shadow(0 0 22px rgba(255,208,0,.25));animation:fiAtem 1.8s ease-in-out infinite}
+@keyframes fiAtem{50%{transform:translateY(-6px);filter:drop-shadow(0 0 34px rgba(255,208,0,.45))}}
+.fi-load p{display:flex;gap:14px;align-items:baseline;margin:0;color:rgba(255,255,255,.75);font:400 13px/1 "Share Tech Mono",ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase}
+.fi-load p b{color:#ffd000;font-weight:400;min-width:4.5ch;text-align:right}
+.fi-lbar{width:min(260px,62vw);height:2px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px}
+.fi-lbar i{display:block;height:100%;background:#ffd000;box-shadow:0 0 10px #ffd000;transform-origin:0 50%;transform:scaleX(0);transition:transform .2s linear}
+
 .fi-hint{position:absolute;left:50%;bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px));transform:translate(-50%,16px);opacity:0;
   display:flex;flex-direction:column;align-items:center;gap:10px;color:#fff;pointer-events:none;
   font:600 15px/1 "Share Tech Mono",ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.6);
@@ -23,4 +38,6 @@ html.fi-on .fi{display:block;position:fixed;inset:0;z-index:2147483000;backgroun
 .fi-ki{position:absolute;left:18px;bottom:max(14px,env(safe-area-inset-bottom));color:rgba(255,255,255,.55);font:500 11px/1 Archivo,system-ui,sans-serif;letter-spacing:.04em;pointer-events:none}
 .fi-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08)}
 .fi-bar b{display:block;height:100%;width:0;background:#ffd000;box-shadow:0 0 12px #ffd000}
+.fi-rahmen{position:absolute;display:none;border:2px solid #ffd000;border-radius:6px;box-shadow:0 0 24px rgba(255,208,0,.6),0 0 80px rgba(255,190,60,.35);pointer-events:none}
+.fi-tauchen .fi-rahmen{display:block}
 @media (prefers-reduced-motion:reduce){html.fi-on .fi{display:none}html.fi-on,html.fi-on body{overflow:auto!important}}
