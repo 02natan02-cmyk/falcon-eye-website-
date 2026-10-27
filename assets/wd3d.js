@@ -747,7 +747,8 @@ function init() {
     camera.position.x += par.x * .5; camera.position.y += par.y * .3;
     camera.lookAt(camT);
     // Bildausschnitt: Bühne rechts (Desktop) bzw. Mitte (Handy)
-    if (flow) setView(.5, lerp(.6, .44, seg(p, -.05, .06)) - .03 * eInOut(seg(p, .8, .95)));
+    if (quer) setView(.7, lerp(.7, .64, seg(p, -.05, .06)) - .02 * eInOut(seg(p, .8, .95)));   // Handy quer: Bühne rechts unter der Kapitel-Leiste, Text links
+    else if (flow) setView(.5, lerp(.6, .44, seg(p, -.05, .06)) - .03 * eInOut(seg(p, .8, .95)));
     else setView(stageX, .5);
     camera.updateMatrixWorld();
 
@@ -849,7 +850,7 @@ function init() {
   }
 
   /* ---------------- Größe, Scroll, Loop ---------------- */
-  let W = 1, H = 1, fitK = 1, vx = .5, vy = .5, stageX = .735;
+  let W = 1, H = 1, fitK = 1, vx = .5, vy = .5, stageX = .735, quer = false;
   const par = { x: 0, y: 0, tx: 0, ty: 0 };
   function setView(fx, fy) {
     vx = fx; vy = fy;
@@ -865,10 +866,11 @@ function init() {
     const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
     const narrow = camera.aspect < 1.45;
     stageX = narrow ? .765 : .735;
-    const frac = flow ? .84 : narrow ? .33 : .38;
+    quer = flow && camera.aspect > 1.3;
+    const frac = quer ? .4 : flow ? .84 : narrow ? .33 : .38;
     fitK = clamp((.4588 * .4) / (tanH * frac), .75, 1.8);
     camera.updateProjectionMatrix();
-    hero.toggleAttribute('data-nodock', !flow);
+    hero.toggleAttribute('data-nodock', !flow || quer);
     if (lineupBuilt) layoutLineup();
   }
   addEventListener('resize', () => { resize(); warm = 0; wake(); }, { passive: true });

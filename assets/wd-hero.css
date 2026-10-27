@@ -97,6 +97,15 @@
   .wd3-on .wd3 .wd-stats b{font-size:40px}
   .wd3-on .wd3 .wd-stats span{font-size:10px;letter-spacing:.1em;display:block;line-height:1.35}
 }
+/* Handy quer: Text links unten, Bühne rechts (assets/wd3d.js, quer), Leisten oben kompakt */
+@media (max-height:620px) and (orientation:landscape){
+  .wd3-tele{top:calc(70px + var(--safe-top));max-width:calc(100% - 2 * var(--gutter));overflow:hidden;text-overflow:ellipsis}
+  .wd3-chap{top:calc(90px + var(--safe-top))}
+  .wd3-cap{right:auto;width:min(46vw,440px);bottom:calc(22px + var(--safe-bottom))}
+  .wd3-cap span{margin-bottom:6px}
+  .wd3-cap strong{font-size:clamp(30px,6.4vh,40px)}
+  .wd3-cap em{font-size:14px;line-height:1.4}
+}
 /* Reduzierte Bewegung: statisches Endbild (die Galerie), kein Scroll-Kino */
 @media (prefers-reduced-motion:reduce){
   .wd3-on .wd3{height:auto;min-height:100vh;min-height:100svh}
