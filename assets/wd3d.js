@@ -510,7 +510,7 @@ function init() {
   // Die Karte wird über ihre id gefunden, nicht über eine feste Nummer: so bleibt der Klick richtig, wenn Natan die Reihenfolge ändert.
   // Im 3D-Bild stehen 13 Geräte (Hudalla in der Mitte + diese 12); der Flight Club Saar hat kein 3D-Gerät, ist aber Wegpunkt in der Flugroute.
   const REFS = [
-    ['bsp_waescherei', 'Wäscherei Weidenhof · Beispiel', 'wp-waescherei', 'd'], ['verena', 'Praxis (Name geändert)', 'wp-verena', 'm'], ['pellegrin', 'Küchenstudio (Name geändert)', 'wp-pellegrin', 'd'],
+    ['kleber', 'Wäscherei Kleber · Entwurf', 'wp-waescherei', 'd'], ['verena', 'Praxis (Name geändert)', 'wp-verena', 'm'], ['pellegrin', 'Küchenstudio (Name geändert)', 'wp-pellegrin', 'd'],
     ['falcon', 'Falcon Eye', 'wp-falcon', 'm'], ['holding', 'Natan Holding', 'wp-holding', 'd'], ['gartentraum', 'Der Garten-Traum', 'wp-gartentraum', 'm'],
     ['bsp_kueche', 'Küchenstudio Eichenhof · Beispiel', 'wp-kueche', 'd'], ['natan', 'Natan Küchenmontage', 'wp-natan', 'm'],
     ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 'wp-fahrzeug', 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 'wp-karosserie', 'm'],
