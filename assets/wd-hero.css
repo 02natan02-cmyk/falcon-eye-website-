@@ -206,9 +206,18 @@
 .wdh-go .ef-card{--tw:92px;width:262px}
 .wdh-go .ef-ring{width:34px;height:34px;margin:-17px 0 0 -17px}
 .wdh-go .ef-ring svg{width:14px;height:14px}
+/* Größere Bildschirme: die Filmkarte ist eine richtige Kinokachel, das Vorschaubild lebt (Kamerafahrt) */
+@media (min-width:1250px){
+  .wdh-go .ef-card{--tw:132px;width:330px;padding:7px 16px 7px 7px}
+  .wdh-go .ef-ring{width:40px;height:40px;margin:-20px 0 0 -20px}
+  .wdh-go .ef-ring svg{width:16px;height:16px}
+}
+.ef-thumb img{animation:ef-kb 9s ease-in-out infinite alternate}
+@keyframes ef-kb{from{transform:scale(1.03) translate3d(-1%,0,0)}to{transform:scale(1.14) translate3d(1.5%,-1.5%,0)}}
+@media (prefers-reduced-motion:reduce){.ef-thumb img{animation:none}}
 /* Hochformat (Handy, Tablet hochkant): 9:16-Vorschau wie eine Story */
 @media (orientation:portrait){
-  .ef-card,.wdh-go .ef-card{--tw:46px}
+  .ef-card,.wdh-go .ef-card{--tw:58px}
   .ef-thumb{aspect-ratio:9/16;border-radius:8px}
   .ef-ring,.wdh-go .ef-ring{width:32px;height:32px;margin:-16px 0 0 -16px}
   .ef-ring svg,.wdh-go .ef-ring svg{width:13px;height:13px}

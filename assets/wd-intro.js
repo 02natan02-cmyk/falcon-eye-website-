@@ -1,6 +1,7 @@
 /* Intro „Absprung“ (/webdesign) – kommt bei jedem Aufruf (außer Sprungmarken und reduzierter Bewegung).
    Ladebild → Film läuft an → Scroll-Hinweis → Scrollen spielt den Flug ab (ohne Eingabe läuft er weiter)
-   → Monitor fällt, wird zur Website → Übergang in die echte Seite.
+   → der Monitor kippt und liegt flach → Kamera taucht in den Bildschirm, die echte Seite baut sich auf.
+   Am Handy fährt die Kamera mit (immer bildfüllend): Drohne → Absprung → Drohnen → Monitor.
    Sicherheit: Jede Hängepartie (Film lädt nicht, Abspielen klemmt, Skriptfehler) gibt die Seite sofort frei. */
 (function () {
   var H = document.documentElement;
@@ -12,17 +13,25 @@
   var stage = q('.fi-stage'), v = q('.fi-v'), hint = q('.fi-hint'), skip = q('.fi-skip'), bar = q('.fi-bar b'),
       load = q('.fi-load'), lbar = q('.fi-lbar i'), lnum = q('.fi-load b');
 
-  var VW = 1920, VH = 1080, START = 1.4, DUR = 8, END = 7.85;
+  var VW = 1920, VH = 1080, START = 1.4, END = 4.9;   // END: der Monitor liegt flach, ab hier baut Code die Seite
+  var DUR = END;                                        // Scroll-Weg bildet genau den Flug bis END ab
+  var MON = [0.5, 0.42];                                // Bildschirmmitte im Film (Zoomziel am Ende)
   var hoch = function () { return innerWidth / innerHeight < 1.15; };
   var net = navigator.connection || {};
-  var datei = 'media/intro/' + (innerWidth >= 900 && !net.saveData ? 'flug_1080.mp4' : 'flug_720.mp4') + '?v=3';
+  var datei = 'media/intro/' + (innerWidth >= 900 && !net.saveData ? 'flug_1080.mp4' : 'flug_720.mp4') + '?v=4';
 
   var zustand = 'laden', ziel = START, letzte = 0, hintZeit = 0, fertig = false, nurSpringen = false;
   var t0 = performance.now(), letzteZeit = -1, stillSeit = performance.now(), fruehe = 0;
 
   function fehler(e) { try { console.warn('Intro übersprungen', e || ''); } catch (x) {} schnellEnde(); }
+  function bauen() {                                   // Seite darf sich aufbauen (Überschrift, Knöpfe, Zahlen)
+    if (H.classList.contains('fi-bau')) return;
+    H.classList.add('fi-bau');
+    try { dispatchEvent(new CustomEvent('fe:intro-bau')); } catch (e) {}
+  }
   function schnellEnde() {
     if (fertig) return; fertig = true;
+    bauen();
     box.style.display = 'block'; box.style.transition = 'opacity .35s ease'; box.style.opacity = '0';
     H.classList.remove('fi-on');
     setTimeout(aufraeumen, 380);
@@ -31,15 +40,17 @@
   /* Weiches Scrollen (Lenis) darf während des Intros nichts mitzählen, sonst landet man nach dem Intro irgendwo unten */
   var L = function () { return window.FE && window.FE.lenis; };
   function lenisHalt() { try { var l = L(); if (l) { l.stop(); l.scrollTo(0, { immediate: true, force: true }); } } catch (e) {} }
-  var ruheBis = 0, letzteRad = 0, ruhig = false;
+  var ruheBis = 0, letzteRad = 0, ruhig = false, finger = false;
   function beruhigen() {                            // Nachschwung von Mausrad/Trackpad abfangen, dann oben freigeben
-    ruheBis = performance.now() + 700; letzteRad = performance.now();
+    var n0 = performance.now();                     // Finger: sofort frei (kein Nachschwung), Rad/Trackpad: kurze Ruhe abwarten
+    ruheBis = n0 + (finger ? 120 : 500); letzteRad = n0;
     window.scrollTo(0, 0); lenisHalt();
     (function warte() {
       var n = performance.now();
-      if ((n > ruheBis && n - letzteRad > 350) || n > ruheBis + 2000) {
+      if ((n > ruheBis && n - letzteRad > (finger ? 0 : 280)) || n > ruheBis + (finger ? 200 : 1100)) {
         ruhig = true; window.scrollTo(0, 0);
         try { var l = L(); if (l) { l.scrollTo(0, { immediate: true, force: true }); l.start(); } } catch (e) {}
+        try { dispatchEvent(new CustomEvent('fe:intro-ende')); } catch (e) {}
         return;
       }
       window.scrollTo(0, 0); requestAnimationFrame(warte);
@@ -68,7 +79,7 @@
   v.preload = 'auto';
   v.addEventListener('canplaythrough', losgehen);
   v.addEventListener('canplay', function () { if (puffer() > 0.6 || performance.now() - t0 > 2500) losgehen(); });
-  v.addEventListener('loadedmetadata', function () { if (v.duration && isFinite(v.duration)) { DUR = v.duration; END = DUR - 0.15; } });
+  v.addEventListener('loadedmetadata', function () { if (v.duration && isFinite(v.duration)) { END = Math.min(END, v.duration - 0.2); DUR = END; } });
   v.addEventListener('error', function () { fehler('Film-Fehler'); });
   v.src = datei;
   try { v.load(); } catch (e) {}
@@ -85,31 +96,31 @@
     zeig(anzeige); requestAnimationFrame(ladeAnzeige);
   })();
 
-  /* ---------- Bildausschnitt am Handy: Kamera schwenkt mit, am Ende Blick auf die ganze Website ---------- */
-  var PAN = [[0, 30], [1.4, 36], [2.6, 40], [3.6, 44], [4.6, 50], [5.8, 42], [8, 42]];
-  function tab(t, a) { for (var i = 1; i < a.length; i++) if (t <= a[i][0]) { var x = a[i - 1], y = a[i], k = (t - x[0]) / (y[0] - x[0]); return x[1] + (y[1] - x[1]) * k; } return a[a.length - 1][1]; }
-  function lage(t) {
-    var W = innerWidth, Hh = innerHeight, c = Math.max(W / VW, Hh / VH), Dw = VW * c, Dh = VH * c, px = 0.5, z = 1;
-    if (hoch()) {
-      px = tab(t, PAN) / 100;
-      var k = Math.max(0, Math.min(1, (t - 5.9) / 1.3)); k = k * k * (3 - 2 * k);
-      z = 1 + (W / Dw - 1) * k;                      // bis die ganze Filmbreite ins Handy passt
+  /* ---------- Bildausschnitt: immer bildfüllend. Am Handy fährt die Kamera mit (Filmmitte x in 0..1) ----------
+     Drohne (0–0,6 s) → Schwenk zum Motorrad beim Absprung → Flug zum Monitor → Drohnen → Monitor kippt, Mitte */
+  var KAM = [[0, 0.72], [0.6, 0.72], [1.3, 0.40], [2.6, 0.45], [3.2, 0.68], [3.7, 0.68], [4.3, 0.50], [99, 0.50]];
+  function tab(t, a) {
+    for (var i = 1; i < a.length; i++) if (t <= a[i][0]) {
+      var x = a[i - 1], y = a[i], k = Math.max(0, Math.min(1, (t - x[0]) / (y[0] - x[0])));
+      k = k * k * (3 - 2 * k);                       // weiche Kamerafahrt
+      return x[1] + (y[1] - x[1]) * k;
     }
-    return { W: W, H: Hh, Dw: Dw, Dh: Dh, ox: (W - Dw) * px, oy: (Hh - Dh) / 2, px: px, z: z };
+    return a[a.length - 1][1];
+  }
+  function lage(t) {
+    var W = innerWidth, Hh = innerHeight, c = Math.max(W / VW, Hh / VH), Dw = VW * c, Dh = VH * c, px = 0.5;
+    if (hoch() && Dw > W + 1) {
+      var f = W / Dw, mitte = tab(t, KAM);           // sichtbarer Anteil der Filmbreite, gewünschte Filmmitte
+      px = Math.max(0, Math.min(1, (mitte - f / 2) / (1 - f)));
+    }
+    return { W: W, H: Hh, Dw: Dw, Dh: Dh, ox: (W - Dw) * px, oy: (Hh - Dh) / 2 };
   }
   function zeichnen(t) {
-    var g = lage(t), st = v.style;               // Film in voller Größe legen (kein Beschnitt), dann skalieren
+    var g = lage(t), st = v.style;               // Film in voller Größe legen (kein Beschnitt durch object-fit)
     st.inset = 'auto'; st.objectFit = 'fill'; st.maxWidth = 'none'; st.maxHeight = 'none';
     st.width = g.Dw.toFixed(1) + 'px'; st.height = g.Dh.toFixed(1) + 'px';
     st.left = g.ox.toFixed(1) + 'px'; st.top = g.oy.toFixed(1) + 'px';
-    st.transformOrigin = (g.W / 2 - g.ox).toFixed(1) + 'px ' + (g.H / 2 - g.oy).toFixed(1) + 'px';
-    st.transform = g.z === 1 ? '' : 'scale(' + g.z.toFixed(4) + ')';
     bar.style.width = (Math.min(1, t / END) * 100).toFixed(1) + '%';
-  }
-  function filmRechteck(t) {                          // sichtbares Filmbild in Fensterkoordinaten
-    var g = lage(t), cx = g.W / 2, cy = g.H / 2;
-    var x1 = cx + g.z * (g.ox - cx), y1 = cy + g.z * (g.oy - cy);
-    return { x: x1, y: y1, w: g.Dw * g.z, h: g.Dh * g.z };
   }
 
   /* ---------- Eingaben ---------- */
@@ -121,18 +132,18 @@
     if (fertig || zustand === 'finale') return;
     if (zustand === 'laden') { if (++fruehe > 6) schnellEnde(); return; }   // wer drängelt, kommt sofort auf die Seite
     if (zustand === 'anlauf' || zustand === 'auto') { zustand = 'scroll'; ziel = v.currentTime; }
-    ziel = Math.max(0.2, Math.min(DUR, ziel + d * DUR));
+    ziel = Math.max(0.2, Math.min(END, ziel + d * DUR));
     letzte = performance.now();
     if (d > 0) hint.classList.remove('an');
   }
   function sperren(e) { e.preventDefault(); e.stopImmediatePropagation(); }
   addEventListener('wheel', function (e) {
     if (ruhig) return;
-    sperren(e); letzteRad = performance.now();
+    sperren(e); letzteRad = performance.now(); finger = false;
     if (!fertig) eingabe((e.deltaMode ? e.deltaY * 40 : e.deltaY) / 2400);
   }, { passive: false, capture: true });
   var ty = null;
-  addEventListener('touchstart', function (e) { if (ruhig) return; if (!fertig) ty = e.touches[0].clientY; e.stopImmediatePropagation(); }, { passive: true, capture: true });
+  addEventListener('touchstart', function (e) { finger = true; if (ruhig) return; if (!fertig) ty = e.touches[0].clientY; e.stopImmediatePropagation(); }, { passive: true, capture: true });
   addEventListener('touchmove', function (e) {
     if (ruhig) return;
     sperren(e); letzteRad = performance.now();
@@ -166,11 +177,11 @@
       if (diff > 0.03) { if (!spiel(Math.max(0.8, Math.min(3, 0.9 + diff * 1.2)))) { if (!v.seeking) v.currentTime = Math.min(ziel, ct + 0.08); } }
       else if (diff < -0.06) { if (!v.paused) v.pause(); if (!v.seeking) v.currentTime = Math.max(ziel, ct - Math.min(0.15, -diff * 0.35)); }
       else if (!v.paused) v.pause();
-      if (t - letzte > 3000 && ziel < END) { zustand = 'auto'; hint.classList.remove('an'); ziel = DUR; if (!spiel(1)) zustand = 'scroll'; }
+      if (t - letzte > 3000 && ziel < END) { zustand = 'auto'; hint.classList.remove('an'); ziel = END; if (!spiel(1)) zustand = 'scroll'; }
       if (hintZeit && t - hintZeit > 2800 && hint.classList.contains('an')) hinweis();
       if (ziel >= END && ct >= END - 0.25 && (v.paused || nurSpringen)) { finale(); return; }
     } else if (zustand === 'auto') {
-      if (nurSpringen) { zustand = 'scroll'; ziel = DUR; }
+      if (nurSpringen) { zustand = 'scroll'; ziel = END; }
     }
     // Wächter: läuft etwas, das laufen müsste, nicht weiter → Seite freigeben
     var soll = zustand === 'anlauf' || zustand === 'auto' || (zustand === 'scroll' && Math.abs(ziel - ct) > 0.1);
@@ -183,38 +194,31 @@
   }
   requestAnimationFrame(schritt);
 
-  /* ---------- Finale: aus dem Film wird die echte Seite ---------- */
+  /* ---------- Finale: Kamera taucht in den Bildschirm, aus dem Film wird die echte Seite ----------
+     Der Film läuft weich weiter (der Monitor wird im Film selbst zur Seite), die Bühne zoomt auf die Bildschirmmitte
+     und wird durchsichtig. Darunter baut sich die echte Seite auf: Kopf, Überschrift Wort für Wort, Text, Knöpfe, Zahlen. */
   function finale() {
     if (fertig || zustand === 'finale') return;
     zustand = 'finale';
-    try { v.pause(); } catch (e) {}
     hint.classList.remove('an'); stage.classList.remove('fi-wackel');
     window.scrollTo(0, 0);
-    if (!hoch()) {
-      // Am PC ist das letzte Filmbild der Seitenanfang selbst: weich überblenden, dann ist man drin
-      zeichnen(v.currentTime);
-      box.classList.add('fi-tauchen');
-      box.style.transition = 'opacity .9s ease'; box.style.opacity = '0';
-      stage.style.transition = 'transform 1.1s cubic-bezier(.2,.7,.2,1)'; stage.style.transform = 'scale(1.03)';
-      setTimeout(function () { fertig = true; H.classList.remove('fi-on'); aufraeumen(); }, 950);
-      return;
-    }
-    // Am Handy: der Film steht als Website-Streifen in der Mitte, daraus klappt die echte Seite auf
-    zeichnen(DUR);
-    var R0 = filmRechteck(DUR), W = innerWidth, Hh = innerHeight;
-    var teile = [].slice.call(document.body.children).filter(function (el) {
-      return el !== box && !/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(el.tagName) && !el.classList.contains('dock') && !el.classList.contains('mmenu');
-    });
-    box.classList.add('fi-tauchen');
-    var D = 1000, ts = performance.now();
-    function ease(k) { return k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+    try { v.playbackRate = 1; if (v.paused && !nurSpringen) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } } catch (e) {}
+    var g = lage(END), mx = g.ox + g.Dw * MON[0], my = g.oy + g.Dh * MON[1];
+    box.classList.add('fi-tauchen');                   // Hinweise weg, Hintergrund durchsichtig
+    stage.style.transformOrigin = mx.toFixed(1) + 'px ' + my.toFixed(1) + 'px';
+    stage.style.willChange = 'transform, opacity';
+    var D = 1150, ts = performance.now(), bauAb = 220;
+    function glatt(k) { return k * k * (3 - 2 * k); }
     function lauf() {
-      var k = ease(Math.min(1, (performance.now() - ts) / D));
-      var y1 = R0.y * (1 - k), y2 = (R0.y + R0.h) + (Hh - (R0.y + R0.h)) * k;
-      teile.forEach(function (el) { el.style.transform = 'translateY(' + y1.toFixed(1) + 'px)'; });
-      box.style.clipPath = 'polygon(evenodd,0 0,' + W + 'px 0,' + W + 'px ' + Hh + 'px,0 ' + Hh + 'px,0 0,0 ' + y1 + 'px,' + W + 'px ' + y1 + 'px,' + W + 'px ' + y2 + 'px,0 ' + y2 + 'px,0 ' + y1 + 'px)';
-      if (k < 1) { requestAnimationFrame(lauf); return; }
-      teile.forEach(function (el) { el.style.transform = ''; });
+      var e = Math.min(1, (performance.now() - ts) / D);
+      if (!H.classList.contains('fi-bau') && performance.now() - ts > bauAb) bauen();
+      var zoom = 1 + 0.24 * (1 - Math.pow(1 - e, 3));
+      var o = e < 0.12 ? 1 : 1 - glatt((e - 0.12) / 0.88);
+      stage.style.transform = 'scale(' + zoom.toFixed(4) + ')';
+      stage.style.opacity = o.toFixed(3);
+      zeichnen(v.currentTime);
+      if (v.currentTime >= END + 0.25 && !v.paused) { try { v.pause(); } catch (x) {} }   // sauberer Bildschirm, kein zweiter Seitenaufbau im Film
+      if (e < 1) { requestAnimationFrame(lauf); return; }
       fertig = true; H.classList.remove('fi-on'); aufraeumen();
     }
     requestAnimationFrame(lauf);

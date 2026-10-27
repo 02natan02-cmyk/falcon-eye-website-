@@ -8,6 +8,15 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = () => matchMedia('(max-width: 900px)').matches;
   const G = window.gsap;
+  // Läuft das Intro (html.fi-on), warten Flug, Zahlen und Gag, bis die Kamera in den Bildschirm taucht (fe:intro-bau)
+  const H = document.documentElement;
+  const warte = (fn, ms) => {
+    if (!H.classList.contains('fi-on') || H.classList.contains('fi-bau')) return setTimeout(fn, ms);
+    let done = false;
+    const fire = () => { if (done) return; done = true; setTimeout(fn, ms); };
+    addEventListener('fe:intro-bau', fire, { once: true });
+    const iv = setInterval(() => { if (!H.classList.contains('fi-on') || H.classList.contains('fi-bau')) { clearInterval(iv); fire(); } }, 400);
+  };
 
   /* ---------- Handy: echter FPV-Flug als Hintergrund (klein, stumm, erst nach dem Laden) ---------- */
   const vid = $('.wdh-vid');
@@ -23,7 +32,7 @@
     };
     // Bis der Flug läuft, driftet das Standbild per CSS (Bewegung ab dem ersten Bild). Das Video lädt erst nach dem
     // Seitenaufbau: ein Video, das vorher startet, hält das load-Ereignis der ganzen Seite auf.
-    const go = () => setTimeout(start, 150);
+    const go = () => warte(start, 150);
     if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
     addEventListener('resize', () => { if (mobile()) start(); }, { passive: true });
     if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => {
@@ -45,7 +54,7 @@
         let open = 0;
         nums.forEach((el, i) => {
           const to = +el.dataset.wdhTo, suf = el.dataset.wdhSuf || '';
-          const t = Math.min(1, (now - t0) / (dur[i] || 1400));
+          const t = Math.max(0, Math.min(1, (now - t0) / (dur[i] || 1400)));
           const e = 1 - Math.pow(1 - t, 3);
           el.textContent = Math.round(to * e) + suf;
           if (t < 1) open++;
@@ -54,7 +63,7 @@
       };
       requestAnimationFrame(tick);
     };
-    setTimeout(run, 950);
+    warte(run, 950);
   }
 
   /* ---------- Geisterhand: versucht wegzuwischen, die Seite federt zurück, „Festgehalten ✓“ ---------- */
@@ -94,7 +103,7 @@
       .add(() => ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(ev => removeEventListener(ev, abort, true)));
   }
   // kurz nachdem die Überschrift steht (nicht erst nach dem kompletten Laden der Seite)
-  setTimeout(gag, 3300);
+  warte(gag, 3300);
 
   /* ---------- Präsentation starten: Vorhang zu, dann zur Präsentation ---------- */
   const pres = $('[data-wdh-pres]');

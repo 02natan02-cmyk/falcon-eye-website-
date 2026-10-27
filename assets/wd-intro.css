@@ -3,7 +3,7 @@ html{scrollbar-gutter:stable}
 .fi{display:none}
 html.fi-on,html.fi-on body{overflow:hidden!important;overscroll-behavior:none}
 html.fi-on .fi{display:block}
-.fi{position:fixed;inset:0;z-index:2147483000;background:#0b0e12;touch-action:none}
+.fi{position:fixed;inset:0;z-index:2147483000;background:#0b0e12;touch-action:none;overflow:hidden}
 .fi.fi-tauchen{background:transparent}
 .fi-stage{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .5s ease}
 .fi-stage.an{opacity:1}
@@ -13,6 +13,11 @@ html.fi-on .fi{display:block}
 @keyframes fiWackel{0%{translate:0 0}18%{translate:0 -26px}36%{translate:0 0}52%{translate:0 -12px}68%,100%{translate:0 0}}
 .fi-shade{position:absolute;inset:auto 0 0 0;height:34%;background:linear-gradient(transparent,rgba(8,10,12,.55));pointer-events:none}
 .fi-tauchen .fi-shade,.fi-tauchen .fi-hint,.fi-tauchen .fi-skip,.fi-tauchen .fi-ki,.fi-tauchen .fi-bar{opacity:0;transition:opacity .25s}
+
+/* Solange das Intro läuft, wartet der Seitenaufbau des Helden; er startet, wenn die Kamera in den Bildschirm taucht (html.fi-bau) */
+html.fi-on:not(.fi-bau) .wd-hero .wdh-h1,html.fi-on:not(.fi-bau) .wd-hero .wdh-w,html.fi-on:not(.fi-bau) .wd-hero .lede,
+html.fi-on:not(.fi-bau) .wd-hero .wdh-go,html.fi-on:not(.fi-bau) .wd-hero .wdh-row2,html.fi-on:not(.fi-bau) .wd-hero .wd-stats li,
+html.fi-on:not(.fi-bau) .wd-hero .wdh-zero i,html.fi-on:not(.fi-bau) .wd-hero .wdh-pres::after{animation-play-state:paused}
 
 /* Ladebild: Falke, Fortschritt, nichts lädt sichtbar halb */
 .fi-load{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:18px;transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
@@ -39,5 +44,4 @@ html.fi-on .fi{display:block}
 .fi-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08)}
 .fi-bar b{display:block;height:100%;width:0;background:#ffd000;box-shadow:0 0 12px #ffd000}
 .fi-rahmen{position:absolute;display:none;border:2px solid #ffd000;border-radius:6px;box-shadow:0 0 24px rgba(255,208,0,.6),0 0 80px rgba(255,190,60,.35);pointer-events:none}
-.fi-tauchen .fi-rahmen{display:block}
 @media (prefers-reduced-motion:reduce){html.fi-on .fi{display:none}html.fi-on,html.fi-on body{overflow:auto!important}}
