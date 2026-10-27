@@ -18,6 +18,20 @@
   /* mobile: start playback on first touch/scroll if autoplay was blocked (data saver / low power) */
   const kick = () => { if (vid.paused) vid.play().catch(() => {}); };
   ['touchstart', 'scroll', 'pointerdown'].forEach(ev => addEventListener(ev, kick, { passive: true, once: true }));
+  /* Touch-Geräte (auch Tablets und Handys quer) und Rechner, bei denen das Kopieren des Videos in die Leinwand schwarz bleibt:
+     den Falken aus der schwarzen Ebene stanzen, das echte <video> darunter zeigt sich (robuster als drawImage). */
+  const coarse = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 1;
+  let punchFallback = false, blackFrames = 0, checkAt = 0;
+  function pruefeSchwarz(ePx, ePy, dpr) {
+    if (punchFallback || performance.now() < checkAt) return;
+    checkAt = performance.now() + 400;
+    try {
+      const d = ex.getImageData(Math.round((ePx - 10) * dpr), Math.round((ePy - 10) * dpr), 20, 20).data;
+      let hell = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 24) hell++;
+      blackFrames = hell ? 0 : blackFrames + 1;
+      if (blackFrames >= 5) punchFallback = true;          // 2 s lang nur Schwarz im Auge → Stanz-Weg
+    } catch (e) { punchFallback = true; }
+  }
   function renderEye() {
     const dpr = Math.min(devicePixelRatio || 1, 2), vw = ec.clientWidth, vh = ec.clientHeight;
     if (ec.width !== Math.round(vw * dpr) || ec.height !== Math.round(vh * dpr)) { ec.width = Math.round(vw * dpr); ec.height = Math.round(vh * dpr); }
@@ -28,6 +42,7 @@
     if (z >= .995) { ex.setTransform(1, 0, 0, 1, 0, 0); ex.clearRect(0, 0, ec.width, ec.height); return; } /* fully zoomed: the real video underneath shows through */
     if (eye.swoop <= 0) return;
     const narrow = vw < 700;
+    const punch = narrow || coarse || punchFallback;
     const logoW = narrow ? vw * .92 : Math.min(vw * .72, 1150), s0 = logoW / LOGO_W;
     const x0 = (vw - logoW) / 2 - (1 - eye.swoop) * vw * .9;
     const y0 = vh / 2 - LOGO_H * s0 / 2 - (narrow ? 10 : 24) + (1 - eye.swoop) * 90;
@@ -36,7 +51,7 @@
     const sEnd = Math.hypot(vw, vh) / 2 / 4.2 * 1.25;
     const sc = s0 * Math.pow(sEnd / s0, Math.pow(z, 1.35));
     const tx = ePx - E.x * sc, ty = ePy - E.y * sc;
-    if (narrow) {
+    if (punch) {
       /* phones: never copy the video into the canvas (fails on many Android GPUs).
          Instead punch the falcon out of the black layer – the real <video> underneath shows through. */
       ex.save();
@@ -62,6 +77,7 @@
         cover(src, sw, sh, rw, rh, rx, ry);
       } else cover(src, sw, sh, vw, vh);
       ex.filter = 'none';
+      if (ready && vid.currentTime > 0.4 && !vid.paused && z < .9) pruefeSchwarz(ePx, ePy, dpr);   // getImageData ignoriert Clip und Transform
       if (lift > 0) { ex.globalCompositeOperation = 'screen'; ex.globalAlpha = (narrow ? .08 : .28) * lift; ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); ex.globalCompositeOperation = 'source-over'; }
     } else { ex.fillStyle = '#e6ecec'; ex.fillRect(0, 0, vw, vh); }
     ex.restore();
