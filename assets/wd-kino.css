@@ -1,0 +1,64 @@
+/* Falcon Eye – Kino-Band auf webdesign.html (#kino): der Erklärfilm als große Leinwand mit laufendem Teaser.
+   Antippen öffnet den Kino-Modus mit Ton (assets/wd-hero-film.js über die Filmkarte im Held). */
+.wkino{position:relative;padding:clamp(56px,8vw,120px) 0;background:
+  radial-gradient(90% 70% at 70% 40%,rgba(255,208,0,.10),transparent 60%),
+  linear-gradient(180deg,#0b0e12 0,#11161c 50%,#0b0e12 100%);overflow:clip}
+.wkino::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(230,236,236,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(230,236,236,.06) 1px,transparent 1px);background-size:64px 64px;
+  -webkit-mask:radial-gradient(70% 70% at 60% 50%,#000 30%,transparent 100%);mask:radial-gradient(70% 70% at 60% 50%,#000 30%,transparent 100%)}
+.wkino-wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(28px,4vw,64px);align-items:center;position:relative}
+.wkino-txt h2{font:900 clamp(40px,5.4vw,84px)/.9 var(--display);text-transform:uppercase;letter-spacing:-.01em;margin:0 0 18px;color:var(--wing)}
+.wkino-txt h2 em{font-style:normal;color:var(--signal)}
+.wkino-txt .lede{max-width:30em;margin:0 0 26px;font-size:clamp(16px,1.35vw,20px);line-height:1.5;color:var(--text-2)}
+.wkino-fakten{display:flex;flex-wrap:wrap;gap:8px 10px;margin:0 0 28px;padding:0;list-style:none}
+.wkino-fakten li{font:400 12px/1 var(--osd);letter-spacing:.14em;text-transform:uppercase;color:var(--wing);padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(17,21,26,.6)}
+.wkino-btn{display:inline-flex;align-items:center;gap:12px;min-height:56px;padding:0 26px 0 12px;border-radius:999px;border:0;cursor:pointer;
+  background:var(--signal);color:var(--signal-ink);font:700 17px/1 var(--body);box-shadow:0 18px 40px -16px rgba(255,208,0,.55);transition:transform .25s,box-shadow .25s}
+.wkino-btn i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--signal-ink);color:var(--signal)}
+.wkino-btn i svg{width:14px;height:14px;margin-left:2px}
+.wkino-btn:hover,.wkino-btn:focus-visible{transform:translateY(-2px);box-shadow:0 24px 48px -16px rgba(255,208,0,.7);outline:none}
+.wkino-btn:focus-visible{box-shadow:0 0 0 4px rgba(255,208,0,.35)}
+
+/* Leinwand: ein Bildschirm, der leicht im Raum steht und sich beim Anfassen zuwendet */
+.wkino-wand{perspective:1400px}
+.wkino-screen{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:22px;overflow:hidden;cursor:pointer;background:#0b0e12;color:#fff;
+  transform:rotateY(-7deg) rotateX(2deg);transform-origin:50% 50%;transition:transform .7s cubic-bezier(.2,.8,.2,1),box-shadow .7s;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,208,0,.45),0 0 60px -10px rgba(255,208,0,.35);isolation:isolate}
+.wkino-screen:hover,.wkino-screen:focus-visible,.wkino.is-nah .wkino-screen{transform:none;box-shadow:0 50px 100px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,208,0,.8),0 0 90px -10px rgba(255,208,0,.5)}
+.wkino-screen:focus-visible{outline:none}
+.wkino-screen picture,.wkino-screen img,.wkino-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.wkino-v{opacity:0;transition:opacity .6s}
+.wkino-v.an{opacity:1}
+.wkino-screen::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(11,14,18,.1),rgba(11,14,18,0) 35%,rgba(11,14,18,.55))}
+.wkino-play{position:absolute;left:50%;top:50%;z-index:3;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(17,21,26,.72);border:2px solid var(--signal);color:var(--signal);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 0 0 0 rgba(255,208,0,.5);animation:wkino-puls 2.6s ease-out infinite;transition:transform .3s,background .3s,color .3s}
+.wkino-play svg{width:30px;height:30px;margin-left:5px}
+.wkino-screen:hover .wkino-play,.wkino-screen:focus-visible .wkino-play{transform:scale(1.08);background:var(--signal);color:var(--signal-ink)}
+@keyframes wkino-puls{0%{box-shadow:0 0 0 0 rgba(255,208,0,.55)}70%{box-shadow:0 0 0 22px rgba(255,208,0,0)}100%{box-shadow:0 0 0 0 rgba(255,208,0,0)}}
+.wkino-osd{position:absolute;z-index:3;font:400 12px/1 var(--osd);letter-spacing:.16em;text-transform:uppercase;color:var(--wing);text-shadow:0 1px 8px rgba(0,0,0,.8);pointer-events:none}
+.wkino-osd.tl{left:16px;top:14px;display:flex;align-items:center;gap:8px}
+.wkino-osd.tl i{width:9px;height:9px;border-radius:50%;background:var(--rec);animation:wdrec 1.2s steps(2) infinite}
+.wkino-osd.br{right:16px;bottom:14px;color:var(--signal)}
+.wkino-osd.bl{left:16px;bottom:14px;color:var(--text-2);letter-spacing:.08em;text-transform:none;font-size:13px}
+.wkino-c{position:absolute;z-index:3;width:18px;height:18px;border:2px solid rgba(255,208,0,.9);pointer-events:none}
+.wkino-c.tl{left:10px;top:10px;border-right:0;border-bottom:0}.wkino-c.tr{right:10px;top:10px;border-left:0;border-bottom:0}
+.wkino-c.bl{left:10px;bottom:10px;border-right:0;border-top:0}.wkino-c.br{right:10px;bottom:10px;border-left:0;border-top:0}
+/* Lichtkegel vom Bildschirm auf den Boden */
+.wkino-wand::after{content:"";position:absolute;left:12%;right:12%;bottom:-60px;height:60px;background:radial-gradient(50% 100% at 50% 0,rgba(255,208,0,.28),transparent 70%);filter:blur(12px);pointer-events:none}
+.wkino-wand{position:relative}
+
+@media (max-width:900px){
+  .wkino-wrap{grid-template-columns:1fr;gap:26px}
+  .wkino-wand{order:-1}
+  .wkino-screen{transform:none;border-radius:18px;aspect-ratio:4/5}
+  .wkino-play{width:72px;height:72px;margin:-36px 0 0 -36px}
+  .wkino-play svg{width:26px;height:26px}
+  .wkino-txt h2{font-size:clamp(38px,11vw,54px)}
+  .wkino-btn{width:100%;justify-content:center;padding-left:14px}
+  .wkino-osd.bl{display:none}
+}
+@media (orientation:landscape) and (max-width:900px){.wkino-screen{aspect-ratio:16/9}}
+@media (prefers-reduced-motion:reduce){
+  .wkino-screen{transform:none;transition:none}.wkino-play{animation:none}.wkino-v{display:none}
+}
