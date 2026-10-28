@@ -248,12 +248,12 @@
   if (form) {
     const err = $('.af-err', form), btn = $('button[type=submit]', form), doneBox = $('.af-done', form);
     const val = n => (form.elements[n] ? form.elements[n].value.trim() : '');
-    const text = d => `Hallo Falcon Eye,\n\nich hätte gern einen kostenlosen Website-Entwurf${d.fpv ? ' – und einen Drohnenfilm dazu (Film und Website aus einer Hand)' : ''}.\n\nName: ${d.name}\nFirma: ${d.firma || '–'}\nTelefon/WhatsApp: ${d.tel || '–'}\nE-Mail: ${d.mail || '–'}\nBranche: ${d.branche || '–'}\nCode: ${d.code || '–'}\n\n${d.msg || ''}`;
+    const text = d => `Hallo Falcon Eye,\n\nich hätte gern einen kostenlosen Website-Entwurf${d.fpv ? ' – und einen Drohnenfilm dazu (Film und Website aus einer Hand)' : ''}.\n\nName: ${d.name}\nFirma: ${d.firma || '–'}\nTelefon/WhatsApp: ${d.tel || '–'}\nE-Mail: ${d.mail || '–'}\nBranche: ${d.branche || '–'}\nCode: ${d.code || '–'}${d.quelle ? '\nAufmerksam geworden über: ' + d.quelle : ''}\n\n${d.msg || ''}`;
     if (codeF) codeF.addEventListener('input', () => codeF.closest('.af-f').classList.toggle('filled', !!codeF.value.trim()));
     form.addEventListener('submit', e => {
       e.preventDefault();
       $$('.af-f.bad', form).forEach(f => f.classList.remove('bad'));
-      const d = { name: val('name'), firma: val('firma'), tel: val('telefon'), mail: val('email'), branche: val('branche'), msg: val('nachricht'), code: val('code'), fpv: !!(form.elements.fpv && form.elements.fpv.checked) };
+      const d = { name: val('name'), firma: val('firma'), tel: val('telefon'), mail: val('email'), branche: val('branche'), quelle: val('quelle'), msg: val('nachricht'), code: val('code'), fpv: !!(form.elements.fpv && form.elements.fpv.checked) };
       const bad = (n, m) => { const f = form.elements[n]; if (f) { f.closest('.af-f').classList.add('bad'); f.focus(); } err.textContent = m; };
       if (!d.name) return bad('name', 'Bitte tragen Sie Ihren Namen ein.');
       if (!d.tel && !d.mail) return bad('telefon', 'Bitte geben Sie eine Telefonnummer oder E-Mail-Adresse an, damit wir antworten können.');
@@ -274,7 +274,7 @@
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           access_key: FORM_KEY, subject: 'Website-Anfrage über falcon-eye.de' + (d.fpv ? ' · mit Drohnenfilm' : '') + (d.code ? ' · Code ' + d.code : '') + (d.firma ? ' · ' + d.firma : ''), from_name: 'falcon-eye.de/webdesign',
-          name: d.name, replyto: d.mail || undefined, Firma: d.firma || '–', 'Telefon/WhatsApp': d.tel || '–', 'E-Mail': d.mail || '–', Branche: d.branche || '–', Nachricht: d.msg || '–', Code: d.code || '–', Drohnenfilm: d.fpv ? 'Ja, Film und Website zusammen' : 'Nein', Seite: location.href.split('#')[0]
+          name: d.name, replyto: d.mail || undefined, Firma: d.firma || '–', 'Telefon/WhatsApp': d.tel || '–', 'E-Mail': d.mail || '–', Branche: d.branche || '–', Nachricht: d.msg || '–', Code: d.code || '–', 'Aufmerksam geworden über': d.quelle || '–', Drohnenfilm: d.fpv ? 'Ja, Film und Website zusammen' : 'Nein', Seite: location.href.split('#')[0]
         })
       }).then(r => r.json()).then(j => finish(!!j.success)).catch(() => finish(false)).finally(() => { btn.disabled = false; btn.textContent = old; });
     });

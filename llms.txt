@@ -6,11 +6,12 @@ Kontakt: info@falcon-eye.de · Telefon und WhatsApp 0151 56743442 · Römerstr. 
 
 ## Webdesign
 
-- [Webdesign & Webentwicklung](https://falcon-eye.de/webdesign): Hauptseite für Websites mit Referenzen (13 Projekte), Angebot, Leistungen aus einer Hand, Sichtbarkeit bei Google und in KI-Antworten, häufigen Fragen und Anfrageformular.
+- [Webdesign & Webentwicklung](https://falcon-eye.de/webdesign): Hauptseite für Websites mit Referenzen, Angebot, Leistungen aus einer Hand, Sichtbarkeit bei Google und in KI-Antworten, häufigen Fragen und Anfrageformular.
 - [Alles aus einer Hand](https://falcon-eye.de/webdesign#rundum): Website (Unikat statt Vorlage), Domain finden, kaufen und verwalten, Einkäufe wie Postfächer, Hosting, E-Mail und Formulare, Wartung und Updates per WhatsApp-Sprachnachricht – einfache Änderungen sind in 10 Minuten live.
 - [Gefunden werden bei Google, Bing und in KI-Antworten](https://falcon-eye.de/webdesign#ki): echte Überschriften und Antworten auf die Fragen der Kunden, strukturierte Daten (Schema.org), Sitemap und llms.txt, Google Search Console und Bing Webmaster Tools, Pflege des Google-Unternehmensprofils. Einen festen Platz bei Google oder in einer KI-Antwort kann niemand garantieren.
 - [Häufige Fragen](https://falcon-eye.de/webdesign#fragen): Dauer, Preis, Domain und Hosting, spätere Änderungen, erster Entwurf, Google und KI, PHP-Sicherheit, Drohnenaufnahmen.
 - [Referenzen](https://falcon-eye.de/webdesign#referenzen): Handwerk und Service, Küchenstudios, Autobetriebe, Gesundheit und Pflege sowie eigene Projekte.
+- [Film + Website aus einer Hand](https://falcon-eye.de/leistungen.html#beides): Drohnenfilm und Website vom selben Team, mit echten Beispielen (falcon-eye.de und die Website des Flight Club Saar). Anfrage: https://falcon-eye.de/kontakt.html#beides
 
 ## Angebot
 
@@ -23,7 +24,7 @@ Kontakt: info@falcon-eye.de · Telefon und WhatsApp 0151 56743442 · Römerstr. 
 
 - [Startseite](https://falcon-eye.de/): FPV-Drohnenfilme durch Hallen, Fenster, Stadien und Menschenmengen – Imagefilme, Events, Sport und Social-Media-Clips aus dem Saarland.
 - [Projekte](https://falcon-eye.de/projekte.html): echte FPV-Projekte, zum Beispiel Möbel Martin, Ludwigspark, Polizeipräsidium, Weinloft 23 und Hörmann.
-- [Leistungen](https://falcon-eye.de/leistungen.html): FPV-Drohnenfilme für Events, Imagefilme, Social Media, Sport, Gastro, Immobilien, Hochzeiten und Live-Übertragungen.
+- [Leistungen](https://falcon-eye.de/leistungen.html): Webdesign, Film + Website aus einer Hand sowie FPV-Drohnenfilme für Events, Imagefilme, Social Media, Sport, Gastro, Immobilien, Hochzeiten, Live-Übertragungen und Kino-Qualität in 6K.
 - [Über uns](https://falcon-eye.de/ueber-uns.html): die Crew hinter Falcon Eye, FPV-Piloten aus dem Saarland, über 100 Drohnen im Hangar.
 - [Kontakt](https://falcon-eye.de/kontakt.html): Dreh anfragen per Formular, WhatsApp, Telefon oder E-Mail.
 - [Flight Club Saar](https://falcon-eye.de/flight-club.html): der FPV-Verein im Saarland, Partner von Falcon Eye.
@@ -35,6 +36,7 @@ Kontakt: info@falcon-eye.de · Telefon und WhatsApp 0151 56743442 · Römerstr. 
 - [Pflege24-7](https://pflege24-7.de): 24-Stunden-Betreuung, mit Kostenrechner und Ratgeber.
 - [Opieka24-7](https://opieka24-7.pl): polnische Partnerseite von Pflege24-7.
 - [Natan Holding](https://natanholding.de): Holding aus Saarbrücken.
+- [Flight Club Saar](https://02natan02-cmyk.github.io/flight-club-saar-website/): Website des FPV-Vereins Flight Club Saar e. V.
 
 ## Optional
 
