@@ -1,4 +1,4 @@
-/* Intro „Absprung“ (/webdesign) – kommt bei jedem Aufruf (außer Sprungmarken und reduzierter Bewegung).
+/* Intro „Absprung“ (/webdesign) – kommt beim ersten Aufruf und danach frühestens nach 12 Stunden wieder (Merker fe-intro im localStorage; ?intro erzwingt, ?nointro verhindert; nie bei Sprungmarken und reduzierter Bewegung).
    Ladebild → Film läuft an → Scroll-Hinweis → Scrollen spielt den Flug ab (ohne Eingabe läuft er weiter)
    → der Monitor kippt und liegt flach → Kamera taucht in den Bildschirm, die echte Seite baut sich auf.
    Am Handy fährt die Kamera mit (immer bildfüllend): Drohne → Absprung → Drohnen → Monitor.

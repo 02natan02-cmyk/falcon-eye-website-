@@ -102,7 +102,7 @@
   if (mis) {
     const btns = $$('.mlist button', mis), layers = $$('.bg video', mis);
     const txt = $('[data-m=text]', mis), meta = $('[data-m=meta]', mis), link = $('[data-m=link]', mis), ask = $('[data-m=ask]', mis), prog = $('.mprog i', mis);
-    let active = -1, layer = 0, auto = true, timer = 0, inView = false, t0 = 0;
+    let active = -1, layer = 0, auto = true, timer = 0, inView = false, t0 = 0, armed = false; /* armed: Clip erst laden, wenn der Abschnitt naht */
     const DUR = 5200;
     function select(i, user) {
       if (user) auto = false;
@@ -111,7 +111,7 @@
       btns.forEach(x => x.setAttribute('aria-selected', x === b)); b.style.setProperty('--dur', DUR + 'ms');
       layer = 1 - layer;
       const v = layers[layer], o = layers[1 - layer];
-      v.src = b.dataset.src; v.poster = b.dataset.poster; v.currentTime = 0; v.play().catch(() => {});
+      v.poster = b.dataset.poster; if (armed) { v.src = b.dataset.src; v.currentTime = 0; v.play().catch(() => {}); }
       v.classList.add('on'); o.classList.remove('on'); setTimeout(() => o.pause(), 800);
       txt.textContent = b.dataset.text; meta.textContent = b.dataset.meta; link.href = b.dataset.link; ask.href = 'kontakt.html' + (b.dataset.projekt ? '?projekt=' + encodeURIComponent(b.dataset.projekt) : '') + '#' + b.dataset.anlass;
       t0 = performance.now();
@@ -126,6 +126,9 @@
     mis.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
     mis.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) user((active + (dx < 0 ? 1 : -1) + btns.length) % btns.length); }, { passive: true });
     select(0);
+    new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting && !armed) { armed = true; const v = layers[layer]; v.src = btns[active].dataset.src; v.play().catch(() => {}); }
+    }), { rootMargin: '400px 0px' }).observe(mis);
     new IntersectionObserver(es => es.forEach(e => {
       inView = e.isIntersecting;
       layers.forEach(v => inView && v.classList.contains('on') ? v.play().catch(() => {}) : v.pause());
@@ -183,11 +186,14 @@
   const feed = $('.phone .feed');
   if (feed) {
     const items = $$('.item', feed), dots = $$('.phone .dots i');
+    /* Clips erst laden und abspielen, wenn das Handy im Bild ist (Ladezeit am Handy) */
+    let cur = items[0], near = false;
+    const sync = () => items.forEach(it => { const v = $('video', it); if (near && it === cur) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause(); });
     const io = new IntersectionObserver(es => es.forEach(e => {
-      const v = $('video', e.target);
-      if (e.intersectionRatio > .6) { v.preload = 'auto'; v.play().catch(() => {}); dots.forEach((d, k) => d.classList.toggle('on', items[k] === e.target)); }
-      else v.pause();
+      if (e.intersectionRatio > .6) { cur = e.target; dots.forEach((d, k) => d.classList.toggle('on', items[k] === e.target)); }
+      sync();
     }), { root: feed, threshold: [0, .6, 1] });
+    new IntersectionObserver(es => es.forEach(e => { near = e.isIntersecting; sync(); }), { rootMargin: '200px 0px' }).observe(feed);
     items.forEach(i => io.observe(i));
     const go = d => { const h = feed.clientHeight, i = Math.round(feed.scrollTop / h); feed.scrollTo({ top: Math.max(0, Math.min(items.length - 1, i + d)) * h, behavior: 'smooth' }); };
     $('[data-reel=prev]').addEventListener('click', () => go(-1));

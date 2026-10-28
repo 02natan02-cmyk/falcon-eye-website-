@@ -32,7 +32,7 @@
 <link rel="modulepreload" href="js/three.module.min.js">
 <link rel="stylesheet" href="assets/wd-intro.css?v=4">
 <link rel="preload" as="image" href="media/bird.png">
-<script>(function(){try{var h=document.documentElement;if(!/[?&]nointro\b/.test(location.search)&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('fi-on');setTimeout(function(){if(!window.__fiOk)h.classList.remove('fi-on')},7000)}}catch(e){}})()</script>
+<script>(function(){try{var h=document.documentElement;var z=0,f=/[?&]intro\b/.test(location.search);try{z=+localStorage.getItem('fe-intro')||0}catch(e){}if(!/[?&]nointro\b/.test(location.search)&&(f||Date.now()-z>432e5)&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('fi-on');try{localStorage.setItem('fe-intro',Date.now())}catch(e){}setTimeout(function(){if(!window.__fiOk)h.classList.remove('fi-on')},7000)}}catch(e){}})()</script>
 </head>
 <body class="p-webdesign">
 <div class="fi" id="fe-intro" role="region" aria-label="Intro: Drohnenflug zur Website">
@@ -1294,7 +1294,7 @@
       <div><h4>Kontakt</h4><ul><li><a href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20ich%20h%C3%A4tte%20gern%20einen%20kostenlosen%20Website-Entwurf." target="_blank" rel="noopener">WhatsApp</a></li><li>Telefon 0151 56743442</li><li>info@falcon-eye.de</li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
       <div><h4>Folgt uns</h4><ul><li><a href="https://www.instagram.com/falconeyesaar" target="_blank" rel="noopener">Instagram @falconeyesaar</a></li><li><a href="https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.facebook.com/profile.php?id=61559258413801" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">YouTube: Kinofilme</a></li><li><a href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a></li><li><a href="https://flightclub-saar.de/" target="_blank" rel="noopener">flightclub-saar.de</a></li></ul></div>
     </div>
-    <div class="legalrow"><span>© <span data-year>2026</span> Falcon Eye, Natan Wojtasczyk</span><span><a href="impressum.html">Impressum</a> &nbsp; <a href="datenschutz.html">Datenschutz</a></span></div>
+    <div class="legalrow"><span>© <span data-year>2026</span> Falcon Eye, Natan Wojtasczyk</span><span><a href="webdesign.html?intro">Intro nochmal ansehen</a> &nbsp; <a href="impressum.html">Impressum</a> &nbsp; <a href="datenschutz.html">Datenschutz</a></span></div>
   </div>
 </footer>
 <script src="assets/hinweis-php.js?v=2"></script>
