@@ -217,6 +217,8 @@
       msg.className = 'ld-msg' + (unknown ? ' no' : '');
       msg.innerHTML = unknown ? `Als <b>Hinweis-Band</b> eingebaut. Probiert auch Farbe, Schrift, Überschrift, Dunkelmodus, „Mit Drohnenflug“ oder „Maschine schneller“.` : `Live geändert: <b>${said.map(esc).join(' · ')}</b>` + (ch.fly === true ? '. In echt fliegen wir dafür einmal durch euren Betrieb.' : '');
       busy = false; curText = ''; inp.disabled = false; if (sub) sub.disabled = false; if (!fromChip) inp.value = '';
+      // Einladung zum Feedback nur, wenn jemand die Demo selbst ausprobiert hat (nicht beim automatischen Vorspiel)
+      if (userActed && !inviteT && window.FEFeedback) inviteT = setTimeout(() => { try { window.FEFeedback.invite({ topic: 'Live-Demo', art: 'die' }); } catch (e) { /* Feedback ist optional */ } }, RM ? 3000 : 6000);
       if (queued) { const q = queued; queued = null; timers.push(setTimeout(() => { inp.value = q[0]; run(q[0], q[1]); }, RM ? 0 : 900)); }
     });
   }
@@ -239,7 +241,7 @@
   /* ---------- Erster Sichtkontakt: Seite baut sich auf, dann tippt sich die Verkaufsidee von selbst ein:
      „Startseite mit Drohnenflug“ – die Mini-Seite startet mit einem echten FPV-Durchflug. ---------- */
   paint(); H.innerHTML = headHTML(S.h);
-  let autoT = [], userActed = false; const stopAuto = () => { userActed = true; autoT.forEach(clearTimeout); autoT = []; };
+  let inviteT = 0, autoT = [], userActed = false; const stopAuto = () => { userActed = true; autoT.forEach(clearTimeout); autoT = []; };
   ['pointerdown', 'keydown', 'focusin'].forEach(ev => root.addEventListener(ev, e => { if (e.isTrusted) stopAuto(); }, { passive: true }));
   if (!RM) mp.classList.add('build');
   const start = () => {
