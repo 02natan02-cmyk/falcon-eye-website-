@@ -223,7 +223,8 @@
   form.addEventListener('submit', e => { e.preventDefault(); stopAuto(); run(inp.value || inp.placeholder.replace(/^z\. B\.\s*/, '')); });
   chips && chips.addEventListener('click', e => { const b = e.target.closest('[data-ld-try]'); if (!b) return; stopAuto(); b.classList.add('used'); if (!busy) inp.value = b.dataset.ldTry; run(b.dataset.ldTry, true); });
   // Knöpfe außerhalb der Demo (z. B. „Unser Extra“): Demo ins Bild holen, dann den Wunsch abspielen
-  document.querySelectorAll('[data-ld-run]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[data-ld-run]').forEach(b => b.addEventListener('click', e => {
+    if (b.tagName === 'A') e.preventDefault(); // Ohne Skript springt der Link einfach zur Demo
     stopAuto(); b.classList.add('used');
     const go = () => { if (!busy) inp.value = b.dataset.ldRun; run(b.dataset.ldRun, true); };
     const r = live.getBoundingClientRect(), hdr = (document.querySelector('.top') || {}).offsetHeight || 70;
