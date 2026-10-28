@@ -176,7 +176,7 @@
     $$('[data-lb]').forEach(b => b.addEventListener('click', e => {
       e.preventDefault();
       lv.src = b.dataset.lb; lt.textContent = b.dataset.title || ''; lb.classList.toggle('tall', b.dataset.tall === '1'); lv.muted = false;
-      if (lc) { lc.textContent = b.dataset.cta || lcTxt; lc.href = b.dataset.ctaHref || (b.dataset.anlass ? 'kontakt.html#' + b.dataset.anlass : lcHref); }
+      if (lc) { lc.textContent = b.dataset.cta || lcTxt; lc.href = b.dataset.ctaHref || (b.dataset.anlass ? 'kontakt.html' + (b.dataset.projekt ? '?projekt=' + encodeURIComponent(b.dataset.projekt) : '') + '#' + b.dataset.anlass : lcHref); }
       lb.hidden = false; document.body.style.overflow = 'hidden'; lv.play().catch(() => {}); $('.x', lb).focus();
     }));
     $('.x', lb).addEventListener('click', close);
@@ -292,6 +292,11 @@
     const pre = decodeURIComponent((location.hash || '').slice(1));
     const pick = pre && $(`input[name=anlass][data-key="${pre}"]`, plan);
     if (pick) pick.checked = true;
+    // Projektname aus der Projekt-Seite (?projekt=…): steht im Nachrichtenfeld, geht also in Formular, WhatsApp und E-Mail mit
+    try {
+      const pj = (new URLSearchParams(location.search).get('projekt') || '').replace(/[\u0000-\u001f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
+      if (pj && plan.msg && !plan.msg.value.trim()) plan.msg.value = 'Ähnlich wie: ' + pj + '\n';
+    } catch (e) { /* ohne Vorbelegung weiter */ }
     const steps = $$('.pstep', plan), ind = $$('.steps-ind i', plan);
     let cur = 0;
     const pst = $('[data-plan-step]', plan);

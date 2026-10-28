@@ -113,7 +113,7 @@
       const v = layers[layer], o = layers[1 - layer];
       v.src = b.dataset.src; v.poster = b.dataset.poster; v.currentTime = 0; v.play().catch(() => {});
       v.classList.add('on'); o.classList.remove('on'); setTimeout(() => o.pause(), 800);
-      txt.textContent = b.dataset.text; meta.textContent = b.dataset.meta; link.href = b.dataset.link; ask.href = 'kontakt.html#' + b.dataset.anlass;
+      txt.textContent = b.dataset.text; meta.textContent = b.dataset.meta; link.href = b.dataset.link; ask.href = 'kontakt.html' + (b.dataset.projekt ? '?projekt=' + encodeURIComponent(b.dataset.projekt) : '') + '#' + b.dataset.anlass;
       t0 = performance.now();
     }
     /* click / tap selects (no hover switching); arrows step; auto-play resumes after 15 s idle */
