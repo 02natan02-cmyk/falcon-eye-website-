@@ -19,7 +19,7 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var G = typeof window.gsap !== 'undefined' ? window.gsap : null;
   var motion = !reduce && !!G;
-  var BASE = 'https://02natan02-cmyk.github.io/flight-club-saar-website/';
+  var BASE = 'https://flightclub-saar.de/';
 
   /* Nur, was die Vereinsseite wirklich hat (Stand 24.10.2026) */
   var F = {
