@@ -368,3 +368,9 @@ html.ef-lock{overflow:hidden;scrollbar-gutter:stable}
   .ef-card,.ef-ring,.ef-thumb img,.ef-x{transition:none}
   .ef-load{animation-duration:2.4s}
 }
+/* Scroll-Stupser (assets/wd-stups.js) */
+.wd-stups{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:999px;background:rgba(12,15,19,.82);border:1px solid rgba(255,212,0,.45);color:var(--signal,#ffd400);font:600 13px/1 var(--osd,monospace);letter-spacing:.14em;text-transform:uppercase;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.wd-stups.an{opacity:1;transform:translate(-50%,0)}
+.wd-stups i{width:14px;height:14px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);animation:wdstups 1s ease-in-out infinite}
+@keyframes wdstups{0%,100%{translate:0 -3px}50%{translate:0 4px}}
+@media (min-width:900px){.wd-stups{bottom:36px}}
