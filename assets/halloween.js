@@ -85,83 +85,39 @@
     setTimeout(schluss, 4500); // Notschalter
   }
 
-  /* ---------- 2. Versteckte Kürbisse ---------- */
-  function kuerbisse() {
-    var ANZ = 7, wrap = el('div', 'hw-wrap'), gefunden = [], key = 'hw-found-' + location.pathname;
-    try { gefunden = JSON.parse(ss.get(key) || '[]'); } catch (e) { gefunden = []; }
+  /* ---------- 2. Deko am Rand: Kürbisse, kleine Geister, Fledermäuse (nur Schmuck, nichts zum Anklicken) ---------- */
+  var GEIST = '<svg viewBox="0 0 120 140" aria-hidden="true"><path d="M60 8C32 8 16 32 16 62v62c0 6 7 8 11 4l9-9 9 9c4 4 9 4 13 0l2-2 2 2c4 4 9 4 13 0l9-9 9 9c4 4 11 2 11-4V62C104 32 88 8 60 8z" fill="#f4f7ff" opacity=".92"/><ellipse cx="44" cy="58" rx="7" ry="10" fill="#1a1f2b"/><ellipse cx="76" cy="58" rx="7" ry="10" fill="#1a1f2b"/><path d="M48 84q12 12 24 0" stroke="#1a1f2b" stroke-width="4" fill="none" stroke-linecap="round"/></svg>';
+  var FLED = '<svg viewBox="0 0 90 40" aria-hidden="true"><path d="M45 20c-4-9-12-14-22-12 4 3 5 7 3 11-8-4-18-2-26 6 8-2 14 0 18 5 5-3 10-2 14 2 2-5 6-8 13-8 7 0 11 3 13 8 4-4 9-5 14-2 4-5 10-7 18-5-8-8-18-10-26-6-2-4-1-8 3-11-10-2-18 3-22 12z" fill="#0a0d12"/></svg>';
+  function deko() {
+    var wrap = el('div', 'hw-wrap');
     if (!D.getElementById('hw-goo')) wrap.innerHTML = DEFS;
     D.body.appendChild(wrap);
-    var seed = 7; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
-    var items = [];
-    for (var i = 0; i < ANZ; i++) {
-      var k = el('button', 'hw-k' + (gefunden.indexOf(i) > -1 ? ' hw-weg' : ''), PUMP);
-      k.type = 'button'; k.setAttribute('aria-label', 'Versteckter Kürbis ' + (i + 1) + ' von ' + ANZ);
-      k.dataset.i = i; k.style.setProperty('--d', (rnd() * 3).toFixed(2) + 's');
-      k.dataset.fx = (0.06 + rnd() * .88).toFixed(3); k.dataset.fy = ((i + .35 + rnd() * .5) / ANZ).toFixed(3);
-      k.dataset.s = (.6 + rnd() * .7).toFixed(2);
-      wrap.appendChild(k); items.push(k);
-    }
-    var hud = el('div', 'hw-hud', '<span class="hw-ico">' + PUMP + '</span><span class="hw-z"></span><span class="hw-hint">Kürbisse verstecken sich auf der Seite. Tipp sie an!</span>');
-    D.body.appendChild(hud);
-    function zahl() { var n = gefunden.length; hud.querySelector('.hw-z').textContent = n + ' / ' + ANZ; hud.classList.toggle('hw-alle', n >= ANZ); }
-    zahl();
+    var seed = 11; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    // Reihenfolge von oben nach unten, abwechselnd links/rechts am Seitenrand
+    var arten = ['k', 'g', 'k', 'f', 'k', 'g', 'k', 'f', 'k', 'g', 'k'];
+    var items = arten.map(function (a, i) {
+      var e = el('div', 'hw-d hw-d-' + a, a === 'k' ? PUMP : a === 'g' ? GEIST : FLED);
+      e.style.setProperty('--d', (rnd() * 4).toFixed(2) + 's'); e.style.setProperty('--s', (0.7 + rnd() * 0.6).toFixed(2));
+      e.dataset.fy = ((i + 0.3 + rnd() * 0.5) / arten.length).toFixed(3); e.dataset.side = i % 2 ? 'r' : 'l';
+      wrap.appendChild(e); return e;
+    });
     function lege() {
-      var dh = Math.max(D.body.scrollHeight, H.scrollHeight), vw = innerWidth;
+      var dh = Math.max(D.body.scrollHeight, H.scrollHeight), vw = innerWidth, klein = vw < 760;
       wrap.style.height = dh + 'px';
-      items.forEach(function (k) {
-        var y = Math.min(dh - 140, 180 + +k.dataset.fy * (dh - 420));
-        k.style.left = Math.round(+k.dataset.fx * (vw - 70)) + 'px'; k.style.top = Math.round(y) + 'px';
-        k.style.setProperty('--s', k.dataset.s);
+      items.forEach(function (e) {
+        var y = 160 + +e.dataset.fy * (dh - 400), gr = 56 * +e.style.getPropertyValue('--s');
+        var x = e.dataset.side === 'l' ? (klein ? 6 : 14 + rnd() * 0) : vw - gr - (klein ? 6 : 14);
+        e.style.left = Math.round(x) + 'px'; e.style.top = Math.round(y) + 'px';
       });
     }
     lege(); W.addEventListener('resize', lege); setTimeout(lege, 1500); setTimeout(lege, 5000);
-    wrap.addEventListener('click', function (e) {
-      var k = e.target.closest('.hw-k'); if (!k || k.classList.contains('hw-weg')) return;
-      k.classList.add('hw-pop'); setTimeout(function () { k.classList.add('hw-weg'); }, 650);
-      spritzer(e.clientX, e.clientY);
-      gefunden.push(+k.dataset.i); ss.set(key, JSON.stringify(gefunden)); zahl();
-      hud.classList.add('hw-puls'); setTimeout(function () { hud.classList.remove('hw-puls'); }, 500);
-      if (gefunden.length >= ANZ) finale();
-    });
-    hud.addEventListener('click', function () { // Hinweis: zum nächsten Kürbis scrollen
-      var n = items.filter(function (k) { return !k.classList.contains('hw-weg'); })[0];
-      if (!n) { finale(); return; }
-      var y = parseFloat(n.style.top) - innerHeight * .4;
-      if (W.FE && W.FE.lenis) W.FE.lenis.scrollTo(y); else W.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
-      n.classList.add('hw-wink'); setTimeout(function () { n.classList.remove('hw-wink'); }, 1600);
-    });
-    // Selbst-Impuls: nach 6 s ohne Fund wackelt der erste sichtbare Kürbis kurz
-    setTimeout(function () {
-      if (gefunden.length) return;
-      var n = items.filter(function (k) { var r = k.getBoundingClientRect(); return r.top > 0 && r.bottom < innerHeight; })[0];
-      if (n) { n.classList.add('hw-wink'); setTimeout(function () { n.classList.remove('hw-wink'); }, 1600); }
-      hud.classList.add('hw-zeig'); setTimeout(function () { hud.classList.remove('hw-zeig'); }, 4000);
-    }, 6000);
-    function spritzer(x, y) {
-      if (reduce) return;
-      for (var i = 0; i < 9; i++) {
-        var s = el('i', 'hw-sp'); s.style.left = x + 'px'; s.style.top = y + 'px';
-        s.style.setProperty('--dx', ((Math.random() - .5) * 160).toFixed(0) + 'px'); s.style.setProperty('--dy', ((Math.random() - .9) * 140).toFixed(0) + 'px');
-        D.body.appendChild(s); setTimeout(function (s) { s.remove(); }, 900, s);
-      }
-    }
-    var fin = false;
-    function finale() {
-      if (fin || D.querySelector('.hw-fin')) return; fin = true;
-      var f = el('div', 'hw-fin', '<div class="hw-card">' + PUMP + '<h3>Alle Kürbisse gefunden!</h3><p>Happy Halloween von Falcon Eye. Wer so genau hinschaut, verdient eine Website, bei der sich jeder Abschnitt bewegt.</p><a class="hw-btn" href="webdesign.html#entwurf">Kostenlosen Entwurf anfragen</a><button type="button" class="hw-x">Schließen</button></div>');
-      D.body.appendChild(f); requestAnimationFrame(function () { f.classList.add('an'); }); setTimeout(zeigeGeist, 1200);
-      f.querySelector('.hw-x').addEventListener('click', function () { f.classList.remove('an'); setTimeout(function () { f.remove(); }, 400); });
-      f.addEventListener('click', function (e) { if (e.target === f) f.querySelector('.hw-x').click(); });
-    }
   }
-
-
   /* ---------- 3. Der Geist: kommt einmal beim zweiten Klick irgendwo auf der Seite ---------- */
   function geist() {
     if (ss.get('hw-geist') === '1') return;
     var klicks = 0;
     D.addEventListener('click', function (e) {
-      if (e.target.closest('.hw-k, .hw-hud, .hw-fin, .hw-ov')) return;
+      if (e.target.closest('.hw-ov, .hw-geist')) return;
       if (++klicks < 2 || ss.get('hw-geist') === '1') return;
       ss.set('hw-geist', '1'); zeigeGeist();
     }, true);
@@ -177,7 +133,7 @@
   }
 
   function start() {
-    var los = function () { intro(kuerbisse); geist(); };
+    var los = function () { intro(deko); geist(); };
     if (H.classList.contains('fi-on')) { // Webdesign-Intro (Motorrad) läuft zuerst
       var fired = false, go = function () { if (!fired) { fired = true; los(); } };
       W.addEventListener('fe:intro-ende', go, { once: true }); setTimeout(go, 30000);
