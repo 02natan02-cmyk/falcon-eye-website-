@@ -1,4 +1,4 @@
-/* Halloween 2026 – Schleim-Intro und versteckte Kürbisse (nur 31.10.–02.11.2026, assets/halloween.js) */
+/* Halloween 2026 – Schleim-Intro und versteckte Kürbisse (nur 31.10. bis Mo 02.11.2026 18:00, assets/halloween.js) */
 html.hw-lock{overflow:hidden}
 .hw-ov{position:fixed;inset:0;z-index:100000;background:transparent;cursor:pointer;transition:opacity .4s}
 .hw-ov.hw-aus{opacity:0;pointer-events:none}

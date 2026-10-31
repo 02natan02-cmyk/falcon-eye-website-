@@ -1,12 +1,12 @@
 /* Halloween 2026 – grüner Schleim beim Öffnen und versteckte Kürbisse.
-   Läuft von selbst nur vom 31.10.2026 bis Montag, 02.11.2026, 23:59 Uhr (Ortszeit).
+   Läuft von selbst nur vom 31.10.2026 bis Montag, 02.11.2026, 18:00 Uhr (Ortszeit); danach bleibt die Seite unverändert, die Dateien tun nichts mehr.
    ?halloween=1 erzwingt, ?halloween=0 schaltet aus. */
 (function () {
   'use strict';
   var D = document, W = window, H = D.documentElement;
   var q = new URLSearchParams(location.search).get('halloween');
   var now = new Date();
-  var aktiv = now >= new Date(2026, 9, 31) && now < new Date(2026, 10, 3);
+  var aktiv = now >= new Date(2026, 9, 31) && now < new Date(2026, 10, 2, 18);
   if (q === '0') aktiv = false; else if (q === '1') aktiv = true;
   if (!aktiv) return;
   var reduce = W.matchMedia && W.matchMedia('(prefers-reduced-motion: reduce)').matches;
