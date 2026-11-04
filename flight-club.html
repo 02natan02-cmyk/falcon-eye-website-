@@ -2,9 +2,10 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<!-- Bis zum Start der neuen Vereinsseite (Do 29.10.2026, 8 Uhr) geht es direkt zur Countdown-Seite mit dem 3D-Intro; danach zur Vereinsseite selbst -->
-<script>(function(){try{if(/[?&]hier\b/.test(location.search))return;var B="https://flightclub-saar.de/";location.replace(Date.now()<Date.UTC(2026,9,29,7,0,0)?B+"bald/":B)}catch(e){}})()</script>
+<!-- Leitet seit dem Start der Vereinsseite (29.10.2026) auf flightclub-saar.de weiter; nicht in Sitemap und Suche -->
+<script>(function(){try{if(/[?&]hier\b/.test(location.search))return;location.replace("https://flightclub-saar.de/")}catch(e){}})()</script>
 <noscript><meta http-equiv="refresh" content="0; url=https://flightclub-saar.de/"></noscript>
+<meta name="robots" content="noindex, follow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Flight Club Saar – Partner von Falcon Eye</title>
 <meta name="description" content="Der Flight Club Saar e.V. ist der FPV-Verein im Saarland und Partner von Falcon Eye.">
@@ -15,8 +16,13 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://falcon-eye.de/media/og.jpg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:site_name" content="Falcon Eye">
+<meta property="og:image:alt" content="Falcon Eye – FPV-Drohnenfilme und Webdesign aus Saarbrücken">
+<meta name="twitter:title" content="Flight Club Saar – Partner von Falcon Eye">
+<meta name="twitter:description" content="Der Flight Club Saar e.V. ist der FPV-Verein im Saarland und Partner von Falcon Eye.">
 <meta property="og:url" content="https://falcon-eye.de/flight-club.html">
-<link rel="canonical" href="https://falcon-eye.de/flight-club.html">
 <meta name="theme-color" content="#161b21">
 <link rel="icon" href="media/bird.png">
 <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
@@ -27,11 +33,11 @@
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="top">
   <a class="brand" href="./" aria-label="Falcon Eye – zur Startseite"><span class="bird"><img src="media/bird.png" alt="" width="934" height="207"></span><img class="word" src="media/wordmark.png" alt="Falcon Eye" width="956" height="175"></a>
-  <nav aria-label="Hauptmenü"><a href="projekte.html">Projekte</a><a href="leistungen.html">Leistungen</a><a href="webdesign.html">Webdesign</a><a href="ueber-uns.html">Über uns</a><a href="flight-club.html" aria-current=page>Flight Club</a><a href="kontakt.html">Kontakt</a><a class="btn sm" href="kontakt.html">Dreh anfragen</a></nav>
+  <nav aria-label="Hauptmenü"><a href="projekte.html">Projekte</a><a href="leistungen.html">Leistungen</a><a href="/webdesign">Webdesign</a><a href="ueber-uns.html">Über uns</a><a href="https://flightclub-saar.de/" aria-current=page>Flight Club</a><a href="kontakt.html">Kontakt</a><a class="btn sm" href="kontakt.html">Dreh anfragen</a></nav>
   <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mmenu"><i></i><i></i><i></i></button>
 </header>
 <div class="mmenu" id="mmenu" aria-hidden="true">
-  <a href="./">Start</a><a href="projekte.html">Projekte</a><a href="leistungen.html">Leistungen</a><a href="webdesign.html">Webdesign</a><a href="ueber-uns.html">Über uns</a><a href="flight-club.html" aria-current=page>Flight Club</a><a href="kontakt.html">Kontakt</a>
+  <a href="./">Start</a><a href="projekte.html">Projekte</a><a href="leistungen.html">Leistungen</a><a href="/webdesign">Webdesign</a><a href="ueber-uns.html">Über uns</a><a href="https://flightclub-saar.de/" aria-current=page>Flight Club</a><a href="kontakt.html">Kontakt</a>
   <div class="row"><a class="btn" href="kontakt.html">Dreh anfragen</a><a class="btn wa" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp</a></div>
 </div>
 <div class="dock" aria-label="Schnell buchen">
@@ -65,7 +71,7 @@
 <section class="band" aria-label="Anfrage starten">
   <div class="band-mq" aria-hidden="true"><span>Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · </span><span>Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · Wir fliegen da durch · </span></div>
   <div class="wrap">
-    <div><h2>Ihr braucht Piloten für euer Projekt?</h2><p>Dafür ist Falcon Eye da. Schreibt uns, was ihr filmen wollt.</p><div class="quick"><a href="kontakt.html#event">Event / Firmenfeier</a><a href="kontakt.html#imagefilm">Imagefilm</a><a href="kontakt.html#social">Social-Media-Clips</a><a href="kontakt.html#sport">Sport &amp; Stadion</a><a href="kontakt.html#hochzeit">Hochzeit</a><a href="kontakt.html#immobilie">Immobilie / Gewerbe</a><a href="webdesign.html#entwurf">Website</a><a href="kontakt.html#beides">Film + Website</a></div></div>
+    <div><h2>Ihr braucht Piloten für euer Projekt?</h2><p>Dafür ist Falcon Eye da. Schreibt uns, was ihr filmen wollt.</p><div class="quick"><a href="kontakt.html#event">Event / Firmenfeier</a><a href="kontakt.html#imagefilm">Imagefilm</a><a href="kontakt.html#social">Social-Media-Clips</a><a href="kontakt.html#sport">Sport &amp; Stadion</a><a href="kontakt.html#hochzeit">Hochzeit</a><a href="kontakt.html#immobilie">Immobilie / Gewerbe</a><a href="/webdesign#entwurf">Website</a><a href="kontakt.html#beides">Film + Website</a></div></div>
     <div class="ctas"><a class="btn dark" href="kontakt.html">Dreh anfragen</a><a class="btn ghost" href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp schreiben</a></div>
   </div>
 </section>
@@ -81,7 +87,7 @@
     <div class="grid">
       <div><img src="media/logo.png" alt="Falcon Eye" width="2000" height="249"><p>FPV-Drohnenfilme und Websites aus Saarbrücken – für Firmen, Events, Sport und alle, die gesehen werden wollen.</p>
         <p><a class="btn sm" href="kontakt.html">Dreh anfragen</a></p></div>
-      <div><h4>Seiten</h4><ul><li><a href="projekte.html">Projekte</a></li><li><a href="leistungen.html">Leistungen</a></li><li><a href="webdesign.html">Webdesign &amp; Webentwicklung</a></li><li><a href="ueber-uns.html">Über uns &amp; Hangar</a></li><li><a href="flight-club.html">Partner: Flight Club Saar</a></li><li><a href="kontakt.html">Kontakt</a></li></ul></div>
+      <div><h4>Seiten</h4><ul><li><a href="projekte.html">Projekte</a></li><li><a href="leistungen.html">Leistungen</a></li><li><a href="/webdesign">Webdesign &amp; Webentwicklung</a></li><li><a href="ueber-uns.html">Über uns &amp; Hangar</a></li><li><a href="https://flightclub-saar.de/">Partner: Flight Club Saar</a></li><li><a href="kontakt.html">Kontakt</a></li></ul></div>
       <div><h4>Kontakt</h4><ul><li><a href="https://wa.me/4915156743442?text=Hallo%20Falcon%20Eye%2C%20wir%20m%C3%B6chten%20einen%20Dreh%20anfragen." target="_blank" rel="noopener">WhatsApp</a></li><li><a href="tel:+4915156743442">Telefon 0151 56743442</a></li><li><a href="mailto:info@falcon-eye.de">info@falcon-eye.de</a></li><li>Römerstr. 25<br>66125 Saarbrücken</li></ul></div>
       <div><h4>Folgt uns</h4><ul><li><a href="https://www.instagram.com/falconeyesaar" target="_blank" rel="noopener">Instagram @falconeyesaar</a></li><li><a href="https://www.youtube.com/channel/UCSpNx9Xw74DpDg3IRXK67fw" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://www.facebook.com/profile.php?id=61559258413801" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.youtube.com/@Booyaka/videos" target="_blank" rel="noopener">YouTube: Kinofilme</a></li><li><a href="https://www.instagram.com/flightclubsaar" target="_blank" rel="noopener">Instagram @flightclubsaar</a></li><li><a href="https://flightclub-saar.de/" target="_blank" rel="noopener">flightclub-saar.de</a></li></ul></div>
     </div>
