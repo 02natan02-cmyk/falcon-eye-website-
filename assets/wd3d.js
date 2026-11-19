@@ -516,7 +516,7 @@ function init() {
     ['bsp_fahrzeug', 'K&S Aufbereitung · Beispiel', 'wp-fahrzeug', 'm'], ['bsp_karosserie', 'Karosserie Hellwig · Beispiel', 'wp-karosserie', 'm'],
     ['pflege247', 'Pflege24-7', 'wp-pflege247', 'm'], ['opieka247', 'Opieka24-7', 'wp-opieka247', 'm']
   ];
-  // Gesamtzahl der Referenzen aus derselben Quelle wie der Rest der Seite (Karten in #referenzen, derzeit 14 Wegpunkte)
+  // Gesamtzahl der Referenzen aus derselben Quelle wie der Rest der Seite (Karten in #referenzen, derzeit 15 Wegpunkte)
   const refCards = () => [...document.querySelectorAll('#referenzen .wd-ref')];
   const REF_TOTAL = refCards().length || 14;
   // Plätze im Endbild (Bildschirmkoordinaten des Fußpunkts); daraus werden Bodenpositionen berechnet
